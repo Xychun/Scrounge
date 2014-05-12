@@ -3,3 +3,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //Collection init
+  menus = new Meteor.Collection("Menus");
+
+  player = new Meteor.Collection("Player");
+
+  mine = new Meteor.Collection("mine");
+
+  laboratory = new Meteor.Collection("laboratory");
+
+  battlefield = new Meteor.Collection("battlefield");

@@ -1,13 +1,120 @@
 <head>
   <title>Scrounge</title>
+  <meta charset="UTF-8">
 </head>
 
 <body>
-  {{> hello}}
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="masterLayout">
+	<div id="links" class="top left">
+    	<div class="corner top left">
+        	{{> yield region='topLeftCorner'}}
+        </div>
+        <div class="inventory left">
+        	{{> yield region='leftInventory'}}
+        </div>
+        <div class="corner bot left">
+        	{{> yield region='botLeftCorner'}}
+        </div>
+    </div>
 </template>
+
+<!-- TO-DO: Konterfeien -->
+<template name="layout">
+	<div style="position: fixed; left: 50%;">
+		{{> yield region='top'}}
+	</div>
+	<div style="position: fixed; left: 0px">
+		{{> yield region='left'}}
+	</div>
+	<div style="position: fixed; right: 0px">
+		{{> yield region='right'}}
+	</div>
+	<div style="position: fixed; bottom: 40px">
+		{{> yield region='bottom'}}
+	</div>
+	<div style="position: absolute; left: 40%; top: 40%; width:400px">
+		{{> yield region='center'}}
+		<br>
+		<div style="width:400px">
+			{{> yield region='center2'}}
+		</div>
+	</div>
+</template>
+	
+    <!-- 
+    <div id="oben" class="top">
+    	<div id="k">
+            <div id="k1">
+            <img class="kimage i1" src="MineMenuScroungeNormal.gif" onClick="alert('4')">
+            <img class="kimage i2" src="MineMenuBaseNormal.gif" onClick="alert('3')">
+            <img class="kimage i3" src="MineMenuBaseNormal.gif" onClick="alert('2')">
+            <img class="kimage i4" src="MineMenuBaseNormal.gif" onClick="alert('1')">
+            <img class="kimage i5" src="MineMenuBaseNormal.gif" onClick="alert('6')">
+            <img class="kimage i6" src="MineMenuBaseNormal.gif" onClick="alert('5')">
+            <img class="kimage i7" src="MineMenuScroungeNormal.gif" onClick="alert('4')">
+            </div>
+            <div id="k2"> 
+            <img class="kimage i1" src="MineMenuScroungeNormal.gif" onClick="alert('4')">
+            <img class="kimage i2" src="MineMenuBaseNormal.gif" onClick="alert('3')">
+            <img class="kimage i3" src="MineMenuBaseNormal.gif" onClick="alert('2')">
+            <img class="kimage i4" src="MineMenuBaseNormal.gif" onClick="alert('1')">
+            <img class="kimage i5" src="MineMenuBaseNormal.gif" onClick="alert('6')">
+            <img class="kimage i6" src="MineMenuBaseNormal.gif" onClick="alert('5')">
+            <img class="kimage i7" src="MineMenuScroungeNormal.gif" onClick="alert('4')">
+            </div>
+    	</div>
+    </div>
+    <div id="mitte">
+    	<div id="improvements" class="top left right"></div>
+        <div class="areas left bot">
+            <div id="up_slider_base" class="slider_base_height top">
+            	<img id="base_up" class="slider_base center_h" src="HoverUpButtonBrownNormal.gif" onMouseOver="slide_up()" onMouseOut="slide_stop('up_slider_base')">
+            </div>
+            <div id="base_area">
+                <div id="base_area_content" class="relative">
+                </div>
+            </div>
+            <div id="down_slider_base" class="slider_base_height bot">
+            	<img id="base_down" class="slider_base center_h" src="HoverDownButtonBrownNormal.gif">
+            </div>
+        </div>
+        <div id="seperation_bar" class="left right"></div>
+        <div class="areas right bot">
+            <div id="up_slider_scrounge"></div>
+            <div id="scrounge_area" class="top relative">
+            <div id="rotate_test"></div>
+            </div>
+            <div id="down_slider_scrounge"></div>
+        </div>    
+    </div>
+    <div id="unten" class="bot">
+        <div id="matter_left" class="matter_edge bot left"></div>
+		<div id="matter_content" class="bot">
+            <img class="cba inherit" src="CubeWeißGleich_goldbraun.png" style="left:20px">
+            <img class="cba inherit" src="CubeWeißGleich_goldbraun.png" style="left:100px">
+            <img class="cba inherit" src="CubeWeißGleich_grün.png" style="left:170px">
+             <img class="cba inherit" src="CubeWeißGleich_rot.png" style="left:240px">
+        </div>
+		<div id="matter_right" class="matter_edge bot right"></div>
+    </div>
+    <div id="rechts" class="top right">
+    	<div class="corner top right">
+            <img id="character" class="corner top right inherit" src="Frame_Button_Character_Green.png">
+            <img id="right_slider_category" class="right_slider left inherit" src="ScrollRightButtonBaseNormal.gif"
+            onMouseOver="slide_right()" onMouseOut="slide_stop('right')">
+            <img id="up_slider_own" class="slider_inv bot inherit" src="HoverUpButtonBrownNormal.gif">
+        </div>
+        <div class="inventory right">
+        	<div class="inv_edge inv_top top" ></div>
+            <div class="inventory_content" src="Inventory.png"></div>
+            <div class="inv_edge inv_bot bot" src="Inventory_Abschluss_Unten.gif"></div>
+        </div>
+        <div class="corner bot right">
+            <img id="scrounge_3" class="corner bot right inherit" src="ButtonBottomRight.png">
+            <img id="right_slider_matter" class="right_slider left inherit" src="HoverRightButtonBrownNormal.gif">
+            <img id="down_slider_own" class="slider_inv top inherit" src="HoverDownButtonBrownNormal.gif">
+        </div>
+    </div> -->
+

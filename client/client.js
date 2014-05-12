@@ -2,31 +2,31 @@
 /////////////////////////////////////////// CLIENT /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if (Meteor.isClient) {
-  //Methods
-  Meteor.methods({
-    name: function(param) {
+// if (Meteor.isClient) {
+//   //Methods
+//   Meteor.methods({
+//     name: function(param) {
 
-    }
-  });
+//     }
+//   });
 
-  //Subscriptions
-  Meteor.subscribe("name");
+//   //Subscriptions
+//   Meteor.subscribe("name");
 
-  //Template Returns
-  Template.content.TestInput = function (){
-    return null;
-  }
+//   //Template Returns
+//   Template.content.TestInput = function (){
+//     return null;
+//   }
 
- //Template Events
- Template.tempName.events({
-  'click': function () {
-      //asd
-    }
-  });
+//  //Template Events
+//  Template.tempName.events({
+//   'click': function () {
+//       //asd
+//     }
+//   });
 
- //Deps.Autorun
- Deps.autorun(function () {
-    //asd
-  });
-}
+//  //Deps.Autorun
+//  Deps.autorun(function () {
+//     //asd
+//   });
+// }
