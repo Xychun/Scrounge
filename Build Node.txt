@@ -1,0 +1,22 @@
+Meteor Installation unter Windows:
+
+Meteor Installer :
+http://win-install.meteor.com/LaunchMeteor.exe
+
+Packages :
+iron-router - https://github.com/EventedMind/iron-router
+deps-ext - https://github.com/EventedMind/deps-ext
+blaze-layout - https://github.com/EventedMind/blaze-layout
+
+Installation:
+LaunchMeteor.exe starten zur Installtion und dann 
+in den "packages" Ordner alle Packages reinkopieren
+
+Meteor starten :
+PowerShell (mit Admin rechten) öffnen
+Pfad zum Projektordner wechseln
+den Befehl 'meteor' eingeben
+
+falls das nicht funktionieren sollte 
+ggf. noch den router hinzufügen mit
+'meteor add iron-router'
