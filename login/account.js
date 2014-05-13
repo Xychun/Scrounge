@@ -133,7 +133,7 @@ function switchToGame(){
     var menu = self.menu;
     Router.go('game', {name: cu, menu: menu});
   } else {
-    Meteor.call('error', "User not yet defined problem switchToGame", 5000);
+    console.log("User not yet defined problem switchToGame");
   } 
 }
 }
