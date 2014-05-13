@@ -7,8 +7,12 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
 
-
-  Meteor.publish("asd", function(){
-      return null;
+  //Publish
+  Meteor.publish("userData", function(){
+    if (this.userId) {
+      return Meteor.users.find({}, {fields: {'username': 1, 'menu': 1, 'cu': 1}});
+    } else {
+      this.ready();
+    }
   });
 }
