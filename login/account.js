@@ -31,28 +31,28 @@ Meteor.methods({
         //update successful
       }
     });
-    //TO-DO INIT
-    // mine.insert({user: name, src: "/pics/green_1.gif"}, function(err){
-    //   if(err){
-    //     throw new Meteor.Error(404, 'account creation mine error: ' + err);
-    //   } else{
-    //     //insert successful
-    //   }
-    // });
-    // laboratory.insert({user: name, src: "/pics/yel_1.gif"}, function(err){
-    //   if(err){
-    //     throw new Meteor.Error(404, 'account creation laboratory error: ' + err);
-    //   } else{
-    //     //insert successful
-    //   }
-    // });
-    // battlefield.insert({user: name, src: "/pics/red_1.gif"}, function(err){
-    //   if(err){
-    //     throw new Meteor.Error(404, 'account creation battlefield error: ' + err);
-    //   } else{
-    //     //insert successful
-    //   }
-    // });
+    
+    mine.insert({user: name, value: 100, slots: 3, remaining: 45}, function(err){
+      if(err){
+        throw new Meteor.Error(404, 'account creation mine error: ' + err);
+      } else{
+        //insert successful
+      }
+    });
+    laboratory.insert({user: name, value: 100, slots: 3, remaining: 45}, function(err){
+      if(err){
+        throw new Meteor.Error(404, 'account creation laboratory error: ' + err);
+      } else{
+        //insert successful
+      }
+    });
+    battlefield.insert({user: name, value: 100, slots: 3, remaining: 45}, function(err){
+      if(err){
+        throw new Meteor.Error(404, 'account creation battlefield error: ' + err);
+      } else{
+        //insert successful
+      }
+    });
     return "account init OK!";
   }
 });

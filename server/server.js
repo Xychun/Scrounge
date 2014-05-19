@@ -29,4 +29,28 @@ if (Meteor.isServer) {
       this.ready();
     }
   });
+
+  Meteor.publish("mine", function(current){
+    if (this.userId) {
+      return mine.find({user: current});
+    } else {
+      this.ready();
+    }
+  });
+
+  Meteor.publish("laboratory", function(current){
+    if (this.userId) {
+      return laboratory.find({user: current});
+    } else {
+      this.ready();
+    }
+  });
+
+  Meteor.publish("colosseum", function(current){
+    if (this.userId) {
+      return colosseum.find({user: current});
+    } else {
+      this.ready();
+    }
+  });
 }

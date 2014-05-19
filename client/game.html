@@ -1,7 +1,7 @@
 <template name="standardBorder">
 	<div id="links" class="top left">
 		<div class="corner top left">
-		<!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
+			<!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
 			<img id="scrounge" class="corner top left inherit SSscroungeBaseButton">
 			<img id="left_slider_category" class="left_slider right inherit relative sliderRotate180 SShoverButton">
 			<img id="up_slider_stolen" class="slider_inv bot inherit sliderRotate270 SShoverButton">
@@ -79,19 +79,34 @@
 			</div>
 			<div id="base_area">
 				<div id="base_area_content" class="relative">
-				</div>
-			</div>
-			<div id="down_slider_base" class="slider_base_height bot">
-				<img id="base_down" class="slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+
+					{{#each mineSlots}}
+					<div class='slot relative'>
+					<p class='text relative'>Value: {{value}}</p>
+					<p class='text relative'>Slots: {{slots}}</p>
+					<p class='text relative'>Remaining: {{remaining}}</p>
+					</div>
+					{{/each}}
+
+					<!-- TO-DO Scrounger <div id='s"+z+"a' class='slot_a relative'>
+					<p class='text relative'>Value: value</p>
+					<p class='text relative'>Slots: slots</p>
+					<p class='text relative'>Remaining: remaining</p>
+					</div> -->
+
 			</div>
 		</div>
-		<div id="seperation_bar" class="left right"></div>
-		<div class="areas right bot">
-			<div id="up_slider_scrounge"></div>
-			<div id="scrounge_area" class="top relative">
-				<div id="rotate_test"></div>
-			</div>
-			<div id="down_slider_scrounge"></div>
-		</div>    
+		<div id="down_slider_base" class="slider_base_height bot">
+			<img id="base_down" class="slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+		</div>
 	</div>
+	<div id="seperation_bar" class="left right"></div>
+	<div class="areas right bot">
+		<div id="up_slider_scrounge"></div>
+		<div id="scrounge_area" class="top relative">
+			<div id="rotate_test"></div>
+		</div>
+		<div id="down_slider_scrounge"></div>
+	</div>    
+</div>
 </template>
