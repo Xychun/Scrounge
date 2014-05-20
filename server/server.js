@@ -32,7 +32,7 @@ if (Meteor.isServer) {
 
   Meteor.publish("mine", function(current){
     if (this.userId) {
-      return mine.find({user: current});
+      return mine.find({});
     } else {
       this.ready();
     }

@@ -3,8 +3,8 @@
 		<div class="corner top left">
 			<!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
 			<img id="scrounge" class="corner top left inherit SSscroungeBaseButton">
-			<img id="left_slider_category" class="left_slider right inherit relative sliderRotate180 SShoverButton">
-			<img id="up_slider_stolen" class="slider_inv bot inherit sliderRotate270 SShoverButton">
+			<img id="left_slider_category" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
+			<img id="up_slider_stolen" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
 		</div>
 		<div class="inventory left">
 			<div class="inv_edge inv_top top" ></div>
@@ -13,8 +13,8 @@
 		</div>
 		<div class="corner bot left">
 			<img id="scrounge_2" class="corner bot left inherit sliderRotate270" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif">
-			<img id="left_slider_matter" class="left_slider right inherit sliderRotate180 SShoverButton">
-			<img id="down_slider_stolen" class="slider_inv top inherit sliderRotate90 SShoverButton">
+			<img id="left_slider_matter" class="slider left_slider right inherit sliderRotate180 SShoverButton">
+			<img id="down_slider_stolen" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
 		</div>
 	</div>
 	<div id="oben" class="top">
@@ -54,8 +54,8 @@
 	<div id="rechts" class="top right">
 		<div class="corner top right">
 			<img id="character" class="corner top right inherit" src="/Aufloesung1920x1080/Interface/CharacterButtonBaseNormal.png">
-			<img id="right_slider_category" class="right_slider left inherit SShoverButton">
-			<img id="up_slider_own" class="slider_inv bot inherit sliderRotate270 SShoverButton">
+			<img id="right_slider_category" class="slider right_slider left inherit SShoverButton">
+			<img id="up_slider_own" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
 		</div>
 		<div class="inventory right">
 			<div class="inv_edge inv_top top" ></div>
@@ -64,8 +64,8 @@
 		</div>
 		<div class="corner bot right">
 			<img id="scrounge_3" class="corner bot right inherit" src="/Aufloesung1920x1080/Interface/CharacterButtonScroungeNormal.png">
-			<img id="right_slider_matter" class="right_slider left inherit SShoverButton">
-			<img id="down_slider_own" class="slider_inv top inherit sliderRotate90 SShoverButton">
+			<img id="right_slider_matter" class="slider right_slider left inherit SShoverButton">
+			<img id="down_slider_own" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
 		</div>
 	</div>
 </template>
@@ -75,7 +75,7 @@
 		<div id="improvements" class="top left right"></div>
 		<div class="areas left bot">
 			<div id="up_slider_base" class="slider_base_height top">
-				<img id="base_up" class="slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif" onMouseOver="slide_up()" onMouseOut="slide_stop('up_slider_base')">
+				<img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
 			</div>
 			<div id="base_area">
 				<div id="base_area_content" class="relative">
@@ -86,18 +86,18 @@
 					<p class='text relative'>Slots: {{slots}}</p>
 					<p class='text relative'>Remaining: {{remaining}}</p>
 					</div>
+					
+					<div class='slot_a relative'>
+					<p class='text relative'>Value: {{value}}</p>
+					<p class='text relative'>Slots: {{slots}}</p>
+					<p class='text relative'>Remaining: {{remaining}}</p>
+					</div>
 					{{/each}}
-
-					<!-- TO-DO Scrounger <div id='s"+z+"a' class='slot_a relative'>
-					<p class='text relative'>Value: value</p>
-					<p class='text relative'>Slots: slots</p>
-					<p class='text relative'>Remaining: remaining</p>
-					</div> -->
 
 			</div>
 		</div>
 		<div id="down_slider_base" class="slider_base_height bot">
-			<img id="base_down" class="slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+			<img id="base_down" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
 		</div>
 	</div>
 	<div id="seperation_bar" class="left right"></div>
