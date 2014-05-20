@@ -53,4 +53,14 @@ if (Meteor.isServer) {
       this.ready();
     }
   });
+
+  Meteor.users.allow({
+    update: function(userId, docs, fields, modifier) {
+      if(fields == 'menu' || fields == 'cu'){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  });
 }

@@ -223,7 +223,7 @@ if (Meteor.isClient){
 	Deps.autorun(function () {
 		if (!Meteor.user()){
     		//not logged in yet
-    		console.log("DEPS.AUTORUN: not logged in");
+    		// console.log("DEPS.AUTORUN: not logged in");
     	} else {
     		var self = Meteor.users.findOne({_id: Meteor.userId()});
     		var menu = self.menu;
@@ -233,41 +233,12 @@ if (Meteor.isClient){
           			// console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
           		});
     		}else{
-    			console.log("DEPS.AUTORUN: cu or menu undefined");
+    			// console.log("DEPS.AUTORUN: cu or menu undefined");
     		}
     	}
     });
 }
 
-
-
 /*  function hoverScroungeBase() {
 	var pos = button.style.backgroundPosition;
 	alert(pos);*/
-	
-
-
-// if (Meteor.isClient) {
-//   //Methods
-//   Meteor.methods({
-//     name: function(param) {
-
-//     }
-//   });
-
-//   //Subscriptions
-//   Meteor.subscribe("name");
-
-//   //Template Returns
-//   Template.content.TestInput = function (){
-//     return null;
-//   }
-
-//  //Template Events
-//  Template.tempName.events({
-//   'click': function () {
-//       //asd
-//     }
-//   });
-
-// }
