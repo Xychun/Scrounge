@@ -1,29 +1,53 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////// HELP SECTION /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//[JQUERY: ATTR = Attribute Selector!]
+// expl: $(this).attr('id') 
+
+  var clicked = false;
+// var elm = document.createElement("div");
+// var jelm = $(elm);//convert to jQuery Element
+// var htmlElm = jelm[0];//convert to HTML Element
+
+// Meteor - get object : $(event.target).css({"background-color":"orange"});
+// Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////// CLIENT /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient){
 	//Subscriptions
-  Meteor.subscribe("userData");
+	Meteor.subscribe("userData");
 
-  var clicked = false;
+  	//Get Data
+  	Template.gameMiddle.mineSlots = function () {
+  		var self = Meteor.users.findOne({_id: Meteor.userId()});
+  		if(self){
+  			var menu = self.menu;
+  			var cu = self.cu;
+  			if(menu == 'mine'){
+  				return mine.find({});
+  			}
+  			if(menu == 'laboratory'){
+  				return laboratory.find({});
+  			}
+  			if(menu == 'colosseum'){
+  				return colosseum.find({});
+  			}
+  		}  
+  	};
 
+  	/*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
+  	Template.standardBorder.events({
 
-/*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
-Template.standardBorder.events({
+  		/*Events Frame-Buttons + Hover*/
 
-/*Events Frame-Buttons + Hover*/
+  		'mouseover #scrounge' : function(e, t){
 
-    'mouseover #scrounge' : function(e, t){
-
-        console.log("id"+ " "+event.target.id+" "+t.which+" "+e);
-
-        var elem = event.target;
-
-        console.log(elem);
-
-    	var pos = $('#scrounge').css("background-position");
-    	var size = $('#scrounge').css("padding");
+      var pos = $('#scrounge').css("background-position");
+      var size = $('#scrounge').css("padding");
         console.log(pos);
         console.log(size);
 
@@ -48,13 +72,13 @@ Template.standardBorder.events({
             default:
 
             console.log("something's wrong...");
-        }  	
+        }   
     },
 
-    'mouseout #scrounge' : function(e, t){
+  		'mouseout #scrounge' : function(e, t){
 
-    	var pos = $('#scrounge').css("background-position");
-    	var size = $('#scrounge').css("padding");
+  	  var pos = $('#scrounge').css("background-position");
+      var size = $('#scrounge').css("padding");
         console.log(pos);
         console.log(size);
 
@@ -79,83 +103,68 @@ Template.standardBorder.events({
             default:
 
             console.log("something's wrong...");
-        } 	
+        }   
     },
 
     'mouseover #character' : function(e, t){
 
-    	var pos = $('#character').css("background-position");
-    	console.log(pos);
-    	$('#character').css({"background-position":"0px -152px"});	
+      var pos = $('#character').css("background-position");
+      console.log(pos);
+      $('#character').css({"background-position":"0px -152px"});  
     },
 
     'mouseout #character' : function(e, t){
 
-    	if(clicked==false) {
-    	var pos = $('#character').css("background-position");
-    	console.log(pos);
-    	$('#character').css({"background-position":"0px 0px"});
-    	}	
+      if(clicked==false) {
+      var pos = $('#character').css("background-position");
+      console.log(pos);
+      $('#character').css({"background-position":"0px 0px"});
+      } 
     },
 
-    'click #character' : function(e, t){
-
-    	if(clicked==false) {
-    		clicked = true;
-    		$('#mitte').css({"display":"none"});
-    		$('#mitteCharacterScreen').css({"display":"block"});
-    		$('#character').css({"background-position":"0px -152px"});
-    	}
-
-    	else{
-    		clicked = false;
-    		$('#mitte').css({"display":"block"});
-    		$('#mitteCharacterScreen').css({"display":"none"});
-    	}
-    		
-    },
 
     'mouseover #message' : function(e, t){
 
-    	var pos = $('#message').css("background-position");
-    	console.log(pos);
-    	$('#message').css({"background-position":"0px -152px"});	
+      var pos = $('#message').css("background-position");
+      console.log(pos);
+      $('#message').css({"background-position":"0px -152px"});  
     },
 
     'mouseout #message' : function(e, t){
 
-    	var pos = $('#message').css("background-position");
-    	console.log(pos);
-    	$('#message').css({"background-position":"0px 0px"});	
+      var pos = $('#message').css("background-position");
+      console.log(pos);
+      $('#message').css({"background-position":"0px 0px"}); 
     },
 
     'mouseover #social' : function(e, t){
 
-    	var pos = $('#social').css("background-position");
-    	console.log(pos);
-    	$('#social').css({"background-position":"0px -153px"});	
+      var pos = $('#social').css("background-position");
+      console.log(pos);
+      $('#social').css({"background-position":"0px -153px"}); 
     },
 
     'mouseout #social' : function(e, t){
 
-    	var pos = $('#social').css("background-position");
-    	console.log(pos);
-    	$('#social').css({"background-position":"0px 0px"});	
+      var pos = $('#social').css("background-position");
+      console.log(pos);
+      $('#social').css({"background-position":"0px 0px"});  
     },
 
-/*HOVER*/
 
-    'mouseover #left_slider_category' : function(e, t){
+  		/*HOVER*/
 
-    	var pos = $('#left_slider_category').css("background-position");
-    	var size = $('#left_slider_category').css("padding");
-    	console.log(pos);
-    	console.log(size);
+  		'mouseover #left_slider_category' : function(e, t){
 
-    	/*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
-    	switch (size) {
+  			var pos = $('#left_slider_category').css("background-position");
+  			var size = $('#left_slider_category').css("padding");
+  			//console.log(pos);
+  			//console.log(size);
 
-    		case "110px 54px 0px 0px":
+  			/*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
+  			switch (size) {
+
+  			case "110px 54px 0px 0px":
 
     		$('#left_slider_category').css({"background-position":"-163px 0px"});
     		break;
@@ -167,46 +176,45 @@ Template.standardBorder.events({
 
     		case"58px 28px 0px 0px":
 
-    		$('#left_slider_category').css({"background-position":"-86px 0px"});
-    		break;
-
-    		default:
-
-    		console.log("something's wrong...");
-    	}    		
-    },
-
-    'mouseout #left_slider_category' : function(e, t){
-
-    	var pos = $('#left_slider_category').css("background-position");
-    	var size = $('#left_slider_category').css("padding");
-    	console.log(pos);
-
-    	switch (size) {
-
-    		case "110px 54px 0px 0px":
-
-    		$('#left_slider_category').css({"background-position":"-109px 0px"});
-    		break;
-
-    		case "74px 36px 0px 0px":
-
-    		$('#left_slider_category').css({"background-position":"-74px 0px"});
-    		break;
-
-    		case"58px 28px 0px 0px":
-
     		$('#left_slider_category').css({"background-position":"-58px 0px"});
     		break;
 
-    		default:
+        default:
 
-    		console.log("something's wrong...");
-    	} 
-    		
-    },
+  				console.log("something's wrong...");
+  			}    		
+  		},
 
-    'mouseover #right_slider_category' : function(e, t){
+  		'mouseout #left_slider_category' : function(e, t){
+
+  			var pos = $('#left_slider_category').css("background-position");
+  			var size = $('#left_slider_category').css("padding");
+  			//console.log(pos);
+
+  			switch (size) {
+
+        case "110px 54px 0px 0px":
+
+        $('#left_slider_category').css({"background-position":"-109px 0px"});
+        break;
+
+        case "74px 36px 0px 0px":
+
+        $('#left_slider_category').css({"background-position":"-74px 0px"});
+        break;
+
+        case"58px 28px 0px 0px":
+
+        $('#left_slider_category').css({"background-position":"-58px 0px"});
+        break;
+
+        default:
+
+          console.log("something's wrong...");
+        } 
+      },
+
+'mouseover #right_slider_category' : function(e, t){
 
     	var pos = $('#right_slider_category').css("background-position");
     	var size = $('#right_slider_category').css("padding");
@@ -236,7 +244,7 @@ Template.standardBorder.events({
         } 	
     },
 
-    'mouseout #right_slider_category' : function(e, t){
+'mouseout #right_slider_category' : function(e, t){
 
     	var pos = $('#right_slider_category').css("background-position");
     	var size = $('#right_slider_category').css("padding");
@@ -266,171 +274,341 @@ Template.standardBorder.events({
         } 
     },
 
-    'mouseover #up_slider_stolen' : function(e, t){
+  		'mouseover #up_slider_stolen' : function(e, t){
 
-    	var pos = $('#up_slider_stolen').css("background-position");
-    	var size = $('#up_slider_stolen').css("padding");
-        console.log(pos);
-        console.log(size);
+  			var pos = $('#up_slider_stolen').css("background-position");
+  			//console.log(pos);
+  			$('#up_slider_stolen').css({"background-position":"-55px 0px"});	
+  		},
 
-        switch (size) {
+  		'mouseout #up_slider_stolen' : function(e, t){
 
-            case "110px 54px 0px 0px":
+  			var pos = $('#up_slider_stolen').css("background-position");
+  			//console.log(pos);
+  			$('#up_slider_stolen').css({"background-position":"0px 0px"});	
+  		},
 
-            $('#up_slider_stolen').css({"background-position":"-55px 0px"});
-            break;
+  		'mouseover #down_slider_stolen' : function(e, t){
 
-            case "74px 36px 0px 0px":
+  			var pos = $('#down_slider_stolen').css("background-position");
+  			//console.log(pos);
+  			$('#down_slider_stolen').css({"background-position":"-55px 0px"});	
+  		},
 
-            $('#up_slider_stolen').css({"background-position":"-39px 0px"});
-            break;
+  		'mouseout #down_slider_stolen' : function(e, t){
 
-            case"58px 28px 0px 0px":
+  			var pos = $('#down_slider_stolen').css("background-position");
+  			//console.log(pos);
+  			$('#down_slider_stolen').css({"background-position":"0px 0px"});	
+  		},
 
-            $('#up_slider_stolen').css({"background-position":"-28px 0px"});
-            break;
+  		'mouseover #down_slider_own' : function(e, t){
 
-            default:
+  			var pos = $('#down_slider_own').css("background-position");
+  			//console.log(pos);
+  			$('#down_slider_own').css({"background-position":"-55px 0px"});	
+  		},
 
-            console.log("something's wrong...");
-        } 
-    },
+  		'mouseout #down_slider_own' : function(e, t){
 
-    'mouseout #up_slider_stolen' : function(e, t){
+  			var pos = $('#down_slider_own').css("background-position");
+  			//console.log(pos);
+  			$('#down_slider_own').css({"background-position":"0px 0px"});	
+  		},
 
-    	var pos = $('#up_slider_stolen').css("background-position");
-    	var size = $('#up_slider_stolen').css("padding");
-        console.log(pos);
-        console.log(size);
+  		'mouseover #up_slider_own' : function(e, t){
 
-        switch (size) {
+  			var pos = $('#up_slider_own').css("background-position");
+  			//console.log(pos);
+  			$('#up_slider_own').css({"background-position":"-55px 0px"});	
+  		},
 
-            case "110px 54px 0px 0px":
+  		'mouseout #up_slider_own' : function(e, t){
 
-            $('#up_slider_stolen').css({"background-position":"0px 0px"});
-            break;
+  			var pos = $('#up_slider_own').css("background-position");
+  			//console.log(pos);
+  			$('#up_slider_own').css({"background-position":"0px 0px"});	
+  		},
 
-            case "74px 36px 0px 0px":
+  		'mouseover #right_slider_matter' : function(e, t){
 
-            $('#up_slider_stolen').css({"background-position":"0px 0px"});
-            break;
+  			var pos = $('#right_slider_matter').css("background-position");
+  			//console.log(pos);
+  			$('#right_slider_matter').css({"background-position":"-55px 0px"});	
+  		},
 
-            case"58px 28px 0px 0px":
+  		'mouseout #right_slider_matter' : function(e, t){
 
-            $('#up_slider_stolen').css({"background-position":"0px 0px"});
-            break;
+  			var pos = $('#right_slider_matter').css("background-position");
+  			//console.log(pos);
+  			$('#right_slider_matter').css({"background-position":"0px 0px"});	
+  		},
 
-            default:
+  		'mouseover #left_slider_matter' : function(e, t){
 
-            console.log("something's wrong...");
-        } 
-    },
+  			var pos = $('#left_slider_matter').css("background-position");
+  			//console.log(pos);
+  			$('#left_slider_matter').css({"background-position":"-55px 0px"});	
+  		},
 
-    'mouseover #down_slider_stolen' : function(e, t){
+  		'mouseout #left_slider_matter' : function(e, t){
 
-    	var pos = $('#down_slider_stolen').css("background-position");
-    	var size = $('#left_slider_category').css("padding");
-        console.log(pos);
-        console.log(size);
-    	$('#down_slider_stolen').css({"background-position":"-55px 0px"});	
-    },
+  			var pos = $('#left_slider_matter').css("background-position");
+  			//console.log(pos);
+  			$('#left_slider_matter').css({"background-position":"0px 0px"});	
+  		}
+  	});
 
-    'mouseout #down_slider_stolen' : function(e, t){
 
-    	var pos = $('#down_slider_stolen').css("background-position");
-    	console.log(pos);
-    	$('#down_slider_stolen').css({"background-position":"0px 0px"});	
-    },
 
-    'mouseover #down_slider_own' : function(e, t){
+	Template.masterLayout.events({
+		'mouseover .slider' : function(e, t){
+			slide_right();
 
-    	var pos = $('#down_slider_own').css("background-position");
-    	console.log(pos);
-    	$('#down_slider_own').css({"background-position":"-55px 0px"});	
-    },
+		},
+		'mouseout .slider' : function(e, t){
+			slide_stop();
 
-    'mouseout #down_slider_own' : function(e, t){
+		}
 
-    	var pos = $('#down_slider_own').css("background-position");
-    	console.log(pos);
-    	$('#down_slider_own').css({"background-position":"0px 0px"});	
-    },
+	});
 
-    'mouseover #up_slider_own' : function(e, t){
+	//TODO: noch nicht fertig !
+	Template.gameMiddle.events({
+		'click .slot' : function(e, t){
+			//console.log(e.target);
+			if($(this).next(".slot_a").height()==0)
+			{
+				console.log("slot clicked");
+				$(this).next(".slot_a").animate({"height": "143px"},1000);
+			}
+			else if($(this).next(".slot_a").height()==143)
+			{
+				$(this).next(".slot_a").animate({"height": "0px"},1000);
+			}
 
-    	var pos = $('#up_slider_own').css("background-position");
-    	console.log(pos);
-    	$('#up_slider_own').css({"background-position":"-55px 0px"});	
-    },
+		},
+		'click .slot_a' : function(e, t){
+			//console.log("slot_a clicked");
+		}
 
-    'mouseout #up_slider_own' : function(e, t){
+	});
 
-    	var pos = $('#up_slider_own').css("background-position");
-    	console.log(pos);
-    	$('#up_slider_own').css({"background-position":"0px 0px"});	
-    },
 
-    'mouseover #right_slider_matter' : function(e, t){
+	var time=1200; //Animationszeit in ms
+	var c=1; //Start Kategorie
+	var max_cat=6; //Anzahl Kategorien
+	var interval;
+	var ready_check;
+	var size;
+	var slots_count = 10;
 
-    	var pos = $('#right_slider_matter').css("background-position");
-    	console.log(pos);
-    	$('#right_slider_matter').css({"background-position":"-55px 0px"});	
-    },
+	if ($(window).width() <= 1024){	
+		//console.log("1024");
+		ready_check=1;
+	}	
+	if ($(window).width() <= 1280 && $(window).width() >=1024){	
+		//console.log("1280");
+		ready_check=2;
+	}	
+	if ($(window).width() >= 1280){	
+		//console.log("1920");
+		ready_check=3;
+	}
 
-    'mouseout #right_slider_matter' : function(e, t){
+	function slide_left()
+	{	
+		size=size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+		var pos=size.p;
+		var pos_r=size.pr+"px";
+		var pos_p="-="+size.pp+"px";
+		
+		if($("#k1").filter(':not(:animated)').length==1) //Wenn Animation läuft keine neue Anfangen
+		{
+			if($("#k2").position().left<pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
+			{
+				$("#k2").css({ left: pos_r });
+				$("#k1").css({ left: "0px" });
+			}
+			// Vorab Animation da Intervall erst nach [Time] anfängt
+			$("#k1").filter(':not(:animated)').animate({ left: pos_p }, time , "linear" );
+			$("#k2").filter(':not(:animated)').animate({ left: pos_p }, time , "linear" );
+			//Rekursiver Intervall (unendlich)
+			var action = function() {		
+				if($("#k2").position().left<pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
+				{
+					$("#k2").animate({ left: pos_r }, 0 , "linear" );
+					$("#k1").animate({ left: "0px" }, 0 , "linear" );
+				}	
+				//Animation im laufenden Intervall	
+				$("#k1").animate({ left: pos_p }, time , "linear" );
+				$("#k2").animate({ left: pos_p }, time , "linear" );
+				update("left");
+			};
+			//Start des Intervalls
+			interval=setInterval(action, time);
+			update("left");
+		}
+	}
 
-    	var pos = $('#right_slider_matter').css("background-position");
-    	console.log(pos);
-    	$('#right_slider_matter').css({"background-position":"0px 0px"});	
-    },
+	function slide_right()
+	{	
+		size=size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+		var pos=size.p;
+		var pos_r="-"+size.pr+"px";
+		var pos_p="+="+size.pp+"px";
+		
+		if($("#k1").filter(':not(:animated)').length==1) //Wenn Animation läuft keine neue Anfangen
+		{
+			if($("#k1").position().left>-pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
+			{
+				$("#k1").css({ left: pos_r });
+				$("#k2").css({ left: "0px" });
+			}
+			// Vorab Animation da Intervall erst nach [Time] anfängt
+			$("#k1").filter(':not(:animated)').animate({ left: pos_p }, time , "linear" );
+			$("#k2").filter(':not(:animated)').animate({ left: pos_p }, time , "linear" );
+			//Rekursiver Intervall (unendlich)
+			var action = function() {		
+				if($("#k1").position().left>-pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
+				{
+					$("#k1").animate({ left: pos_r }, 0 , "linear" );
+					$("#k2").animate({ left: "0px" }, 0 , "linear" );
+				}	
+				//Animation im laufenden Intervall	
+				$("#k1").animate({ left: pos_p }, time , "linear" );
+				$("#k2").animate({ left: pos_p }, time , "linear" );
+				update("right");
+			};
+			//Start des Intervalls
+			interval=setInterval(action, time);
+			update("right");
+		}
+	}
 
-    'mouseover #left_slider_matter' : function(e, t){
+	function slide_up()
+	{	
+		size=size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+		var pos=size.p;
+		var pos_r=size.pr+"px";
+		var pos_p="-="+size.pp+"px";
+		//console.log("s1: "+$("#s1").position().top);
+		if($("#base_area_content").filter(':not(:animated)').length==1) //Wenn Animation läuft keine neue Anfangen
+		{
+			$("#base_up").attr("src","HoverUpButtonBrownHover.gif");
+			
+			if($("#base_area_content").position().top<=0)
+			{
+				// Vorab Animation da Intervall erst nach [Time] anfängt
+				$("#base_area_content").filter(':not(:animated)').animate({ "top": "-=143px" }, time , "linear" );
+				//Rekursiver Intervall (unendlich)
+				var action = function() {		
+					//Animation im laufenden Intervall	
+					$("#base_area_content").animate({ "top": "-=143px" }, time , "linear" );
+				};
+				//Start des Intervalls
+				interval=setInterval(action, time);
+			}
+		}
+	}
 
-    	var pos = $('#left_slider_matter').css("background-position");
-    	console.log(pos);
-    	$('#left_slider_matter').css({"background-position":"-55px 0px"});	
-    },
+	function slide_stop()
+	{
+		clearInterval(interval);
+	}
 
-    'mouseout #left_slider_matter' : function(e, t){
+	function update(direction)
+	{	
+		if(direction=="left"){
+			c--;
+		}
+		else if(direction=="right"){
+			c++;
+		}
+		
+		if(c==0 && direction=="left")
+		{
+			c=max_cat;
+		}
+		else if(c==(max_cat+1) && direction=="right")
+		{
+			c=1;
+		}
+	}
 
-    	var pos = $('#left_slider_matter').css("background-position");
-    	console.log(pos);
-    	$('#left_slider_matter').css({"background-position":"0px 0px"});	
-    }
-});
+	function size_check()
+	{
+		switch(ready_check)
+		{
+			case 3: var pos=256;
+			var pos_plus=pos+10;
+			break;
+			case 2: var pos=170;
+			var pos_plus=pos+7;
+			break;
+			case 1: var pos=136;
+			var pos_plus=pos+6;
+			break;
+			default: console.log("failed to check size !(default)");
+			break;
+		}
+		var pos_reset=pos_plus*max_cat;
+		
+		return {p: pos, pp: pos_plus, pr: pos_reset};
+	}
 
+
+	function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
+	{	
+		size=size_check();
+		var pos=size.p;
+		var pos_r=size.pr;
+		var pos_p=size.pp;
+		
+		var cur_pos_right=(c*pos_p)-pos_p;
+		var cur_pos_left=cur_pos_right-(pos_r);
+		$("#k1").css({ left: cur_pos_left });
+		$("#k2").css({ left: cur_pos_right });
+	}
+
+	$(window).resize(function(){
+		if ($(window).width() <= 1024 && ready_check!==1){	
+			//console.log("1024");
+			ready_check=1;
+			repositioning(ready_check);
+		}	
+		if ($(window).width() <= 1280 && $(window).width() >=1024 && ready_check!=2){	
+			//console.log("1280");
+			ready_check=2;
+			repositioning(ready_check);
+		}	
+		if ($(window).width() >= 1280 && ready_check!=3){	
+			//console.log("1920");
+			ready_check=3;
+			repositioning(ready_check);
+		}	
+	});
+
+	//Deps.Autorun
+	Deps.autorun(function () {
+		if (!Meteor.user()){
+    		//not logged in yet
+    		// console.log("DEPS.AUTORUN: not logged in");
+    	} else {
+    		var self = Meteor.users.findOne({_id: Meteor.userId()});
+    		var menu = self.menu;
+    		var cu = self.cu;
+    		if(cu && menu){
+    			Meteor.subscribe(menu, cu, function(rdy){
+    				// console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
+    			});
+    		}else{
+    			// console.log("DEPS.AUTORUN: cu or menu undefined");
+    		}
+    	}
+    });
 }
+
 /*  function hoverScroungeBase() {
 	var pos = button.style.backgroundPosition;
 	alert(pos);*/
-	
-
-
-// if (Meteor.isClient) {
-//   //Methods
-//   Meteor.methods({
-//     name: function(param) {
-
-//     }
-//   });
-
-//   //Subscriptions
-//   Meteor.subscribe("name");
-
-//   //Template Returns
-//   Template.content.TestInput = function (){
-//     return null;
-//   }
-
-//  //Template Events
-//  Template.tempName.events({
-//   'click': function () {
-//       //asd
-//     }
-//   });
-
-//  //Deps.Autorun
-//  Deps.autorun(function () {
-//     //asd
-//   });
-// }

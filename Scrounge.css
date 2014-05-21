@@ -231,13 +231,13 @@ img.i7 {
 .slot{
 	z-index:2;
 	height:143px;
-	background-image:url(Cube_05c_rot_imKasten.png);
+	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenGreenSlot.png);
 }
 .slot_a{
 	z-index:1;
 	height:0px;
 	overflow:hidden;
-	background-image:url(Cube_05d_imKasten.png);
+	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
 .text{
 	margin-top:0px;
@@ -612,7 +612,7 @@ img.i7 {
 	}
 }
 
-@media only screen and (min-width: 1980px) {
+@media only screen and (min-width: 1280px) {
 	.corner{ 
 		width:152px;
 		height:152px;
