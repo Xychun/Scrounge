@@ -219,38 +219,36 @@ if (Meteor.isClient){
   		}
   	});
 
-	Template.masterLayout.events({
-		'mouseover .slider' : function(e, t){
-			slide_right();
+Template.masterLayout.events({
+	'mouseover .slider' : function(e, t){
+		slide_right();
 
-		},
-		'mouseout .slider' : function(e, t){
-			slide_stop();
+	},
+	'mouseout .slider' : function(e, t){
+		slide_stop();
 
+	}
+
+});
+
+Template.gameMiddle.events({
+	'click .slot' : function(e, t){
+		var elm = event.Target;
+		var jelm = $(elm);
+		console.log(jelm.next(".slot_a").height());
+		if(jelm.next(".slot_a").height()==0)
+		{
+			console.log("wenn 0");
+			jelm.next(".slot_a").animate({"height": "143px"},1000);
 		}
-
-	});
-
-	//TODO: noch nicht fertig !
-	Template.gameMiddle.events({
-		'click .slot' : function(e, t){
-			//console.log(e.target);
-			if($(this).next(".slot_a").height()==0)
-			{
-				console.log("slot clicked");
-				$(this).next(".slot_a").animate({"height": "143px"},1000);
-			}
-			else if($(this).next(".slot_a").height()==143)
-			{
-				$(this).next(".slot_a").animate({"height": "0px"},1000);
-			}
-
-		},
-		'click .slot_a' : function(e, t){
-			//console.log("slot_a clicked");
+		else if(jelm.next(".slot_a").height()==143)
+		{
+			console.log("wenn 143");
+			jelm.next(".slot_a").animate({"height": "0px"},1000);
 		}
+	}
 
-	});
+});
 
 
 	var time=1200; //Animationszeit in ms
