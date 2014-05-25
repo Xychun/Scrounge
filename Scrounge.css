@@ -257,6 +257,176 @@ img.i7 {
 	height:30px;
 }
 
+	.sliderRotate90 {
+		overflow: hidden;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.sliderRotate90:before {
+		content: "";
+		position: absolute;
+		width: 200%;
+		height: 200%;
+		top: -50%;
+		left: -50%;
+		z-index: -1;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.sliderRotate180 {
+		overflow: hidden;
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+
+	.sliderRotate180:before {
+		content: "";
+		position: absolute;
+		width: 200%;
+		height: 200%;
+		top: -50%;
+		left: -50%;
+		z-index: -1;
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+
+	.sliderRotate270 {
+		overflow: hidden;
+		-webkit-transform: rotate(270deg);
+		-moz-transform: rotate(270deg);
+		-ms-transform: rotate(270deg);
+		-o-transform: rotate(270deg);
+		transform: rotate(270deg);
+	}
+
+	.sliderRotate270:before {
+		content: "";
+		position: absolute;
+		-webkit-transform: rotate(270deg);
+		-moz-transform: rotate(270deg);
+		-ms-transform: rotate(270deg);
+		-o-transform: rotate(270deg);
+		transform: rotate(270deg);
+	}
+
+	.sliderRotate90 {
+		overflow: hidden;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.sliderRotate90:before {
+		content: "";
+		position: absolute;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.SSscroungeBaseButton {
+		width: 0px;
+		height: 0px;
+		padding: 40px;
+		background-image:url(/Aufloesung1024xXXX/Interface/ScroungeBaseButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SScharacterButton {
+		width: 0px;
+		height: 0px;
+		padding: 40px;
+		background-image:url(/Aufloesung1024xXXX/Interface/CharacterButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSmessageButton {
+		width: 0px;
+		height: 0px;
+		padding: 40px;
+		background-image:url(/Aufloesung1024xXXX/Interface/MessageButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSsocialButton {
+		width: 0px;
+		height: 0px;
+		padding: 40px;
+		background-image:url(/Aufloesung1024xXXX/Interface/SocialButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SShoverButton {
+		width:0px;
+		height:0px;
+		padding: 58px 28px 0px 0px;
+		background-image:url(/Aufloesung1024xXXX/Interface/HoverButton.png);
+		background-repeat: no-repeat;
+	}
+
+	#left_slider_category {
+		background-position: -58px 0px;
+	}
+
+	#right_slider_category {
+		background-position: -58px 0px;
+	}
+
+	#up_slider_stolen {
+		background-position: 0px 0px;
+		left: 38px;
+		top: 50px;
+	}
+
+	#down_slider_stolen {
+		background-position: 0px 0px;
+		left: 50px;
+		top: -30px;
+	}
+
+	#up_slider_own {
+		background-position: 0px 0px;
+		left: 38px;
+		top: 50px;
+	}
+
+	#down_slider_own {
+		background-position: 0px 0px;
+		left: 50px;
+		top: -30px;
+	}
+
+	#characterScreen {
+		display: hidden;
+	}
+
 @media only screen and (min-width: 1024px) {
 	.corner{ 
 		width:102px;
@@ -351,6 +521,95 @@ img.i7 {
 		right:109px;
 		height:102px;
 	}
+
+
+
+
+	/*HOVER BUTTONS*/
+
+
+
+
+		/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSscroungeBaseButton {
+		width: 0px;
+		height: 0px;
+		padding: 51px;
+		background-image:url(/Aufloesung1280xXXX/Interface/ScroungeBaseButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SScharacterButton {
+		width: 0px;
+		height: 0px;
+		padding: 51px;
+		background-image:url(/Aufloesung1280xXXX/Interface/CharacterButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSmessageButton {
+		width: 0px;
+		height: 0px;
+		padding: 51px;
+		background-image:url(/Aufloesung1280xXXX/Interface/MessageButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSsocialButton {
+		width: 0px;
+		height: 0px;
+		padding: 51px;
+		background-image:url(/Aufloesung1280xXXX/Interface/SocialButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SShoverButton {
+		width:0px;
+		height:0px;
+		padding: 74px 36px 0px 0px;
+		background-image:url(/Aufloesung1280xXXX/Interface/HoverButton.png);
+		background-repeat: no-repeat;
+	}
+
+	#left_slider_category {
+		background-position: -74px 0px;
+	}
+
+	#right_slider_category {
+		background-position: -74px 0px;
+	}
+
+	#up_slider_stolen {
+		background-position: 0px 0px;
+		left: 38px;
+		top: 50px;
+	}
+
+	#down_slider_stolen {
+		background-position: 0px 0px;
+		left: 50px;
+		top: -30px;
+	}
+
+	#up_slider_own {
+		background-position: 0px 0px;
+		left: 38px;
+		top: 50px;
+	}
+
+	#down_slider_own {
+		background-position: 0px 0px;
+		left: 50px;
+		top: -30px;
+	}
 }
 
 @media only screen and (min-width: 1280px) {
@@ -442,11 +701,135 @@ img.i7 {
 		left:162px;
 		right:162px;
 	}
+
 	#unten {
 		left:162px;
 		right:162px;
 		height:152px;
 	}
+
+
+
+
+	/*Character Screen*/
+
+
+
+/*	#mitteCharacterScreen{
+		top:162px;
+		bottom:162px;
+		left:162px;
+		right:162px;
+		display: none;
+		overflow: hidden;
+	}
+
+	#mitteCharacterScreenWrapper{
+		width: 1616px;
+		height: 100%;
+
+	}
+
+	#characterScrounge {
+		top: 41px;
+		width: 532px;
+		height: 100%;
+		position: relative;
+		float: left;
+		margin-right: 10px;
+		background-color: blue;
+	}
+
+	#characterBase {
+		top: 41px;
+		width: 532px;
+		height: 100%;
+		position: relative;
+		float: left;
+		margin-right: 10px;
+		background-color: green;
+	}
+
+	#characterStats {
+		top: 41px;
+		width: 532px;
+		height: 100%;
+		position: relative;
+		float: left;
+		background-color: red;
+	}*/
+
+
+
+	/*Character Screen 2*/
+
+
+
+	#mitteCharacterScreen{
+		top:162px;
+		bottom:162px;
+		left:162px;
+		right:162px;
+		display: none;
+		overflow: hidden;
+	}
+
+	#mitteCharacterScreenWrapper{
+		width: 1616px;
+		height: 100%;
+
+	}
+
+	#characterScrounge {
+		top: 41px;
+		height: 152px;
+		position: relative;
+		margin-bottom: 10px;
+	}
+
+	.scroungeItem {
+		width: 100px;
+		height: 100px;
+		position: relative;
+		float: left;
+		margin-left: 50px;
+		margin-top: 26px;
+		background-color: black;
+	}
+
+	#characterBase {
+		top: 41px;
+		height: 152px;
+		position: relative;
+		margin-bottom: 10px;
+	}
+
+	.baseItem {
+		width: 100px;
+		height: 100px;
+		position: relative;
+		float: left;
+		margin-left: 50px;
+		margin-top: 26px;
+		background-color: black;
+	}
+
+	#characterStats {
+		top: 41px;
+		height: 152px;
+		position: relative;
+		margin-bottom: 10px;
+	}
+
+
+	/*Character Screen 3*/
+
+
+
+	/*HOVER BUTTONS*/
+
+
+
 
 	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
 	.SSscroungeBaseButton {
@@ -454,6 +837,36 @@ img.i7 {
 		height: 0px;
 		padding: 76px;
 		background-image:url(/Aufloesung1920x1080/Interface/ScroungeBaseButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SScharacterButton {
+		width: 0px;
+		height: 0px;
+		padding: 76px;
+		background-image:url(/Aufloesung1920x1080/Interface/CharacterButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSmessageButton {
+		width: 0px;
+		height: 0px;
+		padding: 76px;
+		background-image:url(/Aufloesung1920x1080/Interface/MessageButton.png);
+		background-repeat: no-repeat;
+		border-style: none;
+	}
+
+	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+	.SSsocialButton {
+		width: 0px;
+		height: 0px;
+		padding: 76px;
+		background-image:url(/Aufloesung1920x1080/Interface/SocialButton.png);
 		background-repeat: no-repeat;
 		border-style: none;
 	}
@@ -467,7 +880,20 @@ img.i7 {
 		background-repeat: no-repeat;
 	}
 
+	.inventoryCharacter {
+		width: 0px;
+		height: 0px;
+		padding: 152px 2000px 0px 0px;
+		background-image:url(/Aufloesung1920x1080/Interface/Inventory.png);
+		background-repeat: repeat-y;
+		border-style: none;
+	}
+
 	#left_slider_matter {
+		background-position: 0px 0px;
+	}
+
+	#right_slider_matter {
 		background-position: 0px 0px;
 	}
 
@@ -501,91 +927,5 @@ img.i7 {
 		background-position: 0px 0px;
 		left: 50px;
 		top: -30px;
-	}
-
-	.sliderRotate90 {
-		overflow: hidden;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate90:before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		top: -50%;
-		left: -50%;
-		z-index: -1;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate180 {
-		overflow: hidden;
-		-webkit-transform: rotate(180deg);
-		-moz-transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-o-transform: rotate(180deg);
-		transform: rotate(180deg);
-	}
-
-	.sliderRotate180:before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		top: -50%;
-		left: -50%;
-		z-index: -1;
-		-webkit-transform: rotate(180deg);
-		-moz-transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-o-transform: rotate(180deg);
-		transform: rotate(180deg);
-	}
-
-	.sliderRotate270 {
-		overflow: hidden;
-		-webkit-transform: rotate(270deg);
-		-moz-transform: rotate(270deg);
-		-ms-transform: rotate(270deg);
-		-o-transform: rotate(270deg);
-		transform: rotate(270deg);
-	}
-
-	.sliderRotate270:before {
-		content: "";
-		position: absolute;
-		-webkit-transform: rotate(270deg);
-		-moz-transform: rotate(270deg);
-		-ms-transform: rotate(270deg);
-		-o-transform: rotate(270deg);
-		transform: rotate(270deg);
-	}
-
-	.sliderRotate90 {
-		overflow: hidden;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate90:before {
-		content: "";
-		position: absolute;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
 	}
 }

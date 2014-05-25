@@ -5,6 +5,7 @@
 //[JQUERY: ATTR = Attribute Selector!]
 // expl: $(this).attr('id') 
 
+  var clicked = false;
 // var elm = document.createElement("div");
 // var jelm = $(elm);//convert to jQuery Element
 // var htmlElm = jelm[0];//convert to HTML Element
@@ -38,7 +39,6 @@ if (Meteor.isClient){
   		}  
   	};
 
-
   	/*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
   	Template.standardBorder.events({
 
@@ -46,17 +46,110 @@ if (Meteor.isClient){
 
   		'mouseover #scrounge' : function(e, t){
 
-  			var pos = $('#scrounge').css("background-position");
-  			//console.log(pos);
-  			$('#scrounge').css({"background-position":"0px -152px"});	
-  		},
+      var pos = $('#scrounge').css("background-position");
+      var size = $('#scrounge').css("padding");
+        console.log(pos);
+        console.log(size);
+
+        /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
+        switch (size) {
+
+            case "76px":
+
+            $('#scrounge').css({"background-position":"0px -153px"});
+            break;
+
+            case "51px":
+
+            $('#scrounge').css({"background-position":"0px -103px"});
+            break;
+
+            case"40px":
+
+            $('#scrounge').css({"background-position":"0px -80px"});
+            break;
+
+            default:
+
+            console.log("something's wrong...");
+        }   
+    },
 
   		'mouseout #scrounge' : function(e, t){
 
-  			var pos = $('#scrounge').css("background-position");
-  			//console.log(pos);
-  			$('#scrounge').css({"background-position":"0px 0px"});	
-  		},
+  	  var pos = $('#scrounge').css("background-position");
+      var size = $('#scrounge').css("padding");
+        console.log(pos);
+        console.log(size);
+
+        /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
+        switch (size) {
+
+            case "76px":
+
+            $('#scrounge').css({"background-position":"0px 0px"});
+            break;
+
+            case "51px":
+
+            $('#scrounge').css({"background-position":"0px 0px"});
+            break;
+
+            case"40px":
+
+            $('#scrounge').css({"background-position":"0px 0px"});
+            break;
+
+            default:
+
+            console.log("something's wrong...");
+        }   
+    },
+
+    'mouseover #character' : function(e, t){
+
+      var pos = $('#character').css("background-position");
+      console.log(pos);
+      $('#character').css({"background-position":"0px -152px"});  
+    },
+
+    'mouseout #character' : function(e, t){
+
+      if(clicked==false) {
+      var pos = $('#character').css("background-position");
+      console.log(pos);
+      $('#character').css({"background-position":"0px 0px"});
+      } 
+    },
+
+
+    'mouseover #message' : function(e, t){
+
+      var pos = $('#message').css("background-position");
+      console.log(pos);
+      $('#message').css({"background-position":"0px -152px"});  
+    },
+
+    'mouseout #message' : function(e, t){
+
+      var pos = $('#message').css("background-position");
+      console.log(pos);
+      $('#message').css({"background-position":"0px 0px"}); 
+    },
+
+    'mouseover #social' : function(e, t){
+
+      var pos = $('#social').css("background-position");
+      console.log(pos);
+      $('#social').css({"background-position":"0px -153px"}); 
+    },
+
+    'mouseout #social' : function(e, t){
+
+      var pos = $('#social').css("background-position");
+      console.log(pos);
+      $('#social').css({"background-position":"0px 0px"});  
+    },
 
 
   		/*HOVER*/
@@ -71,21 +164,22 @@ if (Meteor.isClient){
   			/*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
   			switch (size) {
 
-  				case "110px 54px 0px 0px":
+  			case "110px 54px 0px 0px":
 
-  				$('#left_slider_category').css({"background-position":"-163px 0px"});
+    		$('#left_slider_category').css({"background-position":"-163px 0px"});
+    		break;
 
-  				break;
+    		case "74px 36px 0px 0px":
 
-  				case "":
+    		$('#left_slider_category').css({"background-position":"-110px 0px"});
+    		break;
 
-  				break;
+    		case"58px 28px 0px 0px":
 
-  				case"":
+    		$('#left_slider_category').css({"background-position":"-58px 0px"});
+    		break;
 
-  				break;
-
-  				default:
+        default:
 
   				console.log("something's wrong...");
   			}    		
@@ -99,40 +193,86 @@ if (Meteor.isClient){
 
   			switch (size) {
 
-  				case "110px 54px 0px 0px":
+        case "110px 54px 0px 0px":
 
-  				$('#left_slider_category').css({"background-position":"-109px 0px"});
+        $('#left_slider_category').css({"background-position":"-109px 0px"});
+        break;
 
-  				break;
+        case "74px 36px 0px 0px":
 
-  				case "":
+        $('#left_slider_category').css({"background-position":"-74px 0px"});
+        break;
 
-  				break;
+        case"58px 28px 0px 0px":
 
-  				case"":
+        $('#left_slider_category').css({"background-position":"-58px 0px"});
+        break;
 
-  				break;
+        default:
 
-  				default:
+          console.log("something's wrong...");
+        } 
+      },
 
-  				console.log("something's wrong...");
-  			} 
+'mouseover #right_slider_category' : function(e, t){
 
-  		},
+    	var pos = $('#right_slider_category').css("background-position");
+    	var size = $('#right_slider_category').css("padding");
+        console.log(pos);
+        console.log(size);
 
-  		'mouseover #right_slider_category' : function(e, t){
+        switch (size) {
 
-  			var pos = $('#right_slider_category').css("background-position");
-  			//console.log(pos);
-  			$('#right_slider_category').css({"background-position":"-163px 0px"});	
-  		},
+            case "110px 54px 0px 0px":
 
-  		'mouseout #right_slider_category' : function(e, t){
+            $('#right_slider_category').css({"background-position":"-163px 0px"});
+            break;
 
-  			var pos = $('#right_slider_category').css("background-position");
-  			//console.log(pos);
-  			$('#right_slider_category').css({"background-position":"-109px 0px"});	
-  		},
+            case "74px 36px 0px 0px":
+
+            $('#right_slider_category').css({"background-position":"-110px 0px"});
+            break;
+
+            case"58px 28px 0px 0px":
+
+            $('#right_slider_category').css({"background-position":"-58px 0px"});
+            break;
+
+            default:
+
+            console.log("something's wrong...");
+        } 	
+    },
+
+'mouseout #right_slider_category' : function(e, t){
+
+    	var pos = $('#right_slider_category').css("background-position");
+    	var size = $('#right_slider_category').css("padding");
+        console.log(pos);
+        console.log(size);
+
+        switch (size) {
+
+            case "110px 54px 0px 0px":
+
+            $('#right_slider_category').css({"background-position":"-109px 0px"});
+            break;
+
+            case "74px 36px 0px 0px":
+
+            $('#right_slider_category').css({"background-position":"-74pxpx 0px"});
+            break;
+
+            case"58px 28px 0px 0px":
+
+            $('#right_slider_category').css({"background-position":"-58px 0px"});
+            break;
+
+            default:
+
+            console.log("something's wrong...");
+        } 
+    },
 
   		'mouseover #up_slider_stolen' : function(e, t){
 
@@ -219,17 +359,15 @@ if (Meteor.isClient){
   		}
   	});
 
-Template.masterLayout.events({
-	'mouseover .slider' : function(e, t){
-		slide_right();
+	Template.masterLayout.events({
+		'mouseover .slider' : function(e, t){
+			slide_right();
+		},
+		'mouseout .slider' : function(e, t){
+			slide_stop();
+		}
 
-	},
-	'mouseout .slider' : function(e, t){
-		slide_stop();
-
-	}
-
-});
+	});
 
 Template.gameMiddle.events({
 	'click .slot' : function(e, t){
@@ -449,51 +587,22 @@ Template.gameMiddle.events({
 	Deps.autorun(function () {
 		if (!Meteor.user()){
     		//not logged in yet
-    		//console.log("DEPS.AUTORUN: not logged in");
+    		// console.log("DEPS.AUTORUN: not logged in");
     	} else {
     		var self = Meteor.users.findOne({_id: Meteor.userId()});
     		var menu = self.menu;
     		var cu = self.cu;
     		if(cu && menu){
     			Meteor.subscribe(menu, cu, function(rdy){
-    				console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
+    				// console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
     			});
     		}else{
-    			//console.log("DEPS.AUTORUN: cu or menu undefined");
+    			// console.log("DEPS.AUTORUN: cu or menu undefined");
     		}
     	}
     });
 }
 
-
-
 /*  function hoverScroungeBase() {
 	var pos = button.style.backgroundPosition;
 	alert(pos);*/
-	
-
-
-// if (Meteor.isClient) {
-//   //Methods
-//   Meteor.methods({
-//     name: function(param) {
-
-//     }
-//   });
-
-//   //Subscriptions
-//   Meteor.subscribe("name");
-
-//   //Template Returns
-//   Template.content.TestInput = function (){
-//     return null;
-//   }
-
-//  //Template Events
-//  Template.tempName.events({
-//   'click': function () {
-//       //asd
-//     }
-//   });
-
-// }
