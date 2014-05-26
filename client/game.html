@@ -1,115 +1,214 @@
 <template name="standardBorder">
-	<div id="links" class="top left">
-		<div class="corner top left">
-			<!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
-			<img id="scrounge" class="corner top left inherit SSscroungeBaseButton">
-			<img id="left_slider_category" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
-			<img id="up_slider_stolen" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
-		</div>
-		<div class="inventory left">
-			<div class="inv_edge inv_top top" ></div>
-			<div class="inventory_content"></div>
-			<div class="inv_edge inv_bot bot"></div>
-		</div>
-		<div class="corner bot left">
-			<img id="social" class="corner bot left inherit SSsocialButton">
-			<img id="left_slider_matter" class="slider left_slider right inherit sliderRotate180 SShoverButton">
-			<img id="down_slider_stolen" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
-		</div>
-	</div>
-	<div id="oben" class="top">
-		<div id="k">
-			<div id="k1">
-				<img class="kimage i1" src="/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.gif">
-				<img class="kimage i2" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i3" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i4" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i5" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i6" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i7" src="/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.gif">
-			</div>
-			<div id="k2"> 
-				<img class="kimage i1" src="/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.gif">
-				<img class="kimage i2" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i3" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i4" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i5" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i6" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
-				<img class="kimage i7" src="/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.gif">
-			</div>
-		</div>
-	</div>
+    <div id="links" class="top left">
+        <div class="corner top left">
+            <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
+            <img id="scrounge" class="corner top left inherit SSscroungeBaseButton">
+            <img id="left_slider_category" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
+            <img id="up_slider_stolen" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+        </div>
+        <div class="inventory left">
+            <div class="inv_edge inv_top top"></div>
+            <div class="inventory_content"></div>
+            <div class="inv_edge inv_bot bot"></div>
+        </div>
+        <div class="corner bot left">
+            <img id="social" class="corner bot left inherit SSsocialButton">
+            <img id="left_slider_matter" class="slider left_slider right inherit sliderRotate180 SShoverButton">
+            <img id="down_slider_stolen" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+        </div>
+    </div>
+    <div id="oben" class="top">
+        <div id="k">
+            <div id="MenuFrame" class="center_h"></div>
+            <div id="k1">
+                <img class="kimage i1" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuLocked.png">
+                <img class="kimage i2" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
+                <img class="kimage i3" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
+                <img class="kimage i4" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
+                <img class="kimage i5" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuBaseNormal.png">
+                <img class="kimage i6" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
+                <img class="kimage i7" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuLocked.png">
+
+            </div>
+            <div id="k2">
+                <img class="kimage i1" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuLocked.png">
+                <img class="kimage i2" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
+                <img class="kimage i3" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
+                <img class="kimage i4" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
+                <img class="kimage i5" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuBaseNormal.png">
+                <img class="kimage i6" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
+                <img class="kimage i7" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuLocked.png">
+            </div>
+        </div>
+    </div>
 
 
-	<div id="unten" class="bot">
-		<div id="matter_left" class="matter_edge bot left"></div>
-		<div id="matter_content" class="bot">
-			<img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:20px">
-			<img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:100px">
-			<img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_gruen.png" style="left:170px">
-			<img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_rot.png" style="left:240px">
-		</div>
-		<div id="matter_right" class="matter_edge bot right"></div>
-	</div>
-	<div id="rechts" class="top right">
-		<div class="corner top right">
-			<img id="character" class="corner top right inherit SScharacterButton">
-			<img id="right_slider_category" class="slider right_slider left inherit SShoverButton">
-			<img id="up_slider_own" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
-		</div>
-		<div class="inventory right">
-			<div class="inv_edge inv_top top" ></div>
-			<div class="inventory_content"></div>
-			<div class="inv_edge inv_bot bot"></div>
-		</div>
-		<div class="corner bot right">
-			<img id="message" class="corner bot right inherit SSmessageButton">
-			<img id="right_slider_matter" class="slider right_slider left inherit SShoverButton">
-			<img id="down_slider_own" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
-		</div>
-	</div>
+    <div id="unten" class="bot">
+        <div id="matter_left" class="matter_edge bot left"></div>
+        <div id="matter_content" class="bot">
+            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:20px">
+            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:100px">
+            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_gruen.png" style="left:170px">
+            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_rot.png" style="left:240px">
+        </div>
+        <div id="matter_right" class="matter_edge bot right"></div>
+    </div>
+    <div id="rechts" class="top right">
+        <div class="corner top right">
+            <img id="character" class="corner top right inherit SScharacterButton">
+            <img id="right_slider_category" class="slider right_slider left inherit SShoverButton">
+            <img id="up_slider_own" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+        </div>
+        <div class="inventory right">
+            <div class="inv_edge inv_top top"></div>
+            <div class="inventory_content"></div>
+            <div class="inv_edge inv_bot bot"></div>
+        </div>
+        <div class="corner bot right">
+            <img id="message" class="corner bot right inherit SSmessageButton">
+            <img id="right_slider_matter" class="slider right_slider left inherit SShoverButton">
+            <img id="down_slider_own" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+        </div>
+    </div>
 </template>
 
 <template name="gameMiddle">
-	<div id="mitte">
-		<div id="improvements" class="top left right"></div>
-		<div class="areas left bot">
-			<div id="up_slider_base" class="slider_base_height top">
-				<img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
-			</div>
-			<div id="base_area">
-				<div id="base_area_content" class="relative">
+    <div id="mitte">
+        <div id="improvements" class="top left right"></div>
+        <div class="areas left bot">
+            <div id="up_slider_base" class="slider_base_height top">
+                <img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+            </div>
+            <div id="base_area">
+                <div id="base_area_content" class="relative">
 
-					{{#each mineSlots}}
-					<div class='slot relative'>
-					<p class='text relative'>Value: {{value}}</p>
-					<p class='text relative'>Slots: {{slots}}</p>
-					<p class='text relative'>Remaining: {{remaining}}</p>
-					</div>
-					
-					<div class='slot_a relative'>
-					<p class='text relative'>Value: {{value}}</p>
-					<p class='text relative'>Slots: {{slots}}</p>
-					<p class='text relative'>Remaining: {{remaining}}</p>
-					</div>
-					{{/each}}
+                    <div class="unused_slot relative">
+                        <div class="slot_icon"></div>
+                        <div class="slot_upper_bar">
+                            <div id="left_slider_slot_colors" class="left slot_colors_slider test_colors_pfeil_left"></div>
+                            <div class="slot_colors_wrapper">
+                                <div class="left slot_colors_edges"></div>
+                                <div class="slot_colors_content">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemGreenNormal.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemRedNormal.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemLocked.png">
 
-			</div>
-		</div>
-		<div id="down_slider_base" class="slider_base_height bot">
-			<img id="base_down" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
-		</div>
-	</div>
+                                </div>
+                                <div class="right slot_colors_edges"></div>
+                            </div>
+                            <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
+                        </div>
+                        <div class="slot_items">
+                            <div id="left_slider_slot_items" class="left slot_items_slider"></div>
+                            <div class="slot_items_wrapper">
+                                <div class="slot_items_content relative">
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                    <div class="item relative"></div>
+                                </div>
+                            </div>
+                            <div id="right_slider_slot_items" class="right slot_items_slider"></div>
+                        </div>
+                    </div>
 
-	<div id="seperation_bar" class="left right"></div>
-	<div class="areas right bot">
-		<div id="up_slider_scrounge"></div>
-		<div id="scrounge_area" class="top relative">
-			<div id="rotate_test"></div>
-		</div>
-		<div id="down_slider_scrounge"></div>
-	</div>    
-</div>
+                    {{#each mineSlots}}
+
+                    <div class="used_slot relative">
+                        <div class="slot_icon"></div>
+                        <div class="slot_upper_bar">
+                            <div class="slot_range"></div>
+                        </div>
+                        <div class="slot_stats">
+                            <p class='text relative'>Value: {{value}}</p>
+                            <p class='text relative'>Slots: {{slots}}</p>
+                            <p class='text relative'>Remaining: {{remaining}}</p>
+                        </div>
+                    </div>
+
+                    <div class="used_slot_advanced relative">
+                        <div class="slot_advanced_stats relative">
+                            <p class='text relative'>Profit:</p>
+                            <p class='text relative'>Miningrate:</p>
+                            <p class='text relative'>Time spent:</p>
+                        </div>
+                        <div class="scrounger_slot relative">
+                            <div class="scrounger_icon"></div>
+                            <div class="scrounger_stats_wrapper">
+                                <div class="scrounger_stats relative">
+                                    <p class='text relative'>Miningrate:</p>
+                                    <p class='text relative'>Mined:</p>
+                                    <p class='text relative'>Time spent:</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{/each}}
+
+                </div>
+            </div>
+            <div id="down_slider_base" class="slider_base_height bot">
+                <img id="base_down" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+            </div>
+        </div>
+
+        <div id="seperation_bar" class="left right"></div>
+        <div class="areas right bot">
+            <div id="up_slider_scrounge"></div>
+            <div id="scrounge_area" class="top relative">
+            </div>
+            <div id="down_slider_scrounge"></div>
+        </div>
+    </div>
 </template>
 
 <!-- <template name="characterScreen">
