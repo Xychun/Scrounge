@@ -1,227 +1,219 @@
 body {
-	/*background-image:url(Gras2.png);*/
-	background-size:cover;
-	min-height:500px;
-	min-width:500px;
+    background-image:url(/Aufloesung1920x1080/Interface/TempImages/Gras.gif);
+    background-repeat: repeat;
 }
 #bg {
-	min-height:500px;
-	min-width:500px;
+    min-height:500px;
+    min-width:500px;
 }
-.abc{
-	position:absolute;
-	top:0px;
-	width:778px;
-	height:143px;
+.abc {
+    position:absolute;
+    top:0px;
+    width:778px;
+    height:143px;
 }
-.cba{
-	position:absolute;
-	top:10px;
-	width:40px;
-	height:40px;
+.cba {
+    position:absolute;
+    top:10px;
+    width:40px;
+    height:40px;
 }
-.left{
-	left:0px;
+.left {
+    left:0px;
 }
-.right{
-	right:0px;
+.right {
+    right:0px;
 }
-.top{
-	top:0px;
+.top {
+    top:0px;
 }
-.bot{
-	bottom:0px;
+.bot {
+    bottom:0px;
 }
-.center_h{
-	margin-left: auto;
+.center_h {
+    margin-left: auto;
     margin-right: auto;
 }
-div{
-	position:absolute;
+div {
+    position:absolute;
 }
-.inherit{
-	position:inherit;
+.inherit {
+    position:inherit;
 }
-.relative{
-	position:relative;
+.relative {
+    position:relative;
 }
-.corner{ 
-	width:80px;
-	height:80px;
+.corner {
+    width:80px;
+    height:80px;
 }
-.slider_inv{ 	
-	width:58px; 
-	height:28px;
-	left:11px;
+.slider_inv {
+    width:58px;
+    height:28px;
+    left:11px;
 }
 .left_slider {
-	top:11px;	
-	width:28px; 
-	height:58px;
-	float:right;
+    top:11px;
+    width:28px;
+    height:58px;
+    float:right;
 }
 .right_slider {
-	top:11px;	
-	width:28px; 
-	height:58px;
-	float:left;
+    top:11px;
+    width:28px;
+    height:58px;
+    float:left;
 }
-.inventory{
-	width:80px;
-	height:auto;
-	top:86px;
-	bottom:86px;
+.inventory {
+    width:80px;
+    height:auto;
+    top:86px;
+    bottom:86px;
 }
 .inv_edge {
-	width:80px;
-	height:19px;
+    width:80px;
+    height:19px;
 }
-.inv_top{
-	background-image:url(Inventory_Abschluss_Oben.gif);
-	background-size:cover;
+.inv_top {
+    background-image:url(Inventory_Abschluss_Oben.gif);
+    background-size:cover;
 }
-.inventory_content{
-	width:80px;
-	height:auto;
-	top:19px;
-	bottom:19px;
-	background-image:url(Inventory_Vertikal.png);
-	background-size: cover;
-	background-repeat:repeat-y;
+.inventory_content {
+    width:80px;
+    height:auto;
+    top:19px;
+    bottom:19px;
+    background-image:url(Inventory_Vertikal.png);
+    background-size: cover;
+    background-repeat:repeat-y;
 }
-.inv_bot{
-	background-image:url(Inventory_Abschluss_Unten.gif);
-	background-size:cover;
+.inv_bot {
+    background-image:url(Inventory_Abschluss_Unten.gif);
+    background-size:cover;
 }
-.matter_edge{
-	width:19px;
-	height:80px;
+.matter_edge {
+    width:19px;
+    height:80px;
 }
-#matter_left{
-	position:relative;
-	background-image:url(InventoryAbschluss.png);
-	background-attachment:fixed;
-	background-position:center;
-	background-repeat:no-repeat;
-	transform:rotate(90deg);
+#matter_left {
+    position:relative;
+    background-image:url(InventoryAbschluss.png);
+    background-attachment:fixed;
+    background-position:center;
+    background-repeat:no-repeat;
+    transform:rotate(90deg);
 }
-#rotate_test{
-	position:relative;
-	width:152px;
-	height:152px;
-	background-image:url(InventoryAbschluss.png);
-	background-position:left;
-	background-repeat:no-repeat;
-	transform:scaleX(-2);
-	-ms-transform:scaleX(-2); /* IE 9 */
-	-webkit-transform:scaleX(-2); /* Opera, Chrome, and Safari */
-	transform:rotate(-90deg);
-	-ms-transform:rotate(-90deg); /* IE 9 */
-	-webkit-transform:rotate(-90deg); /* Opera, Chrome, and Safari */
+#matter_content {
+    width:auto;
+    height:80px;
+    left:19px;
+    right:19px;
+    background-image:url(Inventory_Horizontal.png);
+    background-size:cover;
+    background-repeat:repeat-x;
 }
-#matter_content{
-	width:auto;
-	height:80px;
-	left:19px;
-	right:19px;
-	background-image:url(Inventory_Horizontal.png);
-	background-size:cover;
-	background-repeat:repeat-x;
-}
-#matter_right{
-	background-image:url(Inventory_Abschluss_Rechts.gif);
-	background-size:cover;
+#matter_right {
+    background-image:url(Inventory_Abschluss_Rechts.gif);
+    background-size:cover;
 }
 .kimage {
-	position:absolute;
-	width:136px;
-	height:80px;
+    position:absolute;
+    width:136px;
+    height:80px;
 }
 img.i1 {
-	left: -68px;
+    left: -68px;
 }
 img.i2 {
-	left: +74px;
+    left: +74px;
 }
 img.i3 {
-	left: +216px;
+    left: +216px;
 }
 img.i4 {
-	left: +358px;
+    left: +358px;
 }
 img.i5 {
-	left: +500px;
+    left: +500px;
 }
 img.i6 {
-	left: +642px;
+    left: +642px;
 }
 img.i7 {
-	left: +784px;
+    left: +784px;
 }
 #k {
-	left:50%;
-	height:80px;
-	margin-left:-426px;
+    left:50%;
+    height:80px;
+    margin-left:-426px;
+}
+#MenuFrame {
+    z-index:2;
+    left:50%;
+    margin-left:660px;
+    height:152px;
+    width:276px;
+    background-image: url(/Aufloesung1920x1080/Interface/MenuFrame8.png);
 }
 #links {
-	float:left;
-	height:100%;
-	width:80px;	
+    float:left;
+    height:100%;
+    width:80px;
 }
 #rechts {
-	float:right;
-	height:100%;
-	width:80px;
+    float:right;
+    height:100%;
+    width:80px;
 }
 #oben {
-	left:86px;
-	right:86px;
-	height:80px;
-	width:auto;
-	overflow:hidden;
+    left:86px;
+    right:86px;
+    height:80px;
+    width:auto;
+    overflow:hidden;
 }
 #mitte {
-	overflow:hidden;
-	top:86px;
-	bottom:86px;
-	left:86px;
-	right:86px;
-	height:auto;
-	width:auto;
-	min-height:200px;
-	min-width:200px;
+    overflow:hidden;
+    top:86px;
+    bottom:86px;
+    left:86px;
+    right:86px;
+    height:auto;
+    width:auto;
+    min-height:200px;
+    min-width:200px;
 }
 #unten {
-	left:86px;
-	right:86px;
-	height:80px;
-	width:auto;	
+    left:86px;
+    right:86px;
+    height:80px;
+    width:auto;
 }
 #improvements {
-	background-color:grey;
-	width:auto;
-	height:31px;
+    background-color:grey;
+    width:auto;
+    height:31px;
 }
 .areas {
-	top:37px;
-	width:48.8%;
-	min-width:300px;
-	overflow:hidden;
+    top:37px;
+    width:48.8%;
+    min-width:300px;
+    overflow:hidden;
 }
 #seperation_bar {
-	margin-left: auto;
-	margin-right: auto;
-	top:37px;
-	width:20px;
-	height:100%;
-	background-image:url(Trennbalken.png);
-	background-size:cover;
+    margin-left: auto;
+    margin-right: auto;
+    top:37px;
+    width:20px;
+    height:100%;
+    background-image:url(/Aufloesung1920x1080/Interface/Trennbalken.png);
+    background-size:cover;
 }
 #base_area {
-	overflow:hidden;
-	width:100%;
-	top:40px;
-	bottom:40px;
+    overflow:hidden;
+    width:100%;
+    top:40px;
+    bottom:40px;
 }
 #scrounge_area {
 	overflow:auto;
@@ -343,483 +335,6 @@ img.i7 {
 		transform: rotate(90deg);
 	}
 
-	.SSscroungeBaseButton {
-		width: 0px;
-		height: 0px;
-		padding: 40px;
-		background-image:url(/Aufloesung1024xXXX/Interface/ScroungeBaseButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SScharacterButton {
-		width: 0px;
-		height: 0px;
-		padding: 40px;
-		background-image:url(/Aufloesung1024xXXX/Interface/CharacterButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSmessageButton {
-		width: 0px;
-		height: 0px;
-		padding: 40px;
-		background-image:url(/Aufloesung1024xXXX/Interface/MessageButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSsocialButton {
-		width: 0px;
-		height: 0px;
-		padding: 40px;
-		background-image:url(/Aufloesung1024xXXX/Interface/SocialButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SShoverButton {
-		width:0px;
-		height:0px;
-		padding: 58px 28px 0px 0px;
-		background-image:url(/Aufloesung1024xXXX/Interface/HoverButton.png);
-		background-repeat: no-repeat;
-	}
-
-	#left_slider_category {
-		background-position: -58px 0px;
-	}
-
-	#right_slider_category {
-		background-position: -58px 0px;
-	}
-
-	#up_slider_stolen {
-		background-position: 0px 0px;
-		left: 38px;
-		top: 50px;
-	}
-
-	#down_slider_stolen {
-		background-position: 0px 0px;
-		left: 50px;
-		top: -30px;
-	}
-
-	#up_slider_own {
-		background-position: 0px 0px;
-		left: 38px;
-		top: 50px;
-	}
-
-	#down_slider_own {
-		background-position: 0px 0px;
-		left: 50px;
-		top: -30px;
-	}
-
-	#characterScreen {
-		display: hidden;
-	}
-
-@media only screen and (min-width: 1024px) {
-	.corner{ 
-		width:102px;
-		height:102px;
-	}
-	.slider_inv{ 	
-		left:14px;
-		width:74px; 
-		height:36px;
-	}
-	.left_slider {
-		top:14px;	
-		width:36px; 
-		height:74px;
-	}
-	.right_slider {
-		top:14px;	
-		width:36px; 
-		height:74px;
-	}
-	.inventory{
-		width:102px;
-		top:109px;
-		bottom:109px;
-	}
-	.inv_edge {
-		width:102px;
-		height:25px;
-	}
-	.inventory_content{
-		width:102px;
-		top:25px;
-		bottom:25px;
-	}
-	.matter_edge{
-		width:25px;
-		height:102px;
-	}
-	#matter_content{
-		height:102px;
-		left:25px;
-		right:25px;
-	}
-	.kimage {
-		width:170px;
-		height:102px;
-	}
-	img.i1 {
-		left: -85px;
-	}
-	img.i2 {
-		left: +92px;
-	}
-	img.i3 {
-		left: +269px;
-	}
-	img.i4 {
-		left: +446px;
-	}
-	img.i5 {
-		left: +623px;
-	}
-	img.i6 {
-		left: +800px;
-	}
-	img.i7 {
-		left: +977px;
-	}
-	#k {
-		height:102px;
-		margin-left:-531px;
-	}
-	#links {
-		width:102px;	
-	}
-	#rechts {
-		width:102px;
-	}
-	#oben {
-		left:109px;
-		right:109px;
-		height:102px;
-	}
-	#mitte {
-		top:109px;
-		bottom:109px;
-		left:109px;
-		right:109px;
-	}
-	#unten {
-		left:109px;
-		right:109px;
-		height:102px;
-	}
-
-
-
-
-	/*HOVER BUTTONS*/
-
-
-
-
-		/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSscroungeBaseButton {
-		width: 0px;
-		height: 0px;
-		padding: 51px;
-		background-image:url(/Aufloesung1280xXXX/Interface/ScroungeBaseButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SScharacterButton {
-		width: 0px;
-		height: 0px;
-		padding: 51px;
-		background-image:url(/Aufloesung1280xXXX/Interface/CharacterButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSmessageButton {
-		width: 0px;
-		height: 0px;
-		padding: 51px;
-		background-image:url(/Aufloesung1280xXXX/Interface/MessageButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSsocialButton {
-		width: 0px;
-		height: 0px;
-		padding: 51px;
-		background-image:url(/Aufloesung1280xXXX/Interface/SocialButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SShoverButton {
-		width:0px;
-		height:0px;
-		padding: 74px 36px 0px 0px;
-		background-image:url(/Aufloesung1280xXXX/Interface/HoverButton.png);
-		background-repeat: no-repeat;
-	}
-
-	#left_slider_category {
-		background-position: -74px 0px;
-	}
-
-	#right_slider_category {
-		background-position: -74px 0px;
-	}
-
-	#up_slider_stolen {
-		background-position: 0px 0px;
-		left: 38px;
-		top: 50px;
-	}
-
-	#down_slider_stolen {
-		background-position: 0px 0px;
-		left: 50px;
-		top: -30px;
-	}
-
-	#up_slider_own {
-		background-position: 0px 0px;
-		left: 38px;
-		top: 50px;
-	}
-
-	#down_slider_own {
-		background-position: 0px 0px;
-		left: 50px;
-		top: -30px;
-	}
-}
-
-@media only screen and (min-width: 1280px) {
-	.corner{ 
-		width:152px;
-		height:152px;
-	}
-	.slider_inv{ 
-		left:21px;
-/*		width:110px; 
-		height:54px;*/
-	}
-	.left_slider {
-		top:21px;	
-		width:54px; 
-		height:110px;
-	}
-	.right_slider {
-		top:21px;	
-		width:54px; 
-		height:110px;
-	}
-	.inventory{
-		width:152px;
-		top:162px;
-		bottom:162px;
-	}
-	.inv_edge{
-		width:152px;
-		height:25px;
-	}
-	.inventory_content{
-		width:152px;
-		top:25px;
-		bottom:25px;
-	}
-	.matter_edge{
-		width:25px;
-		height:152px;
-	}
-	#matter_content{
-		height:152px;
-		left:25px;
-		right:25px;
-	}
-	.kimage {
-		width:256px;
-		height:152px;
-	}
-	img.i1 {
-		left: -128px;
-	}
-	img.i2 {
-		left: +138px;
-	}
-	img.i3 {
-		left: +404px;
-	}
-	img.i4 {
-		left: +670px;
-	}
-	img.i5 {
-		left: +936px;
-	}
-	img.i6 {
-		left: +1202px;
-	}
-	img.i7 {
-		left: +1468px;
-	}
-	#k {
-		height:152px;
-		margin-left:-798px;
-	}
-	#links {
-		width:152px;	
-	}
-	#rechts {
-		width:152px;
-	}
-	#oben {
-		left:162px;
-		right:162px;
-		height:152px;
-	}
-	#mitte {
-		top:162px;
-		bottom:162px;
-		left:162px;
-		right:162px;
-	}
-
-	#unten {
-		left:162px;
-		right:162px;
-		height:152px;
-	}
-
-
-	/*HOVER BUTTONS*/
-
-
-
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSscroungeBaseButton {
-		width: 0px;
-		height: 0px;
-		padding: 76px;
-		background-image:url(/Aufloesung1920x1080/Interface/ScroungeBaseButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SScharacterButton {
-		width: 0px;
-		height: 0px;
-		padding: 76px;
-		background-image:url(/Aufloesung1920x1080/Interface/CharacterButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSmessageButton {
-		width: 0px;
-		height: 0px;
-		padding: 76px;
-		background-image:url(/Aufloesung1920x1080/Interface/MessageButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SSsocialButton {
-		width: 0px;
-		height: 0px;
-		padding: 76px;
-		background-image:url(/Aufloesung1920x1080/Interface/SocialButton.png);
-		background-repeat: no-repeat;
-		border-style: none;
-	}
-
-	/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
-	.SShoverButton {
-		width:0px;
-		height:0px;
-		padding: 110px 54px 0px 0px;
-		background-image:url(/Aufloesung1920x1080/Interface/HoverButton.png);
-		background-repeat: no-repeat;
-	}
-
-	.inventoryCharacter {
-		width: 0px;
-		height: 0px;
-		padding: 152px 2000px 0px 0px;
-		background-image:url(/Aufloesung1920x1080/Interface/Inventory.png);
-		background-repeat: repeat-y;
-		border-style: none;
-	}
-
-	#left_slider_matter {
-		background-position: 0px 0px;
-	}
-
-	#right_slider_matter {
-		background-position: 0px 0px;
-	}
-
-	#left_slider_category {
-		background-position: -109px 0px;
-	}
-
-	#right_slider_category {
-		background-position: -109px 0px;
-	}
-
-	#up_slider_stolen {
-		background-position: 0px 0px;
-		left: 50px;
-		top: 70px;
-	}
-
-	#down_slider_stolen {
-		background-position: 0px 0px;
-		left: 50px;
-		top: -30px;
-	}
-
-	#up_slider_own {
-		background-position: 0px 0px;
-		left: 50px;
-		top: 70px;
-	}
-
-	#down_slider_own {
-		background-position: 0px 0px;
-		left: 50px;
-		top: -30px;
-	}
-
-
-
-
-
-
-
-
-
 
 	/*MINE BUY MENU*/
 
@@ -930,9 +445,6 @@ img.i7 {
 
 	/*CHARACTER VIEW*/
 
-
-
-
 	#characterView{
 		top:162px;
 		bottom:162px;
@@ -957,10 +469,10 @@ img.i7 {
 
 	#scroungeItemSlot1 {
 		margin: 0px auto;
-/*		position: relative;
+		position: relative;
 		float: left;
 		margin-left: 50px;
-		margin-top: 26px;*/
+		margin-top: 26px;
 	}
 
 	#characterViewRightSide {
@@ -989,109 +501,665 @@ img.i7 {
 
 	/*Character Screen*/
 
-
-
 /*	#mitteCharacterScreen{
-		top:162px;
-		bottom:162px;
-		left:162px;
-		right:162px;
-		display: none;
-		overflow: hidden;
-	}
+    overflow:auto;
+    top:114px;
+    height:auto;
+}
+.unused_slot {
+    height:143px;
+    background-color:red;
+}
+.used_slot {
+    z-index:2;
+    height:143px;
+    background-color:green;
+}
+.used_slot_advanced {
+    z-index:1;
+    height:0px;
+    overflow:hidden;
+    background-color:green;
+}
+.scrounger_slot {
+    vertical-align: middle;
+    height:143px;
+    background-color:orange;
+}
+.text {
+    margin-top:5px;
+    margin-bottom:5px;
+    color: white;
+    font-family:"OCR A Std";
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor:default;
+}
+.slot_icon {
+    left:33px;
+    top:29px;
+    width:85px;
+    height:85px;
+    background-color:yellow;
+}
+.scrounger_icon {
+    left:48px;
+    top:44px;
+    width:55px;
+    height:55px;
+    background-color:yellow;
+}
+.scrounger_stats_wrapper {
+    display:table;
+    left:151px;
+    right:5px;
+    height:143px;
+}
+.scrounger_stats {
+    display:table-cell;
+    vertical-align: middle;
+}
+.slot_upper_bar {
+    top:13px;
+    left:151px;
+    right:5px;
+    width:auto;
+    height:27px;
+    background-color:yellow;
+}
+.slot_stats {
+    top:53px;
+    left:151px;
+    right:5px;
+}
+.slot_advanced_stats {
+    margin-top:20px;
+    margin-left:151px;
+    margin-right:5px;
+}
+.slot_colors_slider {
+    width:21px;
+    height:27px;
+}
+.slot_colors_wrapper {
+    overflow:hidden;
+    left:21px;
+    right:21px;
+    width:auto;
+    height:27px;
+}
+.slot_colors_edges {
+    width:4px;
+    height:27px;
+    background-image: url(/Aufloesung1920x1080/Interface/AktionsKastenSortierBalken/AktionsBalkenSortingBarEdge.png);
+}
+.test_colors_pfeil_left {
+    background-image: url(/Aufloesung1920x1080/Interface/AktionsKastenSortierBalken/AktionsKastenSortingBarPfeilNormal.png);
+}
+.test_colors_pfeil_right {
+    background-image: url(/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarPfeilNormal.png);
+}
+.slot_colors_content {
+    left:4px;
+    width:700px;
+    height:27px;
+    background-image: url(/Aufloesung1920x1080/Interface/AktionsKastenSortierBalken/AktionsBalkenSortingBar.png);
+}
+.color {
+    float:left;
+    width:16px;
+    height:16px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-image: url(/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItemGreenNormal.png);
+}
+.slot_items {
+    top:53px;
+    left:151px;
+    right:5px;
+    width:auto;
+    height:60px;
+}
+.slot_items_slider {
+    width:21px;
+    height:60px;
+    background-color:orange;
+}
+.slot_items_wrapper {
+    overflow:hidden;
+    left:26px;
+    right:26px;
+    width:auto;
+    height:60px;
+}
+.slot_items_content {
+    height:60px;
+    width:700px;
+}
+.item {
+    float:left;
+    margin-right:10px;
+    width:60px;
+    height:60px;
+    background-color:yellow;
+}
+.slider_base {
+    width:61px;
+    height:100%;
+    display: block;
+}
+.slider_base_height {
+    width:100%;
+    height:30px;
+}
+.sliderRotate90 {
+    overflow: hidden;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.sliderRotate90:before {
+    content:"";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.sliderRotate180 {
+    overflow: hidden;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.sliderRotate180:before {
+    content:"";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.sliderRotate270 {
+    overflow: hidden;
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+.sliderRotate270:before {
+    content:"";
+    position: absolute;
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+.sliderRotate90 {
+    overflow: hidden;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.sliderRotate90:before {
+    content:"";
+    position: absolute;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.SSscroungeBaseButton {
+    width: 0px;
+    height: 0px;
+    padding: 40px;
+    background-image:url(/Aufloesung1024xXXX/Interface/ScroungeBaseButton.png);
+    background-repeat: no-repeat;
+    border-style: none;
+}
+/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+ .SScharacterButton {
+    width: 0px;
+    height: 0px;
+    padding: 40px;
+    background-image:url(/Aufloesung1024xXXX/Interface/charTestButton.png);
+    background-repeat: no-repeat;
+    border-style: none;
+}
+/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+ .SSmessageButton {
+    width: 0px;
+    height: 0px;
+    padding: 40px;
+    background-image:url(/Aufloesung1024xXXX/Interface/MessageButton.png);
+    background-repeat: no-repeat;
+    border-style: none;
+}
+/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+ .SSsocialButton {
+    width: 0px;
+    height: 0px;
+    padding: 40px;
+    background-image:url(/Aufloesung1024xXXX/Interface/SocialButton.png);
+    background-repeat: no-repeat;
+    border-style: none;
+}
+/*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+ .SShoverButton {
+    width:0px;
+    height:0px;
+    padding: 58px 28px 0px 0px;
+    background-image:url(/Aufloesung1024xXXX/Interface/HoverButton.png);
+    background-position: 0px -102px;
+    background-repeat: no-repeat;
+}
+#left_slider_category {
+    background-position: -58px 0px;
+}
+#right_slider_category {
+    background-position: -58px 0px;
+}
+#up_slider_stolen {
+    background-position: 0px 0px;
+    left: 38px;
+    top: 50px;
+}
+#down_slider_stolen {
+    background-position: 0px 0px;
+    left: 50px;
+    top: -30px;
+}
+#up_slider_own {
+    background-position: 0px 0px;
+    left: 38px;
+    top: 50px;
+}
+#down_slider_own {
+    background-position: 0px 0px;
+    left: 50px;
+    top: -30px;
+}
+#characterScreen {
+    display: hidden;
+}
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// 1280 ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+ @media only screen and (min-width: 1024px) and (max-width: 1919px) {
+    .corner {
+        width:102px;
+        height:102px;
+    }
+    .slider_inv {
+        left:14px;
+        width:74px;
+        height:36px;
+    }
+    .left_slider {
+        top:14px;
+        width:36px;
+        height:74px;
+    }
+    .right_slider {
+        top:14px;
+        width:36px;
+        height:74px;
+    }
+    .inventory {
+        width:102px;
+        top:109px;
+        bottom:109px;
+    }
+    .inv_edge {
+        width:102px;
+        height:25px;
+    }
+    .inventory_content {
+        width:102px;
+        top:25px;
+        bottom:25px;
+    }
+    .matter_edge {
+        width:25px;
+        height:102px;
+    }
+    #matter_content {
+        height:102px;
+        left:25px;
+        right:25px;
+    }
+    .kimage {
+        width:170px;
+        height:102px;
+    }
+    img.i1 {
+        left: -85px;
+    }
+    img.i2 {
+        left: +92px;
+    }
+    img.i3 {
+        left: +269px;
+    }
+    img.i4 {
+        left: +446px;
+    }
+    img.i5 {
+        left: +623px;
+    }
+    img.i6 {
+        left: +800px;
+    }
+    img.i7 {
+        left: +977px;
+    }
+    #k {
+        height:102px;
+        margin-left:-531px;
+    }
+    #links {
+        width:102px;
+    }
+    #rechts {
+        width:102px;
+    }
+    #oben {
+        left:109px;
+        right:109px;
+        height:102px;
+    }
+    #mitte {
+        top:109px;
+        bottom:109px;
+        left:109px;
+        right:109px;
+    }
+    #unten {
+        left:109px;
+        right:109px;
+        height:102px;
+    }
+    /*HOVER BUTTONS*/
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SSscroungeBaseButton {
+        width: 0px;
+        height: 0px;
+        padding: 51px;
+        background-image:url(/Aufloesung1280xXXX/Interface/ScroungeBaseButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SScharacterButton {
+        width: 0px;
+        height: 0px;
+        padding: 51px;
+        background-image:url(/Aufloesung1280xXXX/Interface/charTestButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SSmessageButton {
+        width: 0px;
+        height: 0px;
+        padding: 51px;
+        background-image:url(/Aufloesung1280xXXX/Interface/MessageButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SSsocialButton {
+        width: 0px;
+        height: 0px;
+        padding: 51px;
+        background-image:url(/Aufloesung1280xXXX/Interface/SocialButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SShoverButton {
+        width:0px;
+        height:0px;
+        padding: 74px 36px 0px 0px;
+        background-image:url(/Aufloesung1280xXXX/Interface/HoverButton.png);
+        background-repeat: no-repeat;
+    }
+    #left_slider_category {
+        background-position: -74px 0px;
+    }
+    #right_slider_category {
+        background-position: -74px 0px;
+    }
+    #up_slider_stolen {
+        background-position: 0px 0px;
+        left: 38px;
+        top: 50px;
+    }
+    #down_slider_stolen {
+        background-position: 0px 0px;
+        left: 50px;
+        top: -30px;
+    }
+    #up_slider_own {
+        background-position: 0px 0px;
+        left: 38px;
+        top: 50px;
+    }
+    #down_slider_own {
+        background-position: 0px 0px;
+        left: 50px;
+        top: -30px;
+    }
+}
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// 1920 ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+ @media only screen and (min-width: 1920px) {
+    .corner {
+        width:152px;
+        height:152px;
+    }
+    .slider_inv {
+        left:21px;
+        /*width:110px; 
+ 		height:54px;*/
+    }
+    .left_slider {
+        top:21px;
+        width:54px;
+        height:110px;
+    }
+    .right_slider {
+        top:21px;
+        width:54px;
+        height:110px;
+    }
+    .inventory {
+        width:152px;
+        top:162px;
+        bottom:162px;
+    }
+    .inv_edge {
+        width:152px;
+        height:25px;
+    }
+    .inventory_content {
+        width:152px;
+        top:25px;
+        bottom:25px;
+    }
+    .matter_edge {
+        width:25px;
+        height:152px;
+    }
+    #matter_content {
+        height:152px;
+        left:25px;
+        right:25px;
+    }
+    .kimage {
+        width:256px;
+        height:152px;
+    }
+    img.i1 {
+        left: -128px;
+    }
+    img.i2 {
+        left: +138px;
+    }
+    img.i3 {
+        left: +404px;
+    }
+    img.i4 {
+        left: +670px;
+    }
+    img.i5 {
+        left: +936px;
+    }
+    img.i6 {
+        left: +1202px;
+    }
+    img.i7 {
+        left: +1468px;
+    }
+    #k {
+        height:152px;
+        margin-left:-798px;
+    }
+    #links {
+        width:152px;
+    }
+    #rechts {
+        width:152px;
+    }
+    #oben {
+        left:162px;
+        right:162px;
+        height:152px;
+    }
+    #mitte {
+        top:162px;
+        bottom:162px;
+        left:162px;
+        right:162px;
+    }
+    #unten {
+        left:162px;
+        right:162px;
+        height:152px;
+    }
 
-	#mitteCharacterScreenWrapper{
-		width: 1616px;
-		height: 100%;
-
-	}
-
-	#characterScrounge {
-		top: 41px;
-		width: 532px;
-		height: 100%;
-		position: relative;
-		float: left;
-		margin-right: 10px;
-		background-color: blue;
-	}
-
-	#characterBase {
-		top: 41px;
-		width: 532px;
-		height: 100%;
-		position: relative;
-		float: left;
-		margin-right: 10px;
-		background-color: green;
-	}
-
-	#characterStats {
-		top: 41px;
-		width: 532px;
-		height: 100%;
-		position: relative;
-		float: left;
-		background-color: red;
-	}*/
-
-
-
-	/*Character Screen 2*/
-
-
-
-	
-
-	#mitteCharacterScreenWrapper{
-		width: 1616px;
-		height: 100%;
-
-	}
-
-	#characterScrounge {
-		top: 41px;
-		height: 152px;
-		position: relative;
-		margin-bottom: 10px;
-	}
-
-	.scroungeItem {
-		width: 100px;
-		height: 100px;
-		position: relative;
-		float: left;
-		margin-left: 50px;
-		margin-top: 26px;
-		background-color: black;
-	}
-
-	#characterBase {
-		top: 41px;
-		height: 152px;
-		position: relative;
-		margin-bottom: 10px;
-	}
-
-	.baseItem {
-		width: 100px;
-		height: 100px;
-		position: relative;
-		float: left;
-		margin-left: 50px;
-		margin-top: 26px;
-		background-color: black;
-	}
-
-	#characterStats {
-		top: 41px;
-		height: 152px;
-		position: relative;
-		margin-bottom: 10px;
-	}
-
-
-	/*Character Screen 3*/
-
-
+    /*HOVER BUTTONS*/
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SSscroungeBaseButton {
+        width: 0px;
+        height: 0px;
+        padding: 76px;
+        background-image:url(/Aufloesung1920x1080/Interface/ScroungeBaseButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SScharacterButton {
+        width: 0px;
+        height: 0px;
+        padding: 76px;
+        background-image:url(/Aufloesung1920x1080/Interface/charTestButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SSmessageButton {
+        width: 0px;
+        height: 0px;
+        padding: 76px;
+        background-image:url(/Aufloesung1920x1080/Interface/MessageButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SSsocialButton {
+        width: 0px;
+        height: 0px;
+        padding: 76px;
+        background-image:url(/Aufloesung1920x1080/Interface/SocialButton.png);
+        background-repeat: no-repeat;
+        border-style: none;
+    }
+    /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
+    .SShoverButton {
+        width:0px;
+        height:0px;
+        padding: 110px 54px 0px 0px;
+        background-image:url(/Aufloesung1920x1080/Interface/HoverButton.png);
+        background-repeat: no-repeat;
+    }
+    .inventoryCharacter {
+        width: 0px;
+        height: 0px;
+        padding: 152px 2000px 0px 0px;
+        background-image:url(/Aufloesung1920x1080/Interface/Inventory.png);
+        background-repeat: repeat-y;
+        border-style: none;
+    }
+    #left_slider_matter {
+        background-position: 0px 0px;
+    }
+    #right_slider_matter {
+        background-position: 0px 0px;
+    }
+    #left_slider_category {
+        background-position: -109px 0px;
+    }
+    #right_slider_category {
+        background-position: -109px 0px;
+    }
+    #up_slider_stolen {
+        background-position: 0px 0px;
+        left: 50px;
+        top: 70px;
+    }
+    #down_slider_stolen {
+        background-position: 0px 0px;
+        left: 50px;
+        top: -30px;
+    }
+    #up_slider_own {
+        background-position: 0px 0px;
+        left: 50px;
+        top: 70px;
+    }
+    #down_slider_own {
+        background-position: 0px 0px;
+        left: 50px;
+        top: -30px;
+    }
 }
