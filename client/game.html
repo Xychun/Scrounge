@@ -68,6 +68,11 @@
 			<img id="down_slider_own" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
 		</div>
 	</div>
+
+<!-- Zu Testzwecken -->
+<div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"> </div>
+<div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"> </div>
+
 </template>
 
 <template name="gameMiddle">
@@ -110,6 +115,94 @@
 		<div id="down_slider_scrounge"></div>
 	</div>    
 </div>
+</template>
+
+<template name="mineBuyMenu">
+
+<div id="mineBuyMenu"  class="left right">
+
+		<div id="mineBuyMenuFrame" class="left right">
+
+			<div id="mineBuyMenuText">
+			<p class='relative'>Price: {{value}}</p>
+			<p class='relative'>Matter: {{slots}}</p>
+			<p class='relative'>Time: {{remaining}}</p>
+			</div>
+
+			<div id="rangeSlider">
+
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+				<div class="rangeSliderMarks"> <div class="rangeSliderMarksStroke"> </div> </div>
+
+
+			</div>
+
+			<div id="AmountScroungerSlots"> 
+				<div id="sslot1" class="sslots"> </div>
+				<div id="sslot2" class="sslots"> </div>
+				<div id="sslot3" class="sslots"> </div>
+				<div id="sslot4" class="sslots"> </div>
+				<div id="sslot5" class="sslots"> </div>
+				<div id="sslot6" class="sslots"> </div>
+				<div id="sslot7" class="sslots"> </div>
+				<div id="sslot8" class="sslots"> </div>
+				<div id="sslot9" class="sslots"> </div>
+			</div>
+
+			<div id="buyMenuYes"> </div>
+			<div id="buyMenuNo"> </div>
+
+		 </div>
+
+		<div id="mineBuyMenuBottomEnd" class="left right"></div>
+</div>
+
+</template>
+
+<template name="characterView">
+
+	<div id="characterView">
+
+		<div id="scroungeItems">
+
+			<div id="scroungeItemsWrapper">
+
+				<div id="scroungeItemSlot1"> </div>
+
+			</div>
+
+		</div>
+
+		<div id="characterViewRightSide"> 
+
+			<div id="playerStats"> </div>
+
+			<div id="baseItems"> </div>
+
+		</div>
+
+
+
+</div>
+
 </template>
 
 <!-- <template name="characterScreen">

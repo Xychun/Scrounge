@@ -17,9 +17,18 @@ Router.map( function () {
   this.route('game', {
     path: '/game/:name/:menu',
     layoutTemplate: 'masterLayout',
+
     yieldTemplates:{
       'standardBorder': {to: 'border'},
-      'gameMiddle': {to: 'middle'},
-    }
+      'gameMiddle': {to: 'middle'},  
+    },
+/*
+    action: function () {
+
+      this.render('standardBorder', {to: 'border'});
+      this.render('gameMiddle', {to: 'middle'});
+
+      console.log(getRenderPara("mineBuyMenu"));
+    },*/
   });
 });
