@@ -460,7 +460,7 @@ img.i7 {
     width: 0px;
     height: 0px;
     padding: 40px;
-    background-image:url(/Aufloesung1024xXXX/Interface/CharacterButton.png);
+    background-image:url(/Aufloesung1024xXXX/Interface/charTestButton.png);
     background-repeat: no-repeat;
     border-style: none;
 }
@@ -488,6 +488,7 @@ img.i7 {
     height:0px;
     padding: 58px 28px 0px 0px;
     background-image:url(/Aufloesung1024xXXX/Interface/HoverButton.png);
+    background-position: 0px -102px;
     background-repeat: no-repeat;
 }
 #left_slider_category {
@@ -519,7 +520,12 @@ img.i7 {
 #characterScreen {
     display: hidden;
 }
-@media only screen and (min-width: 1024px) {
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// 1280 ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+ @media only screen and (min-width: 1024px) and (max-width: 1919px) {
     .corner {
         width:102px;
         height:102px;
@@ -628,7 +634,7 @@ img.i7 {
         width: 0px;
         height: 0px;
         padding: 51px;
-        background-image:url(/Aufloesung1280xXXX/Interface/CharacterButton.png);
+        background-image:url(/Aufloesung1280xXXX/Interface/charTestButton.png);
         background-repeat: no-repeat;
         border-style: none;
     }
@@ -685,15 +691,20 @@ img.i7 {
         top: -30px;
     }
 }
-@media only screen and (min-width: 1280px) {
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// 1920 ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+ @media only screen and (min-width: 1920px) {
     .corner {
         width:152px;
         height:152px;
     }
     .slider_inv {
         left:21px;
-        /*		width:110px; 
-		height:54px;*/
+        /*width:110px; 
+ 		height:54px;*/
     }
     .left_slider {
         top:21px;
@@ -822,7 +833,7 @@ img.i7 {
 		position: relative;
 		float: left;
 		background-color: red;
-	}*/
+		}*/
     /*Character Screen 2*/
     #mitteCharacterScreen {
         top:162px;
@@ -888,7 +899,7 @@ img.i7 {
         width: 0px;
         height: 0px;
         padding: 76px;
-        background-image:url(/Aufloesung1920x1080/Interface/CharacterButton.png);
+        background-image:url(/Aufloesung1920x1080/Interface/charTestButton.png);
         background-repeat: no-repeat;
         border-style: none;
     }

@@ -46,391 +46,79 @@ if (Meteor.isClient) {
 
         /*Events Frame-Buttons + Hover*/
 
-        'mouseover #scrounge': function(e, t) {
+        // 'mouseover #scrounge': function(e, t) {
 
-            var pos = $('#scrounge').css("background-position");
-            var size = $('#scrounge').css("padding");
-            //console.log(pos);
-            //console.log(size);
+        //     var pos = $('#scrounge').css("background-position");
+        //     var size = $('#scrounge').css("padding");
+        //     //console.log(pos);
+        //     //console.log(size);
 
-            /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
-            switch (size) {
+        //     /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
+        //     switch (size) {
 
-                case "76px":
+        //         case "76px":
 
-                    $('#scrounge').css({
-                        "background-position": "0px -153px"
-                    });
-                    break;
+        //             $('#scrounge').css({
+        //                 "background-position": "0px -153px"
+        //             });
+        //             break;
 
-                case "51px":
+        //         case "51px":
 
-                    $('#scrounge').css({
-                        "background-position": "0px -103px"
-                    });
-                    break;
+        //             $('#scrounge').css({
+        //                 "background-position": "0px -103px"
+        //             });
+        //             break;
 
-                case "40px":
+        //         case "40px":
 
-                    $('#scrounge').css({
-                        "background-position": "0px -80px"
-                    });
-                    break;
+        //             $('#scrounge').css({
+        //                 "background-position": "0px -80px"
+        //             });
+        //             break;
 
-                default:
+        //         default:
 
-                    console.log("something's wrong...");
-            }
-        },
+        //             console.log("something's wrong...");
+        //     }
+        // },
 
-        'mouseout #scrounge': function(e, t) {
+        // 'mouseout #scrounge': function(e, t) {
 
-            var pos = $('#scrounge').css("background-position");
-            var size = $('#scrounge').css("padding");
-            //console.log(pos);
-            //console.log(size);
+        //     var pos = $('#scrounge').css("background-position");
+        //     var size = $('#scrounge').css("padding");
+        //     //console.log(pos);
+        //     //console.log(size);
 
-            /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
-            switch (size) {
+        //     /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
+        //     switch (size) {
 
-                case "76px":
+        //         case "76px":
 
-                    $('#scrounge').css({
-                        "background-position": "0px 0px"
-                    });
-                    break;
+        //             $('#scrounge').css({
+        //                 "background-position": "0px 0px"
+        //             });
+        //             break;
 
-                case "51px":
+        //         case "51px":
 
-                    $('#scrounge').css({
-                        "background-position": "0px 0px"
-                    });
-                    break;
+        //             $('#scrounge').css({
+        //                 "background-position": "0px 0px"
+        //             });
+        //             break;
 
-                case "40px":
+        //         case "40px":
 
-                    $('#scrounge').css({
-                        "background-position": "0px 0px"
-                    });
-                    break;
+        //             $('#scrounge').css({
+        //                 "background-position": "0px 0px"
+        //             });
+        //             break;
 
-                default:
+        //         default:
 
-                    console.log("something's wrong...");
-            }
-        },
-
-        'mouseover #character': function(e, t) {
-
-            var pos = $('#character').css("background-position");
-            //console.log(pos);
-            $('#character').css({
-                "background-position": "0px -152px"
-            });
-        },
-
-        'mouseout #character': function(e, t) {
-
-            if (clicked == false) {
-                var pos = $('#character').css("background-position");
-                //console.log(pos);
-                $('#character').css({
-                    "background-position": "0px 0px"
-                });
-            }
-        },
-
-
-        'mouseover #message': function(e, t) {
-
-            var pos = $('#message').css("background-position");
-            //console.log(pos);
-            $('#message').css({
-                "background-position": "0px -152px"
-            });
-        },
-
-        'mouseout #message': function(e, t) {
-
-            var pos = $('#message').css("background-position");
-            //console.log(pos);
-            $('#message').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-        'mouseover #social': function(e, t) {
-
-            var pos = $('#social').css("background-position");
-            //console.log(pos);
-            $('#social').css({
-                "background-position": "0px -153px"
-            });
-        },
-
-        'mouseout #social': function(e, t) {
-
-            var pos = $('#social').css("background-position");
-            //console.log(pos);
-            $('#social').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-
-        /*HOVER*/
-
-        'mouseover #left_slider_category': function(e, t) {
-
-            var pos = $('#left_slider_category').css("background-position");
-            var size = $('#left_slider_category').css("padding");
-            //console.log(pos);
-            //console.log(size);
-
-            /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
-            switch (size) {
-
-                case "110px 54px 0px 0px":
-
-                    $('#left_slider_category').css({
-                        "background-position": "-163px 0px"
-                    });
-                    break;
-
-                case "74px 36px 0px 0px":
-
-                    $('#left_slider_category').css({
-                        "background-position": "-110px 0px"
-                    });
-                    break;
-
-                case "58px 28px 0px 0px":
-
-                    $('#left_slider_category').css({
-                        "background-position": "-58px 0px"
-                    });
-                    break;
-
-                default:
-
-                    console.log("something's wrong...");
-            }
-        },
-
-        'mouseout #left_slider_category': function(e, t) {
-
-            var pos = $('#left_slider_category').css("background-position");
-            var size = $('#left_slider_category').css("padding");
-            //console.log(pos);
-
-            switch (size) {
-
-                case "110px 54px 0px 0px":
-
-                    $('#left_slider_category').css({
-                        "background-position": "-109px 0px"
-                    });
-                    break;
-
-                case "74px 36px 0px 0px":
-
-                    $('#left_slider_category').css({
-                        "background-position": "-74px 0px"
-                    });
-                    break;
-
-                case "58px 28px 0px 0px":
-
-                    $('#left_slider_category').css({
-                        "background-position": "-58px 0px"
-                    });
-                    break;
-
-                default:
-
-                    console.log("something's wrong...");
-            }
-        },
-
-        'mouseover #right_slider_category': function(e, t) {
-
-            var pos = $('#right_slider_category').css("background-position");
-            var size = $('#right_slider_category').css("padding");
-            //console.log(pos);
-            //console.log(size);
-
-            switch (size) {
-
-                case "110px 54px 0px 0px":
-
-                    $('#right_slider_category').css({
-                        "background-position": "-163px 0px"
-                    });
-                    break;
-
-                case "74px 36px 0px 0px":
-
-                    $('#right_slider_category').css({
-                        "background-position": "-110px 0px"
-                    });
-                    break;
-
-                case "58px 28px 0px 0px":
-
-                    $('#right_slider_category').css({
-                        "background-position": "-58px 0px"
-                    });
-                    break;
-
-                default:
-
-                    console.log("something's wrong...");
-            }
-        },
-
-        'mouseout #right_slider_category': function(e, t) {
-
-            var pos = $('#right_slider_category').css("background-position");
-            var size = $('#right_slider_category').css("padding");
-            //console.log(pos);
-            //console.log(size);
-
-            switch (size) {
-
-                case "110px 54px 0px 0px":
-
-                    $('#right_slider_category').css({
-                        "background-position": "-109px 0px"
-                    });
-                    break;
-
-                case "74px 36px 0px 0px":
-
-                    $('#right_slider_category').css({
-                        "background-position": "-74pxpx 0px"
-                    });
-                    break;
-
-                case "58px 28px 0px 0px":
-
-                    $('#right_slider_category').css({
-                        "background-position": "-58px 0px"
-                    });
-                    break;
-
-                default:
-
-                    console.log("something's wrong...");
-            }
-        },
-
-        'mouseover #up_slider_stolen': function(e, t) {
-
-            var pos = $('#up_slider_stolen').css("background-position");
-            //console.log(pos);
-            $('#up_slider_stolen').css({
-                "background-position": "-55px 0px"
-            });
-        },
-
-        'mouseout #up_slider_stolen': function(e, t) {
-
-            var pos = $('#up_slider_stolen').css("background-position");
-            //console.log(pos);
-            $('#up_slider_stolen').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-        'mouseover #down_slider_stolen': function(e, t) {
-
-            var pos = $('#down_slider_stolen').css("background-position");
-            //console.log(pos);
-            $('#down_slider_stolen').css({
-                "background-position": "-55px 0px"
-            });
-        },
-
-        'mouseout #down_slider_stolen': function(e, t) {
-
-            var pos = $('#down_slider_stolen').css("background-position");
-            //console.log(pos);
-            $('#down_slider_stolen').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-        'mouseover #down_slider_own': function(e, t) {
-
-            var pos = $('#down_slider_own').css("background-position");
-            //console.log(pos);
-            $('#down_slider_own').css({
-                "background-position": "-55px 0px"
-            });
-        },
-
-        'mouseout #down_slider_own': function(e, t) {
-
-            var pos = $('#down_slider_own').css("background-position");
-            //console.log(pos);
-            $('#down_slider_own').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-        'mouseover #up_slider_own': function(e, t) {
-
-            var pos = $('#up_slider_own').css("background-position");
-            //console.log(pos);
-            $('#up_slider_own').css({
-                "background-position": "-55px 0px"
-            });
-        },
-
-        'mouseout #up_slider_own': function(e, t) {
-
-            var pos = $('#up_slider_own').css("background-position");
-            //console.log(pos);
-            $('#up_slider_own').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-        'mouseover #right_slider_matter': function(e, t) {
-
-            var pos = $('#right_slider_matter').css("background-position");
-            //console.log(pos);
-            $('#right_slider_matter').css({
-                "background-position": "-55px 0px"
-            });
-        },
-
-        'mouseout #right_slider_matter': function(e, t) {
-
-            var pos = $('#right_slider_matter').css("background-position");
-            //console.log(pos);
-            $('#right_slider_matter').css({
-                "background-position": "0px 0px"
-            });
-        },
-
-        'mouseover #left_slider_matter': function(e, t) {
-
-            var pos = $('#left_slider_matter').css("background-position");
-            //console.log(pos);
-            $('#left_slider_matter').css({
-                "background-position": "-55px 0px"
-            });
-        },
-
-        'mouseout #left_slider_matter': function(e, t) {
-
-            var pos = $('#left_slider_matter').css("background-position");
-            //console.log(pos);
-            $('#left_slider_matter').css({
-                "background-position": "0px 0px"
-            });
-        }
+        //             console.log("something's wrong...");
+        //     }
+        // }
     });
 
     Template.masterLayout.events({
@@ -439,8 +127,24 @@ if (Meteor.isClient) {
         },
         'mouseout .slider': function(e, t) {
             slide_stop();
-        }
+        },
 
+        'mouseover .hover': function(e, t){
+        	console.log(e.target);
+        	var pos = $(e.target).css("background-position");
+            var size = $(e.target).css("padding");
+            var bImage = $(e.target).css("background-image");
+            var bImageHover = bImage.replace(".png", "_hover.png");
+            $(e.target).css({"background-image":bImageHover});        
+        },
+        'mouseout .hover': function(e, t){
+        	console.log(e.target);
+        	var pos = $(e.target).css("background-position");
+            var size = $(e.target).css("padding");
+            var bImageHover = $(e.target).css("background-image");
+            var bImage = bImageHover.replace("_hover.png", ".png");
+            $(e.target).css({"background-image":bImage}); 
+        }
     });
 
     Template.gameMiddle.events({
@@ -476,15 +180,15 @@ if (Meteor.isClient) {
     var slots_count = 10;
 
     if ($(window).width() <= 1024) {
-        //console.log("1024");
+        // console.log("1024");
         ready_check = 1;
     }
     if ($(window).width() <= 1280 && $(window).width() >= 1024) {
-        //console.log("1280");
+        // console.log("1280");
         ready_check = 2;
     }
     if ($(window).width() >= 1280) {
-        //console.log("1920");
+        // console.log("1920");
         ready_check = 3;
     }
 
