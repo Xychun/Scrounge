@@ -2,13 +2,15 @@
 ///////////////////////////////////// CLIENT + SERVER //////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  //Collection init
-  menus = new Meteor.Collection("Menus");
+//Collection init
+Menus = new Meteor.Collection("Menus");
+MatterBlocks = new Meteor.Collection("MatterBlocks");
 
-  player = new Meteor.Collection("Player");
+playerData = new Meteor.Collection("playerData");
 
-  mine = new Meteor.Collection("mine");
-
-  laboratory = new Meteor.Collection("laboratory");
-
-  battlefield = new Meteor.Collection("battlefield");
+mine = new Meteor.Collection("mine");
+laboratory = new Meteor.Collection("laboratory");
+workshop = new Meteor.Collection("workshop");
+battlefield = new Meteor.Collection("battlefield");
+thivery = new Meteor.Collection("thivery");
+smelter = new Meteor.Collection("smelter");

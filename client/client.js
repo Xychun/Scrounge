@@ -10,7 +10,7 @@ var clicked = false;
 // var jelm = $(elm);//convert to jQuery Element
 // var htmlElm = jelm[0];//convert to HTML Element
 
-// Meteor - get object : $(event.target).css({"background-color":"orange"});
+// Meteor - get object : $(e.target).css({"background-color":"orange"});
 // Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
