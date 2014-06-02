@@ -231,7 +231,15 @@ img.i7 {
 	overflow:hidden;
 	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
-.text{
+
+
+
+
+
+
+
+
+/*.text{
 	margin-top:0px;
 	margin-bottom:30px;
 	left:200px;
@@ -247,9 +255,9 @@ img.i7 {
 .slider_base_height{
 	width:100%;
 	height:30px;
-}
+}*/
 
-	.sliderRotate90 {
+/*	.sliderRotate90 {
 		overflow: hidden;
 		-webkit-transform: rotate(90deg);
 		-moz-transform: rotate(90deg);
@@ -333,7 +341,13 @@ img.i7 {
 		-ms-transform: rotate(90deg);
 		-o-transform: rotate(90deg);
 		transform: rotate(90deg);
-	}
+	}*/
+
+
+
+
+
+
 
 
 	/*MINE BUY MENU*/
@@ -443,6 +457,17 @@ img.i7 {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 	/*CHARACTER VIEW*/
 
 	#characterView{
@@ -499,13 +524,21 @@ img.i7 {
 	}
 
 
-	/*Character Screen*/
 
-/*	#mitteCharacterScreen{
-    overflow:auto;
-    top:114px;
-    height:auto;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .unused_slot {
     height:143px;
     background-color:red;
@@ -803,9 +836,8 @@ img.i7 {
     left: 50px;
     top: -30px;
 }
-#characterScreen {
-    display: hidden;
-}
+
+
 /*
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////// 1280 ///////////////////////////////////////////////////
