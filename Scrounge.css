@@ -519,7 +519,7 @@ img.i7 {
 #characterScreen {
     display: hidden;
 }
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 1280px) {
     .corner {
         width:102px;
         height:102px;
@@ -685,7 +685,7 @@ img.i7 {
         top: -30px;
     }
 }
-@media only screen and (min-width: 1280px) {
+@media only screen and (min-width: 1920px) {
     .corner {
         width:152px;
         height:152px;
