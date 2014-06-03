@@ -216,10 +216,329 @@ img.i7 {
     bottom:40px;
 }
 #scrounge_area {
-    overflow:auto;
-    top:114px;
-    height:auto;
+	overflow:auto;
+	top:114px;
+	height:auto;
 }
+.slot{
+	z-index:2;
+	height:143px;
+	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenGreenSlot.png);
+}
+.slot_a{
+	z-index:1;
+	height:0px;
+	overflow:hidden;
+	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
+}
+
+
+
+
+
+
+
+
+/*.text{
+	margin-top:0px;
+	margin-bottom:30px;
+	left:200px;
+	top: 15px;
+	font-family:"OCR A Std";
+	text-shadow: 0.5px 0.5px #FFFFFF;
+}
+.slider_base{
+	width:61px;
+	height:100%;
+	display: block;
+}
+.slider_base_height{
+	width:100%;
+	height:30px;
+}*/
+
+/*	.sliderRotate90 {
+		overflow: hidden;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.sliderRotate90:before {
+		content: "";
+		position: absolute;
+		width: 200%;
+		height: 200%;
+		top: -50%;
+		left: -50%;
+		z-index: -1;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.sliderRotate180 {
+		overflow: hidden;
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+
+	.sliderRotate180:before {
+		content: "";
+		position: absolute;
+		width: 200%;
+		height: 200%;
+		top: -50%;
+		left: -50%;
+		z-index: -1;
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+
+	.sliderRotate270 {
+		overflow: hidden;
+		-webkit-transform: rotate(270deg);
+		-moz-transform: rotate(270deg);
+		-ms-transform: rotate(270deg);
+		-o-transform: rotate(270deg);
+		transform: rotate(270deg);
+	}
+
+	.sliderRotate270:before {
+		content: "";
+		position: absolute;
+		-webkit-transform: rotate(270deg);
+		-moz-transform: rotate(270deg);
+		-ms-transform: rotate(270deg);
+		-o-transform: rotate(270deg);
+		transform: rotate(270deg);
+	}
+
+	.sliderRotate90 {
+		overflow: hidden;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+
+	.sliderRotate90:before {
+		content: "";
+		position: absolute;
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}*/
+
+
+
+
+
+
+
+
+	/*MINE BUY MENU*/
+
+	#mineBuyMenu {
+		margin: 0px auto;
+		top:162px;
+		bottom:162px;
+		width: 778px;
+	}
+
+	#mineBuyMenuFrame {
+		top: 0px;
+		display: block;
+		bottom: 15px;
+		width: 778px;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackground.png);
+		background-repeat: no-repeat;
+	}
+
+	#mineBuyMenuBottomEnd {
+		margin: 0px auto;
+		bottom: 0px;
+		width: 778px;
+		height: 15px;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackgroundBottomEnd.png);
+		background-repeat: no-repeat;
+	}
+
+	#buyMenuYes {
+		width: 100px;
+		height: 40px;
+		bottom: 10px;
+		left:30%;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/YESButton.png);
+		background-repeat: no-repeat;
+	}
+
+	#buyMenuNo {
+		width: 100px;
+		height: 40px;
+		bottom: 10px;
+		right:30%;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png);
+		background-repeat: no-repeat;
+	}
+
+	#mineBuyMenuText {
+		left:150px;
+		top: 70px;
+		font-family:"OCR A Std";
+		text-shadow: 1px 1px #000000;
+		font-size: 1em;
+	}
+
+		#rangeSlider {
+		top: 20px;
+		left: 144px;
+		width: 622px;
+		height: 27px;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
+	}
+
+	.rangeSliderMarks {
+		display: block;
+		position: relative;
+		float: left;
+		height: 100%;
+		width: 5%;
+	}
+
+	#noButton {
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
+	}
+
+	#yesButton {
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
+	}
+
+	.rangeSliderMarksStroke {
+		right: 0px;
+		left: 0px;
+		top: 0px;
+		bottom: 0px;
+		width: 3px;
+		height: 18px;
+		margin: auto;
+		background-color: black;
+	}
+
+	#AmountScroungerSlots {
+		width: 90px;
+		height: 90px;
+		left: 33px;
+		top: 124px;
+	}
+
+	.sslots {
+		position: relative;
+		float: left;
+		width: 28px;
+		height: 28px;
+		margin: 1px;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable.png);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*CHARACTER VIEW*/
+
+	#characterView{
+		top:162px;
+		bottom:162px;
+		left:162px;
+		right:162px;
+	}
+
+
+	#scroungeItems {
+		left: 0px;
+		right: 50%;
+		height: 100%;
+		min-height: 400px;
+		background-color: blue;
+	}
+
+	.scroungeItemSlots {
+		width: 100px;
+		height: 100px;
+		background-color: black;
+	}
+
+	#scroungeItemSlot1 {
+		margin: 0px auto;
+		position: relative;
+		float: left;
+		margin-left: 50px;
+		margin-top: 26px;
+	}
+
+	#characterViewRightSide {
+		right: 0px;
+		left: 50%;
+		height: 100%;
+		min-height: 400px;
+		background-color: brown;
+	}
+
+	#playerStats {
+		top: 0px;
+		width: 100%;
+		height: 200px;
+		background-color: green;
+	}
+
+	#baseItems {
+		width: 100%;
+		top: 200px;
+		bottom: 0px;
+		min-height: 200px;
+		background-color: red;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .unused_slot {
     height:143px;
     background-color:red;
@@ -460,7 +779,7 @@ img.i7 {
     width: 0px;
     height: 0px;
     padding: 40px;
-    background-image:url(/Aufloesung1024xXXX/Interface/CharacterButton.png);
+    background-image:url(/Aufloesung1024xXXX/Interface/charTestButton.png);
     background-repeat: no-repeat;
     border-style: none;
 }
@@ -488,6 +807,7 @@ img.i7 {
     height:0px;
     padding: 58px 28px 0px 0px;
     background-image:url(/Aufloesung1024xXXX/Interface/HoverButton.png);
+    background-position: 0px -102px;
     background-repeat: no-repeat;
 }
 #left_slider_category {
@@ -516,10 +836,12 @@ img.i7 {
     left: 50px;
     top: -30px;
 }
-#characterScreen {
-    display: hidden;
-}
-@media only screen and (min-width: 1280px) {
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// 1280 ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+ @media only screen and (min-width: 1024px) and (max-width: 1919px) {
     .corner {
         width:102px;
         height:102px;
@@ -628,7 +950,7 @@ img.i7 {
         width: 0px;
         height: 0px;
         padding: 51px;
-        background-image:url(/Aufloesung1280xXXX/Interface/CharacterButton.png);
+        background-image:url(/Aufloesung1280xXXX/Interface/charTestButton.png);
         background-repeat: no-repeat;
         border-style: none;
     }
@@ -685,15 +1007,20 @@ img.i7 {
         top: -30px;
     }
 }
-@media only screen and (min-width: 1920px) {
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// 1920 ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+ @media only screen and (min-width: 1920px) {
     .corner {
         width:152px;
         height:152px;
     }
     .slider_inv {
         left:21px;
-        /*		width:110px; 
-		height:54px;*/
+        /*width:110px; 
+ 		height:54px;*/
     }
     .left_slider {
         top:21px;
@@ -779,100 +1106,7 @@ img.i7 {
         right:162px;
         height:152px;
     }
-    /*Character Screen*/
-    /*	#mitteCharacterScreen{
-		top:162px;
-		bottom:162px;
-		left:162px;
-		right:162px;
-		display: none;
-		overflow: hidden;
-	}
 
-	#mitteCharacterScreenWrapper{
-		width: 1616px;
-		height: 100%;
-
-	}
-
-	#characterScrounge {
-		top: 41px;
-		width: 532px;
-		height: 100%;
-		position: relative;
-		float: left;
-		margin-right: 10px;
-		background-color: blue;
-	}
-
-	#characterBase {
-		top: 41px;
-		width: 532px;
-		height: 100%;
-		position: relative;
-		float: left;
-		margin-right: 10px;
-		background-color: green;
-	}
-
-	#characterStats {
-		top: 41px;
-		width: 532px;
-		height: 100%;
-		position: relative;
-		float: left;
-		background-color: red;
-	}*/
-    /*Character Screen 2*/
-    #mitteCharacterScreen {
-        top:162px;
-        bottom:162px;
-        left:162px;
-        right:162px;
-        display: none;
-        overflow: hidden;
-    }
-    #mitteCharacterScreenWrapper {
-        width: 1616px;
-        height: 100%;
-    }
-    #characterScrounge {
-        top: 41px;
-        height: 152px;
-        position: relative;
-        margin-bottom: 10px;
-    }
-    .scroungeItem {
-        width: 100px;
-        height: 100px;
-        position: relative;
-        float: left;
-        margin-left: 50px;
-        margin-top: 26px;
-        background-color: black;
-    }
-    #characterBase {
-        top: 41px;
-        height: 152px;
-        position: relative;
-        margin-bottom: 10px;
-    }
-    .baseItem {
-        width: 100px;
-        height: 100px;
-        position: relative;
-        float: left;
-        margin-left: 50px;
-        margin-top: 26px;
-        background-color: black;
-    }
-    #characterStats {
-        top: 41px;
-        height: 152px;
-        position: relative;
-        margin-bottom: 10px;
-    }
-    /*Character Screen 3*/
     /*HOVER BUTTONS*/
     /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
     .SSscroungeBaseButton {
@@ -888,7 +1122,7 @@ img.i7 {
         width: 0px;
         height: 0px;
         padding: 76px;
-        background-image:url(/Aufloesung1920x1080/Interface/CharacterButton.png);
+        background-image:url(/Aufloesung1920x1080/Interface/charTestButton.png);
         background-repeat: no-repeat;
         border-style: none;
     }

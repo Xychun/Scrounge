@@ -7,8 +7,9 @@
 </body>
 
 <template name="masterLayout">
-	{{> yield region='middle'}}
 	{{> yield region='border'}}
+	{{> yield region='middle'}}
+	{{> yield region='buyMenu'}}
 
 	<div style="position: absolute; left: 40%; top: 40%; width:400px">
 		{{> yield region='center'}}
