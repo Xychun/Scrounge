@@ -7,6 +7,7 @@ Menus = new Meteor.Collection("Menus");
 MatterBlocks = new Meteor.Collection("MatterBlocks");
 
 playerData = new Meteor.Collection("playerData");
+resources = new Meteor.Collection("resources");
 
 mine = new Meteor.Collection("mine");
 laboratory = new Meteor.Collection("laboratory");
