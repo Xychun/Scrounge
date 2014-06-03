@@ -357,6 +357,8 @@ img.i7 {
 		top:162px;
 		bottom:162px;
 		width: 778px;
+		z-index: 5;
+		display: none;
 	}
 
 	#mineBuyMenuFrame {
@@ -403,7 +405,15 @@ img.i7 {
 		font-size: 1em;
 	}
 
-		#rangeSlider {
+	#mineBuyMenuMatterBlock {
+		width: 85px;
+		height: 85px;
+		left: 30px;
+		top: 30px;
+		position: relative;
+	}
+
+	#rangeSlider {
 		top: 20px;
 		left: 144px;
 		width: 622px;
@@ -453,6 +463,119 @@ img.i7 {
 		margin: 1px;
 		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable.png);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/*MATTER COLOR BLOCKS*/
+
+	.matter_colorBlocks {
+		float: left;
+		position: relative;
+		width: 250px;
+		height: 152px;
+		margin-right: 10px;
+		background-color: brown;
+	}
+
+	.text_matter {
+		display: inline;
+		width: 200px;
+		right: 10px;
+		top: 20px;
+		margin: 0px;
+	    color: white;
+	    font-family:"OCR A Std";
+	    font-size: 1.5em;
+	    text-align: right;
+	    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	    -ms-user-select: none;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    user-select: none;
+	    cursor:default;
+	}
+
+	.text_specialRessources {
+		display: inline;
+		width: 100px;
+		right: 5px;
+		top: 12px;
+		margin: 0px;
+	    color: white;
+	    font-family:"OCR A Std";
+	    font-size: 0.8em;
+	    text-align: right;
+	    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	    -ms-user-select: none;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    user-select: none;
+	    cursor:default;
+	}
+
+	.img_matter {
+		position: relative;
+		display: inline;
+		left: 10px;
+		top: 5px;
+		width: 50px;
+		height: 50px;
+	}
+
+	.img_specialRessources {
+		position: relative;
+		display: inline;
+		left: 5px;
+		top: 5px;
+		width: 25px;
+		height: 25px;
+	}
+
+	.wrapper_specialRessource {
+		bottom: 0px;
+		width: 250px;
+		height: 92px;
+		background-color: green;
+	}
+
+	.sr_left {
+		bottom: 0px;
+		left: 5px;
+		width: 120px;
+		height: 92px;
+		background-color: blue;
+	}
+
+	.sr_right {
+		bottom: 0px;
+		right: 0px;
+		width: 120px;
+		height: 92px;
+		background-color: red;
+	}
+
+	.sr_slot {
+		float: left;
+		position: relative;
+		width: 120px;
+		height: 30px;
+	}
+
+
+
+
+
+
+
 
 
 

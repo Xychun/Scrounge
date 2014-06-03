@@ -20,7 +20,8 @@ Router.map( function () {
 
     yieldTemplates:{
       'standardBorder': {to: 'border'},
-      'gameMiddle': {to: 'middle'},  
+      'gameMiddle': {to: 'middle'}, 
+      'mineBuyMenu': {to: 'buyMenu'}, 
     },
 /*
     action: function () {

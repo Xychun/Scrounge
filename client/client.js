@@ -5,7 +5,6 @@
 //[JQUERY: ATTR = Attribute Selector!]
 // expl: $(this).attr('id') 
 
-var clicked = false;
 // var elm = document.createElement("div");
 // var jelm = $(elm);//convert to jQuery Element
 // var htmlElm = jelm[0];//convert to HTML Element
@@ -77,37 +76,6 @@ if (Meteor.isClient) {
         },
 
     });
-
-/*	Template.masterLayout.events({
-		'mouseover .slider' : function(e, t){
-			slide_right();
-
-		},
-		'mouseout .slider' : function(e, t){
-			slide_stop();
-
-		}
-
-	});*/
-
-
-  //TODO: noch nicht fertig !
-  Template.mineBuyMenu.events({
-
-    'click #buyMenuYes' : function(e, t){
-
-          $('#mineBuyMenu').hide();
-
-        },
-
-        'click #buyMenuNo' : function(e, t){
-
-          $('#mineBuyMenu').hide();
-
-        },
-  })
-
-
 
 /*	//TODO: noch nicht fertig !
 	Template.gameMiddle.events({
@@ -465,9 +433,58 @@ if (Meteor.isClient) {
                     "height": "0px"
                 }, 1000);
             }
+        },
+
+        'click .item': function(e, t) {
+
+          var remaining = this.remaining;
+          var value = this.value;
+          var id = this._id;
+          var slots = this.slots;
+
+          //bräuchte man noch:
+          // var imgPath = this.imgPath;
+
+/*          console.log(this);
+          console.log(this +" "+remaining+" "+slots+" "+value+" "+id);*/
+
+          // var imgPath: $('#mineBuyMenuMatterBlock').src="imgPath";
+
+          //rausgenommen, weil es zu langsam rendert. Funktionen, die zugreifen wollen, reagieren zu früh
+          //Das Element muss vorher schon gerendert werden (Aber display: hidden)
+/*          if(!$("#mineBuyMenu").length) {
+
+            Router.current().render('mineBuyMenu', {to: 'buyMenu'});
+
+          } 
+
+          else {*/
+
+            $('#mineBuyMenu').fadeIn();
+            $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png");
+            $('#price').text("Price: "+remaining);
+            $('#matter').text("Matter: "+slots);
+            $('#time').text("Time: "+value);
         }
 
     });
+
+    //TODO: noch nicht fertig !
+    Template.mineBuyMenu.events({
+
+      'click #buyMenuYes' : function(e, t){
+
+            $('#mineBuyMenu').fadeOut();
+
+          },
+
+          'click #buyMenuNo' : function(e, t){
+
+            $('#mineBuyMenu').fadeOut();
+
+          },
+    })
+
 
     var time = 1200; //Animationszeit in ms
     var c = 1; //Start Kategorie

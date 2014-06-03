@@ -45,10 +45,90 @@
     <div id="unten" class="bot">
         <div id="matter_left" class="matter_edge bot left"></div>
         <div id="matter_content" class="bot">
-            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:20px">
+
+        	{{#each mineSlots}}
+
+        	<div class="matter_colorBlocks">
+
+
+        	</div>
+
+        	{{/each}}
+
+        	<div class="matter_colorBlocks">
+        		<img class="img_matter" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_gruen.png">
+        		<div class="text_matter" > 1.000.000 </div>
+        		<div class="wrapper_specialRessource">
+        			<div class="sr_left"> 
+        				<div class="sr_slot">
+	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srMine.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot"> 
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srBattlefield.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot">
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srLaboratory.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        			</div>
+        			<div class="sr_right"> 
+        				<div class="sr_slot">
+	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srWorkshop.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot"> 
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srThievery.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot">
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srSmelter.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+
+        	<div class="matter_colorBlocks">
+        		<img class="img_matter" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_rot.png">
+        		<div class="text_matter" > 400 </div>
+        		<div class="wrapper_specialRessource">
+        			<div class="sr_left"> 
+        				<div class="sr_slot">
+	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srMine.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot"> 
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srBattlefield.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot">
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srLaboratory.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        			</div>
+        			<div class="sr_right"> 
+        				<div class="sr_slot">
+	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srWorkshop.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot"> 
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srThievery.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        				<div class="sr_slot">
+        					<img class="img_specialRessources" src="/Aufloesung1920x1080/Interface/SpecialRessources/srSmelter.png">
+	        				<div class="text_specialRessources" > 1.000.000 </div>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+
+<!--        <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:20px">
             <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_goldbraun.png" style="left:100px">
             <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_gruen.png" style="left:170px">
-            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_rot.png" style="left:240px">
+            <img class="cba inherit" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_rot.png" style="left:240px"> -->
         </div>
         <div id="matter_right" class="matter_edge bot right"></div>
     </div>
@@ -149,6 +229,11 @@
                             <div id="left_slider_slot_items" class="left slot_items_slider"></div>
                             <div class="slot_items_wrapper">
                                 <div class="slot_items_content relative">
+
+                                	{{#each mineSlots}}
+
+                                    <div class="item relative">  <img class="buyableMatter" src={{imgPath}}>  </div>
+                                    <div class="item relative">  <p class='text relative'>Value: {{value}}</p>  </div>
                                     <div class="item relative"></div>
                                     <div class="item relative"></div>
                                     <div class="item relative"></div>
@@ -156,8 +241,9 @@
                                     <div class="item relative"></div>
                                     <div class="item relative"></div>
                                     <div class="item relative"></div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
+
+                                    {{/each}}
+
                                 </div>
                             </div>
                             <div id="right_slider_slot_items" class="right slot_items_slider"></div>
@@ -221,10 +307,12 @@
 
 		<div id="mineBuyMenuFrame" class="left right">
 
+			<img id="mineBuyMenuMatterBlock">
+
 			<div id="mineBuyMenuText">
-			<p class='relative'>Price: {{value}}</p>
-			<p class='relative'>Matter: {{slots}}</p>
-			<p class='relative'>Time: {{remaining}}</p>
+			<p id="price" class='relative'>Price: {{value}}</p>
+			<p id="matter" class='relative'>Matter: {{slots}}</p>
+			<p id="time" class='relative'>Time: {{remaining}}</p>
 			</div>
 
 			<div id="rangeSlider">
