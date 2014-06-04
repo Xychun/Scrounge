@@ -20,10 +20,12 @@ if (Meteor.isClient) {
     //Subscriptions
     Meteor.subscribe("userData");
     Meteor.subscribe("playerData");
+    Meteor.subscribe("MatterBlocks");
 
     //Get Data
     Template.gameMiddle.mineSlots = function() {
-        var self = Meteor.users.findOne({
+
+      var self = Meteor.users.findOne({
             _id: Meteor.userId()
         });
         if (self) {
@@ -38,7 +40,7 @@ if (Meteor.isClient) {
             if (menu == 'colosseum') {
                 return colosseum.find({});
             }
-        }
+        }        
     };
 
     /////UNDER CONSTRUCTION BY SENJU!!
@@ -70,6 +72,25 @@ if (Meteor.isClient) {
     //         return objects;
     //     }
     // };
+
+    //Get Data
+    Template.gameMiddle.matterBlocks = function() {
+             
+      return MatterBlocks.find({});
+
+    };
+
+    Template.mineBuyMenu.playerData = function() {
+
+      return playerData.find({});
+
+    }
+
+    Template.gameMiddle.playerData = function() {
+
+      return playerData.find({});
+
+    }
 
     /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
@@ -249,34 +270,48 @@ if (Meteor.isClient) {
 
         'click .item': function(e, t) {
 
-          var remaining = this.remaining;
-          var value = this.value;
-          var id = this._id;
-          var slots = this.slots;
+          //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
 
-          //bräuchte man noch:
-          // var imgPath = this.imgPath;
+          //Variante A
 
-/*          console.log(this);
-          console.log(this +" "+remaining+" "+slots+" "+value+" "+id);*/
+/*        var cursor = MatterBlocks.findOne({matter: e.currentTarget.id});
 
-          // var imgPath: $('#mineBuyMenuMatterBlock').src="imgPath";
+          console.log(cursor);
 
-          //rausgenommen, weil es zu langsam rendert. Funktionen, die zugreifen wollen, reagieren zu früh
-          //Das Element muss vorher schon gerendert werden (Aber display: hidden)
-/*          if(!$("#mineBuyMenu").length) {
+          $('#mineBuyMenu').fadeIn();
+          $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
+          $('#price').text("Price: "+cursor.cost);
+          $('#matter').text("Matter: "+cursor.value);*/
 
-            Router.current().render('mineBuyMenu', {to: 'buyMenu'});
-
-          } 
-
-          else {*/
+          //Variante B
 
             $('#mineBuyMenu').fadeIn();
-            $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png");
-            $('#price').text("Price: "+remaining);
-            $('#matter').text("Matter: "+slots);
-            $('#time').text("Time: "+value);
+            $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+this.color+".png");
+            $('#price').text("Price: "+this.cost);
+            $('#matter').text("Matter: "+this.value);
+
+            var currentUser = Meteor.users.findOne({_id: Meteor.userId()}).username;
+            console.log(currentUser);
+
+            var cursorPlayerData = playerData.findOne({user: currentUser});
+            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+
+            if($('#AmountScroungerSlots').children()) {$('#AmountScroungerSlots').children().remove();}
+
+            for (i = 0; i < 6; i++) {
+                
+                if(amountOwnSlots>i) {
+
+                $('#AmountScroungerSlots').append( "<div class='sslots_available'> </div>");
+
+                }
+
+                else {
+
+                  $('#AmountScroungerSlots').append( "<div class='sslots_unavailable'> </div>");
+
+                }
+            }
         }
 
     });

@@ -81,7 +81,7 @@ if (Meteor.isServer) {
                             var sRate = sMine['scrs' + result].miningrate;
                             progress = progress + (serverTime - sTime) * (sRate / 3600000);
 
-                            console.log(cUser + ' Progress: ' + progress);
+                            /*console.log(cUser + ' Progress: ' + progress);*/
                         }
                     }
                     //Matter CLEAR?
@@ -157,9 +157,9 @@ if (Meteor.isServer) {
             }
         };
 
-        var END = new Date().getTime();
+        /*var END = new Date().getTime();
         var DURATION = END - START;
-        console.log('UPDATE DURATION: ' + DURATION);
+        console.log('UPDATE DURATION: ' + DURATION);*/
     }
 
 
@@ -185,7 +185,15 @@ if (Meteor.isServer) {
         } else {
             this.ready();
         }
-    })
+    });
+
+    Meteor.publish("MatterBlocks", function() {
+        if (this.userId) {
+            return MatterBlocks.find({});
+        } else {
+            this.ready();
+        }
+    });
 
     Meteor.publish("mine", function(current) {
         if (this.userId) {

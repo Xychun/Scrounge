@@ -401,15 +401,21 @@ img.i7 {
 		left:150px;
 		top: 70px;
 		font-family:"OCR A Std";
-		text-shadow: 1px 1px #000000;
-		font-size: 1em;
+		font-size: 1.5em;
+		color: white;
+		text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	    -ms-user-select: none;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    user-select: none;
+	    cursor:default;
 	}
 
 	#mineBuyMenuMatterBlock {
 		width: 85px;
 		height: 85px;
-		left: 30px;
-		top: 30px;
+		left: 33px;
+		top: 29px;
 		position: relative;
 	}
 
@@ -449,19 +455,28 @@ img.i7 {
 	}
 
 	#AmountScroungerSlots {
-		width: 90px;
-		height: 90px;
+		width: 92px;
+		height: 134px;
 		left: 33px;
-		top: 124px;
+		top: 160px;
 	}
 
-	.sslots {
+	.sslots_available {
 		position: relative;
 		float: left;
-		width: 28px;
-		height: 28px;
-		margin: 1px;
+		width: 42px;
+		height: 42px;
+		margin: 2px;
 		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable.png);
+	}
+
+	.sslots_unavailable {
+		position: relative;
+		float: left;
+		width: 42px;
+		height: 42px;
+		margin: 2px;
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotUnavailable.png);
 	}
 
 
@@ -658,7 +673,7 @@ img.i7 {
 
 
 
-
+	/*SLOTS BASE LEFT*/
 
 
 
@@ -724,7 +739,6 @@ img.i7 {
     right:5px;
     width:auto;
     height:27px;
-    background-color:yellow;
 }
 .slot_stats {
     top:53px;
@@ -754,9 +768,11 @@ img.i7 {
 }
 .test_colors_pfeil_left {
     background-image: url(/Aufloesung1920x1080/Interface/AktionsKastenSortierBalken/AktionsKastenSortingBarPfeilNormal.png);
+    background-repeat: no-repeat;
 }
 .test_colors_pfeil_right {
     background-image: url(/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarPfeilNormal.png);
+    background-repeat: no-repeat;
 }
 .slot_colors_content {
     left:4px;
@@ -777,7 +793,7 @@ img.i7 {
     left:151px;
     right:5px;
     width:auto;
-    height:60px;
+    height:90px;
 }
 .slot_items_slider {
     width:21px;
@@ -789,18 +805,57 @@ img.i7 {
     left:26px;
     right:26px;
     width:auto;
-    height:60px;
+    height:90px;
 }
 .slot_items_content {
-    height:60px;
+    height:90px;
     width:700px;
 }
 .item {
     float:left;
-    margin-right:10px;
+    margin-left:40px;
     width:60px;
-    height:60px;
-    background-color:yellow;
+    height:90px;
+}
+.itemImg {
+	width: 60px;
+	height: 60px;
+}
+.itemTextValue {
+	top: 20px;
+	width: 60px;
+	height: 20px;
+	margin: 0px;
+	font-family:"OCR A Std";
+	font-size: 1em;
+	text-align: center;
+	color: white;
+	text-shadow: 4px 4px 4px black, 4px -4px 4px black, -4px 4px 4px black, -4px -4px 4px black;
+	    -ms-user-select: none;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    user-select: none;
+	cursor:default;
+
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+}
+.itemTextCost {
+	bottom: 5px;
+	display: inline;
+	width: 60px;
+	margin: 0px;
+	color: white;
+	font-family:"OCR A Std";
+	font-size: 1em;
+	text-align: left;
+	text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	    -ms-user-select: none;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    user-select: none;
+	cursor:default;
+
 }
 .slider_base {
     width:61px;

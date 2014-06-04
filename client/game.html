@@ -56,7 +56,7 @@
         	{{/each}}
 
         	<div class="matter_colorBlocks">
-        		<img class="img_matter" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_gruen.png">
+        		<img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png">
         		<div class="text_matter" > 1.000.000 </div>
         		<div class="wrapper_specialRessource">
         			<div class="sr_left"> 
@@ -91,7 +91,7 @@
         	</div>
 
         	<div class="matter_colorBlocks">
-        		<img class="img_matter" src="/Aufloesung1920x1080/Mine/CubeWeißGleichPupsen_rot.png">
+        		<img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png">
         		<div class="text_matter" > 400 </div>
         		<div class="wrapper_specialRessource">
         			<div class="sr_left"> 
@@ -231,17 +231,13 @@
                             <div class="slot_items_wrapper">
                                 <div class="slot_items_content relative">
 
-                                	{{#each mineSlots}}
+                                	{{#each matterBlocks}}
 
-                                    <div class="item relative">  <img class="buyableMatter" src={{imgPath}}>  </div>
-                                    <div class="item relative">  <p class='text relative'>Value: {{value}}</p>  </div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
-                                    <div class="item relative"></div>
+                                    	<div id="{{matter}}" class="item relative">  
+	                                    	<img class="itemImg" src="/Aufloesung1920x1080/Mine/MatterBlockBuyable_{{color}}.png">
+	                                    	<div class="itemTextValue"> {{value}} </div>
+	                                    	<div class="itemTextCost"> {{cost}} </div>
+                                    	</div>
 
                                     {{/each}}
 
@@ -342,16 +338,15 @@
 
 			</div>
 
-			<div id="AmountScroungerSlots"> 
-				<div id="sslot1" class="sslots"> </div>
+			<div id="AmountScroungerSlots">
+
+<!-- 				<div id="sslot1" class="sslots"> {{ownSlots}} </div>
 				<div id="sslot2" class="sslots"> </div>
 				<div id="sslot3" class="sslots"> </div>
 				<div id="sslot4" class="sslots"> </div>
 				<div id="sslot5" class="sslots"> </div>
-				<div id="sslot6" class="sslots"> </div>
-				<div id="sslot7" class="sslots"> </div>
-				<div id="sslot8" class="sslots"> </div>
-				<div id="sslot9" class="sslots"> </div>
+				<div id="sslot6" class="sslots"> </div> -->
+
 			</div>
 
 			<div id="buyMenuYes"> </div>
