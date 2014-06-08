@@ -75,46 +75,46 @@ div {
     height:19px;
 }
 .inv_top {
-    background-image:url(Inventory_Abschluss_Oben.gif);
-    background-size:cover;
+/*    background-image:url(Inventory_Abschluss_Oben.gif);
+    background-size:cover;*/
 }
 .inventory_content {
     width:80px;
     height:auto;
     top:19px;
     bottom:19px;
-    background-image:url(Inventory_Vertikal.png);
+/*    background-image:url(Inventory_Vertikal.png);
     background-size: cover;
-    background-repeat:repeat-y;
+    background-repeat:repeat-y;*/
 }
 .inv_bot {
-    background-image:url(Inventory_Abschluss_Unten.gif);
-    background-size:cover;
+/*    background-image:url(Inventory_Abschluss_Unten.gif);
+    background-size:cover;*/
 }
 .matter_edge {
     width:19px;
     height:80px;
 }
 #matter_left {
-    position:relative;
+/*    position:relative;
     background-image:url(InventoryAbschluss.png);
     background-attachment:fixed;
     background-position:center;
     background-repeat:no-repeat;
-    transform:rotate(90deg);
+    transform:rotate(90deg);*/
 }
 #matter_content {
     width:auto;
     height:80px;
     left:19px;
     right:19px;
-    background-image:url(Inventory_Horizontal.png);
-    background-size:cover;
-    background-repeat:repeat-x;
+/*    background-image:url(Inventory_Horizontal.png);*/
+/*    background-size:cover;
+    background-repeat:repeat-x;*/
 }
 #matter_right {
-    background-image:url(Inventory_Abschluss_Rechts.gif);
-    background-size:cover;
+/*    background-image:url(Inventory_Abschluss_Rechts.gif);
+    background-size:cover;*/
 }
 .kimage {
     position:absolute;
@@ -232,116 +232,6 @@ img.i7 {
 	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
 
-
-
-
-
-
-
-
-/*.text{
-	margin-top:0px;
-	margin-bottom:30px;
-	left:200px;
-	top: 15px;
-	font-family:"OCR A Std";
-	text-shadow: 0.5px 0.5px #FFFFFF;
-}
-.slider_base{
-	width:61px;
-	height:100%;
-	display: block;
-}
-.slider_base_height{
-	width:100%;
-	height:30px;
-}*/
-
-/*	.sliderRotate90 {
-		overflow: hidden;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate90:before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		top: -50%;
-		left: -50%;
-		z-index: -1;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate180 {
-		overflow: hidden;
-		-webkit-transform: rotate(180deg);
-		-moz-transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-o-transform: rotate(180deg);
-		transform: rotate(180deg);
-	}
-
-	.sliderRotate180:before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		top: -50%;
-		left: -50%;
-		z-index: -1;
-		-webkit-transform: rotate(180deg);
-		-moz-transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-o-transform: rotate(180deg);
-		transform: rotate(180deg);
-	}
-
-	.sliderRotate270 {
-		overflow: hidden;
-		-webkit-transform: rotate(270deg);
-		-moz-transform: rotate(270deg);
-		-ms-transform: rotate(270deg);
-		-o-transform: rotate(270deg);
-		transform: rotate(270deg);
-	}
-
-	.sliderRotate270:before {
-		content: "";
-		position: absolute;
-		-webkit-transform: rotate(270deg);
-		-moz-transform: rotate(270deg);
-		-ms-transform: rotate(270deg);
-		-o-transform: rotate(270deg);
-		transform: rotate(270deg);
-	}
-
-	.sliderRotate90 {
-		overflow: hidden;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate90:before {
-		content: "";
-		position: absolute;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}*/
 
 
 
@@ -467,7 +357,7 @@ img.i7 {
 		width: 42px;
 		height: 42px;
 		margin: 2px;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable.png);
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable2.png);
 	}
 
 	.sslots_unavailable {
@@ -476,7 +366,7 @@ img.i7 {
 		width: 42px;
 		height: 42px;
 		margin: 2px;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotUnavailable.png);
+		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotUnavailable2.png);
 	}
 
 
@@ -495,10 +385,11 @@ img.i7 {
 	.matter_colorBlocks {
 		float: left;
 		position: relative;
+		top: 50%;
+		margin-top: -72px;
 		width: 250px;
-		height: 152px;
+		height: 142px;
 		margin-right: 10px;
-		background-color: brown;
 	}
 
 	.text_matter {
@@ -507,11 +398,11 @@ img.i7 {
 		right: 10px;
 		top: 20px;
 		margin: 0px;
-	    color: white;
+	    color: black;
 	    font-family:"OCR A Std";
 	    font-size: 1.5em;
 	    text-align: right;
-	    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 	    -ms-user-select: none;
 	    -webkit-user-select: none;
 	    -moz-user-select: none;
@@ -525,11 +416,11 @@ img.i7 {
 		right: 5px;
 		top: 12px;
 		margin: 0px;
-	    color: white;
+	    color: black;
 	    font-family:"OCR A Std";
-	    font-size: 0.8em;
+	    font-size: 0.9em;
 	    text-align: right;
-	    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 	    -ms-user-select: none;
 	    -webkit-user-select: none;
 	    -moz-user-select: none;
@@ -559,7 +450,6 @@ img.i7 {
 		bottom: 0px;
 		width: 250px;
 		height: 92px;
-		background-color: green;
 	}
 
 	.sr_left {
@@ -567,7 +457,6 @@ img.i7 {
 		left: 5px;
 		width: 120px;
 		height: 92px;
-		background-color: blue;
 	}
 
 	.sr_right {
@@ -575,7 +464,6 @@ img.i7 {
 		right: 0px;
 		width: 120px;
 		height: 92px;
-		background-color: red;
 	}
 
 	.sr_slot {
@@ -684,18 +572,20 @@ img.i7 {
 .used_slot {
     z-index:2;
     height:143px;
-    background-color:green;
+/*    background-color:green;*/
 }
 .used_slot_advanced {
     z-index:1;
     height:0px;
     overflow:hidden;
-    background-color:green;
+/*    background-color:green;*/
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsFirstScrounger.png);
+    background-repeat: no-repeat;
 }
 .scrounger_slot {
     vertical-align: middle;
-    height:143px;
-    background-color:orange;
+    height:103px;
+/*    background-color:orange;*/
 }
 .text {
     margin-top:5px;
@@ -841,7 +731,7 @@ img.i7 {
 	-moz-transform: rotate(-45deg);
 }
 .itemTextCost {
-	bottom: 5px;
+	bottom: 10px;
 	display: inline;
 	width: 60px;
 	margin: 0px;
@@ -1217,12 +1107,36 @@ img.i7 {
     }
     .inv_edge {
         width:152px;
-        height:25px;
+        height:30px;
     }
     .inventory_content {
         width:152px;
         top:25px;
         bottom:25px;
+    }
+    .inventory_left_background{
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryLeft.png);
+        background-repeat: no-repeat;
+    }
+    .inventory_left_background_top{
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryLeftTop.png);
+        background-repeat: no-repeat;
+    }
+    .inventory_left_background_bot{
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryLeftBot.png);
+        background-repeat: no-repeat;
+    }
+    .inventory_right_background{
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryRight.png);
+        background-repeat: no-repeat;
+    }
+    .inventory_right_background_top{
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryRightTop.png);
+        background-repeat: no-repeat;
+    }
+    .inventory_right_background_bot{
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryRightBot.png);
+        background-repeat: no-repeat;
     }
     .matter_edge {
         width:25px;
@@ -1233,6 +1147,24 @@ img.i7 {
         left:25px;
         right:25px;
     }
+    .matter_background {
+/*    	height: 152px;*/
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryMatter.png);
+        background-repeat: no-repeat;
+    }
+    .matter_background_left{
+    	height: 152px;
+    	width: 30px;
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryMatterLeft.png);
+        background-repeat: no-repeat;
+    }
+    .matter_background_right{
+    	height: 152px;
+    	width: 30px;
+    	background-image: url(/Aufloesung1920x1080/Interface/InventoryMatterRight.png);
+        background-repeat: no-repeat;
+    }
+
     .kimage {
         width:256px;
         height:152px;

@@ -12,6 +12,12 @@
 // Meteor - get object : $(e.target).css({"background-color":"orange"});
 // Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);
 
+//target vs. currentTarget:
+//bei target nimmt die Funktion Bezug auf das Element, auf das geklickt wurde. Und zwar das zuoberst liegende Element
+//Beispiel bei Micha's Dropdown: Nachdem ich ein Bild über das DIV eingefügt hatte, reagierte die DropDown Funktion nicht mehr
+//nimmt man stattdessen currentTarget, so werden alle oberhalb liegenden Elemente ignoriert und das spezifizierte Element 
+//rafft, dass auf es geklickt wurde.
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////// CLIENT /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +27,7 @@ if (Meteor.isClient) {
     Meteor.subscribe("userData");
     Meteor.subscribe("playerData");
     Meteor.subscribe("MatterBlocks");
+    Meteor.subscribe("ressources");
 
     //Get Data
     Template.gameMiddle.mineSlots = function() {
@@ -84,30 +91,31 @@ if (Meteor.isClient) {
 
       return playerData.find({});
 
-    }
+    };
+
+    Template.mineBuyMenu.mineSlots = function() {
+
+      return mineSlots.find({});
+
+    };
 
     Template.gameMiddle.playerData = function() {
 
       return playerData.find({});
 
-    }
+    };
+
+    Template.standardBorder.ressources = function() {
+
+      return ressources.find({});
+
+    };
 
     /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
 
-            if (!$("#mineBuyMenu").length) {
-
-                Router.current().render('mineBuyMenu', {
-                    to: 'buyMenu'
-                });
-
-            } else {
-
-                $('#mineBuyMenu').show();
-
-            }
 
         },
 
@@ -249,23 +257,56 @@ if (Meteor.isClient) {
 
     Template.gameMiddle.events({
         'click .used_slot': function(e, t) {
-            if ($(e.target).next(".used_slot_advanced").height() == 0) {
-                $(e.target).next(".used_slot_advanced").animate({
+
+          /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
+                  $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "100%"
+                  }, 0);
+                  var height = $(e.currentTarget).next(".used_slot_advanced").height()+13 + "px";
+                  $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                      "height": "0px"
+                  }, 0, function() {
+
+                      $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                          "margin-top": "-13px"
+                      }, 150, function() {
+
+                        $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                      });
+                  });
+                
+            } else {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
+            }
+
+              /*MICHA'S URSPRÜNGLICHE VERSION*/
+
+/*            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
                     "height": "100%"
                 }, 0);
-                var height = $(e.target).next(".used_slot_advanced").height() + "px";
-                $(e.target).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                var height = $(e.currentTarget).next(".used_slot_advanced").height()+13 + "px";
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                     "height": "0px"
                 }, 0);
-                $(e.target).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                     "height": height
                 }, 1000);
-
             } else {
-                $(e.target).next(".used_slot_advanced").animate({
-                    "height": "0px"
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "0px",
                 }, 1000);
-            }
+            }*/
         },
 
         'click .item': function(e, t) {
@@ -291,9 +332,11 @@ if (Meteor.isClient) {
             $('#matter').text("Matter: "+this.value);
 
             var currentUser = Meteor.users.findOne({_id: Meteor.userId()}).username;
-            console.log(currentUser);
 
             var cursorPlayerData = playerData.findOne({user: currentUser});
+
+            console.log(cursorPlayerData);
+
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
 
             if($('#AmountScroungerSlots').children()) {$('#AmountScroungerSlots').children().remove();}
@@ -320,6 +363,16 @@ if (Meteor.isClient) {
     Template.mineBuyMenu.events({
 
       'click #buyMenuYes' : function(e, t){
+
+            var currentUser = Meteor.users.findOne({_id: Meteor.userId()}).username;
+            var cursorPlayerData = playerData.findOne({user: currentUser});
+            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+
+/*            console.log(amountOwnSlots);
+            console.log(cursorPlayerData._id);*/
+
+            //updating the database
+            playerData.update({_id: cursorPlayerData._id}, {$set:{"mine.ownSlots": amountOwnSlots+1 }})
 
             $('#mineBuyMenu').fadeOut();
 

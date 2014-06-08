@@ -90,15 +90,15 @@ if (Meteor.isServer) {
                         var matterColor = cMatter.color;
                         var ownProfit = 0.5 * cValue;
                         var supProfit = (0.5 * cValue) / (allSups.length);
-                        var cUserResources = resources.findOne({
+                        var cUserRessources = ressources.findOne({
                             user: cUser
                         });
-                        var cUserMatter = cUserResources.values[matterColor].matter;
+                        var cUserMatter = cUserRessources.values[matterColor].matter;
 
                         //owner
                         var obj0 = {};
                         obj0['values.' + matterColor + '.matter'] = cUserMatter + ownProfit;
-                        resources.update({
+                        ressources.update({
                             user: cUser
                         }, {
                             $set: obj0
@@ -107,12 +107,12 @@ if (Meteor.isServer) {
                         //sups
                         for (var l = 0; l < allSups.length; l++) {
                             var obj1 = {};
-                            var cSupResources = resources.findOne({
+                            var cSupRessources = ressources.findOne({
                                 user: allSups[l]
                             });
-                            var cSupMatter = cSupResources.values[matterColor].matter;
+                            var cSupMatter = cSupRessources.values[matterColor].matter;
                             obj1['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
-                            resources.update({
+                            ressources.update({
                                 user: allSups[l]
                             }, {
                                 $set: obj0
@@ -182,6 +182,16 @@ if (Meteor.isServer) {
     Meteor.publish("playerData", function() {
         if (this.userId) {
             return playerData.find({});
+        } else {
+            this.ready();
+        }
+    });
+
+    Meteor.publish("ressources", function() {
+        if (this.userId) {
+            var self = Meteor.users.findOne({_id: this.userId});
+            var name = self.username;
+            return ressources.find({user: name});
         } else {
             this.ready();
         }
