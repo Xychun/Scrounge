@@ -140,8 +140,10 @@ if (Meteor.isClient) {
         	var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             });
-        	mine.update({_id: '2k87C2HCsbiLFqrQ9'}, {$set: {'owns0.stamp.time': new Date(), 'scrs0.time': new Date(), 'owns0.input.matter': '0101'}});
-        	mine.update({_id: 'wSBw6RtLxPeuDxSyi'}, {$set: {'owns0.stamp.time': new Date(), 'scrs0.time': new Date(), 'owns0.input.matter': '0101'}});
+            //dummy1
+        	mine.update({_id: 'syYrdELQfDrNvuSiY'}, {$set: {'owns0.stamp': new Date(), 'owns0.sup0': 'dummy2', 'scrs0.stamp': new Date(), 'scrs0.victim': 'dummy2', 'owns0.input': '0101'}});
+        	//dummy2
+        	mine.update({_id: 'mJNAuu8BknmH3Z93G'}, {$set: {'owns0.stamp': new Date(), 'owns0.sup0': 'dummy1', 'scrs0.stamp': new Date(), 'scrs0.victim': 'dummy1', 'owns0.input': '0101'}});
         }
 
     });
