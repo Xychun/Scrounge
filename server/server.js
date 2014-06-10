@@ -90,15 +90,15 @@ if (Meteor.isServer) {
                         var matterColor = cMatter.color;
                         var ownProfit = 0.5 * cValue;
                         var supProfit = (0.5 * cValue) / (allSups.length);
-                        var cUserRessources = ressources.findOne({
+                        var cUserResources = resources.findOne({
                             user: cUser
                         });
-                        var cUserMatter = cUserRessources.values[matterColor].matter;
+                        var cUserMatter = cUserResources.values[matterColor].matter;
 
                         //owner
                         var obj0 = {};
                         obj0['values.' + matterColor + '.matter'] = cUserMatter + ownProfit;
-                        ressources.update({
+                        resources.update({
                             user: cUser
                         }, {
                             $set: obj0
@@ -107,12 +107,12 @@ if (Meteor.isServer) {
                         //sups
                         for (var l = 0; l < allSups.length; l++) {
                             var obj1 = {};
-                            var cSupRessources = ressources.findOne({
+                            var cSupResources = resources.findOne({
                                 user: allSups[l]
                             });
-                            var cSupMatter = cSupRessources.values[matterColor].matter;
+                            var cSupMatter = cSupResources.values[matterColor].matter;
                             obj1['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
-                            ressources.update({
+                            resources.update({
                                 user: allSups[l]
                             }, {
                                 $set: obj0
@@ -187,11 +187,11 @@ if (Meteor.isServer) {
         }
     });
 
-    Meteor.publish("ressources", function() {
+    Meteor.publish("resources", function() {
         if (this.userId) {
             var self = Meteor.users.findOne({_id: this.userId});
             var name = self.username;
-            return ressources.find({user: name});
+            return resources.find({user: name});
         } else {
             this.ready();
         }
