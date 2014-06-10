@@ -10,7 +10,7 @@
 // var htmlElm = jelm[0];//convert to HTML Element
 
 // Meteor - get object : $(e.target).css({"background-color":"orange"});
-// Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);
+// Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);    e.currentTarget.id;
 
 //target vs. currentTarget:
 //bei target nimmt die Funktion Bezug auf das Element, auf das geklickt wurde. Und zwar das zuoberst liegende Element
@@ -77,7 +77,7 @@ if (Meteor.isClient) {
 
     Template.standardBorder.resources = function() {
 
-      return resources.find({});
+        return resources.find({});
 
     };
 
@@ -226,7 +226,7 @@ if (Meteor.isClient) {
         },
 
         'mouseover .hover': function(e, t) {
-            console.log(e.target);
+            //console.log(e.target);
             var pos = $(e.target).css("background-position");
             var size = $(e.target).css("padding");
             var bImage = $(e.target).css("background-image");
@@ -236,7 +236,7 @@ if (Meteor.isClient) {
             });
         },
         'mouseout .hover': function(e, t) {
-            console.log(e.target);
+            //console.log(e.target);
             var pos = $(e.target).css("background-position");
             var size = $(e.target).css("padding");
             var bImageHover = $(e.target).css("background-image");
@@ -302,6 +302,7 @@ if (Meteor.isClient) {
         },
 
         'click .item': function(e, t) {
+            Session.set("clickedMatter", e.currentTarget.id);
 
             //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
 
@@ -331,8 +332,6 @@ if (Meteor.isClient) {
                 user: currentUser
             });
 
-            //console.log(cursorPlayerData);
-
             var amountSupSlots = cursorPlayerData.mine.supSlots;
 
             if ($('#AmountScroungerSlots').children()) {
@@ -340,8 +339,8 @@ if (Meteor.isClient) {
             }
 
             for (i = 0; i < 6; i++) {
-                
-                if(amountSupSlots>i) {
+
+                if (amountSupSlots > i) {
 
                     $('#AmountScroungerSlots').append("<div class='sslots_available'> </div>");
 
@@ -366,13 +365,13 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
-
-            /*            console.log(amountOwnSlots);
-            console.log(cursorPlayerData._id);*/
 
             //updating the database
-            playerData.update({_id: cursorPlayerData._id}, {$set:{"mine.ownSlots": amountOwnSlots+1 }});
+            Meteor.call('buyMatter', Session.get("clickedMatter"), function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
 
             $('#mineBuyMenu').fadeOut();
 
@@ -431,32 +430,32 @@ if (Meteor.isClient) {
                 slide_right_simple('slot_items_content');
                 break;
             default:
-                console.log("Slide für diesen Hover nicht definiert !");
+                //console.log("Slide für diesen Hover nicht definiert !");
                 break;
         }
     }
 
 
     function slide_left_simple(element) {
-        console.log(element);
-        console.log($("."+element).position().left);
+        //console.log(element);
+        //console.log($("." + element).position().left);
         size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
         var pos = size.p;
         var pos_r = size.pr + "px";
         var pos_p = "-=" + size.pp + "px";
 
         //console.log("s1: "+$("#s1").position().top);
-        if ($("."+element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
         {
-            if ($("."+element).position().left >= 60) {
+            if ($("." + element).position().left >= 60) {
                 // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("."+element).filter(':not(:animated)').animate({
+                $("." + element).filter(':not(:animated)').animate({
                     "left": "-=60px"
                 }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
                     //Animation im laufenden Intervall  
-                    $("."+element).animate({
+                    $("." + element).animate({
                         "left": "-=60px"
                     }, 300, "linear");
                 };
@@ -473,17 +472,17 @@ if (Meteor.isClient) {
         var pos_p = "+=" + size.pp + "px";
 
         //console.log("s1: "+$("#s1").position().top);
-        if ($("."+element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
         {
-            if ($("."+element).position().left >= 0) {
+            if ($("." + element).position().left >= 0) {
                 // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("."+element).filter(':not(:animated)').animate({
+                $("." + element).filter(':not(:animated)').animate({
                     "left": "+=60px"
                 }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
                     //Animation im laufenden Intervall  
-                    $("."+element).animate({
+                    $("." + element).animate({
                         "left": "+=60px"
                     }, 300, "linear");
                 };
@@ -501,16 +500,9 @@ if (Meteor.isClient) {
 
 
 
-
-
-
-
-
-
-
     function slide_start(direction, endless, element1, element2) {
         element2 = (typeof element2 === "undefined") ? "0" : element2; // optionaler Parameter wenn nicht vorhanden dann = 0
-        console.log(direction + " " + endless + " " + element1 + " " + element2);
+        //console.log(direction + " " + endless + " " + element1 + " " + element2);
     }
 
     function slide_left() {
