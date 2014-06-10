@@ -27,7 +27,7 @@ if (Meteor.isClient) {
     Meteor.subscribe("userData");
     Meteor.subscribe("playerData");
     Meteor.subscribe("MatterBlocks");
-    Meteor.subscribe("ressources");
+    Meteor.subscribe("resources");
 
     //Get Data
     Template.gameMiddle.mineSlots = function() {
@@ -105,9 +105,9 @@ if (Meteor.isClient) {
 
     };
 
-    Template.standardBorder.ressources = function() {
+    Template.standardBorder.resources = function() {
 
-      return ressources.find({});
+      return resources.find({});
 
     };
 
@@ -337,13 +337,13 @@ if (Meteor.isClient) {
 
             console.log(cursorPlayerData);
 
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+            var amountSupSlots = cursorPlayerData.mine.supSlots;
 
             if($('#AmountScroungerSlots').children()) {$('#AmountScroungerSlots').children().remove();}
 
             for (i = 0; i < 6; i++) {
                 
-                if(amountOwnSlots>i) {
+                if(amountSupSlots>i) {
 
                 $('#AmountScroungerSlots').append( "<div class='sslots_available'> </div>");
 
@@ -372,7 +372,7 @@ if (Meteor.isClient) {
             console.log(cursorPlayerData._id);*/
 
             //updating the database
-            playerData.update({_id: cursorPlayerData._id}, {$set:{"mine.ownSlots": amountOwnSlots+1 }})
+            playerData.update({_id: cursorPlayerData._id}, {$set:{"mine.ownSlots": amountOwnSlots+1 }});
 
             $('#mineBuyMenu').fadeOut();
 
@@ -424,11 +424,89 @@ if (Meteor.isClient) {
             case 'base_down':
                 slide_down();
                 break;
+            case 'left_slider_slot_items':
+                slide_left_simple('slot_items_content');
+                break;
+            case 'right_slider_slot_items':
+                slide_right_simple('slot_items_content');
+                break;
             default:
                 console.log("Slide für diesen Hover nicht definiert !");
                 break;
         }
     }
+
+
+    function slide_left_simple(element) {
+        console.log(element);
+        console.log($("."+element).position().left);
+        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+        var pos = size.p;
+        var pos_r = size.pr + "px";
+        var pos_p = "-=" + size.pp + "px";
+
+        //console.log("s1: "+$("#s1").position().top);
+        if ($("."+element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            if ($("."+element).position().left >= 60) {
+                // Vorab Animation da Intervall erst nach [Time] anfängt
+                $("."+element).filter(':not(:animated)').animate({
+                    "left": "-=60px"
+                }, 300, "linear");
+                //Rekursiver Intervall (unendlich)
+                var action = function() {
+                    //Animation im laufenden Intervall  
+                    $("."+element).animate({
+                        "left": "-=60px"
+                    }, 300, "linear");
+                };
+                //Start des Intervalls
+                interval = setInterval(action, 300);
+            }
+        }
+    }
+
+    function slide_right_simple(element) {
+        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+        var pos = size.p;
+        var pos_r = size.pr + "px";
+        var pos_p = "+=" + size.pp + "px";
+
+        //console.log("s1: "+$("#s1").position().top);
+        if ($("."+element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            if ($("."+element).position().left >= 0) {
+                // Vorab Animation da Intervall erst nach [Time] anfängt
+                $("."+element).filter(':not(:animated)').animate({
+                    "left": "+=60px"
+                }, 300, "linear");
+                //Rekursiver Intervall (unendlich)
+                var action = function() {
+                    //Animation im laufenden Intervall  
+                    $("."+element).animate({
+                        "left": "+=60px"
+                    }, 300, "linear");
+                };
+                //Start des Intervalls
+                interval = setInterval(action, 300);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function slide_start(direction, endless, element1, element2) {
         element2 = (typeof element2 === "undefined") ? "0" : element2; // optionaler Parameter wenn nicht vorhanden dann = 0

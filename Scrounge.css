@@ -410,7 +410,7 @@ img.i7 {
 	    cursor:default;
 	}
 
-	.text_specialRessources {
+	.text_specialResources {
 		display: inline;
 		width: 100px;
 		right: 5px;
@@ -437,7 +437,7 @@ img.i7 {
 		height: 50px;
 	}
 
-	.img_specialRessources {
+	.img_specialResources {
 		position: relative;
 		display: inline;
 		left: 5px;
@@ -446,7 +446,7 @@ img.i7 {
 		height: 25px;
 	}
 
-	.wrapper_specialRessource {
+	.wrapper_specialResource {
 		bottom: 0px;
 		width: 250px;
 		height: 92px;
@@ -688,7 +688,6 @@ img.i7 {
 .slot_items_slider {
     width:21px;
     height:60px;
-    background-color:orange;
 }
 .slot_items_wrapper {
     overflow:hidden;
@@ -700,6 +699,7 @@ img.i7 {
 .slot_items_content {
     height:90px;
     width:700px;
+    overflow: hidden;
 }
 .item {
     float:left;
@@ -748,7 +748,7 @@ img.i7 {
 
 }
 .slider_base {
-    width:61px;
+    width:110px;
     height:100%;
     display: block;
 }
@@ -1100,6 +1100,17 @@ img.i7 {
         width:54px;
         height:110px;
     }
+
+
+	
+
+
+	/*INVENTORY*/
+
+
+
+
+
     .inventory {
         width:152px;
         top:162px;
@@ -1113,6 +1124,17 @@ img.i7 {
         width:152px;
         top:25px;
         bottom:25px;
+        overflow: hidden;
+    }
+    .inventory_slots {
+    	width: 120px;
+    	height: 120px;
+    	left: 50%;
+    	position: relative;
+    	margin-top: 10px;
+    	margin-left: -60px;
+    	background-image: url(/Aufloesung1920x1080/Interface/InventorySlot.png);
+        background-repeat: no-repeat;
     }
     .inventory_left_background{
     	background-image: url(/Aufloesung1920x1080/Interface/InventoryLeft.png);
@@ -1138,6 +1160,15 @@ img.i7 {
     	background-image: url(/Aufloesung1920x1080/Interface/InventoryRightBot.png);
         background-repeat: no-repeat;
     }
+
+
+
+    /*MATTER*/
+
+
+
+
+
     .matter_edge {
         width:25px;
         height:152px;
@@ -1164,6 +1195,13 @@ img.i7 {
     	background-image: url(/Aufloesung1920x1080/Interface/InventoryMatterRight.png);
         background-repeat: no-repeat;
     }
+
+
+
+
+
+
+
 
     .kimage {
         width:256px;
@@ -1270,6 +1308,14 @@ img.i7 {
         background-repeat: repeat-y;
         border-style: none;
     }
+
+
+
+
+	/*SLIDER*/
+
+
+
     #left_slider_matter {
         background-position: 0px 0px;
     }
@@ -1301,5 +1347,25 @@ img.i7 {
         background-position: 0px 0px;
         left: 50px;
         top: -30px;
+    }
+    #base_slider_up {
+        background-position: 0px 0px;
+        left: 50px;
+        top: -30px;
+    }
+    #base_slider_down {
+        background-position: 0px 0px;
+        left: 50px;
+        top: -30px;
+    }
+    .left_slider_slot_items_background {
+    	background-position: center;
+    	background-image:url(/Aufloesung1920x1080/Interface/LeftSliderSlotItemsNormal.png);
+        background-repeat: no-repeat;
+    }
+    .right_slider_slot_items_background {
+    	background-position: center;
+    	background-image:url(/Aufloesung1920x1080/Interface/RightSliderSlotItemsNormal.png);
+        background-repeat: no-repeat;
     }
 }

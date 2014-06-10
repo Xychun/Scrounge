@@ -8,7 +8,13 @@
         </div>
         <div class="inventory left">
             <div class="inv_edge inv_top top inventory_left_background_top"></div>
-            <div class="inventory_content inventory_left_background"></div>
+            <div class="inventory_content inventory_left_background">
+            	
+	            <div class="inventory_slots"> </div>
+	            <div class="inventory_slots"> </div>
+	            <div class="inventory_slots"> </div>
+
+            </div>
             <div class="inv_edge inv_bot bot inventory_left_background_bot"></div>
         </div>
         <div class="corner bot left">
@@ -46,38 +52,38 @@
         <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
         <div id="matter_content" class="bot matter_background">
 
-        	{{#each ressources}}
+        	{{#each resources}}
 
         	<div class="matter_colorBlocks">
         		<img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png">
         		<div class="text_matter" > {{values.green.matter}} </div>
-        		<div class="wrapper_specialRessource">
+        		<div class="wrapper_specialResource">
         			<div class="sr_left"> 
         				<div class="sr_slot">
-	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srMine_green.png">
-	        				<div class="text_specialRessources" > {{values.green.srMine}} </div>
+	        				<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_green.png">
+	        				<div class="text_specialResources" > {{values.green.sr1}} </div>
         				</div>
         				<div class="sr_slot"> 
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srLaboratory_green.png">
-	        				<div class="text_specialRessources" > {{values.green.srLaboratory}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_green.png">
+	        				<div class="text_specialResources" > {{values.green.sr2}} </div>
         				</div>
         				<div class="sr_slot">
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srThievery_green.png">
-	        				<div class="text_specialRessources" > {{values.green.srThievery}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_green.png">
+	        				<div class="text_specialResources" > {{values.green.sr3}} </div>
         				</div>
         			</div>
         			<div class="sr_right"> 
         				<div class="sr_slot">
-	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srSmelter_green.png">
-	        				<div class="text_specialRessources" > {{values.green.srSmelter}} </div>
+	        				<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_green.png">
+	        				<div class="text_specialResources" > {{values.green.sr4}} </div>
         				</div>
         				<div class="sr_slot"> 
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srWorkshop_green.png">
-	        				<div class="text_specialRessources" > {{values.green.srWorkshop}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_green.png">
+	        				<div class="text_specialResources" > {{values.green.sr5}} </div>
         				</div>
         				<div class="sr_slot">
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srBattlefield_green.png">
-	        				<div class="text_specialRessources" > {{values.green.srBattlefield}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_green.png">
+	        				<div class="text_specialResources" > {{values.green.sr6}} </div>
         				</div>
         			</div>
         		</div>
@@ -85,33 +91,33 @@
         	<div class="matter_colorBlocks">
         		<img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png">
         		<div class="text_matter" > {{values.red.matter}} </div>
-        		<div class="wrapper_specialRessource">
+        		<div class="wrapper_specialResource">
         			<div class="sr_left"> 
         				<div class="sr_slot">
-	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srMine_red.png">
-	        				<div class="text_specialRessources" > {{values.red.srMine}} </div>
+	        				<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_red.png">
+	        				<div class="text_specialResources" > {{values.red.sr1}} </div>
         				</div>
         				<div class="sr_slot"> 
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srLaboratory_red.png">
-	        				<div class="text_specialRessources" > {{values.red.srLaboratory}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_red.png">
+	        				<div class="text_specialResources" > {{values.red.sr2}} </div>
         				</div>
         				<div class="sr_slot">
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srThievery_red.png">
-	        				<div class="text_specialRessources" > {{values.red.srThievery}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_red.png">
+	        				<div class="text_specialResources" > {{values.red.sr3}} </div>
         				</div>
         			</div>
         			<div class="sr_right"> 
         				<div class="sr_slot">
-	        				<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srSmelter_red.png">
-	        				<div class="text_specialRessources" > {{values.red.srSmelter}} </div>
+	        				<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_red.png">
+	        				<div class="text_specialResources" > {{values.red.sr4}} </div>
         				</div>
         				<div class="sr_slot"> 
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srWorkshop_red.png">
-	        				<div class="text_specialRessources" > {{values.red.srWorkshop}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_red.png">
+	        				<div class="text_specialResources" > {{values.red.sr5}} </div>
         				</div>
         				<div class="sr_slot">
-        					<img class="img_specialRessources" src="/Aufloesung1920x1080/SpecialRessources/srBattlefield_red.png">
-	        				<div class="text_specialRessources" > {{values.red.srBattlefield}} </div>
+        					<img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_red.png">
+	        				<div class="text_specialResources" > {{values.red.sr6}} </div>
         				</div>
         			</div>
         		</div>
@@ -152,7 +158,7 @@
         <div id="improvements" class="top left right"></div>
         <div class="areas left bot">
             <div id="up_slider_base" class="slider_base_height top">
-                <img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+                <img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
             </div>
             <div id="base_area">
                 <div id="base_area_content" class="relative">
@@ -217,7 +223,7 @@
                             <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
                         </div>
                         <div class="slot_items">
-                            <div id="left_slider_slot_items" class="left slot_items_slider"></div>
+                            <div id="left_slider_slot_items" class="slider left slot_items_slider left_slider_slot_items_background"></div>
                             <div class="slot_items_wrapper">
                                 <div class="slot_items_content relative">
 
@@ -233,7 +239,7 @@
 
                                 </div>
                             </div>
-                            <div id="right_slider_slot_items" class="right slot_items_slider"></div>
+                            <div id="right_slider_slot_items" class="slider right slot_items_slider right_slider_slot_items_background"></div>
                         </div>
                     </div>
 
@@ -274,7 +280,7 @@
                 </div>
             </div>
             <div id="down_slider_base" class="slider_base_height bot">
-                <img id="base_down" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/HoverButtonBrownNormal.gif">
+                <img id="base_down" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
             </div>
         </div>
 
