@@ -46,14 +46,14 @@ if (Meteor.isServer) {
             for (var j = 0; j < cPData.mine.ownSlots; j++) {
                 var cSlot = 'owns' + j;
                 //Matter exists?
-                var cMatterID = cMine[cSlot].input.matter;
+                var cMatterID = cMine[cSlot].input;
                 if (cMatterID > 0) {
                     var cMatter = MatterBlocks.findOne({
                         matter: cMatterID
                     });
                     var cValue = cMatter.value;
 
-                    var startTime = cMine[cSlot].stamp.time.getTime();
+                    var startTime = cMine[cSlot].stamp.getTime();
                     var progress = (serverTime - startTime) * (7.5 / 3600000);
 
                     var allSups = new Array();
@@ -77,8 +77,8 @@ if (Meteor.isServer) {
 
                             allSups[k] = cSup;
                             //calculate mined by cSup
-                            var sTime = sMine['scrs' + result].time.getTime();
-                            var sRate = sMine['scrs' + result].miningrate;
+                            var sTime = sMine['scrs' + result].stamp.getTime();
+                            var sRate = sMine['scrs' + result].benefit;
                             progress = progress + (serverTime - sTime) * (sRate / 3600000);
 
                             /*console.log(cUser + ' Progress: ' + progress);*/
@@ -143,7 +143,7 @@ if (Meteor.isServer) {
 
                         //reset owner slots
                         var obj3 = {};
-                        obj3[cSlot + '.input.matter'] = '0000';
+                        obj3[cSlot + '.input'] = '0000';
                         for (var m = 0; m < cPData.mine.supSlots; m++) {
                             obj3[cSlot + '.sup' + m] = 'false';
                         }

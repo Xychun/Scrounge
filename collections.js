@@ -13,5 +13,5 @@ mine = new Meteor.Collection("mine");
 laboratory = new Meteor.Collection("laboratory");
 workshop = new Meteor.Collection("workshop");
 battlefield = new Meteor.Collection("battlefield");
-thivery = new Meteor.Collection("thivery");
+thievery = new Meteor.Collection("thievery");
 smelter = new Meteor.Collection("smelter");
