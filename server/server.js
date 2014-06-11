@@ -55,6 +55,7 @@ if (Meteor.isServer) {
 
                     var startTime = cMine[cSlot].stamp.getTime();
                     var progress = (serverTime - startTime) * (7.5 / 3600000);
+                    console.log(cUser + ': ' + progress);
 
                     var allSups = new Array();
                     //Iterate Supporter
@@ -131,7 +132,7 @@ if (Meteor.isServer) {
                                 index2++;
                             }
 
-                            obj2 = {};
+                            var obj2 = {};
                             obj2['scrs' + result2 + '.victim'] = 'false';
 
                             mine.update({

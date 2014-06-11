@@ -10,9 +10,19 @@ if (Meteor.isServer) {
                 _id: this.userId
             }).username;
             var colorCode = matterId.substring(0, 2);
+            switch (colorCode) {
+                case "01":
+                    var matterColor = "green";
+                    break;
+                case "02":
+                    var matterColor = "red";
+                    break;
+                default:
+                    console.log("methods.js: something's wrong...");
+            }
             var matter = resources.findOne({
                 user: name
-            }).values['color' + colorCode].matter;
+            }).values[matterColor].matter;
             var cost = MatterBlocks.findOne({
                 matter: matterId
             }).cost;
@@ -40,7 +50,7 @@ if (Meteor.isServer) {
                         });
                         //pay matter
                         var obj1 = {};
-                        obj1['values.color' + colorCode + '.matter'] = matter - cost;
+                        obj1['values.' + matterColor + '.matter'] = matter - cost;
                         resources.update({
                             user: name
                         }, {

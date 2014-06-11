@@ -23,34 +23,91 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient) {
-    //Subscriptions
+
+
+    /////////////////////////
+    ///// SUBSCRIPTIONS /////
+    /////////////////////////
+
     Meteor.subscribe("userData");
     Meteor.subscribe("playerData");
     Meteor.subscribe("MatterBlocks");
     Meteor.subscribe("resources");
 
-    //Get Data
-    Template.gameMiddle.mineSlots = function() {
-        var self = Meteor.users.findOne({
+
+    ////////////////////////////
+    ///// TEMPLATE RETURNS /////
+    ////////////////////////////
+
+    //To-DO für andere Menüs anpassen
+    Template.gameMiddle.mineUnusedSlots = function() {
+        //Mine
+        var name = Meteor.users.findOne({
             _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
         });
-        var menu = self.menu;
-        var cu = self.cu;
-        var cursor = playerData.findOne({
-            user: cu
+        var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+        var cursorMine = mine.findOne({
+            user: name
         });
         var objects = new Array();
-        var amount = cursor[menu].ownSlots;
-        for (var i = 0; i < amount; i++) {
-            var a = mine.findOne({
-                user: cu
-            });
-            objects[i] = a['owns' + i];
+
+        for (var i = 0; i < amountOwnSlots; i++) {
+            if (cursorMine['owns' + i].input == "0000")
+                objects[i] = {};
         }
         return objects;
     };
 
-    //Get Data
+    //To-DO für andere Menüs anpassen
+    Template.gameMiddle.mineUsedSlots = function() {
+        //Mine
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+        var cursorMine = mine.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var cursorMatterColors = MatterBlocks.find({});
+
+        for (var i = 0; i < amountOwnSlots; i++) {
+            if (cursorMine['owns' + i].input > 0){
+                var obj0 = {};
+                obj0['matter'] = cursorMine['owns' + i].input;
+                objects[i] = MatterBlocks.findOne(obj0);
+            }                
+        }
+        return objects;
+    };
+
+    Template.gameMiddle.blockColors = function() {
+        var cursorMatterColors = MatterBlocks.find({}, {
+            fields: {
+                'color': 1
+            }
+        }).fetch();
+        var colorArray = new Array();
+        for (i = 0; i < cursorMatterColors.length; i++) {
+            colorArray[i] = cursorMatterColors[i].color;
+        }
+        var result = distinct(colorArray);
+        var objects = new Array();
+        for (var j = 0; j < result.length; j++) {
+            objects[j] = {
+                'color': result[j]
+            };
+        }
+        return objects;
+    };
+
     Template.gameMiddle.matterBlocks = function() {
 
         return MatterBlocks.find({});
@@ -81,6 +138,11 @@ if (Meteor.isClient) {
 
     };
 
+
+    //////////////////
+    ///// EVENTS /////
+    //////////////////
+
     /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
 
@@ -103,37 +165,6 @@ if (Meteor.isClient) {
 
             }
 
-        },
-
-        'click #testButton3': function(e, t) {
-            //insert test matter - TO-DO: Buy matter functionality
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            });
-            //dummy1
-            mine.update({
-                _id: 'syYrdELQfDrNvuSiY'
-            }, {
-                $set: {
-                    'owns0.stamp': new Date(),
-                    'owns0.sup0': 'dummy2',
-                    'scrs0.stamp': new Date(),
-                    'scrs0.victim': 'dummy2',
-                    'owns0.input': '0101'
-                }
-            });
-            //dummy2
-            mine.update({
-                _id: 'mJNAuu8BknmH3Z93G'
-            }, {
-                $set: {
-                    'owns0.stamp': new Date(),
-                    'owns0.sup0': 'dummy1',
-                    'scrs0.stamp': new Date(),
-                    'scrs0.victim': 'dummy1',
-                    'owns0.input': '0101'
-                }
-            });
         }
 
     });
@@ -225,6 +256,8 @@ if (Meteor.isClient) {
             slide_stop();
         },
 
+        //To-DO Media Queries in 3 CSS files aufteilen und je nach Query nutzen
+        //      Evtl. SpriteSheets anlegen im 4er Block und abhängig von der Größe benutzen
         'mouseover .hover': function(e, t) {
             //console.log(e.target);
             var pos = $(e.target).css("background-position");
@@ -738,6 +771,15 @@ if (Meteor.isClient) {
             repositioning(ready_check);
         }
     });
+
+    //Changes array to unique array with distinct values
+
+    function distinct(array) {
+        var uniqueArray = array.filter(function(elem, pos) {
+            return array.indexOf(elem) == pos;
+        })
+        return uniqueArray
+    }
 
     //Deps.Autorun
     Deps.autorun(function() {
