@@ -5,32 +5,51 @@
 if (Meteor.isServer) {
     //Methods
     Meteor.methods({
-        //TO-DO Resourcen beim user abziehen
         buyMatter: function(matterId) {
             var name = Meteor.users.findOne({
                 _id: this.userId
             }).username;
-
-            var amountSlots = playerData.findOne({
+            var colorCode = matterId.substring(0, 2);
+            var matter = resources.findOne({
                 user: name
-            }).mine.ownSlots;
+            }).values['color' + colorCode].matter;
+            var cost = MatterBlocks.findOne({
+                matter: matterId
+            }).cost;
 
-            var cursor = mine.findOne({
-                user: name
-            })
-            for (i = 0; i < amountSlots; i++) {
-                if (cursor['owns' + i].input == "0000") {
-                    var obj0 = {};
+            //check costs
+            if (matter >= cost) {
+                var amountSlots = playerData.findOne({
+                    user: name
+                }).mine.ownSlots;
+
+                var cursor = mine.findOne({
+                    user: name
+                })
+
+                //Iterate all own slots and fill matter into free one
+                for (i = 0; i < amountSlots; i++) {
+                    if (cursor['owns' + i].input == "0000") {
+                        var obj0 = {};
                         obj0['owns' + i + '.stamp'] = new Date();
                         obj0['owns' + i + '.input'] = matterId;
-                    mine.update({
-                        user: name
-                    }, {
-                        $set: obj0
-                    });
+                        mine.update({
+                            user: name
+                        }, {
+                            $set: obj0
+                        });
+                        //pay matter
+                        var obj1 = {};
+                        obj1['values.color' + colorCode + '.matter'] = matter - cost;
+                        resources.update({
+                            user: name
+                        }, {
+                            $set: obj1
+                        });
+                        break;
+                    }
                 }
             }
-
         },
 
         init: function() {
