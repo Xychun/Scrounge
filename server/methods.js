@@ -5,6 +5,10 @@
 if (Meteor.isServer) {
     //Methods
     Meteor.methods({
+        getServerTime: function(){
+            return new Date();
+        },
+
         buyMatter: function(matterId) {
             var name = Meteor.users.findOne({
                 _id: this.userId
@@ -91,13 +95,13 @@ if (Meteor.isServer) {
                 user: name,
                 values: {
                     green: {
-                        matter: 14,
-                        sr1: 4,
-                        sr2: 6,
-                        sr3: 9,
-                        sr4: 2,
-                        sr5: 1,
-                        sr6: 15
+                        matter: 0,
+                        sr1: 0,
+                        sr2: 0,
+                        sr3: 0,
+                        sr4: 0,
+                        sr5: 0,
+                        sr6: 0
                     }
                 }
             }, function(err) {
@@ -130,7 +134,9 @@ if (Meteor.isServer) {
                     ownSlots: 1,
                     scrSlots: 1,
                     supSlots: 1,
-                    science: 0.1
+                    science: 0.1,
+                    minControl: 0.1,
+                    maxControl: 10
                 },
                 laboratory: {
                     ownItem: {
@@ -150,7 +156,9 @@ if (Meteor.isServer) {
                     ownSlots: 1,
                     scrSlots: 1,
                     supSlots: 1,
-                    science: 0.1
+                    science: 0.1,
+                    minControl: 0.1,
+                    maxControl: 10
                 },
                 workshop: {
                     ownItem: {
@@ -170,7 +178,9 @@ if (Meteor.isServer) {
                     ownSlots: 1,
                     scrSlots: 1,
                     supSlots: 1,
-                    science: 0.1
+                    science: 0.1,
+                    minControl: 0.1,
+                    maxControl: 10
                 },
                 battlefield: {
                     ownItem: {
@@ -190,7 +200,9 @@ if (Meteor.isServer) {
                     ownSlots: 1,
                     scrSlots: 1,
                     supSlots: 1,
-                    science: 0.1
+                    science: 0.1,
+                    minControl: 0.1,
+                    maxControl: 10
                 },
                 thivery: {
                     ownItem: {
@@ -210,7 +222,9 @@ if (Meteor.isServer) {
                     ownSlots: 1,
                     scrSlots: 1,
                     supSlots: 1,
-                    science: 0.1
+                    science: 0.1,
+                    minControl: 0.1,
+                    maxControl: 10
                 },
                 smelter: {
                     ownItem: {
@@ -230,7 +244,9 @@ if (Meteor.isServer) {
                     ownSlots: 1,
                     scrSlots: 1,
                     supSlots: 1,
-                    science: 0.1
+                    science: 0.1,
+                    minControl: 0.1,
+                    maxControl: 10
                 }
             }, function(err) {
                 if (err) {
@@ -250,10 +266,10 @@ if (Meteor.isServer) {
                         min: 5,
                         max: 10
                     },
-                    sup0: "false"
+                    sup0: ""
                 },
                 scrs0: {
-                    victim: "false",
+                    victim: "",
                     stamp: " ",
                     benefit: 5
                 }
@@ -275,10 +291,10 @@ if (Meteor.isServer) {
                         min: 105,
                         max: 113
                     },
-                    sup0: "false"
+                    sup0: ""
                 },
                 scrs0: {
-                    victim: "false",
+                    victim: "",
                     stamp: " ",
                     benefit: 110
                 }
@@ -300,10 +316,10 @@ if (Meteor.isServer) {
                             min: 5,
                             max: 10
                         },
-                        sup0: "false"
+                        sup0: ""
                     },
                     scrs0: {
-                        victim: "false",
+                        victim: "",
                         stamp: " ",
                         benefit: 2.5
                     }
@@ -326,10 +342,10 @@ if (Meteor.isServer) {
                             min: 50,
                             max: 80
                         },
-                        sup0: "false"
+                        sup0: ""
                     },
                     scrs0: {
-                        victim: "false",
+                        victim: "",
                         stamp: " ",
                         benefit: 50
                     }
@@ -352,10 +368,10 @@ if (Meteor.isServer) {
                             min: 1,
                             max: 3.2
                         },
-                        sup0: "false"
+                        sup0: ""
                     },
                     scrs0: {
-                        victim: "false",
+                        victim: "",
                         stamp: " ",
                         benefit: 1
                     }
@@ -378,10 +394,10 @@ if (Meteor.isServer) {
                             min: 0.1,
                             max: 0.2
                         },
-                        sup0: "false"
+                        sup0: ""
                     },
                     scrs0: {
-                        victim: "false",
+                        victim: "",
                         stamp: " ",
                         benefit: 0.1
                     }

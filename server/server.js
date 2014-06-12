@@ -55,14 +55,14 @@ if (Meteor.isServer) {
 
                     var startTime = cMine[cSlot].stamp.getTime();
                     var progress = (serverTime - startTime) * (7.5 / 3600000);
-                    console.log(cUser + ': ' + progress);
+                    // console.log(cUser + ': ' + progress);
 
                     var allSups = new Array();
                     //Iterate Supporter
                     for (var k = 0; k < cPData.mine.supSlots; k++) {
                         var cSup = cMine[cSlot]['sup' + k];
                         //SupSlot used?
-                        if (cSup != undefined && cSup != "false") {
+                        if (cSup != undefined && cSup.length != 0) {
                             var sMine = mine.findOne({
                                 user: cSup
                             });
@@ -133,7 +133,7 @@ if (Meteor.isServer) {
                             }
 
                             var obj2 = {};
-                            obj2['scrs' + result2 + '.victim'] = 'false';
+                            obj2['scrs' + result2 + '.victim'] = '';
 
                             mine.update({
                                 user: allSups[l]
@@ -146,7 +146,7 @@ if (Meteor.isServer) {
                         var obj3 = {};
                         obj3[cSlot + '.input'] = '0000';
                         for (var m = 0; m < cPData.mine.supSlots; m++) {
-                            obj3[cSlot + '.sup' + m] = 'false';
+                            obj3[cSlot + '.sup' + m] = '';
                         }
                         mine.update({
                             user: cUser
@@ -190,9 +190,13 @@ if (Meteor.isServer) {
 
     Meteor.publish("resources", function() {
         if (this.userId) {
-            var self = Meteor.users.findOne({_id: this.userId});
+            var self = Meteor.users.findOne({
+                _id: this.userId
+            });
             var name = self.username;
-            return resources.find({user: name});
+            return resources.find({
+                user: name
+            });
         } else {
             this.ready();
         }

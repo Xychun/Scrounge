@@ -23,7 +23,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient) {
-
+    Meteor.startup(function() {
+        timeClient = new Date();
+        Meteor.call("getServerTime", function(err, result) {
+            timeServer = result;
+            timeDifference = timeClient.getTime() - timeServer.getTime();
+            // console.log('timeServer' + timeServer.getTime());
+        });
+    });
 
     /////////////////////////
     ///// SUBSCRIPTIONS /////
@@ -34,10 +41,59 @@ if (Meteor.isClient) {
     Meteor.subscribe("MatterBlocks");
     Meteor.subscribe("resources");
 
+    ////////////////////////////
+    ///// GLOBAL VARIABLES /////
+    ////////////////////////////
+
+    timersInc = new Array();
+    timersDec = new Array();
 
     ////////////////////////////
     ///// TEMPLATE RETURNS /////
     ////////////////////////////
+
+
+    setInterval(function() {
+        updateTimersInc();
+        updateTimersDec();
+    }, 1 * 1000);
+
+    //Client Live Render timers that increase value by 1 second
+    function updateTimersInc() {
+        for (i = 0; i < timersInc.length; i++) {
+            if ($('#' + timersInc[i].id).length > 0) {
+                obj0 = {};
+                obj0['id'] = timersInc[i].id;
+                obj0['miliseconds'] = timersInc[i].miliseconds + 1000;
+                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
+                timersInc[i] = obj0;
+            }
+        }
+    }
+
+    //Client Live Render timers that decrease value by 1 second
+    function updateTimersDec() {
+        for (i = 0; i < timersDec.length; i++) {
+            if ($('#' + timersDec[i].id).length > 0) {
+                obj0 = {};
+                obj0['id'] = timersDec[i].id;
+                obj0['miliseconds'] = timersDec[i].miliseconds - 1000;
+                if (obj0['miliseconds'] < 0) obj0['miliseconds'] = 0;
+                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
+                timersDec[i] = obj0;
+            }
+        }
+    }
+
+    function msToTime(ms) {
+        var helper = Math.round(ms / 1000);
+        var secs = helper % 60;
+        helper = (helper - secs) / 60;
+        var mins = helper % 60;
+        var hrs = (helper - mins) / 60;
+
+        return hrs + ':' + mins + ':' + secs;
+    }
 
     //To-DO für andere Menüs anpassen
     Template.gameMiddle.mineUnusedSlots = function() {
@@ -76,15 +132,78 @@ if (Meteor.isClient) {
         });
         var objects = new Array();
 
-        var cursorMatterColors = MatterBlocks.find({});
-
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        var timersHelperInc = new Array();
+        var timersHelperDec = new Array();
         for (var i = 0; i < amountOwnSlots; i++) {
-            if (cursorMine['owns' + i].input > 0){
+            var matterId = cursorMine['owns' + i].input;
+            if (matterId > 0) {
+                var cursorMatterBlock = MatterBlocks.findOne({
+                    matter: matterId
+                });
+                var amountMaxSupSlots = cursorPlayerData.mine.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
                 var obj0 = {};
-                obj0['matter'] = cursorMine['owns' + i].input;
-                objects[i] = MatterBlocks.findOne(obj0);
-            }                
+
+                var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                var progressSups = 0;
+                var supRates = 0;
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
+                    var currentSup = cursorMine['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var supMine = mine.findOne({
+                            user: cSup
+                        });
+                        //get index of scr slot
+                        var index = 0;
+                        var result = 0;
+                        while (result = 0) {
+                            if (supMine['scrs' + index].victim = name) {
+                                result = index;
+                            }
+                            index++;
+                        }
+                        //calculate mined by cSup
+                        var supTime = supMine['scrs' + result].stamp.getTime();
+                        var supRate = supMine['scrs' + result].benefit;
+                        supRates = supRates + supRate;
+                        progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+                    }
+                }
+                var progressTotal = progressOwn + progressSups;
+                obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
+                obj0['color'] = cursorMatterBlock.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['remainingId'] = 'timerDec_' + i + '_mine';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_mine';
+
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                timersHelperDec.push(obj1);
+                obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
+                timersHelperInc.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
+
+                //TO-DO Anteile richtig berechnen
+                obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
+                obj0['miningrate'] = (7.5 + supRates) + '/hr';
+
+                objects[i] = obj0;
+
+            }
         }
+        timersInc = timersHelperInc;
+        timersDec = timersHelperDec;
         return objects;
     };
 
