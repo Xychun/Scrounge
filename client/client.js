@@ -64,7 +64,7 @@ if (Meteor.isClient) {
     //         // }
     //         var objects = new Array();
     //         for (var i = 0; i = amount; i++) {
-    //         	console.log([menu].findOne({user: cu}, ['owns' + i]));
+    //          console.log([menu].findOne({user: cu}, ['owns' + i]));
     //             objects[i] = [menu].findOne({user: cu}, ['owns' + i]);
     //         }
     //         return objects;
@@ -106,13 +106,29 @@ if (Meteor.isClient) {
 
         },
 
-        'click #testButton3': function(e, t){
-        	//insert test matter - TO-DO: Buy matter functionality
-        	var self = Meteor.users.findOne({
+        'click #testButton3': function(e, t) {
+            //insert test matter - TO-DO: Buy matter functionality
+            var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             });
-        	mine.update({_id: '2k87C2HCsbiLFqrQ9'}, {$set: {'owns0.stamp.time': new Date(), 'scrs0.time': new Date(), 'owns0.input.matter': '0101'}});
-        	mine.update({_id: 'wSBw6RtLxPeuDxSyi'}, {$set: {'owns0.stamp.time': new Date(), 'scrs0.time': new Date(), 'owns0.input.matter': '0101'}});
+            mine.update({
+                _id: '2k87C2HCsbiLFqrQ9'
+            }, {
+                $set: {
+                    'owns0.stamp.time': new Date(),
+                    'scrs0.time': new Date(),
+                    'owns0.input.matter': '0101'
+                }
+            });
+            mine.update({
+                _id: 'wSBw6RtLxPeuDxSyi'
+            }, {
+                $set: {
+                    'owns0.stamp.time': new Date(),
+                    'scrs0.time': new Date(),
+                    'owns0.input.matter': '0101'
+                }
+            });
         }
 
     });
@@ -197,6 +213,9 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
+        'mousedown img': function(e, t) {
+            return false;
+        },
         'mouseover .slider': function(e, t) {
             slide($(e.target).attr('id'));
         },
@@ -227,6 +246,7 @@ if (Meteor.isClient) {
     });
 
     Template.gameMiddle.events({
+
         'click .used_slot': function(e, t) {
             if ($(e.target).next(".used_slot_advanced").height() == 0) {
                 $(e.target).next(".used_slot_advanced").animate({
@@ -247,24 +267,32 @@ if (Meteor.isClient) {
             }
         },
 
+        // Für die Tooltips der Range Slider
+        // 'mouseenter .range_slider_wrapper': function(e, t) {
+        //     fade_In_and_Out($(e.target).attr('id'), "in");
+        // },
+        // 'mouseleave .range_slider_wrapper': function(e, t) {
+        //     fade_In_and_Out($(e.target).attr('id'), "out");
+        // },
+
         'click .item': function(e, t) {
 
-          var remaining = this.remaining;
-          var value = this.value;
-          var id = this._id;
-          var slots = this.slots;
+            var remaining = this.remaining;
+            var value = this.value;
+            var id = this._id;
+            var slots = this.slots;
 
-          //bräuchte man noch:
-          // var imgPath = this.imgPath;
+            //bräuchte man noch:
+            // var imgPath = this.imgPath;
 
-/*          console.log(this);
+            /*          console.log(this);
           console.log(this +" "+remaining+" "+slots+" "+value+" "+id);*/
 
-          // var imgPath: $('#mineBuyMenuMatterBlock').src="imgPath";
+            // var imgPath: $('#mineBuyMenuMatterBlock').src="imgPath";
 
-          //rausgenommen, weil es zu langsam rendert. Funktionen, die zugreifen wollen, reagieren zu früh
-          //Das Element muss vorher schon gerendert werden (Aber display: hidden)
-/*          if(!$("#mineBuyMenu").length) {
+            //rausgenommen, weil es zu langsam rendert. Funktionen, die zugreifen wollen, reagieren zu früh
+            //Das Element muss vorher schon gerendert werden (Aber display: hidden)
+            /*          if(!$("#mineBuyMenu").length) {
 
             Router.current().render('mineBuyMenu', {to: 'buyMenu'});
 
@@ -273,10 +301,10 @@ if (Meteor.isClient) {
           else {*/
 
             $('#mineBuyMenu').fadeIn();
-            $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png");
-            $('#price').text("Price: "+remaining);
-            $('#matter').text("Matter: "+slots);
-            $('#time').text("Time: "+value);
+            $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png");
+            $('#price').text("Price: " + remaining);
+            $('#matter').text("Matter: " + slots);
+            $('#time').text("Time: " + value);
         }
 
     });
@@ -284,17 +312,17 @@ if (Meteor.isClient) {
     //TODO: noch nicht fertig !
     Template.mineBuyMenu.events({
 
-      'click #buyMenuYes' : function(e, t){
+        'click #buyMenuYes': function(e, t) {
 
             $('#mineBuyMenu').fadeOut();
 
-          },
+        },
 
-          'click #buyMenuNo' : function(e, t){
+        'click #buyMenuNo': function(e, t) {
 
             $('#mineBuyMenu').fadeOut();
 
-          },
+        },
     })
 
 
@@ -305,6 +333,8 @@ if (Meteor.isClient) {
     var ready_check;
     var size;
     var slots_count = 10;
+    var handle_check = false;
+    var hover_check = false;
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -317,6 +347,36 @@ if (Meteor.isClient) {
     if ($(window).width() >= 1280) {
         // console.log("1920");
         ready_check = 3;
+    }
+
+    // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
+
+    function fade_In_and_Out(element, state) {
+
+        // Solange der User den Handle vom Range Slider festhält soll der Tooltip anbleiben
+        // zusätzlich soll er anbleiben solange man mit der Maus über dem Range Slider ist
+        if (element === "handle" && state === "out") {
+            console.log("handle.out");
+            handle_check = false;
+        } else if (element === "handle" && state === "in") {
+            console.log("handle.in");
+            handle_check = true;
+        }
+        if (element !== "handle" && state === "out") {
+            console.log("hover.out");
+            hover_check = false;
+        } else if (element !== "handle" && state === "in") {
+            console.log("hover.in");
+            hover_check = true;
+        }
+
+        // Tooltip geht an wenn entweder der Handle verschoben wird oder man mit der Maus über den Range Slider hovert
+        // Tooltip geht nur aus wenn Maus nicht mehr auf dem Range Slider und kein Handle gezogen wird
+        if (handle_check === true || hover_check === true)
+            $(".tooltip").fadeIn('fast');
+        else if (handle_check === false && hover_check === false)
+            $(".tooltip").fadeOut('fast');
+
     }
 
     function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
@@ -382,7 +442,7 @@ if (Meteor.isClient) {
                         left: "0px"
                     }, 0, "linear");
                 }
-                //Animation im laufenden Intervall	
+                //Animation im laufenden Intervall  
                 $("#k1").animate({
                     left: pos_p
                 }, time, "linear");
@@ -432,7 +492,7 @@ if (Meteor.isClient) {
                         left: "0px"
                     }, 0, "linear");
                 }
-                //Animation im laufenden Intervall	
+                //Animation im laufenden Intervall  
                 $("#k1").animate({
                     left: pos_p
                 }, time, "linear");
@@ -462,7 +522,7 @@ if (Meteor.isClient) {
                 }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
-                    //Animation im laufenden Intervall	
+                    //Animation im laufenden Intervall  
                     $("#base_area_content").animate({
                         "top": "-=80px"
                     }, 300, "linear");
@@ -488,7 +548,7 @@ if (Meteor.isClient) {
                 }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
-                    //Animation im laufenden Intervall	
+                    //Animation im laufenden Intervall  
                     if ($("#base_area_content").position().top <= -80)
                         $("#base_area_content").animate({
                             "top": "+=80px"
@@ -504,7 +564,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    function update(direction) {
+    function update(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
         if (direction == "left") {
             c--;
         } else if (direction == "right") {
@@ -544,7 +604,6 @@ if (Meteor.isClient) {
             pr: pos_reset
         };
     }
-
 
     function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
     {
@@ -601,8 +660,9 @@ if (Meteor.isClient) {
             }
         }
     });
+
 }
 
 /*  function hoverScroungeBase() {
-	var pos = button.style.backgroundPosition;
-	alert(pos);*/
+    var pos = button.style.backgroundPosition;
+    alert(pos);*/

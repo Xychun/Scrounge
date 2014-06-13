@@ -1,8 +1,110 @@
+* {
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
 body {
     background-image:url(/Aufloesung1920x1080/Interface/TempImages/Gras.gif);
     background-repeat: repeat;
 }
-#bg {
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////   Range Slider  //////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+ section {
+    width: 150px;
+    height: auto;
+    margin: 100px auto 0;
+    position: relative;
+}
+/*Test Button
+#disable_range_slider {
+    height:50px;
+    width:50px;
+    top:50px;
+    left:50px;
+    background-color: yellow;
+}*/
+ #range_slider_wrapper {
+    top:100px;
+    width:150px;
+    height:13px;
+}
+#range_slider {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #333 #333 #777 #333;
+    border-radius: 25px;
+    width: 150px;
+    position: absolute;
+    height: 13px;
+    background-color: #8e8d8d;
+    background: url(/images/bg-track.png) repeat top left;
+    box-shadow: inset 0 1px 5px 0px rgba(0, 0, 0, .5), 0 1px 0 0px rgba(250, 250, 250, .5);
+}
+.tooltip {
+    position: absolute;
+    display: block;
+    margin-left:-18px;
+    top: 75px;
+    width: 40px;
+    height: 20px;
+    color: #fff;
+    text-align: center;
+    font: 10pt Tahoma, Arial, sans-serif;
+    border-radius: 3px;
+    border: 1px solid #333;
+    -webkit-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, .3);
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, .3);
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: -moz-linear-gradient(top, rgba(69, 72, 77, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(69, 72, 77, 0.5)), color-stop(100%, rgba(0, 0, 0, 0.5)));
+    background: -webkit-linear-gradient(top, rgba(69, 72, 77, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background: -o-linear-gradient(top, rgba(69, 72, 77, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background: -ms-linear-gradient(top, rgba(69, 72, 77, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background: linear-gradient(top, rgba(69, 72, 77, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8045484d', endColorstr='#80000000', GradientType=0);
+}
+.ui-slider-handle {
+    top:100px;
+    position: absolute;
+    z-index: 2;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background: url(/images/handle.png) no-repeat 50% 50%;
+    font-weight: bold;
+    color: #1C94C4;
+    outline: none;
+    top: -7px;
+    margin-left: -12px;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+.ui-slider-range {
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 0%, #eaeaea 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #eaeaea));
+    background: -webkit-linear-gradient(top, #ffffff 0%, #eaeaea 100%);
+    background: -o-linear-gradient(top, #ffffff 0%, #eaeaea 100%);
+    background: -ms-linear-gradient(top, #ffffff 0%, #eaeaea 100%);
+    background: linear-gradient(top, #ffffff 0%, #eaeaea 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eaeaea', GradientType=0);
+    position: absolute;
+    border: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 25px;
+}
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////   Range Slider Test   //////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////          END          //////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+ #bg {
     min-height:500px;
     min-width:500px;
 }
@@ -216,452 +318,356 @@ img.i7 {
     bottom:40px;
 }
 #scrounge_area {
-	overflow:auto;
-	top:114px;
-	height:auto;
+    overflow:auto;
+    top:114px;
+    height:800px;
+    background-color: red;
 }
-.slot{
-	z-index:2;
-	height:143px;
-	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenGreenSlot.png);
+.slot {
+    z-index:2;
+    height:143px;
+    background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenGreenSlot.png);
 }
-.slot_a{
-	z-index:1;
-	height:0px;
-	overflow:hidden;
-	background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
+.slot_a {
+    z-index:1;
+    height:0px;
+    overflow:hidden;
+    background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
-
-
-
-
-
-
-
-
 /*.text{
-	margin-top:0px;
-	margin-bottom:30px;
-	left:200px;
-	top: 15px;
-	font-family:"OCR A Std";
-	text-shadow: 0.5px 0.5px #FFFFFF;
+    margin-top:0px;
+    margin-bottom:30px;
+    left:200px;
+    top: 15px;
+    font-family:"OCR A Std";
+    text-shadow: 0.5px 0.5px #FFFFFF;
 }
 .slider_base{
-	width:61px;
-	height:100%;
-	display: block;
+    width:61px;
+    height:100%;
+    display: block;
 }
 .slider_base_height{
-	width:100%;
-	height:30px;
+    width:100%;
+    height:30px;
 }*/
 
-/*	.sliderRotate90 {
-		overflow: hidden;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate90:before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		top: -50%;
-		left: -50%;
-		z-index: -1;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate180 {
-		overflow: hidden;
-		-webkit-transform: rotate(180deg);
-		-moz-transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-o-transform: rotate(180deg);
-		transform: rotate(180deg);
-	}
-
-	.sliderRotate180:before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		top: -50%;
-		left: -50%;
-		z-index: -1;
-		-webkit-transform: rotate(180deg);
-		-moz-transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-o-transform: rotate(180deg);
-		transform: rotate(180deg);
-	}
-
-	.sliderRotate270 {
-		overflow: hidden;
-		-webkit-transform: rotate(270deg);
-		-moz-transform: rotate(270deg);
-		-ms-transform: rotate(270deg);
-		-o-transform: rotate(270deg);
-		transform: rotate(270deg);
-	}
-
-	.sliderRotate270:before {
-		content: "";
-		position: absolute;
-		-webkit-transform: rotate(270deg);
-		-moz-transform: rotate(270deg);
-		-ms-transform: rotate(270deg);
-		-o-transform: rotate(270deg);
-		transform: rotate(270deg);
-	}
-
-	.sliderRotate90 {
-		overflow: hidden;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}
-
-	.sliderRotate90:before {
-		content: "";
-		position: absolute;
-		-webkit-transform: rotate(90deg);
-		-moz-transform: rotate(90deg);
-		-ms-transform: rotate(90deg);
-		-o-transform: rotate(90deg);
-		transform: rotate(90deg);
-	}*/
-
-
-
-
-
-
-
-
-	/*MINE BUY MENU*/
-
-	#mineBuyMenu {
-		margin: 0px auto;
-		top:162px;
-		bottom:162px;
-		width: 778px;
-		z-index: 5;
-		display: none;
-	}
-
-	#mineBuyMenuFrame {
-		top: 0px;
-		display: block;
-		bottom: 15px;
-		width: 778px;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackground.png);
-		background-repeat: no-repeat;
-	}
-
-	#mineBuyMenuBottomEnd {
-		margin: 0px auto;
-		bottom: 0px;
-		width: 778px;
-		height: 15px;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackgroundBottomEnd.png);
-		background-repeat: no-repeat;
-	}
-
-	#buyMenuYes {
-		width: 100px;
-		height: 40px;
-		bottom: 10px;
-		left:30%;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/YESButton.png);
-		background-repeat: no-repeat;
-	}
-
-	#buyMenuNo {
-		width: 100px;
-		height: 40px;
-		bottom: 10px;
-		right:30%;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png);
-		background-repeat: no-repeat;
-	}
-
-	#mineBuyMenuText {
-		left:150px;
-		top: 70px;
-		font-family:"OCR A Std";
-		text-shadow: 1px 1px #000000;
-		font-size: 1em;
-	}
-
-	#mineBuyMenuMatterBlock {
-		width: 85px;
-		height: 85px;
-		left: 30px;
-		top: 30px;
-		position: relative;
-	}
-
-	#rangeSlider {
-		top: 20px;
-		left: 144px;
-		width: 622px;
-		height: 27px;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
-	}
-
-	.rangeSliderMarks {
-		display: block;
-		position: relative;
-		float: left;
-		height: 100%;
-		width: 5%;
-	}
-
-	#noButton {
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
-	}
-
-	#yesButton {
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
-	}
-
-	.rangeSliderMarksStroke {
-		right: 0px;
-		left: 0px;
-		top: 0px;
-		bottom: 0px;
-		width: 3px;
-		height: 18px;
-		margin: auto;
-		background-color: black;
-	}
-
-	#AmountScroungerSlots {
-		width: 90px;
-		height: 90px;
-		left: 33px;
-		top: 124px;
-	}
-
-	.sslots {
-		position: relative;
-		float: left;
-		width: 28px;
-		height: 28px;
-		margin: 1px;
-		background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable.png);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-	/*MATTER COLOR BLOCKS*/
-
-	.matter_colorBlocks {
-		float: left;
-		position: relative;
-		width: 250px;
-		height: 152px;
-		margin-right: 10px;
-		background-color: brown;
-	}
-
-	.text_matter {
-		display: inline;
-		width: 200px;
-		right: 10px;
-		top: 20px;
-		margin: 0px;
-	    color: white;
-	    font-family:"OCR A Std";
-	    font-size: 1.5em;
-	    text-align: right;
-	    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
-	    -ms-user-select: none;
-	    -webkit-user-select: none;
-	    -moz-user-select: none;
-	    user-select: none;
-	    cursor:default;
-	}
-
-	.text_specialRessources {
-		display: inline;
-		width: 100px;
-		right: 5px;
-		top: 12px;
-		margin: 0px;
-	    color: white;
-	    font-family:"OCR A Std";
-	    font-size: 0.8em;
-	    text-align: right;
-	    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
-	    -ms-user-select: none;
-	    -webkit-user-select: none;
-	    -moz-user-select: none;
-	    user-select: none;
-	    cursor:default;
-	}
-
-	.img_matter {
-		position: relative;
-		display: inline;
-		left: 10px;
-		top: 5px;
-		width: 50px;
-		height: 50px;
-	}
-
-	.img_specialRessources {
-		position: relative;
-		display: inline;
-		left: 5px;
-		top: 5px;
-		width: 25px;
-		height: 25px;
-	}
-
-	.wrapper_specialRessource {
-		bottom: 0px;
-		width: 250px;
-		height: 92px;
-		background-color: green;
-	}
-
-	.sr_left {
-		bottom: 0px;
-		left: 5px;
-		width: 120px;
-		height: 92px;
-		background-color: blue;
-	}
-
-	.sr_right {
-		bottom: 0px;
-		right: 0px;
-		width: 120px;
-		height: 92px;
-		background-color: red;
-	}
-
-	.sr_slot {
-		float: left;
-		position: relative;
-		width: 120px;
-		height: 30px;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*CHARACTER VIEW*/
-
-	#characterView{
-		top:162px;
-		bottom:162px;
-		left:162px;
-		right:162px;
-	}
-
-
-	#scroungeItems {
-		left: 0px;
-		right: 50%;
-		height: 100%;
-		min-height: 400px;
-		background-color: blue;
-	}
-
-	.scroungeItemSlots {
-		width: 100px;
-		height: 100px;
-		background-color: black;
-	}
-
-	#scroungeItemSlot1 {
-		margin: 0px auto;
-		position: relative;
-		float: left;
-		margin-left: 50px;
-		margin-top: 26px;
-	}
-
-	#characterViewRightSide {
-		right: 0px;
-		left: 50%;
-		height: 100%;
-		min-height: 400px;
-		background-color: brown;
-	}
-
-	#playerStats {
-		top: 0px;
-		width: 100%;
-		height: 200px;
-		background-color: green;
-	}
-
-	#baseItems {
-		width: 100%;
-		top: 200px;
-		bottom: 0px;
-		min-height: 200px;
-		background-color: red;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*  .sliderRotate90 {
+        overflow: hidden;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .sliderRotate90:before {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        z-index: -1;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .sliderRotate180 {
+        overflow: hidden;
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+
+    .sliderRotate180:before {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        z-index: -1;
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+
+    .sliderRotate270 {
+        overflow: hidden;
+        -webkit-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
+        -ms-transform: rotate(270deg);
+        -o-transform: rotate(270deg);
+        transform: rotate(270deg);
+    }
+
+    .sliderRotate270:before {
+        content: "";
+        position: absolute;
+        -webkit-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
+        -ms-transform: rotate(270deg);
+        -o-transform: rotate(270deg);
+        transform: rotate(270deg);
+    }
+
+    .sliderRotate90 {
+        overflow: hidden;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .sliderRotate90:before {
+        content: "";
+        position: absolute;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }*/
+
+/*MINE BUY MENU*/
+ #mineBuyMenu {
+    margin: 0px auto;
+    top:162px;
+    bottom:162px;
+    width: 778px;
+    z-index: 5;
+    display: none;
+}
+#mineBuyMenuFrame {
+    top: 0px;
+    display: block;
+    bottom: 15px;
+    width: 778px;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackground.png);
+    background-repeat: no-repeat;
+}
+#mineBuyMenuBottomEnd {
+    margin: 0px auto;
+    bottom: 0px;
+    width: 778px;
+    height: 15px;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackgroundBottomEnd.png);
+    background-repeat: no-repeat;
+}
+#buyMenuYes {
+    width: 100px;
+    height: 40px;
+    bottom: 10px;
+    left:30%;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/YESButton.png);
+    background-repeat: no-repeat;
+}
+#buyMenuNo {
+    width: 100px;
+    height: 40px;
+    bottom: 10px;
+    right:30%;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png);
+    background-repeat: no-repeat;
+}
+#mineBuyMenuText {
+    left:150px;
+    top: 70px;
+    font-family:"OCR A Std";
+    text-shadow: 1px 1px #000000;
+    font-size: 1em;
+}
+#mineBuyMenuMatterBlock {
+    width: 85px;
+    height: 85px;
+    left: 30px;
+    top: 30px;
+    position: relative;
+}
+#rangeSlider {
+    top: 20px;
+    left: 144px;
+    width: 622px;
+    height: 27px;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
+}
+.rangeSliderMarks {
+    display: block;
+    position: relative;
+    float: left;
+    height: 100%;
+    width: 5%;
+}
+#noButton {
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
+}
+#yesButton {
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
+}
+.rangeSliderMarksStroke {
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 3px;
+    height: 18px;
+    margin: auto;
+    background-color: black;
+}
+#AmountScroungerSlots {
+    width: 90px;
+    height: 90px;
+    left: 33px;
+    top: 124px;
+}
+.sslots {
+    position: relative;
+    float: left;
+    width: 28px;
+    height: 28px;
+    margin: 1px;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/ScroungeSlotAvailable.png);
+}
+/*MATTER COLOR BLOCKS*/
+ .matter_colorBlocks {
+    float: left;
+    position: relative;
+    width: 250px;
+    height: 152px;
+    margin-right: 10px;
+    background-color: brown;
+}
+.text_matter {
+    display: inline;
+    width: 200px;
+    right: 10px;
+    top: 20px;
+    margin: 0px;
+    color: white;
+    font-family:"OCR A Std";
+    font-size: 1.5em;
+    text-align: right;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor:default;
+}
+.text_specialRessources {
+    display: inline;
+    width: 100px;
+    right: 5px;
+    top: 12px;
+    margin: 0px;
+    color: white;
+    font-family:"OCR A Std";
+    font-size: 0.8em;
+    text-align: right;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor:default;
+}
+.img_matter {
+    position: relative;
+    display: inline;
+    left: 10px;
+    top: 5px;
+    width: 50px;
+    height: 50px;
+}
+.img_specialRessources {
+    position: relative;
+    display: inline;
+    left: 5px;
+    top: 5px;
+    width: 25px;
+    height: 25px;
+}
+.wrapper_specialRessource {
+    bottom: 0px;
+    width: 250px;
+    height: 92px;
+    background-color: green;
+}
+.sr_left {
+    bottom: 0px;
+    left: 5px;
+    width: 120px;
+    height: 92px;
+    background-color: blue;
+}
+.sr_right {
+    bottom: 0px;
+    right: 0px;
+    width: 120px;
+    height: 92px;
+    background-color: red;
+}
+.sr_slot {
+    float: left;
+    position: relative;
+    width: 120px;
+    height: 30px;
+}
+/*CHARACTER VIEW*/
+ #characterView {
+    top:162px;
+    bottom:162px;
+    left:162px;
+    right:162px;
+}
+#scroungeItems {
+    left: 0px;
+    right: 50%;
+    height: 100%;
+    min-height: 400px;
+    background-color: blue;
+}
+.scroungeItemSlots {
+    width: 100px;
+    height: 100px;
+    background-color: black;
+}
+#scroungeItemSlot1 {
+    margin: 0px auto;
+    position: relative;
+    float: left;
+    margin-left: 50px;
+    margin-top: 26px;
+}
+#characterViewRightSide {
+    right: 0px;
+    left: 50%;
+    height: 100%;
+    min-height: 400px;
+    background-color: brown;
+}
+#playerStats {
+    top: 0px;
+    width: 100%;
+    height: 200px;
+    background-color: green;
+}
+#baseItems {
+    width: 100%;
+    top: 200px;
+    bottom: 0px;
+    min-height: 200px;
+    background-color: red;
+}
 .unused_slot {
     height:143px;
     background-color:red;
@@ -1143,7 +1149,7 @@ img.i7 {
     .slider_inv {
         left:21px;
         /*width:110px; 
- 		height:54px;*/
+        height:54px;*/
     }
     .left_slider {
         top:21px;
@@ -1229,7 +1235,6 @@ img.i7 {
         right:162px;
         height:152px;
     }
-
     /*HOVER BUTTONS*/
     /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
     .SSscroungeBaseButton {
