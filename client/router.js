@@ -26,7 +26,7 @@ Router.map(function() {
             'standardBorder': {
                 to: 'border'
             },
-            'gameMiddle': {
+            'mineBase': {
                 to: 'middle'
             },
             'mineBuyMenu': {
@@ -52,7 +52,7 @@ Router.map(function() {
     action: function () {
 
       this.render('standardBorder', {to: 'border'});
-      this.render('gameMiddle', {to: 'middle'});
+      this.render('mineMiddle', {to: 'middle'});
 
       console.log(getRenderPara("mineBuyMenu"));
     },*/

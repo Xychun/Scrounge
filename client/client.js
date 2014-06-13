@@ -96,7 +96,7 @@ if (Meteor.isClient) {
     }
 
     //To-DO für andere Menüs anpassen
-    Template.gameMiddle.mineUnusedSlots = function() {
+    Template.mineBase.mineUnusedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -118,7 +118,7 @@ if (Meteor.isClient) {
     };
 
     //To-DO für andere Menüs anpassen
-    Template.gameMiddle.mineUsedSlots = function() {
+    Template.mineBase.mineUsedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -207,7 +207,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
-    Template.gameMiddle.blockColors = function() {
+    Template.mineBase.blockColors = function() {
         var cursorMatterColors = MatterBlocks.find({}, {
             fields: {
                 'color': 1
@@ -227,7 +227,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
-    Template.gameMiddle.matterBlocks = function() {
+    Template.mineBase.matterBlocks = function() {
 
         return MatterBlocks.find({});
 
@@ -245,7 +245,7 @@ if (Meteor.isClient) {
 
     };
 
-    Template.gameMiddle.playerData = function() {
+    Template.mineBase.playerData = function() {
 
         return playerData.find({});
 
@@ -399,7 +399,7 @@ if (Meteor.isClient) {
         }
     });
 
-    Template.gameMiddle.events({
+    Template.mineBase.events({
         'click .used_slot': function(e, t) {
 
             /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
