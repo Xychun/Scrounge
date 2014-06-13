@@ -17,13 +17,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isServer) {
-    Meteor.startup(function() {
-        // code to run on server at startup
-        update();
-        Meteor.setInterval(function() {
-            update();
-        }, 20 * 1000);
-    });
+    // Meteor.startup(function() {
+    //     // code to run on server at startup
+    //     update();
+    //     Meteor.setInterval(function() {
+    //         update();
+    //     }, 20 * 1000);
+    // });
 
     function update() {
         var START = new Date().getTime();
@@ -46,22 +46,23 @@ if (Meteor.isServer) {
             for (var j = 0; j < cPData.mine.ownSlots; j++) {
                 var cSlot = 'owns' + j;
                 //Matter exists?
-                var cMatterID = cMine[cSlot].input.matter;
+                var cMatterID = cMine[cSlot].input;
                 if (cMatterID > 0) {
                     var cMatter = MatterBlocks.findOne({
                         matter: cMatterID
                     });
                     var cValue = cMatter.value;
 
-                    var startTime = cMine[cSlot].stamp.time.getTime();
+                    var startTime = cMine[cSlot].stamp.getTime();
                     var progress = (serverTime - startTime) * (7.5 / 3600000);
+                    // console.log(cUser + ': ' + progress);
 
                     var allSups = new Array();
                     //Iterate Supporter
                     for (var k = 0; k < cPData.mine.supSlots; k++) {
                         var cSup = cMine[cSlot]['sup' + k];
                         //SupSlot used?
-                        if (cSup != undefined && cSup != "false") {
+                        if (cSup != undefined && cSup.length != 0) {
                             var sMine = mine.findOne({
                                 user: cSup
                             });
@@ -77,11 +78,11 @@ if (Meteor.isServer) {
 
                             allSups[k] = cSup;
                             //calculate mined by cSup
-                            var sTime = sMine['scrs' + result].time.getTime();
-                            var sRate = sMine['scrs' + result].miningrate;
+                            var sTime = sMine['scrs' + result].stamp.getTime();
+                            var sRate = sMine['scrs' + result].benefit;
                             progress = progress + (serverTime - sTime) * (sRate / 3600000);
 
-                            console.log(cUser + ' Progress: ' + progress);
+                            /*console.log(cUser + ' Progress: ' + progress);*/
                         }
                     }
                     //Matter CLEAR?
@@ -131,8 +132,8 @@ if (Meteor.isServer) {
                                 index2++;
                             }
 
-                            obj2 = {};
-                            obj2['scrs' + result2 + '.victim'] = 'false';
+                            var obj2 = {};
+                            obj2['scrs' + result2 + '.victim'] = '';
 
                             mine.update({
                                 user: allSups[l]
@@ -143,9 +144,9 @@ if (Meteor.isServer) {
 
                         //reset owner slots
                         var obj3 = {};
-                        obj3[cSlot + '.input.matter'] = '0000';
+                        obj3[cSlot + '.input'] = '0000';
                         for (var m = 0; m < cPData.mine.supSlots; m++) {
-                            obj3[cSlot + '.sup' + m] = 'false';
+                            obj3[cSlot + '.sup' + m] = '';
                         }
                         mine.update({
                             user: cUser
@@ -157,9 +158,9 @@ if (Meteor.isServer) {
             }
         };
 
-        var END = new Date().getTime();
+        /*var END = new Date().getTime();
         var DURATION = END - START;
-        console.log('UPDATE DURATION: ' + DURATION);
+        console.log('UPDATE DURATION: ' + DURATION);*/
     }
 
 
@@ -185,7 +186,29 @@ if (Meteor.isServer) {
         } else {
             this.ready();
         }
-    })
+    });
+
+    Meteor.publish("resources", function() {
+        if (this.userId) {
+            var self = Meteor.users.findOne({
+                _id: this.userId
+            });
+            var name = self.username;
+            return resources.find({
+                user: name
+            });
+        } else {
+            this.ready();
+        }
+    });
+
+    Meteor.publish("MatterBlocks", function() {
+        if (this.userId) {
+            return MatterBlocks.find({});
+        } else {
+            this.ready();
+        }
+    });
 
     Meteor.publish("mine", function(current) {
         if (this.userId) {

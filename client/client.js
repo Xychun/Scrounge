@@ -10,83 +10,264 @@
 // var htmlElm = jelm[0];//convert to HTML Element
 
 // Meteor - get object : $(e.target).css({"background-color":"orange"});
-// Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);
+// Meteor - get object ID: alert($(event.currentTarget.ID));     alert(event.target.id);    e.currentTarget.id;
+
+//target vs. currentTarget:
+//bei target nimmt die Funktion Bezug auf das Element, auf das geklickt wurde. Und zwar das zuoberst liegende Element
+//Beispiel bei Micha's Dropdown: Nachdem ich ein Bild über das DIV eingefügt hatte, reagierte die DropDown Funktion nicht mehr
+//nimmt man stattdessen currentTarget, so werden alle oberhalb liegenden Elemente ignoriert und das spezifizierte Element 
+//rafft, dass auf es geklickt wurde.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////// CLIENT /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient) {
-    //Subscriptions
+    Meteor.startup(function() {
+        timeClient = new Date();
+        Meteor.call("getServerTime", function(err, result) {
+            timeServer = result;
+            timeDifference = timeClient.getTime() - timeServer.getTime();
+            // console.log('timeServer' + timeServer.getTime());
+        });
+    });
+
+    /////////////////////////
+    ///// SUBSCRIPTIONS /////
+    /////////////////////////
+
     Meteor.subscribe("userData");
     Meteor.subscribe("playerData");
+    Meteor.subscribe("MatterBlocks");
+    Meteor.subscribe("resources");
 
-    //Get Data
-    Template.gameMiddle.mineSlots = function() {
-        var self = Meteor.users.findOne({
-            _id: Meteor.userId()
-        });
-        if (self) {
-            var menu = self.menu;
-            var cu = self.cu;
-            if (menu == 'mine') {
-                return mine.find({});
-            }
-            if (menu == 'laboratory') {
-                return laboratory.find({});
-            }
-            if (menu == 'colosseum') {
-                return colosseum.find({});
+    ////////////////////////////
+    ///// GLOBAL VARIABLES /////
+    ////////////////////////////
+
+    timersInc = new Array();
+    timersDec = new Array();
+
+    ////////////////////////////
+    ///// TEMPLATE RETURNS /////
+    ////////////////////////////
+
+
+    setInterval(function() {
+        updateTimersInc();
+        updateTimersDec();
+    }, 1 * 1000);
+
+    //Client Live Render timers that increase value by 1 second
+
+    function updateTimersInc() {
+        for (i = 0; i < timersInc.length; i++) {
+            if ($('#' + timersInc[i].id).length > 0) {
+                obj0 = {};
+                obj0['id'] = timersInc[i].id;
+                obj0['miliseconds'] = timersInc[i].miliseconds + 1000;
+                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
+                timersInc[i] = obj0;
             }
         }
+    }
+
+    //Client Live Render timers that decrease value by 1 second
+
+    function updateTimersDec() {
+        for (i = 0; i < timersDec.length; i++) {
+            if ($('#' + timersDec[i].id).length > 0) {
+                obj0 = {};
+                obj0['id'] = timersDec[i].id;
+                obj0['miliseconds'] = timersDec[i].miliseconds - 1000;
+                if (obj0['miliseconds'] < 0) obj0['miliseconds'] = 0;
+                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
+                timersDec[i] = obj0;
+            }
+        }
+    }
+
+    function msToTime(ms) {
+        var helper = Math.round(ms / 1000);
+        var secs = helper % 60;
+        helper = (helper - secs) / 60;
+        var mins = helper % 60;
+        var hrs = (helper - mins) / 60;
+
+        return hrs + ':' + mins + ':' + secs;
+    }
+
+    //To-DO für andere Menüs anpassen
+    Template.mineBase.mineUnusedSlots = function() {
+        //Mine
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+        var cursorMine = mine.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        for (var i = 0; i < amountOwnSlots; i++) {
+            if (cursorMine['owns' + i].input == "0000")
+                objects[i] = {};
+        }
+        return objects;
     };
 
-    /////UNDER CONSTRUCTION BY SENJU!!
-    // //Get Data
-    // Template.gameMiddle.mineSlots = function() {
-    //     var self = Meteor.users.findOne({
-    //         _id: Meteor.userId()
-    //     });
-    //     if (self) {
-    //         var menu = self.menu;
-    //         var cu = self.cu;
-    //         var cursor = playerData.findOne({user: cu});
-    //         console.log(cursor);
-    //         var amount = cursor['menu'].ownSlots;
-    //         // if (menu == 'mine') {
-    //         //     var cursor = mine.find({});
-    //         // }
-    //         // if (menu == 'laboratory') {
-    //         //     var cursor = laboratory.find({});
-    //         // }
-    //         // if (menu == 'colosseum') {
-    //         //     var cursor = colosseum.find({});
-    //         // }
-    //         var objects = new Array();
-    //         for (var i = 0; i = amount; i++) {
-    //          console.log([menu].findOne({user: cu}, ['owns' + i]));
-    //             objects[i] = [menu].findOne({user: cu}, ['owns' + i]);
-    //         }
-    //         return objects;
-    //     }
-    // };
+    //To-DO für andere Menüs anpassen
+    Template.mineBase.mineUsedSlots = function() {
+        //Mine
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+        var cursorMine = mine.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        var timersHelperInc = new Array();
+        var timersHelperDec = new Array();
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var matterId = cursorMine['owns' + i].input;
+            if (matterId > 0) {
+                var cursorMatterBlock = MatterBlocks.findOne({
+                    matter: matterId
+                });
+                var amountMaxSupSlots = cursorPlayerData.mine.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+
+                var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                var progressSups = 0;
+                var supRates = 0;
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
+                    var currentSup = cursorMine['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var supMine = mine.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var index = 0;
+                        var result = 0;
+                        while (result = 0) {
+                            if (supMine['scrs' + index].victim = name) {
+                                result = index;
+                            }
+                            index++;
+                        }
+                        //calculate mined by currentSup
+                        var supTime = supMine['scrs' + result].stamp.getTime();
+                        var supRate = supMine['scrs' + result].benefit;
+                        supRates = supRates + supRate;
+                        progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+                    }
+                }
+                var progressTotal = progressOwn + progressSups;
+                obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
+                obj0['color'] = cursorMatterBlock.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['remainingId'] = 'timerDec_' + i + '_mine';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_mine';
+
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                timersHelperDec.push(obj1);
+                obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
+                timersHelperInc.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
+
+                //TO-DO Anteile richtig berechnen
+                obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
+                obj0['miningrate'] = (7.5 + supRates) + '/hr';
+
+                objects[i] = obj0;
+
+            }
+        }
+        timersInc = timersHelperInc;
+        timersDec = timersHelperDec;
+        return objects;
+    };
+
+    Template.mineBase.blockColors = function() {
+        var cursorMatterColors = MatterBlocks.find({}, {
+            fields: {
+                'color': 1
+            }
+        }).fetch();
+        var colorArray = new Array();
+        for (i = 0; i < cursorMatterColors.length; i++) {
+            colorArray[i] = cursorMatterColors[i].color;
+        }
+        var result = distinct(colorArray);
+        var objects = new Array();
+        for (var j = 0; j < result.length; j++) {
+            objects[j] = {
+                'color': result[j]
+            };
+        }
+        return objects;
+    };
+    Template.mineBase.matterBlocks = function() {
+
+        return MatterBlocks.find({});
+
+    };
+
+    Template.mineBuyMenu.playerData = function() {
+
+        return playerData.find({});
+
+    };
+
+    Template.mineBuyMenu.mineSlots = function() {
+
+        return mineSlots.find({});
+
+    };
+
+    Template.mineBase.playerData = function() {
+
+        return playerData.find({});
+
+    };
+
+    Template.standardBorder.resources = function() {
+
+        return resources.find({});
+
+    };
+
+
+    //////////////////
+    ///// EVENTS /////
+    //////////////////
 
     /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
 
-            if (!$("#mineBuyMenu").length) {
-
-                Router.current().render('mineBuyMenu', {
-                    to: 'buyMenu'
-                });
-
-            } else {
-
-                $('#mineBuyMenu').show();
-
-            }
 
         },
 
@@ -103,32 +284,6 @@ if (Meteor.isClient) {
                 $('#characterView').show();
 
             }
-
-        },
-
-        'click #testButton3': function(e, t) {
-            //insert test matter - TO-DO: Buy matter functionality
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            });
-            mine.update({
-                _id: '2k87C2HCsbiLFqrQ9'
-            }, {
-                $set: {
-                    'owns0.stamp.time': new Date(),
-                    'scrs0.time': new Date(),
-                    'owns0.input.matter': '0101'
-                }
-            });
-            mine.update({
-                _id: 'wSBw6RtLxPeuDxSyi'
-            }, {
-                $set: {
-                    'owns0.stamp.time': new Date(),
-                    'scrs0.time': new Date(),
-                    'owns0.input.matter': '0101'
-                }
-            });
         }
 
     });
@@ -223,8 +378,10 @@ if (Meteor.isClient) {
             slide_stop();
         },
 
+        //To-DO Media Queries in 3 CSS files aufteilen und je nach Query nutzen
+        //      Evtl. SpriteSheets anlegen im 4er Block und abhängig von der Größe benutzen
         'mouseover .hover': function(e, t) {
-            console.log(e.target);
+            //console.log(e.target);
             var pos = $(e.target).css("background-position");
             var size = $(e.target).css("padding");
             var bImage = $(e.target).css("background-image");
@@ -234,7 +391,7 @@ if (Meteor.isClient) {
             });
         },
         'mouseout .hover': function(e, t) {
-            console.log(e.target);
+            //console.log(e.target);
             var pos = $(e.target).css("background-position");
             var size = $(e.target).css("padding");
             var bImageHover = $(e.target).css("background-image");
@@ -245,26 +402,58 @@ if (Meteor.isClient) {
         }
     });
 
-    Template.gameMiddle.events({
-
+    Template.mineBase.events({
         'click .used_slot': function(e, t) {
-            if ($(e.target).next(".used_slot_advanced").height() == 0) {
-                $(e.target).next(".used_slot_advanced").animate({
+
+            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
                     "height": "100%"
                 }, 0);
-                var height = $(e.target).next(".used_slot_advanced").height() + "px";
-                $(e.target).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 13 + "px";
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                     "height": "0px"
-                }, 0);
-                $(e.target).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                    "height": height
-                }, 1000);
+                }, 0, function() {
+
+                    $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                        "margin-top": "-13px"
+                    }, 150, function() {
+
+                        $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                    });
+                });
 
             } else {
-                $(e.target).next(".used_slot_advanced").animate({
-                    "height": "0px"
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "0px",
                 }, 1000);
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
             }
+
+            /*MICHA'S URSPRÜNGLICHE VERSION*/
+
+            /*            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "100%"
+                }, 0);
+                var height = $(e.currentTarget).next(".used_slot_advanced").height()+13 + "px";
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                    "height": "0px"
+                }, 0);
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                    "height": height
+                }, 1000);
+            } else {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+            }*/
         },
 
         // Für die Tooltips der Range Slider
@@ -276,35 +465,53 @@ if (Meteor.isClient) {
         // },
 
         'click .item': function(e, t) {
+            Session.set("clickedMatter", e.currentTarget.id);
 
-            var remaining = this.remaining;
-            var value = this.value;
-            var id = this._id;
-            var slots = this.slots;
+            //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
+            //Variante A
 
-            //bräuchte man noch:
-            // var imgPath = this.imgPath;
+            /*        var cursor = MatterBlocks.findOne({matter: e.currentTarget.id});
 
-            /*          console.log(this);
-          console.log(this +" "+remaining+" "+slots+" "+value+" "+id);*/
+          console.log(cursor);
 
-            // var imgPath: $('#mineBuyMenuMatterBlock').src="imgPath";
+          $('#mineBuyMenu').fadeIn();
+          $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
+          $('#price').text("Price: "+cursor.cost);
+          $('#matter').text("Matter: "+cursor.value);*/
 
-            //rausgenommen, weil es zu langsam rendert. Funktionen, die zugreifen wollen, reagieren zu früh
-            //Das Element muss vorher schon gerendert werden (Aber display: hidden)
-            /*          if(!$("#mineBuyMenu").length) {
-
-            Router.current().render('mineBuyMenu', {to: 'buyMenu'});
-
-          } 
-
-          else {*/
+            //Variante B
 
             $('#mineBuyMenu').fadeIn();
-            $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png");
-            $('#price').text("Price: " + remaining);
-            $('#matter').text("Matter: " + slots);
-            $('#time').text("Time: " + value);
+            $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
+            $('#price').text("Price: " + this.cost);
+            $('#matter').text("Matter: " + this.value);
+
+            var currentUser = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).username;
+
+            var cursorPlayerData = playerData.findOne({
+                user: currentUser
+            });
+
+            var amountSupSlots = cursorPlayerData.mine.supSlots;
+
+            if ($('#AmountScroungerSlots').children()) {
+                $('#AmountScroungerSlots').children().remove();
+            }
+
+            for (i = 0; i < 6; i++) {
+
+                if (amountSupSlots > i) {
+
+                    $('#AmountScroungerSlots').append("<div class='sslots_available'> </div>");
+
+                } else {
+
+                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable'> </div>");
+
+                }
+            }
         }
 
     });
@@ -313,6 +520,19 @@ if (Meteor.isClient) {
     Template.mineBuyMenu.events({
 
         'click #buyMenuYes': function(e, t) {
+            var currentUser = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).username;
+            var cursorPlayerData = playerData.findOne({
+                user: currentUser
+            });
+
+            //updating the database
+            Meteor.call('buyMatter', Session.get("clickedMatter"), function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
 
             $('#mineBuyMenu').fadeOut();
 
@@ -396,15 +616,86 @@ if (Meteor.isClient) {
             case 'base_down':
                 slide_down();
                 break;
+            case 'left_slider_slot_items':
+                slide_left_simple('slot_items_content');
+                break;
+            case 'right_slider_slot_items':
+                slide_right_simple('slot_items_content');
+                break;
             default:
-                console.log("Slide für diesen Hover nicht definiert !");
+                //console.log("Slide für diesen Hover nicht definiert !");
                 break;
         }
     }
 
+
+    function slide_left_simple(element) {
+        //console.log(element);
+        //console.log($("." + element).position().left);
+        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+        var pos = size.p;
+        var pos_r = size.pr + "px";
+        var pos_p = "-=" + size.pp + "px";
+
+        //console.log("s1: "+$("#s1").position().top);
+        if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            if ($("." + element).position().left >= 60) {
+                // Vorab Animation da Intervall erst nach [Time] anfängt
+                $("." + element).filter(':not(:animated)').animate({
+                    "left": "-=60px"
+                }, 300, "linear");
+                //Rekursiver Intervall (unendlich)
+                var action = function() {
+                    //Animation im laufenden Intervall  
+                    $("." + element).animate({
+                        "left": "-=60px"
+                    }, 300, "linear");
+                };
+                //Start des Intervalls
+                interval = setInterval(action, 300);
+            }
+        }
+    }
+
+    function slide_right_simple(element) {
+        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+        var pos = size.p;
+        var pos_r = size.pr + "px";
+        var pos_p = "+=" + size.pp + "px";
+
+        //console.log("s1: "+$("#s1").position().top);
+        if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            if ($("." + element).position().left >= 0) {
+                // Vorab Animation da Intervall erst nach [Time] anfängt
+                $("." + element).filter(':not(:animated)').animate({
+                    "left": "+=60px"
+                }, 300, "linear");
+                //Rekursiver Intervall (unendlich)
+                var action = function() {
+                    //Animation im laufenden Intervall  
+                    $("." + element).animate({
+                        "left": "+=60px"
+                    }, 300, "linear");
+                };
+                //Start des Intervalls
+                interval = setInterval(action, 300);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
     function slide_start(direction, endless, element1, element2) {
         element2 = (typeof element2 === "undefined") ? "0" : element2; // optionaler Parameter wenn nicht vorhanden dann = 0
-        console.log(direction + " " + endless + " " + element1 + " " + element2);
+        //console.log(direction + " " + endless + " " + element1 + " " + element2);
     }
 
     function slide_left() {
@@ -639,6 +930,15 @@ if (Meteor.isClient) {
             repositioning(ready_check);
         }
     });
+
+    //Changes array to unique array with distinct values
+
+    function distinct(array) {
+        var uniqueArray = array.filter(function(elem, pos) {
+            return array.indexOf(elem) == pos;
+        })
+        return uniqueArray
+    }
 
     //Deps.Autorun
     Deps.autorun(function() {
