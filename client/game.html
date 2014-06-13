@@ -196,7 +196,8 @@
                             <div id="right_slider_slot_items" class="slider right slot_items_slider right_slider_slot_items_background"></div>
                         </div>
                     </div>
-                    {{/each}} {{#each mineUsedSlots}}
+                    {{/each}} 
+                    {{#each mineUsedSlots}}
                     <div class="used_slot relative">
                         <img src="/Aufloesung1920x1080/Interface/ActionsGreenSlot.png">
                         <div class="slot_icon">
@@ -220,16 +221,18 @@
                             <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
                             </p>
                         </div>
+                        {{#each supSlots}}
                         <div class="scrounger_slot relative">
                             <div class="scrounger_icon"></div>
                             <div class="scrounger_stats_wrapper">
                                 <div class="scrounger_stats relative">
-                                    <p class='text relative'>Miningrate:</p>
-                                    <p class='text relative'>Mined:</p>
-                                    <p class='text relative'>Time spent:</p>
+                                    <p class='text relative'>Miningrate: {{miningrate}}</p>
+                                    <p class='text relative'>Mined: {{mined}}</p>
+                                    <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
                                 </div>
                             </div>
                         </div>
+                        {{/each}}
                     </div>
                     {{/each}}
                 </div>

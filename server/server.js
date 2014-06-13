@@ -68,9 +68,9 @@ if (Meteor.isServer) {
                             });
                             //get index of scr slot
                             var index = 0;
-                            var result = 0;
-                            while (result = 0) {
-                                if (sMine['scrs' + index].victim = cUser) {
+                            var result = -1;
+                            while (result == -1) {
+                                if (sMine['scrs' + index].victim == cUser) {
                                     result = index;
                                 }
                                 index++;
@@ -125,8 +125,8 @@ if (Meteor.isServer) {
                             });
                             var index2 = 0;
                             var result2 = 0;
-                            while (result2 = 0) {
-                                if (sMine2['scrs' + index2].victim = cUser) {
+                            while (result2 == 0) {
+                                if (sMine2['scrs' + index2].victim == cUser) {
                                     result2 = index2;
                                 }
                                 index2++;

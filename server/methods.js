@@ -261,7 +261,7 @@ if (Meteor.isServer) {
                 user: name,
                 owns0: {
                     input: "0000",
-                    stamp: " ",
+                    stamp: "",
                     control: {
                         min: 5,
                         max: 10
@@ -270,7 +270,7 @@ if (Meteor.isServer) {
                 },
                 scrs0: {
                     victim: "",
-                    stamp: " ",
+                    stamp: "",
                     benefit: 5
                 }
             }, function(err) {
@@ -286,7 +286,7 @@ if (Meteor.isServer) {
                 user: name,
                 owns0: {
                     input: "000000",
-                    stamp: " ",
+                    stamp: "",
                     control: {
                         min: 105,
                         max: 113
@@ -295,7 +295,7 @@ if (Meteor.isServer) {
                 },
                 scrs0: {
                     victim: "",
-                    stamp: " ",
+                    stamp: "",
                     benefit: 110
                 }
             }, function(err) {
@@ -311,7 +311,7 @@ if (Meteor.isServer) {
                     user: name,
                     owns0: {
                         input: "000000",
-                        stamp: " ",
+                        stamp: "",
                         control: {
                             min: 5,
                             max: 10
@@ -320,7 +320,7 @@ if (Meteor.isServer) {
                     },
                     scrs0: {
                         victim: "",
-                        stamp: " ",
+                        stamp: "",
                         benefit: 2.5
                     }
                 },
@@ -337,7 +337,7 @@ if (Meteor.isServer) {
                     user: name,
                     owns0: {
                         input: "0000",
-                        stamp: " ",
+                        stamp: "",
                         control: {
                             min: 50,
                             max: 80
@@ -346,7 +346,7 @@ if (Meteor.isServer) {
                     },
                     scrs0: {
                         victim: "",
-                        stamp: " ",
+                        stamp: "",
                         benefit: 50
                     }
                 },
@@ -363,7 +363,7 @@ if (Meteor.isServer) {
                     user: name,
                     owns0: {
                         input: "0000",
-                        stamp: " ",
+                        stamp: "",
                         control: {
                             min: 1,
                             max: 3.2
@@ -372,7 +372,7 @@ if (Meteor.isServer) {
                     },
                     scrs0: {
                         victim: "",
-                        stamp: " ",
+                        stamp: "",
                         benefit: 1
                     }
                 },
@@ -389,7 +389,7 @@ if (Meteor.isServer) {
                     user: name,
                     owns0: {
                         input: "0000",
-                        stamp: " ",
+                        stamp: "",
                         control: {
                             min: 0.1,
                             max: 0.2
@@ -398,7 +398,7 @@ if (Meteor.isServer) {
                     },
                     scrs0: {
                         victim: "",
-                        stamp: " ",
+                        stamp: "",
                         benefit: 0.1
                     }
                 },

@@ -119,6 +119,14 @@ if (Meteor.isClient) {
         return objects;
     };
 
+
+    supSlotsMemory = new Array();
+
+    Template.mineBase.supSlots = function() {
+        console.log(supSlotsMemory);
+        return supSlotsMemory;
+    }
+
     //To-DO für andere Menüs anpassen
     Template.mineBase.mineUsedSlots = function() {
         //Mine
@@ -137,6 +145,7 @@ if (Meteor.isClient) {
         var calculatedServerTime = (new Date()).getTime() - timeDifference;
         var timersHelperInc = new Array();
         var timersHelperDec = new Array();
+        //Iterate OwnSlots
         for (var i = 0; i < amountOwnSlots; i++) {
             var matterId = cursorMine['owns' + i].input;
             if (matterId > 0) {
@@ -149,6 +158,7 @@ if (Meteor.isClient) {
                     if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
                 }
                 var obj0 = {};
+                var obj00 = {};
 
                 var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
                 var progressSups = 0;
@@ -163,20 +173,35 @@ if (Meteor.isClient) {
                         });
                         //get index of scr slot
                         var index = 0;
-                        var result = 0;
-                        while (result = 0) {
-                            if (supMine['scrs' + index].victim = name) {
+                        var result = -1;
+                        while (result == -1) {
+                            if (supMine['scrs' + index].victim == name) {
                                 result = index;
                             }
                             index++;
                         }
                         //calculate mined by currentSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + i + '_mine_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        timersHelperInc.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
                         var supRate = supMine['scrs' + result].benefit;
                         supRates = supRates + supRate;
                         progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+
+                        obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
+                        obj00['miningrate'] = supRate + '/hr';
+
+                        supSlotsMemory[k] = obj00;
                     }
                 }
+
+
                 var progressTotal = progressOwn + progressSups;
                 obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
                 obj0['color'] = cursorMatterBlock.color;
@@ -200,6 +225,7 @@ if (Meteor.isClient) {
                 obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
+                obj0['index'] = i;
                 objects[i] = obj0;
 
             }
