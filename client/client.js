@@ -120,12 +120,12 @@ if (Meteor.isClient) {
     };
 
 
-    supSlotsMemory = new Array();
+    // supSlotsMemory = new Array();
 
-    Template.mineBase.supSlots = function() {
-        console.log(supSlotsMemory);
-        return supSlotsMemory;
-    }
+    // Template.mineBase.supSlots = function() {
+    //     console.log(supSlotsMemory);
+    //     return supSlotsMemory;
+    // }
 
     //To-DO für andere Menüs anpassen
     Template.mineBase.mineUsedSlots = function() {
@@ -158,16 +158,18 @@ if (Meteor.isClient) {
                     if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
                 }
                 var obj0 = {};
-                var obj00 = {};
 
                 var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
                 var progressSups = 0;
                 var supRates = 0;
+
+                var supSlotsMemory = new Array();
                 //Iterate Supporter
                 for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
                     var currentSup = cursorMine['owns' + i]['sup' + k];
                     //SupSlot used?
                     if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
                         var supMine = mine.findOne({
                             user: currentSup
                         });
@@ -180,10 +182,10 @@ if (Meteor.isClient) {
                             }
                             index++;
                         }
-                        //calculate mined by currentSup
+                        //calculate mined by cSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + i + '_mine_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -196,7 +198,6 @@ if (Meteor.isClient) {
 
                         obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
                         obj00['miningrate'] = supRate + '/hr';
-
                         supSlotsMemory[k] = obj00;
                     }
                 }
@@ -226,6 +227,7 @@ if (Meteor.isClient) {
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
                 obj0['index'] = i;
+                obj0['scroungers'] = supSlotsMemory;
                 objects[i] = obj0;
 
             }
@@ -254,6 +256,7 @@ if (Meteor.isClient) {
         }
         return objects;
     };
+
     Template.mineBase.matterBlocks = function() {
 
         return MatterBlocks.find({});
@@ -391,6 +394,7 @@ if (Meteor.isClient) {
                 $('#characterView').show();
 
             }
+
         }
 
     });
@@ -475,9 +479,6 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
-        'mousedown img': function(e, t) {
-            return false;
-        },
         'mouseover .slider': function(e, t) {
             slide($(e.target).attr('id'));
         },
@@ -563,18 +564,11 @@ if (Meteor.isClient) {
             }*/
         },
 
-        // Für die Tooltips der Range Slider
-        // 'mouseenter .range_slider_wrapper': function(e, t) {
-        //     fade_In_and_Out($(e.target).attr('id'), "in");
-        // },
-        // 'mouseleave .range_slider_wrapper': function(e, t) {
-        //     fade_In_and_Out($(e.target).attr('id'), "out");
-        // },
-
         'click .item': function(e, t) {
             Session.set("clickedMatter", e.currentTarget.id);
 
             //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
+
             //Variante A
 
             /*        var cursor = MatterBlocks.findOne({matter: e.currentTarget.id});
@@ -627,6 +621,7 @@ if (Meteor.isClient) {
     Template.mineBuyMenu.events({
 
         'click #buyMenuYes': function(e, t) {
+
             var currentUser = Meteor.users.findOne({
                 _id: Meteor.userId()
             }).username;
@@ -660,8 +655,6 @@ if (Meteor.isClient) {
     var ready_check;
     var size;
     var slots_count = 10;
-    var handle_check = false;
-    var hover_check = false;
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -674,36 +667,6 @@ if (Meteor.isClient) {
     if ($(window).width() >= 1280) {
         // console.log("1920");
         ready_check = 3;
-    }
-
-    // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
-
-    function fade_In_and_Out(element, state) {
-
-        // Solange der User den Handle vom Range Slider festhält soll der Tooltip anbleiben
-        // zusätzlich soll er anbleiben solange man mit der Maus über dem Range Slider ist
-        if (element === "handle" && state === "out") {
-            console.log("handle.out");
-            handle_check = false;
-        } else if (element === "handle" && state === "in") {
-            console.log("handle.in");
-            handle_check = true;
-        }
-        if (element !== "handle" && state === "out") {
-            console.log("hover.out");
-            hover_check = false;
-        } else if (element !== "handle" && state === "in") {
-            console.log("hover.in");
-            hover_check = true;
-        }
-
-        // Tooltip geht an wenn entweder der Handle verschoben wird oder man mit der Maus über den Range Slider hovert
-        // Tooltip geht nur aus wenn Maus nicht mehr auf dem Range Slider und kein Handle gezogen wird
-        if (handle_check === true || hover_check === true)
-            $(".tooltip").fadeIn('fast');
-        else if (handle_check === false && hover_check === false)
-            $(".tooltip").fadeOut('fast');
-
     }
 
     function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
@@ -962,7 +925,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    function update(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
+    function update(direction) {
         if (direction == "left") {
             c--;
         } else if (direction == "right") {
@@ -1002,6 +965,7 @@ if (Meteor.isClient) {
             pr: pos_reset
         };
     }
+
 
     function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
     {
@@ -1067,7 +1031,6 @@ if (Meteor.isClient) {
             }
         }
     });
-
 }
 
 /*  function hoverScroungeBase() {
