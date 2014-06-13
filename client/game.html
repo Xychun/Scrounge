@@ -203,9 +203,14 @@
                         <div class="slot_icon">
                             <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
                         </div>
-                        <div class="slot_upper_bar">
-                            <div class="slot_range"></div>
-                        </div>
+                        <section>
+                            <!-- TODO: Muss Eindeutig sein für jeden each durchlauf [Jede Id mit 01 am Ende für den ersten durchlauf und 02 für zweiten ... usw.] -->
+                            <span id="tooltip_left_handle" class="tooltip"></span>
+                            <span id="tooltip_right_handle" class="tooltip"></span>
+                            <div class="slot_range_slider">
+                                <div id="range_slider"></div>
+                            </div>
+                        </section>
                         <div class="slot_stats">
                             <p class='text relative'>Value: {{value}}</p>
                             <p class='text relative'>Slots: {{slots}}</p>
