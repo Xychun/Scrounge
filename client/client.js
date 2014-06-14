@@ -157,7 +157,7 @@ if (Meteor.isClient) {
                     //SupSlot used?
                     if (currentSup != undefined && currentSup.length != 0) {
                         var supMine = mine.findOne({
-                            user: cSup
+                            user: currentSup
                         });
                         //get index of scr slot
                         var index = 0;
@@ -267,24 +267,56 @@ if (Meteor.isClient) {
 
         'click #testButton': function(e, t) {
 
+          Router.current().render('mineBase', {
+                      to: 'middle'
+                  });
 
         },
 
         'click #testButton2': function(e, t) {
 
-            if (!$("#characterView").length) {
+          logRenders();
 
-                Router.current().render('characterView', {
-                    to: 'middle'
-                });
+        },
 
-            } else {
+        'click #character': function(e, t) {
 
-                $('#characterView').show();
+              if (!$("#characterView").length) {
 
+                  Router.current().render('characterView', {
+                      to: 'middle'
+                  });
+
+              } else {
+
+                  $('#characterView').show();
+
+              }
+        },
+
+        'click #scrounge': function(e, t) {
+
+             if($('#scrounge').css("background-position") == "0px 0px" || $('#scrounge').css("background-position") == "0% 0%") {
+
+                    Router.current().render('mineScrounge', {
+                        to: 'middle'
+                    });
+
+                    $('#scrounge').css({backgroundPosition: "0 -306px"});
             }
 
-        }
+            else {
+
+                  Router.current().render('mineBase', {
+                        to: 'middle'
+                    });
+
+                  $('#scrounge').css({backgroundPosition: "0px 0px"});
+            }
+
+            
+
+        },
 
     });
 
@@ -506,6 +538,42 @@ if (Meteor.isClient) {
 
     });
 
+    Template.mineScrounge.events({
+        'click .scroungable': function(e, t) {
+
+            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".scroungable_advanced").height() == 0) {
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "height": "100%"
+                }, 0);
+                var height = $(e.currentTarget).next(".scroungable_advanced").height() + 13 + "px";
+                $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                    "height": "0px"
+                }, 0, function() {
+
+                    $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                        "margin-top": "-13px"
+                    }, 150, function() {
+
+                        $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                    });
+                });
+
+            } else {
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
+            }
+        }
+      });
+
     //TODO: noch nicht fertig !
     Template.mineBuyMenu.events({
 
@@ -581,6 +649,12 @@ if (Meteor.isClient) {
             case 'right_slider_slot_items':
                 slide_right_simple('slot_items_content');
                 break;
+            case 'scroungeUp':
+                slide_up_simple('scroungeAreaContent');
+                break;
+            case 'scroungeDown':
+                slide_down_simple('scroungeAreaContent');
+                break;
             default:
                 //console.log("Slide für diesen Hover nicht definiert !");
                 break;
@@ -637,6 +711,59 @@ if (Meteor.isClient) {
                     $("." + element).animate({
                         "left": "+=60px"
                     }, 300, "linear");
+                };
+                //Start des Intervalls
+                interval = setInterval(action, 300);
+            }
+        }
+    }
+
+    function slide_down_simple(element) {
+        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+        var pos = size.p;
+        var pos_r = size.pr + "px";
+        var pos_p = "-=" + size.pp + "px";
+        //console.log("s1: "+$("#s1").position().top);
+        if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            if ($("#" + element).position().top <= 0) {
+                // Vorab Animation da Intervall erst nach [Time] anfängt
+                $("#" + element).filter(':not(:animated)').animate({
+                    "top": "-=80px"
+                }, 300, "linear");
+                //Rekursiver Intervall (unendlich)
+                var action = function() {
+                    //Animation im laufenden Intervall  
+                    $("#" + element).animate({
+                        "top": "-=80px"
+                    }, 300, "linear");
+                };
+                //Start des Intervalls
+                interval = setInterval(action, 300);
+            }
+        }
+    }
+
+    function slide_up_simple(element) {
+        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+        var pos = size.p;
+        var pos_r = size.pr + "px";
+        var pos_p = "+=" + size.pp + "px";
+        //console.log("s1: "+$("#s1").position().top);
+        if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            if ($("#" + element).position().top <= -80) {
+                // Vorab Animation da Intervall erst nach [Time] anfängt
+                $("#" + element).filter(':not(:animated)').animate({
+                    "top": "+=80px"
+                }, 300, "linear");
+                //Rekursiver Intervall (unendlich)
+                var action = function() {
+                    //Animation im laufenden Intervall  
+                    if ($("#" + element).position().top <= -80)
+                        $("#" + element).animate({
+                            "top": "+=80px"
+                        }, 300, "linear");
                 };
                 //Start des Intervalls
                 interval = setInterval(action, 300);
@@ -920,6 +1047,26 @@ if (Meteor.isClient) {
             }
         }
     });
+
+
+
+
+
+      /*DEBUGGING*/
+
+
+
+              function logRenders () {
+          _.each(Template, function (template, name) {
+            var oldRender = template.rendered;
+            var counter = 0;
+       
+            template.rendered = function () {
+              console.log(name, "render count: ", ++counter);
+              oldRender && oldRender.apply(this, arguments);
+            };
+          });
+  }
 }
 
 /*  function hoverScroungeBase() {

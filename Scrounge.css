@@ -567,25 +567,21 @@ img.i7 {
 
 .unused_slot {
     height:143px;
-    background-color:red;
 }
 .used_slot {
     z-index:2;
     height:143px;
-/*    background-color:green;*/
 }
 .used_slot_advanced {
     z-index:1;
     height:0px;
     overflow:hidden;
-/*    background-color:green;*/
 	background-image: url(/Aufloesung1920x1080/Interface/ActionsFirstScrounger.png);
     background-repeat: no-repeat;
 }
 .scrounger_slot {
     vertical-align: middle;
     height:103px;
-/*    background-color:orange;*/
 }
 .text {
     margin-top:5px;
@@ -604,14 +600,12 @@ img.i7 {
     top:29px;
     width:85px;
     height:85px;
-    background-color:yellow;
 }
 .scrounger_icon {
     left:48px;
     top:44px;
     width:55px;
     height:55px;
-    background-color:yellow;
 }
 .scrounger_stats_wrapper {
     display:table;
@@ -1008,6 +1002,7 @@ img.i7 {
         width: 0px;
         height: 0px;
         padding: 51px;
+        background-position: 0px 0px;
         background-image:url(/Aufloesung1280xXXX/Interface/ScroungeBaseButton.png);
         background-repeat: no-repeat;
         border-style: none;
@@ -1165,9 +1160,6 @@ img.i7 {
     /*MATTER*/
 
 
-
-
-
     .matter_edge {
         width:25px;
         height:152px;
@@ -1199,7 +1191,7 @@ img.i7 {
 
 
 
-
+	/*MENU*/
 
 
     .kimage {
@@ -1231,6 +1223,10 @@ img.i7 {
         height:152px;
         margin-left:-798px;
     }
+
+
+
+
     #links {
         width:152px;
     }
@@ -1253,6 +1249,63 @@ img.i7 {
         right:162px;
         height:152px;
     }
+
+
+
+
+    /*MINESCROUNGE*/
+
+    #scroungeArea {
+    	top:37px;
+	    width:100%;
+	    min-width:600px;
+	    overflow:hidden;
+    }
+    #goScrounging {
+    	width: 200px;
+    	height: 100px;
+    	left: 20px;
+    	top: 22px;
+    }
+    #scroungeAreaWrapper {
+    	top: 40px;
+    	bottom: 40px;
+    	width: 100%;
+    	overflow: hidden;
+    }
+    #scroungeAreaContentLeft {
+    	width: 48.8%;
+    }
+    #scroungeAreaContentRight {
+    	width: 48.8%;
+    }
+    .scroungable {
+    	height: 143px;
+    }
+    .scroungable_advanced {
+    	height: 0px;
+    	overflow: hidden;
+    	background-image: url(/Aufloesung1920x1080/Interface/ActionsFirstScrounger2.png);
+    	background-repeat: no-repeat;
+    }
+    .scroungableText {
+    	top:10px;
+    	left:250px;
+    }
+    #seperationBarScrounge {
+    	margin-left: auto;
+	    margin-right: auto;
+	    top:20px;
+	    width:20px;
+	    height:100%;
+	    background-image:url(/Aufloesung1920x1080/Interface/TrennbalkenScrounge.png);
+	    background-size:cover;
+    }
+
+
+
+
+
 
     /*HOVER BUTTONS*/
     /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/

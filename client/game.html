@@ -147,10 +147,15 @@
     </div>
 
     <!-- Zu Testzwecken -->
-    <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div>
+<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"></div>
 
 </template>
+
+
+
+
+<!-- MINEBASE -->
 
 <template name="mineBase">
     <div id="mitte">
@@ -246,6 +251,155 @@
     </div>
 </template>
 
+
+
+
+
+<!-- MINESCROUNGE -->
+
+<template name="mineScrounge">
+    <div id="mitte">
+        <div id="improvements" class="top left right"></div>
+            
+            <div id="scroungeArea" class="bot">
+
+	            <div id="up_slider_scrounge" class="slider_base_height top" style="z-index:2">
+	                <img id="scroungeUp" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+	            </div>
+
+	                <div id="scroungeAreaWrapper">
+
+	                	<div id="scroungeAreaContent" class="relative top">
+
+			                <div id="scroungeAreaContentLeft" class="left"> 
+
+				                	<!-- TEMPORÄR, SPÄTER MIT DATENBANK -->
+
+				                	<div class="scroungable relative">
+				                        <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
+				                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_green.png"></div>
+				                        <div class="slot_upper_bar">
+				                            <div class="slot_range"></div>
+				                        </div>
+				                        <div class="slot_stats">
+				                            <p class='text relative'>Value: {{value}}</p>
+				                            <p class='text relative'>Slots: {{slots}}</p>
+				                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
+				                        </div>
+				                    </div>
+
+				                    <div class="scroungable_advanced relative">
+				                        <div class="slot_advanced_stats relative">
+				                            <p class='text relative'>Profit: {{profit}}</p>
+				                            <p class='text relative'>Miningrate: {{miningrate}}</p>
+				                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
+				                        </div>
+				                        <div class="scrounger_slot relative">
+				                            <div class="scrounger_icon"></div>
+				                            <div class="scrounger_stats_wrapper">
+				                                <div class="scrounger_stats relative">
+				                                    <p class='text relative'>Miningrate:</p>
+				                                    <p class='text relative'>Mined:</p>
+				                                    <p class='text relative'>Time spent:</p>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+
+				                    <div class="scroungable relative">
+				                        <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
+				                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_green.png"></div>
+				                        <div class="slot_upper_bar">
+				                            <div class="slot_range"></div>
+				                        </div>
+				                        <div class="slot_stats">
+				                            <p class='text relative'>Value: {{value}}</p>
+				                            <p class='text relative'>Slots: {{slots}}</p>
+				                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
+				                        </div>
+				                    </div>
+
+				                    <div class="scroungable_advanced relative">
+				                        <div class="slot_advanced_stats relative">
+				                            <p class='text relative'>Profit: {{profit}}</p>
+				                            <p class='text relative'>Miningrate: {{miningrate}}</p>
+				                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
+				                        </div>
+				                        <div class="scrounger_slot relative">
+				                            <div class="scrounger_icon"></div>
+				                            <div class="scrounger_stats_wrapper">
+				                                <div class="scrounger_stats relative">
+				                                    <p class='text relative'>Miningrate:</p>
+				                                    <p class='text relative'>Mined:</p>
+				                                    <p class='text relative'>Time spent:</p>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+
+				                   <!--  {{#each mineScroungingSlots}}
+				                    <div class="scroungable_slot relative">
+				                        <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
+				                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png"></div>
+				                        <div class="slot_upper_bar">
+				                            <div class="slot_range"></div>
+				                        </div>
+				                        <div class="slot_stats">
+				                            <p class='text relative'>Value: {{value}}</p>
+				                            <p class='text relative'>Slots: {{slots}}</p>
+				                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
+				                        </div>
+				                    </div>
+
+				                    <div class="scroungable_advanced relative">
+				                        <div class="slot_advanced_stats relative">
+				                            <p class='text relative'>Profit: {{profit}}</p>
+				                            <p class='text relative'>Miningrate: {{miningrate}}</p>
+				                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
+				                        </div>
+				                        <div class="scrounger_slot relative">
+				                            <div class="scrounger_icon"></div>
+				                            <div class="scrounger_stats_wrapper">
+				                                <div class="scrounger_stats relative">
+				                                    <p class='text relative'>Miningrate:</p>
+				                                    <p class='text relative'>Mined:</p>
+				                                    <p class='text relative'>Time spent:</p>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    {{/each}} -->
+				                </div>	         
+
+				            <div id="scroungeAreaContentRight" class="right"> 
+
+				            	<!-- TEMPORÄR, SPÄTER MIT DATENBANK -->
+
+				            	<div class="scroungable relative"> <img src="/Aufloesung1920x1080/Interface/ActionsScroungingAvailable.png">
+			                        <div id="goScrounging"> <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png"> 
+			                        </div>
+			                        <div class="scroungableText">
+			                            <p class='text relative'>Value: {{value}}</p>
+			                            <p class='text relative'>Slots: {{slots}}</p>
+			                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
+			                        </div>
+					            </div>
+					            <div class="scroungable relative"> <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
+					            </div>
+				           </div>
+	            </div>
+
+	            <div id="seperationBarScrounge" class="left right"></div>
+
+	        </div>
+
+		        <div id="down_slider_base" class="slider_base_height bot">
+		                <img id="scroungeDown" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+		            </div>
+        </div>
+    </div>
+</template>
+
 <template name="mineBuyMenu">
 
     <div id="mineBuyMenu" class="left right">
@@ -328,12 +482,7 @@
 
             <div id="AmountScroungerSlots">
 
-                <!--                <div id="sslot1" class="sslots"> {{ownSlots}} </div>
-                <div id="sslot2" class="sslots"> </div>
-                <div id="sslot3" class="sslots"> </div>
-                <div id="sslot4" class="sslots"> </div>
-                <div id="sslot5" class="sslots"> </div>
-                <div id="sslot6" class="sslots"> </div> -->
+            <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
 
             </div>
 
