@@ -49,6 +49,7 @@
     </div>
 
     <div id="unten" class="bot">
+
         <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
         <div id="matter_content" class="bot matter_background">
 
@@ -122,7 +123,6 @@
                     </div>
                 </div>
             </div>
-
             {{/each}}
 
         </div>
@@ -179,8 +179,7 @@
                                 <div class="left slot_colors_edges"></div>
                                 <div class="slot_colors_content">
                                     {{#each blockColors}}
-                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItem{{color}}Normal.png">
-                                    {{/each}}
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItem{{color}}Normal.png">{{/each}}
                                 </div>
                                 <div class="right slot_colors_edges"></div>
                             </div>
@@ -202,17 +201,26 @@
                             <div id="right_slider_slot_items" class="slider right slot_items_slider right_slider_slot_items_background"></div>
                         </div>
                     </div>
-                    {{/each}} {{#each mineUsedSlots}}
+                    {{/each}} 
+                    {{#each mineUsedSlots}}
                     <div class="used_slot relative">
                         <img src="/Aufloesung1920x1080/Interface/ActionsGreenSlot.png">
-                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png"></div>
-                        <div class="slot_upper_bar">
-                            <div class="slot_range"></div>
+                        <div class="slot_icon">
+                            <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
                         </div>
+                        <section>
+                            <!-- TODO: Muss Eindeutig sein für jeden each durchlauf [Jede Id mit 01 am Ende für den ersten durchlauf und 02 für zweiten ... usw.] -->
+                            <span id="tooltip_left_handle" class="tooltip"></span>
+                            <span id="tooltip_right_handle" class="tooltip"></span>
+                            <div class="slot_range_slider">
+                                <div id="range_slider"></div>
+                            </div>
+                        </section>
                         <div class="slot_stats">
                             <p class='text relative'>Value: {{value}}</p>
                             <p class='text relative'>Slots: {{slots}}</p>
-                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
+                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
+                            </p>
                         </div>
                     </div>
 
@@ -220,18 +228,21 @@
                         <div class="slot_advanced_stats relative">
                             <p class='text relative'>Profit: {{profit}}</p>
                             <p class='text relative'>Miningrate: {{miningrate}}</p>
-                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
+                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                            </p>
                         </div>
+                        {{#each scroungers}}
                         <div class="scrounger_slot relative">
                             <div class="scrounger_icon"></div>
                             <div class="scrounger_stats_wrapper">
                                 <div class="scrounger_stats relative">
-                                    <p class='text relative'>Miningrate:</p>
-                                    <p class='text relative'>Mined:</p>
-                                    <p class='text relative'>Time spent:</p>
+                                    <p class='text relative'>Miningrate: {{miningrate}}</p>
+                                    <p class='text relative'>Mined: {{mined}}</p>
+                                    <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
                                 </div>
                             </div>
                         </div>
+                        {{/each}}
                     </div>
                     {{/each}}
                 </div>
@@ -244,8 +255,7 @@
         <div id="seperation_bar" class="left right"></div>
         <div class="areas right bot">
             <div id="up_slider_scrounge"></div>
-            <div id="scrounge_area" class="top relative">
-            </div>
+            <div id="scrounge_area" class="top relative"></div>
             <div id="down_slider_scrounge"></div>
         </div>
     </div>
@@ -476,13 +486,13 @@
                 <div class="rangeSliderMarks">
                     <div class="rangeSliderMarksStroke"></div>
                 </div>
-
-
             </div>
 
             <div id="AmountScroungerSlots">
+            
 
             <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
+
 
             </div>
 

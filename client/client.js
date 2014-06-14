@@ -59,6 +59,7 @@ if (Meteor.isClient) {
     }, 1 * 1000);
 
     //Client Live Render timers that increase value by 1 second
+
     function updateTimersInc() {
         for (i = 0; i < timersInc.length; i++) {
             if ($('#' + timersInc[i].id).length > 0) {
@@ -72,6 +73,7 @@ if (Meteor.isClient) {
     }
 
     //Client Live Render timers that decrease value by 1 second
+
     function updateTimersDec() {
         for (i = 0; i < timersDec.length; i++) {
             if ($('#' + timersDec[i].id).length > 0) {
@@ -117,6 +119,14 @@ if (Meteor.isClient) {
         return objects;
     };
 
+
+    // supSlotsMemory = new Array();
+
+    // Template.mineBase.supSlots = function() {
+    //     console.log(supSlotsMemory);
+    //     return supSlotsMemory;
+    // }
+
     //To-DO für andere Menüs anpassen
     Template.mineBase.mineUsedSlots = function() {
         //Mine
@@ -135,6 +145,7 @@ if (Meteor.isClient) {
         var calculatedServerTime = (new Date()).getTime() - timeDifference;
         var timersHelperInc = new Array();
         var timersHelperDec = new Array();
+        //Iterate OwnSlots
         for (var i = 0; i < amountOwnSlots; i++) {
             var matterId = cursorMine['owns' + i].input;
             if (matterId > 0) {
@@ -151,30 +162,47 @@ if (Meteor.isClient) {
                 var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
                 var progressSups = 0;
                 var supRates = 0;
+
+                var supSlotsMemory = new Array();
                 //Iterate Supporter
                 for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
                     var currentSup = cursorMine['owns' + i]['sup' + k];
                     //SupSlot used?
                     if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
                         var supMine = mine.findOne({
                             user: currentSup
                         });
                         //get index of scr slot
                         var index = 0;
-                        var result = 0;
-                        while (result = 0) {
-                            if (supMine['scrs' + index].victim = name) {
+                        var result = -1;
+                        while (result == -1) {
+                            if (supMine['scrs' + index].victim == name) {
                                 result = index;
                             }
                             index++;
                         }
                         //calculate mined by cSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        timersHelperInc.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
                         var supRate = supMine['scrs' + result].benefit;
                         supRates = supRates + supRate;
                         progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+
+                        obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
+                        obj00['miningrate'] = supRate + '/hr';
+                        supSlotsMemory[k] = obj00;
                     }
                 }
+
+
                 var progressTotal = progressOwn + progressSups;
                 obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
                 obj0['color'] = cursorMatterBlock.color;
@@ -198,6 +226,8 @@ if (Meteor.isClient) {
                 obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
+                obj0['index'] = i;
+                obj0['scroungers'] = supSlotsMemory;
                 objects[i] = obj0;
 
             }
@@ -257,6 +287,87 @@ if (Meteor.isClient) {
 
     };
 
+    ////////////////////
+    ///// Rendered /////
+    ////////////////////
+
+    Template.masterLayout.rendered = function() {
+
+        // $("#disable_range_slider").draggable();
+
+        console.log("masterLayout rendered successfully");
+
+        if (!$('#range_slider').data('uiSlider')) {
+            // The data attribute for the slider is not set, so the slider has not yet been created
+            // If the slider is still around, we don't want to initialize it again
+            var slider = $('#range_slider'),
+                tooltip = $('.tooltip'),
+                tooltip_left_handle = $('#tooltip_left_handle'),
+                tooltip_right_handle = $('#tooltip_right_handle'),
+                left_handle,
+                right_handle,
+                min_control = 0.5, //Untere Grenze 
+                max_control = 0.8, //Obere Grenze
+                full_control = max_control - min_control
+                lower_control = 0.6, //Aktueller untere Wert
+                higher_control = 0.7, //Aktueller oberer Wert
+                slider_threshold = (max_control - min_control) / 10;
+
+            tooltip_left_handle.css('left', ((lower_control - min_control) * 100 / full_control) * 1.5).text(lower_control);
+            tooltip_right_handle.css('left', ((higher_control - min_control) * 100 / full_control) * 1.5).text(higher_control);
+
+            tooltip.hide();
+
+            slider.slider({
+                range: true,
+                step: 0.01,
+                min: min_control,
+                max: max_control,
+                values: [lower_control, higher_control],
+
+                start: function(event, ui) {
+                    left_handle = ui.values[0];
+                    right_handle = ui.values[1];
+                    //Initialisierung der Tooltip Fenster an den stellen der Handle
+                    tooltip_left_handle.css('left', ((ui.values[0] - min_control) * 100 / full_control) * 1.5).text(ui.values[0]);
+                    tooltip_right_handle.css('left', ((ui.values[1] - min_control) * 100 / full_control) * 1.5).text(ui.values[1]);
+                    fade_In_and_Out("handle", "in");
+                },
+
+                slide: function(event, ui) {
+
+                    px_left = ((ui.values[0] - min_control) * 100 / full_control) * 1.5;
+                    px_right = ((ui.values[1] - min_control) * 100 / full_control) * 1.5;
+                    console.log(px_left + " " + px_right);
+
+                    if (ui.values[1] - ui.values[0] > slider_threshold) {
+                        if (left_handle != ui.values[0]) {
+                            if ((px_left + 40) <= px_right) {
+                                tooltip_left_handle.css('left', px_left).text(ui.values[0]);
+                            } else {
+                                console.log("stop_left");
+                                tooltip_left_handle.css('left', px_right - 40).text(ui.values[0]);
+                            }
+                        } else if (right_handle != ui.values[1]) {
+                            if ((px_right - 40) >= px_left) {
+                                tooltip_right_handle.css('left', px_right).text(ui.values[1]);
+                            } else {
+                                console.log("stop_right");
+                                tooltip_right_handle.css('left', px_left + 40).text(ui.values[1]);
+                            }
+                        }
+                    } else if (ui.values[1] - ui.values[0] < slider_threshold) {
+                        return (false);
+                    }
+                },
+                stop: function(event, ui) {
+                    fade_In_and_Out("handle", "out");
+                }
+            });
+
+        }
+
+    };
 
     //////////////////
     ///// EVENTS /////
