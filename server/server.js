@@ -17,13 +17,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isServer) {
-    // Meteor.startup(function() {
-    //     // code to run on server at startup
-    //     update();
-    //     Meteor.setInterval(function() {
-    //         update();
-    //     }, 20 * 1000);
-    // });
+    Meteor.startup(function() {
+        // code to run on server at startup
+        update();
+        Meteor.setInterval(function() {
+            update();
+        }, 20 * 1000);
+    });
 
     function update() {
         var START = new Date().getTime();
@@ -163,7 +163,123 @@ if (Meteor.isServer) {
         console.log('UPDATE DURATION: ' + DURATION);*/
     }
 
+    function createMapPosition(username) {
+        //Find random position
+        //Find turf highest size
+        var godTurf = Turf.find({}, {
+            fields: {
+                turfSize: 1
+            }
+        }, {
+            sort: {
+                turfSize: -1
+            }
+        }).fetch()[0];
+        //Find lowest density Turf, babyTurf
+        var babyTurfId = getBabyTurf(godTurf._id);
+        var cursorBabyTurf = Turf.findOne({
+            _id: babyTurfId
+        }, {
+            fields: {
+                turfSize: 0
+            }
+        });
 
+        //Check lowest densitiy value
+        if (cursorBabyTurf.density < 60) {
+            //Set player position on free slot and update densitiy
+            //Find all free slots
+            var freeSlots = new Array();
+            for (i = 0; i < 3; i++) {
+                if (worldMapFields.findOne({
+                    _id: cursorBabyTurf['child' + i]
+                }, {
+                    fields: {
+                        user: 1
+                    }
+                }).user != "") freeSlots.push(i);
+            }
+            //Values randomPosition are [0-(freeSlots.length-1)]
+            var randomPosition = Math.floor((Math.random() * freeSlots.length));
+            //Place player into random free slot
+            var obj1 = {};
+            obj1['_id'] = cursorBabyTurf['child' + randomPosition];
+            worldMapFields.update(obj1, {
+                $set: {
+                    user: username
+                }
+            });
+            cursorWorldMap = worldMapFields.findOne({
+                user: username
+            });
+            var obj2 = {};
+            obj2['x'] = cursorWorldMap.x;
+            obj2['y'] = cursorWorldMap.y;
+            Meteor.users.update({
+                username: username
+            }, {
+                $set: obj2
+            })
+            console.log('Position done!');
+            //TO-DO updateDensitiy
+        } else {
+            //Create new Turf and search again
+        }
+    }
+
+    function getBabyTurf(godTurfId) {
+        var cursorGodTurf = Turf.findOne({
+            _id: godTurfId
+        });
+        //No more Turf childs ?
+        if (cursorGodTurf.turfSize == 0) return godTurfId
+        var cursorChild0 = Turf.findOne({
+            _id: cursorGodTurf.child0
+        }, {
+            fields: {
+                _id: 1,
+                densitiy: 1
+            }
+        });
+        var cursorChild1 = Turf.findOne({
+            _id: cursorGodTurf.child1
+        }, {
+            fields: {
+                _id: 1,
+                densitiy: 1
+            }
+        });
+        var cursorChild2 = Turf.findOne({
+            _id: cursorGodTurf.child2
+        }, {
+            fields: {
+                _id: 1,
+                densitiy: 1
+            }
+        });
+        var cursorChild3 = Turf.findOne({
+            _id: cursorGodTurf.child3
+        }, {
+            fields: {
+                _id: 1,
+                densitiy: 1
+            }
+        });
+
+        //Lowest densitiy of Turf childs
+        var lowestDensity = Math.min(cursorChild0.densitiy, cursorChild1.densitiy, cursorChild2.densitiy, cursorChild3.densitiy);
+
+        //Recursive: get lowest Turf with lowest densitiy - - -
+        if (cursorChild0.densitiy == lowestDensity) {
+            return getBabyTurf(cursorChild0._id);
+        } else if (cursorChild1.densitiy == lowestDensity) {
+            return getBabyTurf(cursorChild1._id);
+        } else if (cursorChild2.densitiy == lowestDensity) {
+            return getBabyTurf(cursorChild2._id);
+        } else {
+            return getBabyTurf(cursorChild3._id);
+        }
+    }
 
     //Publish
     Meteor.publish("userData", function() {
@@ -172,7 +288,9 @@ if (Meteor.isServer) {
                 fields: {
                     'username': 1,
                     'menu': 1,
-                    'cu': 1
+                    'cu': 1,
+                    'x': 1,
+                    'y': 1
                 }
             });
         } else {

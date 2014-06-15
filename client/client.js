@@ -227,7 +227,7 @@ if (Meteor.isClient) {
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
                 obj0['index'] = i;
-                obj0['scroungers'] = supSlotsMemory;
+                obj0['supporter'] = supSlotsMemory;
                 objects[i] = obj0;
 
             }

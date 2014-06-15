@@ -63,8 +63,8 @@ if (Meteor.isClient) {
                             // Now init account data
                             Meteor.call('init', function(err) {
                                 if (err) {
-                                    console.log(err);
-                                } else {
+                                    console.log('account init: ' + err);
+                                } else{
                                     switchToGame();
                                 }
                             });

@@ -9,6 +9,9 @@ MatterBlocks = new Meteor.Collection("MatterBlocks");
 playerData = new Meteor.Collection("playerData");
 resources = new Meteor.Collection("resources");
 
+Turf = new Meteor.Collection("Turf");
+worldMapFields = new Meteor.Collection("worldMapFields");
+
 mine = new Meteor.Collection("mine");
 laboratory = new Meteor.Collection("laboratory");
 workshop = new Meteor.Collection("workshop");
