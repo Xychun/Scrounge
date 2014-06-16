@@ -15,7 +15,10 @@ Router.map(function() {
             'register': {
                 to: 'center2'
             },
-        }
+        },
+        // action: function() {
+        //     if (gameRenderer) gameRenderer.stop();
+        // }
     });
 
     this.route('game', {
@@ -26,12 +29,34 @@ Router.map(function() {
             'standardBorder': {
                 to: 'border'
             },
-            'mineBase': {
-                to: 'middle'
-            },
             'mineBuyMenu': {
                 to: 'buyMenu'
             },
+            'mapSimulation': {
+                to: 'rightSideTest'
+            },
+        },
+
+        onData: function() {
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    menu: 1,
+                    cu: 1,
+                    username: 1
+                }
+            });
+            var cu = self.cu;
+            if (cu == self.username) {
+                Router.current().render('mineBase', {
+                    to: 'middle'
+                });
+            } else {
+                Router.current().render('mineScrounge', {
+                    to: 'middle'
+                });
+            }
         },
 
         waitOn: function() {

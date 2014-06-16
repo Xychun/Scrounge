@@ -147,19 +147,26 @@
     </div>
 
     <!-- Zu Testzwecken -->
-<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"></div>
 
 </template>
 
 
-
+<!-- TEST SECTION FOR USER SWITCH -->
+<template name="mapSimulation">
+    <div style="position: absolute; right: 20px; top: 20%">
+        {{#each users}}
+        <div id="{{username}}" class="testUserChange" style="position: relative; background-color: yellow; font-size: 20pt; font-weight: bold; margin-right: 0">{{username}}</div> <br>
+        {{/each}}
+    </div>
+</template>
 
 <!-- MINEBASE -->
 
 <template name="mineBase">
     <div id="mitte">
-        <div id="improvements" class="top left right"></div>
+        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own menu!</div>
         <div class="areas left bot">
             <div id="up_slider_base" class="slider_base_height top">
                 <img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
@@ -269,143 +276,94 @@
 
 <template name="mineScrounge">
     <div id="mitte">
-        <div id="improvements" class="top left right"></div>
-            
-            <div id="scroungeArea" class="bot">
+        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; Current user menu is {{#with current}} {{cu}} {{/with}}</div>
 
-	            <div id="up_slider_scrounge" class="slider_base_height top" style="z-index:2">
-	                <img id="scroungeUp" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
-	            </div>
+        <div id="scroungeArea" class="bot">
 
-	                <div id="scroungeAreaWrapper">
+            <div id="up_slider_scrounge" class="slider_base_height top" style="z-index:2">
+                <img id="scroungeUp" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+            </div>
 
-	                	<div id="scroungeAreaContent" class="relative top">
+            <div id="scroungeAreaWrapper">
 
-			                <div id="scroungeAreaContentLeft" class="left"> 
+                <div id="scroungeAreaContent" class="relative top">
 
-				                	<!-- TEMPORÄR, SPÄTER MIT DATENBANK -->
+                    <div id="scroungeAreaContentLeft" class="left">
 
-				                	<div class="scroungable relative">
-				                        <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
-				                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_green.png"></div>
-				                        <div class="slot_upper_bar">
-				                            <div class="slot_range"></div>
-				                        </div>
-				                        <div class="slot_stats">
-				                            <p class='text relative'>Value: {{value}}</p>
-				                            <p class='text relative'>Slots: {{slots}}</p>
-				                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
-				                        </div>
-				                    </div>
+                        {{#each mineScroungingSlots}}
+                        <div class="scroungable relative">
+                            <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
+                            <div class="slot_icon">
+                                <img src="/Aufloesung1920x1080/Mine/MatterBlock_green.png">
+                            </div>
+                            <div class="slot_upper_bar">
+                                <div class="slot_range"></div>
+                            </div>
+                            <div class="slot_stats">
+                                <p class='text relative'>Value: {{value}}</p>
+                                <p class='text relative'>Slots: {{slots}}</p>
+                                <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
+                                </p>
+                            </div>
+                        </div>
 
-				                    <div class="scroungable_advanced relative">
-				                        <div class="slot_advanced_stats relative">
-				                            <p class='text relative'>Profit: {{profit}}</p>
-				                            <p class='text relative'>Miningrate: {{miningrate}}</p>
-				                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
-				                        </div>
-				                        <div class="scrounger_slot relative">
-				                            <div class="scrounger_icon"></div>
-				                            <div class="scrounger_stats_wrapper">
-				                                <div class="scrounger_stats relative">
-				                                    <p class='text relative'>Miningrate:</p>
-				                                    <p class='text relative'>Mined:</p>
-				                                    <p class='text relative'>Time spent:</p>
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
+                        <div class="scroungable_advanced relative">
+                            <div class="slot_advanced_stats relative">
+                                <p class='text relative'>Miningrate: {{miningrate}}</p>
+                                <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                                </p>
+                            </div>
+                            {{#each supporter}}
+                            <div class="scrounger_slot relative">
+                                <div class="scrounger_icon"></div>
+                                <div class="scrounger_stats_wrapper">
+                                    <div class="scrounger_stats relative">
+                                        <p class='text relative'>Miningrate: {{miningrate}}</p>
+                                        <p class='text relative'>Mined: {{mined}}</p>
+                                        <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
 
-				                    <div class="scroungable relative">
-				                        <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
-				                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_green.png"></div>
-				                        <div class="slot_upper_bar">
-				                            <div class="slot_range"></div>
-				                        </div>
-				                        <div class="slot_stats">
-				                            <p class='text relative'>Value: {{value}}</p>
-				                            <p class='text relative'>Slots: {{slots}}</p>
-				                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
-				                        </div>
-				                    </div>
+                        <!-- TO-DO: Muss noch umgebaut werden: nach rechts (ein großes Div?)-->
+                        <div class="scroungable relative">
+                            <img src="/Aufloesung1920x1080/Interface/ActionsScroungingAvailable.png">
+                            <div id="{{goScrounging}}" class="goScrounging">
+                                <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
+                            </div>
+                            <div class="scroungableText">
+                                <p class='text relative'>Miningrate: {{miningrateChange}}</p>
+                                <p class='text relative'>Slots: {{slotsChange}}</p>
+                                <p class='text relative'>Remaining: <a id='{{remainingChangeId}}' class='text relative'> {{remainingChange}} </a>
+                                </p>
+                            </div>
 
-				                    <div class="scroungable_advanced relative">
-				                        <div class="slot_advanced_stats relative">
-				                            <p class='text relative'>Profit: {{profit}}</p>
-				                            <p class='text relative'>Miningrate: {{miningrate}}</p>
-				                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
-				                        </div>
-				                        <div class="scrounger_slot relative">
-				                            <div class="scrounger_icon"></div>
-				                            <div class="scrounger_stats_wrapper">
-				                                <div class="scrounger_stats relative">
-				                                    <p class='text relative'>Miningrate:</p>
-				                                    <p class='text relative'>Mined:</p>
-				                                    <p class='text relative'>Time spent:</p>
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
+                        </div>
+                        {{/each}}
+                    </div>
 
-				                   <!--  {{#each mineScroungingSlots}}
-				                    <div class="scroungable_slot relative">
-				                        <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
-				                        <div class="slot_icon"><img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png"></div>
-				                        <div class="slot_upper_bar">
-				                            <div class="slot_range"></div>
-				                        </div>
-				                        <div class="slot_stats">
-				                            <p class='text relative'>Value: {{value}}</p>
-				                            <p class='text relative'>Slots: {{slots}}</p>
-				                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
-				                        </div>
-				                    </div>
+                    <div id="scroungeAreaContentRight" class="right">
 
-				                    <div class="scroungable_advanced relative">
-				                        <div class="slot_advanced_stats relative">
-				                            <p class='text relative'>Profit: {{profit}}</p>
-				                            <p class='text relative'>Miningrate: {{miningrate}}</p>
-				                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a></p>
-				                        </div>
-				                        <div class="scrounger_slot relative">
-				                            <div class="scrounger_icon"></div>
-				                            <div class="scrounger_stats_wrapper">
-				                                <div class="scrounger_stats relative">
-				                                    <p class='text relative'>Miningrate:</p>
-				                                    <p class='text relative'>Mined:</p>
-				                                    <p class='text relative'>Time spent:</p>
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                    {{/each}} -->
-				                </div>	         
 
-				            <div id="scroungeAreaContentRight" class="right"> 
 
-				            	<!-- TEMPORÄR, SPÄTER MIT DATENBANK -->
 
-				            	<div class="scroungable relative"> <img src="/Aufloesung1920x1080/Interface/ActionsScroungingAvailable.png">
-			                        <div id="goScrounging"> <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png"> 
-			                        </div>
-			                        <div class="scroungableText">
-			                            <p class='text relative'>Value: {{value}}</p>
-			                            <p class='text relative'>Slots: {{slots}}</p>
-			                            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a></p>
-			                        </div>
-					            </div>
-					            <div class="scroungable relative"> <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
-					            </div>
-				           </div>
-	            </div>
+                        <div class="scroungable relative">
+                            <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
+                        </div>
 
-	            <div id="seperationBarScrounge" class="left right"></div>
+                    </div>
+                </div>
 
-	        </div>
+                <div id="seperationBarScrounge" class="left right"></div>
 
-		        <div id="down_slider_base" class="slider_base_height bot">
-		                <img id="scroungeDown" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
-		            </div>
+            </div>
+
+            <div id="down_slider_base" class="slider_base_height bot">
+                <img id="scroungeDown" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+            </div>
         </div>
     </div>
 </template>
@@ -489,9 +447,9 @@
             </div>
 
             <div id="AmountScroungerSlots">
-            
 
-            <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
+
+                <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
 
 
             </div>

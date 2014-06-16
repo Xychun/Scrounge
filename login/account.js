@@ -64,7 +64,7 @@ if (Meteor.isClient) {
                             Meteor.call('init', function(err) {
                                 if (err) {
                                     console.log('account init: ' + err);
-                                } else{
+                                } else {
                                     switchToGame();
                                 }
                             });
@@ -106,14 +106,27 @@ if (Meteor.isClient) {
     function switchToGame() {
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1,
+                menu: 1,
+                username: 1
+            }
         });
         if (self) {
-            var cu = self.cu;
-            var menu = self.menu;
             Router.go('game', {
-                name: cu,
-                menu: menu
+                name: self.cu,
+                menu: self.menu
             });
+            // if (cu == self.username) {
+            //     Router.current().render('mineBase', {
+            //         to: 'middle'
+            //     });
+            // } else {
+            //     Router.current().render('mineScrounge', {
+            //         to: 'middle'
+            //     });
+            // }
         } else {
             console.log("User not yet defined problem switchToGame");
         }

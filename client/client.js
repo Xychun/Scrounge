@@ -97,6 +97,22 @@ if (Meteor.isClient) {
         return hrs + ':' + mins + ':' + secs;
     }
 
+    //TO-DO nur für Testzwecke
+    Template.mapSimulation.users = function() {
+        var test = Meteor.users.find({}, {fields: {username: 1}}).fetch();
+        return test;
+    };
+
+    Template.mineScrounge.current = function() {
+        return Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1
+            }
+        });
+    }
+
     //To-DO für andere Menüs anpassen
     Template.mineBase.mineUnusedSlots = function() {
         //Mine
@@ -118,14 +134,6 @@ if (Meteor.isClient) {
         }
         return objects;
     };
-
-
-    // supSlotsMemory = new Array();
-
-    // Template.mineBase.supSlots = function() {
-    //     console.log(supSlotsMemory);
-    //     return supSlotsMemory;
-    // }
 
     //To-DO für andere Menüs anpassen
     Template.mineBase.mineUsedSlots = function() {
@@ -237,6 +245,135 @@ if (Meteor.isClient) {
         return objects;
     };
 
+    Template.mineScrounge.mineScroungingSlots = function() {
+        //Mine
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        });
+        var name = self.cu;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+        var cursorMine = mine.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        var timersHelperInc = new Array();
+        var timersHelperDec = new Array();
+        //Iterate OwnSlots
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var matterId = cursorMine['owns' + i].input;
+            if (matterId > 0) {
+                var cursorMatterBlock = MatterBlocks.findOne({
+                    matter: matterId
+                });
+                var amountMaxSupSlots = cursorPlayerData.mine.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+
+                var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                var progressSups = 0;
+                var supRates = 0;
+
+                var supSlotsMemory = new Array();
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
+                    var currentSup = cursorMine['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
+                        var supMine = mine.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var index = 0;
+                        var result = -1;
+                        while (result == -1) {
+                            if (supMine['scrs' + index].victim == name) {
+                                result = index;
+                            }
+                            index++;
+                        }
+                        //calculate mined by cSup
+                        var supTime = supMine['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        timersHelperInc.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                        var supRate = supMine['scrs' + result].benefit;
+                        supRates = supRates + supRate;
+                        progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+
+                        obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
+                        obj00['miningrate'] = supRate + '/hr';
+                        supSlotsMemory[k] = obj00;
+                    }
+                }
+
+
+                var progressTotal = progressOwn + progressSups;
+                obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
+                obj0['color'] = cursorMatterBlock.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountMaxSupSlots;
+                obj0['remainingId'] = 'timerDec_' + i + '_mine';
+                obj0['remainingChangeId'] = 'timerDec_' + i + '_mineChange';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_mine';
+
+                //Remaining calculation
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                timersHelperDec.push(obj1);
+                obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+
+                //RemainingChange calcuation
+                var obj3 = {};
+                obj3['id'] = obj0['remainingChangeId'];
+                var myRate = playerData.findOne({
+                    user: self.username
+                }, {
+                    fields: {
+                        mine: 1
+                    }
+                }).mine.scrItem.benefit;
+                obj3['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
+                timersHelperDec.push(obj3);
+                obj0['remainingChange'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
+                timersHelperInc.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
+
+                obj0['miningrate'] = (7.5 + supRates) + '/hr';
+                obj0['miningrateChange'] = (7.5 + supRates + myRate) + '/hr';;
+
+                //Make Slot scroungeable
+                obj0['goScrounging'] = 'goScroungingMine_' + i;
+
+                obj0['index'] = i;
+                obj0['supporter'] = supSlotsMemory;
+                objects[i] = obj0;
+
+            }
+        }
+        timersInc = timersHelperInc;
+        timersDec = timersHelperDec;
+        return objects;
+    }
+
     Template.mineBase.blockColors = function() {
         var cursorMatterColors = MatterBlocks.find({}, {
             fields: {
@@ -259,7 +396,11 @@ if (Meteor.isClient) {
 
     Template.mineBase.matterBlocks = function() {
 
-        return MatterBlocks.find({});
+        return MatterBlocks.find({}, {
+            sort: {
+                matter: 1
+            }
+        });
 
     };
 
@@ -295,7 +436,7 @@ if (Meteor.isClient) {
 
         // $("#disable_range_slider").draggable();
 
-        console.log("masterLayout rendered successfully");
+        // console.log("masterLayout rendered successfully");
 
         if (!$('#range_slider').data('uiSlider')) {
             // The data attribute for the slider is not set, so the slider has not yet been created
@@ -373,59 +514,96 @@ if (Meteor.isClient) {
     ///// EVENTS /////
     //////////////////
 
+
+    //TO-DO: Testzwecke Map Simulation
+    Template.mapSimulation.events({
+        'click .testUserChange': function(e, t) {
+            var current = e.currentTarget.id;
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1
+                }
+            });
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    cu: current
+                }
+            });
+            Router.go('game', {
+                name: current,
+                menu: 'mine'
+            });
+            // if (current == self.username) {
+            //     Router.current().render('mineBase', {
+            //         to: 'middle'
+            //     });
+            // } else {
+            //     Router.current().render('mineScrounge', {
+            //         to: 'middle'
+            //     });
+            // }
+        }
+    });
+
     /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
 
-          Router.current().render('mineBase', {
-                      to: 'middle'
-                  });
+            Router.current().render('mineBase', {
+                to: 'middle'
+            });
 
         },
 
         'click #testButton2': function(e, t) {
 
-          logRenders();
+            logRenders();
 
         },
 
         'click #character': function(e, t) {
 
-              if (!$("#characterView").length) {
+            if (!$("#characterView").length) {
 
-                  Router.current().render('characterView', {
-                      to: 'middle'
-                  });
+                Router.current().render('characterView', {
+                    to: 'middle'
+                });
 
-              } else {
+            } else {
 
-                  $('#characterView').show();
+                $('#characterView').show();
 
-              }
+            }
         },
 
         'click #scrounge': function(e, t) {
 
-             if($('#scrounge').css("background-position") == "0px 0px" || $('#scrounge').css("background-position") == "0% 0%") {
+            if ($('#scrounge').css("background-position") == "0px 0px" || $('#scrounge').css("background-position") == "0% 0%") {
 
-                    Router.current().render('mineScrounge', {
-                        to: 'middle'
-                    });
+                Router.current().render('mineScrounge', {
+                    to: 'middle'
+                });
 
-                    $('#scrounge').css({backgroundPosition: "0 -306px"});
+                $('#scrounge').css({
+                    backgroundPosition: "0 -306px"
+                });
+            } else {
+
+                Router.current().render('mineBase', {
+                    to: 'middle'
+                });
+
+                $('#scrounge').css({
+                    backgroundPosition: "0px 0px"
+                });
             }
 
-            else {
 
-                  Router.current().render('mineBase', {
-                        to: 'middle'
-                    });
-
-                  $('#scrounge').css({backgroundPosition: "0px 0px"});
-            }
-
-            
 
         },
 
@@ -682,8 +860,17 @@ if (Meteor.isClient) {
                     "margin-top": "0px"
                 }, 150);
             }
+        },
+
+        'click .goScrounging': function(e, t) {
+            var slotId = e.currentTarget.id.split("_").pop();
+            Meteor.call('goScrounging', slotId, function(err) {
+                if (err) {
+                    console.log('account init: ' + err);
+                }
+            });
         }
-      });
+    });
 
     //TODO: noch nicht fertig !
     Template.mineBuyMenu.events({
@@ -1146,11 +1333,26 @@ if (Meteor.isClient) {
         } else {
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
+            }, {
+                fields: {
+                    menu: 1,
+                    cu: 1,
+                    username: 1
+                }
             });
             var menu = self.menu;
             var cu = self.cu;
             if (cu && menu) {
                 Meteor.subscribe(menu, cu, function(rdy) {
+                    // if (cu == self.username) {
+                    //     Router.current().render('mineBase', {
+                    //         to: 'middle'
+                    //     });
+                    // } else {
+                    //     Router.current().render('mineScrounge', {
+                    //         to: 'middle'
+                    //     });
+                    // }
                     // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
                 });
             } else {
@@ -1163,21 +1365,21 @@ if (Meteor.isClient) {
 
 
 
-      /*DEBUGGING*/
+    /*DEBUGGING*/
 
 
 
-              function logRenders () {
-          _.each(Template, function (template, name) {
+    function logRenders() {
+        _.each(Template, function(template, name) {
             var oldRender = template.rendered;
             var counter = 0;
-       
-            template.rendered = function () {
-              console.log(name, "render count: ", ++counter);
-              oldRender && oldRender.apply(this, arguments);
+
+            template.rendered = function() {
+                console.log(name, "render count: ", ++counter);
+                oldRender && oldRender.apply(this, arguments);
             };
-          });
-  }
+        });
+    }
 }
 
 /*  function hoverScroungeBase() {
