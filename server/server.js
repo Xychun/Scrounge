@@ -120,20 +120,20 @@ if (Meteor.isServer) {
                             });
                             //reset scr slot of sup
                             //get index of scr slot
-                            var sMine2 = mine.findOne({
+                            var sMine = mine.findOne({
                                 user: allSups[l]
                             });
-                            var index2 = 0;
-                            var result2 = 0;
-                            while (result2 == 0) {
-                                if (sMine2['scrs' + index2].victim == cUser) {
-                                    result2 = index2;
+                            var index = 0;
+                            var result = -1;
+                            while (result == -1) {
+                                if (sMine['scrs' + index].victim == cUser) {
+                                    result = index;
                                 }
-                                index2++;
+                                index++;
                             }
 
                             var obj2 = {};
-                            obj2['scrs' + result2 + '.victim'] = '';
+                            obj2['scrs' + result + '.victim'] = '';
 
                             mine.update({
                                 user: allSups[l]

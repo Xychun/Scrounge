@@ -863,6 +863,7 @@ if (Meteor.isClient) {
         },
 
         'click .goScrounging': function(e, t) {
+            console.log('goScrounging: ' + e.currentTarget.id);
             var slotId = e.currentTarget.id.split("_").pop();
             Meteor.call('goScrounging', slotId, function(err) {
                 if (err) {

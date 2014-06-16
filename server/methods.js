@@ -38,7 +38,7 @@ if (Meteor.isServer) {
                 }
             }
             //Scrounger has a free Scrounge Slot ?
-            console.log('resultScrounger: ' + resultScrounger);
+            // console.log('resultScrounger: ' + resultScrounger);
             if (resultScrounger != -1) {
                 //CHECK SUPSLOTS OF CURRENT USER DATA
                 var currentUser = Meteor.users.findOne({
@@ -71,7 +71,7 @@ if (Meteor.isServer) {
                     }
                 }
                 //SupSlot with id result is free: update it ?
-                console.log('resultOwner: ' + resultOwner);
+                // console.log('resultOwner: ' + resultOwner);
                 if (resultOwner != -1) {
                     //set to mine of owner
                     var obj0 = {};
