@@ -179,8 +179,12 @@ if (Meteor.isClient) {
                             console.log('Template.rmineBase slot calculation problem - index scr Slot');
                             break;
                         }
+<<<<<<< HEAD
                         var result = indexScr;
+                        //calculate mined by cSup
+=======
                         //calculate mined by currentSup
+>>>>>>> FETCH_HEAD
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
                         obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
@@ -240,6 +244,11 @@ if (Meteor.isClient) {
                 objects[i] = obj0;
             }
         }
+<<<<<<< HEAD
+=======
+        timersInc = timersHelperInc;
+        timersDec = timersHelperDec;
+
         // für den Range Slider
         Meteor.call("slider_init", function(err, result) {
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
@@ -250,6 +259,8 @@ if (Meteor.isClient) {
                 }
             }
         });
+
+>>>>>>> FETCH_HEAD
         return objects;
     };
 

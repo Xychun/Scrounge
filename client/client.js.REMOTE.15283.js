@@ -45,7 +45,8 @@ if (Meteor.isClient) {
     ///// GLOBAL VARIABLES /////
     ////////////////////////////
 
-    timers = new Array();
+    timersInc = new Array();
+    timersDec = new Array();
 
     ////////////////////////////
     ///// TEMPLATE RETURNS /////
@@ -53,24 +54,35 @@ if (Meteor.isClient) {
 
 
     setInterval(function() {
-        updateTimers();
-        updateTimers();
+        updateTimersInc();
+        updateTimersDec();
     }, 1 * 1000);
 
-    //Client Live Render timers that increase or decrease value by 1 second
+    //Client Live Render timers that increase value by 1 second
 
-    function updateTimers() {
-        for (i = 0; i < timers.length; i++) {
-            if ($('#' + timers[i].id).length > 0) {
-                timers[i].miliseconds = timers[i].miliseconds + (timers[i].prefix * 1000);
-                $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
-            } else {
-                //Element not found and deleted after 3rd time
-                if (timers[i].notFound > 2) {
-                    timers.splice(i, 1);
-                } else {
-                    timers[i].notFound++;
-                }
+    function updateTimersInc() {
+        for (i = 0; i < timersInc.length; i++) {
+            if ($('#' + timersInc[i].id).length > 0) {
+                obj0 = {};
+                obj0['id'] = timersInc[i].id;
+                obj0['miliseconds'] = timersInc[i].miliseconds + 1000;
+                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
+                timersInc[i] = obj0;
+            }
+        }
+    }
+
+    //Client Live Render timers that decrease value by 1 second
+
+    function updateTimersDec() {
+        for (i = 0; i < timersDec.length; i++) {
+            if ($('#' + timersDec[i].id).length > 0) {
+                obj0 = {};
+                obj0['id'] = timersDec[i].id;
+                obj0['miliseconds'] = timersDec[i].miliseconds - 1000;
+                if (obj0['miliseconds'] < 0) obj0['miliseconds'] = 0;
+                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
+                timersDec[i] = obj0;
             }
         }
     }
@@ -105,6 +117,7 @@ if (Meteor.isClient) {
         });
     }
 
+    //To-DO für andere Menüs anpassen
     Template.mineBase.mineUnusedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
@@ -126,6 +139,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
+    //To-DO für andere Menüs anpassen
     Template.mineBase.mineUsedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
@@ -140,7 +154,9 @@ if (Meteor.isClient) {
         });
         var objects = new Array();
 
-        var calculatedServerTime = new Date().getTime() - timeDifference;
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        var timersHelperInc = new Array();
+        var timersHelperDec = new Array();
         //Iterate OwnSlots
         for (var i = 0; i < amountOwnSlots; i++) {
             var matterId = cursorMine['owns' + i].input;
@@ -169,17 +185,15 @@ if (Meteor.isClient) {
                         var supMine = mine.findOne({
                             user: currentSup
                         });
-                        var currentSupScrSlots = playerData.findOne({user: currentSup}, {fields: {mine: 1}}).mine.scrSlots;
                         //get index of scr slot
-                        var indexScr = -1;
-                        for (var m = 0; m < currentSupScrSlots; m++) {
-                            if (supMine['scrs' + m].victim == name) indexScr = m;
+                        var index = 0;
+                        var result = -1;
+                        while (result == -1) {
+                            if (supMine['scrs' + index].victim == name) {
+                                result = index;
+                            }
+                            index++;
                         }
-                        if (indexScr == -1) {
-                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
-                            break;
-                        }
-                        var result = indexScr;
                         //calculate mined by currentSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
@@ -187,14 +201,13 @@ if (Meteor.isClient) {
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
-                        obj01['notFound'] = 0;
-                        obj01['prefix'] = 1;
-                        timers.push(obj01);
+                        timersHelperInc.push(obj01);
                         obj00['timeSpent'] = msToTime(obj01['miliseconds']);
 
                         var supRate = supMine['scrs' + result].benefit;
                         supRates = supRates + supRate;
                         progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+
                         obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
                         obj00['miningrate'] = supRate + '/hr';
                         supSlotsMemory[k] = obj00;
@@ -212,24 +225,17 @@ if (Meteor.isClient) {
                 var obj1 = {};
                 obj1['id'] = obj0['remainingId'];
                 obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-                obj1['notFound'] = 0;
-                obj1['prefix'] = -1;
-                timers.push(obj1);
+                timersHelperDec.push(obj1);
                 obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
 
                 var obj2 = {};
                 obj2['id'] = obj0['timeSpentId'];
                 obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
-                obj2['notFound'] = 0;
-                obj2['prefix'] = 1;
-                timers.push(obj2);
+                timersHelperInc.push(obj2);
                 obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
 
-                if(amountUsedSupSlots == 0){
-                    obj0['profit'] = Math.floor(cursorMatterBlock.value) + '(100%)';
-                } else{
-                    obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
-                } 
+                //TO-DO Anteile richtig berechnen
+                obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
                 obj0['supporter'] = supSlotsMemory;
@@ -240,6 +246,9 @@ if (Meteor.isClient) {
                 objects[i] = obj0;
             }
         }
+        timersInc = timersHelperInc;
+        timersDec = timersHelperDec;
+
         // für den Range Slider
         Meteor.call("slider_init", function(err, result) {
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
@@ -250,163 +259,11 @@ if (Meteor.isClient) {
                 }
             }
         });
+
         return objects;
     };
 
-    Template.rightBaseUnusedSlots.mineUnusedScroungeSlots = function() {
-        //Mine Scrounging
-        var name = Meteor.users.findOne({
-            _id: Meteor.userId()
-        }, {
-            fields: {
-                username: 1
-            }
-        }).username;
-        var cursorPlayerData = playerData.findOne({
-            user: name
-        }, {
-            fields: {
-                mine: 1
-            }
-        }).mine;
-        var amountScrSlots = cursorPlayerData.scrSlots;
-        var cursorMine = mine.findOne({
-            user: name
-        });
-        var objects = new Array();
-        for (var i = 0; i < amountScrSlots; i++) {
-            if (cursorMine['scrs' + i].victim == "")
-                objects[i] = {};
-        }
-        return objects;
-    };
-
-    Template.rightBaseUsedSlots.mineUsedScroungeSlots = function() {
-        //Mine Scrounging
-        var name = Meteor.users.findOne({
-            _id: Meteor.userId()
-        }, {
-            fields: {
-                username: 1
-            }
-        }).username;
-        var cursorPlayerData = playerData.findOne({
-            user: name
-        }, {
-            fields: {
-                mine: 1
-            }
-        }).mine;
-        var cursorMyMine = mine.findOne({
-            user: name
-        });
-        var calculatedServerTime = new Date().getTime() - timeDifference;
-        var amountScrSlots = cursorPlayerData.scrSlots;
-        var objects = new Array();
-
-        //Iterate all Scrounging Slots
-        for (var i = 0; i < amountScrSlots; i++) {
-            //Is used?
-            if (cursorMyMine['scrs' + i].victim != "") {
-                var victimName = cursorMyMine['scrs' + i].victim;
-                var cursorVictimMine = mine.findOne({
-                    user: victimName
-                });
-                var cursorPlayerDataVictim = playerData.findOne({
-                    user: victimName
-                }, {
-                    fields: {
-                        mine: 1
-                    }
-                });
-                var amountVictimOwnSlots = cursorPlayerDataVictim.mine.ownSlots;
-                var amountVictimSupSlots = cursorPlayerDataVictim.mine.supSlots;
-                //get index of the right own slot
-                var indexOwn = -1;
-                for (var j = 0; j < amountVictimOwnSlots; j++) {
-                    for (var k = 0; k < amountVictimSupSlots; k++) {
-                        if (cursorVictimMine['owns' + j]['sup' + k] == name) indexOwn = j
-                    }
-                }
-                if (indexOwn == -1) {
-                    console.log('Template.rightBaseUsedSlots slot calculation problem - index own Slot');
-                    break;
-                }
-                //Calculate input values
-                var matterId = cursorVictimMine['owns' + indexOwn].input;
-                var cursorMatterBlock = MatterBlocks.findOne({
-                    matter: matterId
-                });
-                var progressOwn = (calculatedServerTime - cursorVictimMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
-                var progressSups = 0;
-                var supRates = 0;
-                var amountUsedSupSlots = 0;
-                //Iterate Supporter
-                for (var l = 0; l < cursorPlayerDataVictim.mine.supSlots; l++) {
-                    var currentSup = cursorVictimMine['owns' + indexOwn]['sup' + l];
-                    //SupSlot used?
-                    if (currentSup.length != "") {
-                        amountUsedSupSlots++;
-                        var currentSupScrSlots = playerData.findOne({
-                            user: currentSup
-                        }, {
-                            fields: {
-                                mine: 1
-                            }
-                        }).mine.scrSlots;
-                        var cursorSupMine = mine.findOne({
-                            user: currentSup
-                        });
-                        //get index of scr slot
-                        var indexScr = -1;
-                        for (var m = 0; m < currentSupScrSlots; m++) {
-                            if (cursorSupMine['scrs' + m].victim == victimName) indexScr = m;
-                        }
-                        if (indexScr == -1) {
-                            console.log('Template.rightBaseUsedSlots slot calculation problem - index scr Slot');
-                            break;
-                        }
-                        //calculate mined by cSup
-                        var supTime = cursorSupMine['scrs' + indexScr].stamp.getTime();
-                        var supRate = cursorSupMine['scrs' + indexScr].benefit;
-                        supRates = supRates + supRate;
-                        progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
-                    }
-                }
-                var obj0 = {};
-                var progressTotal = progressOwn + progressSups;
-                obj0['color'] = cursorMatterBlock.color;
-                obj0['victim'] = victimName;
-                obj0['slots'] = amountUsedSupSlots + '/' + amountVictimSupSlots;
-                obj0['remainingId'] = 'timerDec_' + i + '_mine_scr';
-                obj0['timeSpentId'] = 'timerInc_' + i + '_mine_scr';
-
-                var obj1 = {};
-                obj1['id'] = obj0['remainingId'];
-                obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-                obj1['notFound'] = 0;
-                obj1['prefix'] = -1;
-                timers.push(obj1);
-                obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-
-                var obj2 = {};
-                obj2['id'] = obj0['timeSpentId'];
-                obj2['miliseconds'] = (calculatedServerTime - cursorMyMine['scrs' + i].stamp);
-                obj2['notFound'] = 0;
-                obj2['prefix'] = 1;
-                timers.push(obj2);
-                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMyMine['scrs' + i].stamp));
-
-                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorMatterBlock.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
-                obj0['miningrate'] = cursorMyMine['scrs' + i].benefit + '/hr';
-                obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (cursorMyMine['scrs' + i].benefit / 3600000));
-                objects[i] = obj0;
-            }
-        }
-        return objects;
-    };
-
-    Template.mineScrounge.mineSupporterSlots = function() {
+    Template.mineScrounge.mineScroungingSlots = function() {
         //Mine
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -422,6 +279,8 @@ if (Meteor.isClient) {
         var objects = new Array();
 
         var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        var timersHelperInc = new Array();
+        var timersHelperDec = new Array();
         //Iterate OwnSlots
         for (var i = 0; i < amountOwnSlots; i++) {
             var matterId = cursorMine['owns' + i].input;
@@ -450,17 +309,15 @@ if (Meteor.isClient) {
                         var supMine = mine.findOne({
                             user: currentSup
                         });
-                        var currentSupScrSlots = playerData.findOne({user: currentSup}, {fields: {mine: 1}}).mine.scrSlots;
                         //get index of scr slot
-                        var indexScr = -1;
-                        for (var m = 0; m < currentSupScrSlots; m++) {
-                            if (supMine['scrs' + m].victim == name) indexScr = m;
+                        var index = 0;
+                        var result = -1;
+                        while (result == -1) {
+                            if (supMine['scrs' + index].victim == name) {
+                                result = index;
+                            }
+                            index++;
                         }
-                        if (indexScr == -1) {
-                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
-                            break;
-                        }
-                        var result = indexScr;
                         //calculate mined by cSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
@@ -468,9 +325,7 @@ if (Meteor.isClient) {
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
-                        obj01['notFound'] = 0;
-                        obj01['prefix'] = 1;
-                        timers.push(obj01);
+                        timersHelperInc.push(obj01);
                         obj00['timeSpent'] = msToTime(obj01['miliseconds']);
 
                         var supRate = supMine['scrs' + result].benefit;
@@ -497,9 +352,7 @@ if (Meteor.isClient) {
                 var obj1 = {};
                 obj1['id'] = obj0['remainingId'];
                 obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-                obj1['notFound'] = 0;
-                obj1['prefix'] = -1;
-                timers.push(obj1);
+                timersHelperDec.push(obj1);
                 obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
 
                 //RemainingChange calcuation
@@ -513,17 +366,13 @@ if (Meteor.isClient) {
                     }
                 }).mine.scrItem.benefit;
                 obj3['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
-                obj3['notFound'] = 0;
-                obj3['prefix'] = -1;
-                timers.push(obj3);
+                timersHelperDec.push(obj3);
                 obj0['remainingChange'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
 
                 var obj2 = {};
                 obj2['id'] = obj0['timeSpentId'];
                 obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
-                obj2['notFound'] = 0;
-                obj2['prefix'] = 1;
-                timers.push(obj2);
+                timersHelperInc.push(obj2);
                 obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
 
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
@@ -538,6 +387,8 @@ if (Meteor.isClient) {
 
             }
         }
+        timersInc = timersHelperInc;
+        timersDec = timersHelperDec;
         return objects;
     };
 
@@ -622,6 +473,15 @@ if (Meteor.isClient) {
                 name: current,
                 menu: 'mine'
             });
+            // if (current == self.username) {
+            //     Router.current().render('mineBase', {
+            //         to: 'middle'
+            //     });
+            // } else {
+            //     Router.current().render('mineScrounge', {
+            //         to: 'middle'
+            //     });
+            // }
         }
     });
 
@@ -947,10 +807,11 @@ if (Meteor.isClient) {
         },
 
         'click .goScrounging': function(e, t) {
+            console.log('goScrounging: ' + e.currentTarget.id);
             var slotId = e.currentTarget.id.split("_").pop();
             Meteor.call('goScrounging', slotId, function(err) {
                 if (err) {
-                    console.log('goScrounging: ' + err);
+                    console.log('account init: ' + err);
                 }
             });
         }
