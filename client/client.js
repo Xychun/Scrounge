@@ -1036,8 +1036,8 @@ if (Meteor.isClient) {
         // Tooltip geht an wenn entweder der Handle verschoben wird oder man mit der Maus über den Range Slider hovert
         // Tooltip geht nur aus wenn Maus nicht mehr auf dem Range Slider und kein Handle gezogen wird
         if (handle_check === true || hover_check === true) {
-            $("#tooltip_left_handle_" + slot).fadeIn('fast');
-            $("#tooltip_right_handle_" + slot).fadeIn('fast');
+            $("#tooltip_left_handle_" + slot).filter(':not(:animated)').fadeIn('fast');
+            $("#tooltip_right_handle_" + slot).filter(':not(:animated)').fadeIn('fast');
         } else if (handle_check === false && hover_check === false) {
             $("#tooltip_left_handle_" + slot).fadeOut('fast');
             $("#tooltip_right_handle_" + slot).fadeOut('fast');
