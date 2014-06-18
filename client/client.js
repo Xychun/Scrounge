@@ -190,7 +190,7 @@ if (Meteor.isClient) {
                             }
                             index++;
                         }
-                        //calculate mined by cSup
+                        //calculate mined by currentSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
                         obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
@@ -234,14 +234,28 @@ if (Meteor.isClient) {
                 obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
-                obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
-                objects[i] = obj0;
 
+				//für den range slider
+                obj0['slot'] = i;
+
+                objects[i] = obj0;
             }
         }
         timersInc = timersHelperInc;
         timersDec = timersHelperDec;
+
+		// für den Range Slider
+        Meteor.call("slider_init", function(err, result) {
+            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+            for (var i = 0; i < amountOwnSlots; i++) {
+                var matterId = cursorMine['owns' + i].input;
+                if (matterId > 0) {
+                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
+                }
+            }
+        });
+
         return objects;
     };
 
@@ -372,7 +386,7 @@ if (Meteor.isClient) {
         timersInc = timersHelperInc;
         timersDec = timersHelperDec;
         return objects;
-    }
+    };
 
     Template.mineBase.blockColors = function() {
         var cursorMatterColors = MatterBlocks.find({}, {
@@ -425,88 +439,6 @@ if (Meteor.isClient) {
     Template.standardBorder.resources = function() {
 
         return resources.find({});
-
-    };
-
-    ////////////////////
-    ///// Rendered /////
-    ////////////////////
-
-    Template.masterLayout.rendered = function() {
-
-        // $("#disable_range_slider").draggable();
-
-        // console.log("masterLayout rendered successfully");
-
-        if (!$('#range_slider').data('uiSlider')) {
-            // The data attribute for the slider is not set, so the slider has not yet been created
-            // If the slider is still around, we don't want to initialize it again
-            var slider = $('#range_slider'),
-                tooltip = $('.tooltip'),
-                tooltip_left_handle = $('#tooltip_left_handle'),
-                tooltip_right_handle = $('#tooltip_right_handle'),
-                left_handle,
-                right_handle,
-                min_control = 0.5, //Untere Grenze 
-                max_control = 0.8, //Obere Grenze
-                full_control = max_control - min_control
-                lower_control = 0.6, //Aktueller untere Wert
-                higher_control = 0.7, //Aktueller oberer Wert
-                slider_threshold = (max_control - min_control) / 10;
-
-            tooltip_left_handle.css('left', ((lower_control - min_control) * 100 / full_control) * 1.5).text(lower_control);
-            tooltip_right_handle.css('left', ((higher_control - min_control) * 100 / full_control) * 1.5).text(higher_control);
-
-            tooltip.hide();
-
-            slider.slider({
-                range: true,
-                step: 0.01,
-                min: min_control,
-                max: max_control,
-                values: [lower_control, higher_control],
-
-                start: function(event, ui) {
-                    left_handle = ui.values[0];
-                    right_handle = ui.values[1];
-                    //Initialisierung der Tooltip Fenster an den stellen der Handle
-                    tooltip_left_handle.css('left', ((ui.values[0] - min_control) * 100 / full_control) * 1.5).text(ui.values[0]);
-                    tooltip_right_handle.css('left', ((ui.values[1] - min_control) * 100 / full_control) * 1.5).text(ui.values[1]);
-                    fade_In_and_Out("handle", "in");
-                },
-
-                slide: function(event, ui) {
-
-                    px_left = ((ui.values[0] - min_control) * 100 / full_control) * 1.5;
-                    px_right = ((ui.values[1] - min_control) * 100 / full_control) * 1.5;
-                    console.log(px_left + " " + px_right);
-
-                    if (ui.values[1] - ui.values[0] > slider_threshold) {
-                        if (left_handle != ui.values[0]) {
-                            if ((px_left + 40) <= px_right) {
-                                tooltip_left_handle.css('left', px_left).text(ui.values[0]);
-                            } else {
-                                console.log("stop_left");
-                                tooltip_left_handle.css('left', px_right - 40).text(ui.values[0]);
-                            }
-                        } else if (right_handle != ui.values[1]) {
-                            if ((px_right - 40) >= px_left) {
-                                tooltip_right_handle.css('left', px_right).text(ui.values[1]);
-                            } else {
-                                console.log("stop_right");
-                                tooltip_right_handle.css('left', px_left + 40).text(ui.values[1]);
-                            }
-                        }
-                    } else if (ui.values[1] - ui.values[0] < slider_threshold) {
-                        return (false);
-                    }
-                },
-                stop: function(event, ui) {
-                    fade_In_and_Out("handle", "out");
-                }
-            });
-
-        }
 
     };
 
@@ -689,6 +621,9 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
+        'mousedown img': function(e, t) {
+            return false;
+        },
         'mouseover .slider': function(e, t) {
             slide($(e.target).attr('id'));
         },
@@ -773,7 +708,12 @@ if (Meteor.isClient) {
                 }, 1000);
             }*/
         },
-
+        'mouseenter .slot_upper_bar': function(e, t) {
+            fade_In_and_Out($(e.target).attr('id'), "in");
+        },
+        'mouseleave .slot_upper_bar': function(e, t) {
+            fade_In_and_Out($(e.target).attr('id'), "out");
+        },
         'click .item': function(e, t) {
             Session.set("clickedMatter", e.currentTarget.id);
 
@@ -911,6 +851,8 @@ if (Meteor.isClient) {
     var ready_check;
     var size;
     var slots_count = 10;
+    var handle_check = false;
+    var hover_check = false;
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -924,6 +866,129 @@ if (Meteor.isClient) {
         // console.log("1920");
         ready_check = 3;
     }
+
+    // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
+
+    function fade_In_and_Out(element, state) {
+
+        // Solange der User den Handle vom Range Slider festhält soll der Tooltip anbleiben
+        // zusätzlich soll er anbleiben solange man mit der Maus über dem Range Slider ist
+        if (element === "handle" && state === "out") {
+            //console.log("handle.out");
+            handle_check = false;
+        } else if (element === "handle" && state === "in") {
+            //console.log("handle.in");
+            handle_check = true;
+        }
+        if (element !== "handle" && state === "out") {
+            //console.log("hover.out");
+            hover_check = false;
+        } else if (element !== "handle" && state === "in") {
+            //console.log("hover.in");
+            hover_check = true;
+        }
+
+        // Tooltip geht an wenn entweder der Handle verschoben wird oder man mit der Maus über den Range Slider hovert
+        // Tooltip geht nur aus wenn Maus nicht mehr auf dem Range Slider und kein Handle gezogen wird
+        if (handle_check === true || hover_check === true)
+            $(".tooltip").fadeIn('fast');
+        else if (handle_check === false && hover_check === false)
+            $(".tooltip").fadeOut('fast');
+
+    }
+
+    function range_slider(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl) {
+        var range_slider_id = "#range_slider" + slot;
+        // $("#disable_range_slider").draggable();
+        if (!$(range_slider_id).data('uiSlider')) {
+            // The data attribute for the slider is not set, so the slider has not yet been created
+            // If the slider is still around, we don't want to initialize it again
+            var slider = $(range_slider_id),
+                tooltip = $('.tooltip'),
+                tooltip_left_handle_id = "#tooltip_left_handle" + slot,
+                tooltip_right_handle_id = "#tooltip_right_handle" + slot,
+                tooltip_left_handle = $(tooltip_left_handle_id),
+                tooltip_right_handle = $(tooltip_right_handle_id),
+                left_handle,
+                right_handle,
+                full_ctrl = max_ctrl - min_ctrl,
+                slider_threshold = (max_ctrl - min_ctrl) * 0.1;
+
+            // if (higher_ctrl - lower_ctrl > slider_threshold) {
+            //     if ((px_left + 54) <= px_right) {
+            //         tooltip_left_handle.css('left', px_left).text(higher_ctrl);
+            //     } else {
+            //         console.log("stop_left");
+            //         tooltip_left_handle.css('left', px_right - 54).text(higher_ctrl);
+            //     }
+
+            //     if ((px_right - 54) >= px_left) {
+            //         tooltip_right_handle.css('left', px_right).text(lower_ctrl);
+            //     } else {
+            //         console.log("stop_right");
+            //         tooltip_right_handle.css('left', px_left + 54).text(lower_ctrl);
+            //     }
+            // } else if (lower_ctrl - higher_ctrl < slider_threshold) {
+            //     console.log("Threshold fail !");
+            // }
+
+            tooltip_left_handle.css('left', ((lower_ctrl - min_ctrl) * 100 / full_ctrl) * $(range_slider_id).width() / 100 - 10).text(lower_ctrl);
+            tooltip_right_handle.css('left', ((higher_ctrl - min_ctrl) * 100 / full_ctrl) * $(range_slider_id).width() / 100 - 10).text(higher_ctrl);
+
+            tooltip.hide();
+
+            slider.slider({
+                range: true,
+                step: 0.01,
+                min: min_ctrl,
+                max: max_ctrl,
+                values: [lower_ctrl, higher_ctrl],
+
+                start: function(event, ui) {
+                    left_handle = ui.values[0];
+                    right_handle = ui.values[1];
+                    //Initialisierung der Tooltip Fenster an den stellen der Handle
+                    tooltip_left_handle.css('left', ((ui.values[0] - min_ctrl) * 100 / full_ctrl) * $(range_slider_id).width() / 100 - 10).text(ui.values[0]);
+                    tooltip_right_handle.css('left', ((ui.values[1] - min_ctrl) * 100 / full_ctrl) * $(range_slider_id).width() / 100 - 10).text(ui.values[1]);
+                    fade_In_and_Out("handle", "in");
+                },
+
+                slide: function(event, ui) {
+
+                    px_left = ((ui.values[0] - min_ctrl) * 100 / full_ctrl) * $(range_slider_id).width() / 100 - 10;
+                    px_right = ((ui.values[1] - min_ctrl) * 100 / full_ctrl) * $(range_slider_id).width() / 100 - 10;
+                    console.log(px_left + " " + px_right);
+
+                    if (ui.values[1] - ui.values[0] > slider_threshold) {
+                        if (left_handle != ui.values[0]) {
+                            if ((px_left + 54) <= px_right) {
+                                tooltip_left_handle.css('left', px_left).text(ui.values[0]);
+                            } else {
+                                console.log("stop_left");
+                                tooltip_left_handle.css('left', px_right - 54).text(ui.values[0]);
+                            }
+                        } else if (right_handle != ui.values[1]) {
+                            if ((px_right - 54) >= px_left) {
+                                tooltip_right_handle.css('left', px_right).text(ui.values[1]);
+                            } else {
+                                console.log("stop_right");
+                                tooltip_right_handle.css('left', px_left + 54).text(ui.values[1]);
+                            }
+                        }
+                    } else if (ui.values[1] - ui.values[0] < slider_threshold) {
+                        return (false);
+                    }
+                },
+                stop: function(event, ui) {
+                    fade_In_and_Out("handle", "out");
+                }
+            });
+
+        }
+        slider.slider("option", "disabled", true);
+        $(".ui-slider-handle").css("display", "none");
+
+    };
 
     function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
     {
@@ -1101,12 +1166,12 @@ if (Meteor.isClient) {
                 });
             }
             // Vorab Animation da Intervall erst nach [Time] anfängt
-            $("#k1").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
-            $("#k2").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
+            // $("#k1").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
+            // $("#k2").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
             //Rekursiver Intervall (unendlich)
             var action = function() {
                 if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
@@ -1151,12 +1216,12 @@ if (Meteor.isClient) {
                 });
             }
             // Vorab Animation da Intervall erst nach [Time] anfängt
-            $("#k1").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
-            $("#k2").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
+            // $("#k1").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
+            // $("#k2").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
             //Rekursiver Intervall (unendlich)
             var action = function() {
                 if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
@@ -1193,9 +1258,9 @@ if (Meteor.isClient) {
         {
             if ($("#base_area_content").position().top <= 0) {
                 // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("#base_area_content").filter(':not(:animated)').animate({
-                    "top": "-=80px"
-                }, 300, "linear");
+                // $("#base_area_content").filter(':not(:animated)').animate({
+                //     "top": "-=80px"
+                // }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
                     //Animation im laufenden Intervall  
@@ -1219,9 +1284,9 @@ if (Meteor.isClient) {
         {
             if ($("#base_area_content").position().top <= -80) {
                 // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("#base_area_content").filter(':not(:animated)').animate({
-                    "top": "+=80px"
-                }, 300, "linear");
+                // $("#base_area_content").filter(':not(:animated)').animate({
+                //     "top": "+=80px"
+                // }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
                     //Animation im laufenden Intervall  
@@ -1240,7 +1305,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    function update(direction) {
+    function update(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
         if (direction == "left") {
             c--;
         } else if (direction == "right") {
@@ -1280,7 +1345,6 @@ if (Meteor.isClient) {
             pr: pos_reset
         };
     }
-
 
     function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
     {
