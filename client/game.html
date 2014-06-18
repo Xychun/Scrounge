@@ -157,8 +157,8 @@
 <template name="mapSimulation">
     <div style="position: absolute; right: 20px; top: 20%">
         {{#each users}}
-        <div id="{{username}}" class="testUserChange" style="position: relative; background-color: yellow; font-size: 20pt; font-weight: bold; margin-right: 0">{{username}}</div> <br>
-        {{/each}}
+        <div id="{{username}}" class="testUserChange" style="position: relative; background-color: yellow; font-size: 20pt; font-weight: bold; margin-right: 0">{{username}}</div>
+        <br>{{/each}}
     </div>
 </template>
 
@@ -216,10 +216,10 @@
                         </div>
 
                         <!-- TODO: Muss Eindeutig sein für jeden each durchlauf [Jede Id mit 01 am Ende für den ersten durchlauf und 02 für zweiten ... usw.] -->
-                        <div class="slot_upper_bar">
-                            <span id="tooltip_left_handle{{slot}}" class="tooltip"></span>
-                            <span id="tooltip_right_handle{{slot}}" class="tooltip"></span>
-                            <div id="range_slider{{slot}}" class="range_slider"></div>
+                        <div class="slot_upper_bar tooltip_hover">
+                            <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
+                            <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
+                            <div id="range_slider_{{slot}}" class="range_slider"></div>
                         </div>
                         <div class="slot_stats">
                             <p class='text relative'>Value: {{value}}</p>

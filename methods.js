@@ -4,6 +4,5 @@
 
 //Methods
 Meteor.methods({
-    slider_init: function() {
-    }
+    slider_init: function() {}
 });
