@@ -66,15 +66,23 @@ if (Meteor.isServer) {
                             var sMine = mine.findOne({
                                 user: cSup
                             });
-                            //get index of scr slot
-                            var index = 0;
-                            var result = -1;
-                            while (result == -1) {
-                                if (sMine['scrs' + index].victim == cUser) {
-                                    result = index;
+                            var currentSupScrSlots = playerData.findOne({
+                                user: cSup
+                            }, {
+                                fields: {
+                                    mine: 1
                                 }
-                                index++;
+                            }).mine.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sMine['scrs' + m].victim == cUser) indexScr = m;
                             }
+                            if (indexScr == -1) {
+                                console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
 
                             allSups[k] = cSup;
                             //calculate mined by cSup
@@ -89,7 +97,12 @@ if (Meteor.isServer) {
                     if (progress > cValue) {
                         //split matter
                         var matterColor = cMatter.color;
-                        var ownProfit = 0.5 * cValue;
+                        var ownProfit = 0;
+                        if (allSups.length == 0) {
+                            ownProfit = cValue;
+                        } else {
+                            ownProfit = 0.5 * cValue;
+                        }
                         var supProfit = (0.5 * cValue) / (allSups.length);
                         var cUserResources = resources.findOne({
                             user: cUser
@@ -123,14 +136,23 @@ if (Meteor.isServer) {
                             var sMine = mine.findOne({
                                 user: allSups[l]
                             });
-                            var index = 0;
-                            var result = -1;
-                            while (result == -1) {
-                                if (sMine['scrs' + index].victim == cUser) {
-                                    result = index;
+                            var currentSupScrSlots = playerData.findOne({
+                                user: cSup
+                            }, {
+                                fields: {
+                                    mine: 1
                                 }
-                                index++;
+                            }).mine.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sMine['scrs' + m].victim == cUser) indexScr = m;
                             }
+                            if (indexScr == -1) {
+                                console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
 
                             var obj2 = {};
                             obj2['scrs' + result + '.victim'] = '';

@@ -157,8 +157,8 @@
 <template name="mapSimulation">
     <div style="position: absolute; right: 20px; top: 20%">
         {{#each users}}
-        <div id="{{username}}" class="testUserChange" style="position: relative; background-color: yellow; font-size: 20pt; font-weight: bold; margin-right: 0">{{username}}</div> <br>
-        {{/each}}
+        <div id="{{username}}" class="testUserChange" style="position: relative; background-color: yellow; font-size: 20pt; font-weight: bold; margin-right: 0">{{username}}</div>
+        <br>{{/each}}
     </div>
 </template>
 
@@ -265,10 +265,57 @@
             <div id="scrounge_area" class="top relative"></div>
             <div id="down_slider_scrounge"></div>
         </div>
+        <div class="right">
+            {{> rightBaseUnusedSlots}}
+            {{> rightBaseUsedSlots}}
+        </div>
     </div>
 </template>
 
+<template name="rightBaseUnusedSlots">
+    {{#each mineUnusedScroungeSlots}}
+    <div class="unused_slot relative">
+        <img src="/Aufloesung1920x1080/Interface/ActionsYellowSlot.png">
+        <div class="slot_icon">
+            <img src="/Aufloesung1920x1080/Mine/CubeEmptySlot.png">
+        </div>
+    </div>
+    {{/each}}
+</template>
 
+<template name="rightBaseUsedSlots">
+    {{#each mineUsedScroungeSlots}}
+    <div class="used_slot relative">
+        <img src="/Aufloesung1920x1080/Interface/ActionsYellowSlot.png">
+        <div class="slot_icon">
+            <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
+        </div>
+        <!-- Micha TO-DO?
+                        <section>
+                            <span id="tooltip_left_handle" class="tooltip"></span>
+                            <span id="tooltip_right_handle" class="tooltip"></span>
+                            <div class="slot_range_slider">
+                                <div id="range_slider"></div>
+                            </div>
+                        </section> -->
+        <div class="slot_stats">
+            <p class='text relative'>Profit: {{profit}}</p>
+            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="used_slot_advanced relative">
+        <div class="slot_advanced_stats relative">
+            <p class='text relative'>Mined: {{mined}}</p>
+            <p class='text relative'>Slots: {{slots}}</p>
+            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                <p class='text relative'>Miningrate: {{miningrate}}</p>
+            </p>
+        </div>
+    </div>
+    {{/each}}
+</template>
 
 
 
@@ -290,7 +337,7 @@
 
                     <div id="scroungeAreaContentLeft" class="left">
 
-                        {{#each mineScroungingSlots}}
+                        {{#each mineSupporterSlots}}
                         <div class="scroungable relative">
                             <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
                             <div class="slot_icon">

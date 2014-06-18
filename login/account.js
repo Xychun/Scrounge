@@ -118,15 +118,6 @@ if (Meteor.isClient) {
                 name: self.cu,
                 menu: self.menu
             });
-            // if (cu == self.username) {
-            //     Router.current().render('mineBase', {
-            //         to: 'middle'
-            //     });
-            // } else {
-            //     Router.current().render('mineScrounge', {
-            //         to: 'middle'
-            //     });
-            // }
         } else {
             console.log("User not yet defined problem switchToGame");
         }

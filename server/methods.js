@@ -358,7 +358,7 @@ if (Meteor.isServer) {
                 scrs0: {
                     victim: "",
                     stamp: "",
-                    benefit: 1
+                    benefit: 5
                 }
             }, function(err) {
                 if (err) {
