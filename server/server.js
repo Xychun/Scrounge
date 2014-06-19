@@ -137,7 +137,7 @@ if (Meteor.isServer) {
                                 user: allSups[l]
                             });
                             var currentSupScrSlots = playerData.findOne({
-                                user: cSup
+                                user: currentSup
                             }, {
                                 fields: {
                                     mine: 1

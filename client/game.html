@@ -168,8 +168,8 @@
     <div id="mitte">
         <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own menu!</div>
         <div class="areas left bot">
-            <div id="up_slider_base" class="slider_base_height top">
-                <img id="base_up" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
+            <div id="up_slider_base" class="hover_slide_height top">
+                <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
             </div>
             <div id="base_area">
                 <div id="base_area_content" class="relative">
@@ -214,8 +214,6 @@
                         <div class="slot_icon">
                             <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
                         </div>
-
-                        <!-- TODO: Muss Eindeutig sein für jeden each durchlauf [Jede Id mit 01 am Ende für den ersten durchlauf und 02 für zweiten ... usw.] -->
                         <div class="slot_upper_bar tooltip_hover">
                             <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
                             <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
@@ -253,20 +251,27 @@
                     {{/each}}
                 </div>
             </div>
-            <div id="down_slider_base" class="slider_base_height bot">
-                <img id="base_down" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <img id="base_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
             </div>
         </div>
 
         <div id="seperation_bar" class="left right"></div>
+
+
         <div class="areas right bot">
-            <div id="up_slider_scrounge"></div>
-            <div id="scrounge_area" class="top relative"></div>
-            <div id="down_slider_scrounge"></div>
-        </div>
-        <div class="right">
-            {{> rightBaseUnusedSlots}}
-            {{> rightBaseUsedSlots}}
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
+            </div>
+            <div id="scrounge_area">
+                <div id="scrounge_area_content" class="relative">
+                    {{> rightBaseUnusedSlots}} {{> rightBaseUsedSlots}}
+                </div>
+            </div>
+
+            <div id="down_slider_scrounge" class="hover_slide_height bot">
+                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
+            </div>
         </div>
     </div>
 </template>
@@ -289,14 +294,12 @@
         <div class="slot_icon">
             <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
         </div>
-        <!-- Micha TO-DO?
-                        <section>
-                            <span id="tooltip_left_handle" class="tooltip"></span>
-                            <span id="tooltip_right_handle" class="tooltip"></span>
-                            <div class="slot_range_slider">
-                                <div id="range_slider"></div>
-                            </div>
-                        </section> -->
+        <!-- Falls nacher der Range Slider bei den Scrounge Slots auch angezeit werden soll -->
+        <!-- <div class="slot_upper_bar tooltip_hover">
+            <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
+            <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
+            <div id="range_slider_{{slot}}" class="range_slider"></div>
+        </div> -->
         <div class="slot_stats">
             <p class='text relative'>Profit: {{profit}}</p>
             <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
@@ -326,8 +329,8 @@
 
         <div id="scroungeArea" class="bot">
 
-            <div id="up_slider_scrounge" class="slider_base_height top" style="z-index:2">
-                <img id="scroungeUp" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <img id="scroungeUp" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
             </div>
 
             <div id="scroungeAreaWrapper">
@@ -407,8 +410,8 @@
 
             </div>
 
-            <div id="down_slider_base" class="slider_base_height bot">
-                <img id="scroungeDown" class="slider slider_base center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <img id="scroungeDown" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
             </div>
         </div>
     </div>
@@ -428,69 +431,12 @@
                 <p id="time" class='relative'></p>
             </div>
 
-            <div id="rangeSlider">
-
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
-                <div class="rangeSliderMarks">
-                    <div class="rangeSliderMarksStroke"></div>
-                </div>
+            <div class="range_slider_wrapper tooltip_hover">
+                <span id="tooltip_left_handle_Buy_Menu" class="tooltip"></span>
+                <span id="tooltip_right_handle_Buy_Menu" class="tooltip"></span>
+                <div id="range_slider_Buy_Menu" class="range_slider"></div>
             </div>
+
 
             <div id="AmountScroungerSlots">
 

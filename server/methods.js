@@ -95,7 +95,7 @@ if (Meteor.isServer) {
             }
         },
 
-        buyMatter: function(matterId) {
+        buyMatter: function(matterId,slider_range) {
             var name = Meteor.users.findOne({
                 _id: this.userId
             }).username;
@@ -133,6 +133,8 @@ if (Meteor.isServer) {
                         var obj0 = {};
                         obj0['owns' + i + '.stamp'] = new Date();
                         obj0['owns' + i + '.input'] = matterId;
+                        obj0['owns' + i + '.control.min'] = slider_range[0];
+                        obj0['owns' + i + '.control.max'] = slider_range[1];
                         mine.update({
                             user: name
                         }, {

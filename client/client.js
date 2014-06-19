@@ -169,7 +169,13 @@ if (Meteor.isClient) {
                         var supMine = mine.findOne({
                             user: currentSup
                         });
-                        var currentSupScrSlots = playerData.findOne({user: currentSup}, {fields: {mine: 1}}).mine.scrSlots;
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                mine: 1
+                            }
+                        }).mine.scrSlots;
                         //get index of scr slot
                         var indexScr = -1;
                         for (var m = 0; m < currentSupScrSlots; m++) {
@@ -225,11 +231,11 @@ if (Meteor.isClient) {
                 timers.push(obj2);
                 obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
 
-                if(amountUsedSupSlots == 0){
+                if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorMatterBlock.value) + '(100%)';
-                } else{
+                } else {
                     obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
-                } 
+                }
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
                 obj0['supporter'] = supSlotsMemory;
@@ -242,7 +248,6 @@ if (Meteor.isClient) {
         }
         // für den Range Slider
         Meteor.call("slider_init", function(err, result) {
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             for (var i = 0; i < amountOwnSlots; i++) {
                 var matterId = cursorMine['owns' + i].input;
                 if (matterId > 0) {
@@ -337,7 +342,7 @@ if (Meteor.isClient) {
                 var cursorMatterBlock = MatterBlocks.findOne({
                     matter: matterId
                 });
-                var progressOwn = (calculatedServerTime - cursorVictimMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                var progressOwn = (calculatedServerTime - cursorVictimMine['owns' + indexOwn].stamp.getTime()) * (7.5 / 3600000);
                 var progressSups = 0;
                 var supRates = 0;
                 var amountUsedSupSlots = 0;
@@ -450,7 +455,13 @@ if (Meteor.isClient) {
                         var supMine = mine.findOne({
                             user: currentSup
                         });
-                        var currentSupScrSlots = playerData.findOne({user: currentSup}, {fields: {mine: 1}}).mine.scrSlots;
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                mine: 1
+                            }
+                        }).mine.scrSlots;
                         //get index of scr slot
                         var indexScr = -1;
                         for (var m = 0; m < currentSupScrSlots; m++) {
@@ -875,7 +886,6 @@ if (Meteor.isClient) {
           $('#matter').text("Matter: "+cursor.value);*/
 
             //Variante B
-
             $('#mineBuyMenu').fadeIn();
             $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#price').text("Price: " + this.cost);
@@ -890,6 +900,9 @@ if (Meteor.isClient) {
             });
 
             var amountSupSlots = cursorPlayerData.mine.supSlots;
+
+            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display","block");
 
             if ($('#AmountScroungerSlots').children()) {
                 $('#AmountScroungerSlots').children().remove();
@@ -968,8 +981,11 @@ if (Meteor.isClient) {
                 user: currentUser
             });
 
+            // Werte des Range Sliders
+            var slider_range = $('#range_slider_Buy_Menu').slider( "option", "values" );
+
             //updating the database
-            Meteor.call('buyMatter', Session.get("clickedMatter"), function(err) {
+            Meteor.call('buyMatter', Session.get("clickedMatter"),slider_range, function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -980,7 +996,6 @@ if (Meteor.isClient) {
         },
 
         'click #buyMenuNo': function(e, t) {
-
             $('#mineBuyMenu').fadeOut();
 
         },
@@ -1051,9 +1066,16 @@ if (Meteor.isClient) {
             var left_handle;
             var right_handle;
             var current_handle;
+            var disable_boolean = true;
+
+            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());
 
             tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, "left");
             $('.tooltip').hide();
+
+            if (slot === "Buy_Menu") {
+                disable_boolean = false;
+            }
 
             $("#range_slider_" + slot).slider({
                 range: true,
@@ -1061,7 +1083,7 @@ if (Meteor.isClient) {
                 min: min_ctrl,
                 max: max_ctrl,
                 values: [lower_ctrl, higher_ctrl],
-                disabled: true,
+                disabled: disable_boolean,
 
                 start: function(event, ui) {
                     left_handle = ui.values[0];
@@ -1085,8 +1107,6 @@ if (Meteor.isClient) {
                     fade_In_and_Out("handle", slot, "out");
                 }
             });
-            //slider.slider("option", "disabled", true);
-            $(".ui-slider-handle").css("display", "none");
         }
     };
 
@@ -1329,11 +1349,11 @@ if (Meteor.isClient) {
                 $("#k2").animate({
                     left: pos_p
                 }, time, "linear");
-                update("left");
+                update_category("left");
             };
             //Start des Intervalls
             interval = setInterval(action, time);
-            update("left");
+            update_category("left");
         }
     }
 
@@ -1379,11 +1399,11 @@ if (Meteor.isClient) {
                 $("#k2").animate({
                     left: pos_p
                 }, time, "linear");
-                update("right");
+                update_category("right");
             };
             //Start des Intervalls
             interval = setInterval(action, time);
-            update("right");
+            update_category("right");
         }
     }
 
@@ -1444,7 +1464,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    function update(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
+    function update_category(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
         if (direction == "left") {
             c--;
         } else if (direction == "right") {

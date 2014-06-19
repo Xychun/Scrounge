@@ -211,9 +211,10 @@ img.i7 {
     bottom:40px;
 }
 #scrounge_area {
-    overflow:auto;
-    top:114px;
-    height:auto;
+   overflow:hidden;
+    width:100%;
+    top:40px;
+    bottom:40px;
 }
 .slot {
     z-index:2;
@@ -340,7 +341,7 @@ img.i7 {
     border-style: solid;
     border-color: #333 #333 #777 #333;
     border-radius: 25px;
-    width: 621px;
+    width: auto;
     position: absolute;
     height: 25px;
     background-color: #8e8d8d;
@@ -375,6 +376,7 @@ img.i7 {
 }
 .ui-slider-handle {
     position: absolute;
+    display:none;
     z-index: 2;
     top:-7px;
     width: 40px;
@@ -568,11 +570,16 @@ img.i7 {
     display:table-cell;
     vertical-align: middle;
 }
+.range_slider_wrapper{
+    top:30px;
+    left:165px;
+    right:30px;
+    height:27px;
+}
 .slot_upper_bar {
     top:13px;
     left:151px;
-    right:5px;
-    width:auto;
+    right:10px;
     height:27px;
 }
 .slot_stats {
@@ -679,12 +686,12 @@ img.i7 {
     text-align: left;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
-.slider_base {
+.slider_size {
     width:110px;
     height:100%;
     display: block;
 }
-.slider_base_height {
+.hover_slide_height {
     width:100%;
     height:30px;
 }
