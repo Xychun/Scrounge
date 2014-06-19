@@ -10,6 +10,13 @@ if (Meteor.isServer) {
         },
 
         goScrounging: function(slotId) {
+            var currentUser = Meteor.users.findOne({
+                _id: this.userId
+            }, {
+                fields: {
+                    cu: 1
+                }
+            }).cu;
             var myName = Meteor.users.findOne({
                 _id: this.userId
             }, {
@@ -17,19 +24,29 @@ if (Meteor.isServer) {
                     username: 1
                 }
             }).username;
-
-            //CHECK SCRSLOTS OF SCROUNGER DATA
-            var amountScrSlots = playerData.findOne({
+            //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
+            if (currentUser == myName) {
+                console.log('You cant scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O');
+                return;
+            }
+            var cursorMyPlayerData = playerData.findOne({
                 user: myName
             }, {
                 fields: {
                     mine: 1
                 }
-            }).mine.scrSlots;
+            });
+            var amountScrSlots = cursorMyPlayerData.mine.scrSlots;
             var cursorMineScrounger = mine.findOne({
                 user: myName
             });
-
+            for (i = 0; i < amountScrSlots; i++) {
+                if (cursorMineScrounger['scrs' + i].victim == currentUser) {
+                    console.log('You cant scrounge here: You allready scrounge this user!');
+                    return;
+                }
+            }
+            //CHECK FREE SCRSLOTS OF SCROUNGER DATA
             var resultScrounger = -1;
             for (i = 0; i < amountScrSlots; i++) {
                 if (cursorMineScrounger['scrs' + i].victim == "") {
@@ -37,62 +54,63 @@ if (Meteor.isServer) {
                     break;
                 }
             }
-            //Scrounger has a free Scrounge Slot ?
-            // console.log('resultScrounger: ' + resultScrounger);
-            if (resultScrounger != -1) {
-                //CHECK SUPSLOTS OF CURRENT USER DATA
-                var currentUser = Meteor.users.findOne({
-                    _id: this.userId
-                }, {
-                    fields: {
-                        cu: 1
-                    }
-                }).cu;
-                var obj0 = {};
-                obj0['owns' + slotId] = 1;
-                var cursorMineOwner = mine.findOne({
-                    user: currentUser
-                }, {
-                    fields: obj0
-                });
-                //Get free SupSlots index
-                var amountSupSlots = playerData.findOne({
-                    user: currentUser
-                }, {
-                    fields: {
-                        mine: 1
-                    }
-                }).mine.supSlots;
-                var resultOwner = -1;
-                for (i = 0; i < amountSupSlots; i++) {
-                    if (cursorMineOwner['owns' + slotId]['sup' + i] == "") {
-                        resultOwner = i;
-                        break;
-                    }
+            if (resultScrounger == -1) {
+                console.log('You cant scrounge here: Your Scrounge slots are all in use!');
+                return;
+            }
+            //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
+            var obj0 = {};
+            obj0['owns' + slotId] = 1;
+            var cursorMineOwner = mine.findOne({
+                user: currentUser
+            }, {
+                fields: obj0
+            });
+            //Get free SupSlots index
+            var amountSupSlots = playerData.findOne({
+                user: currentUser
+            }, {
+                fields: {
+                    mine: 1
                 }
-                //SupSlot with id result is free: update it ?
-                // console.log('resultOwner: ' + resultOwner);
-                if (resultOwner != -1) {
-                    //set to mine of owner
-                    var obj0 = {};
-                    obj0['owns' + slotId + '.sup' + resultOwner] = myName;
-                    mine.update({
-                        user: currentUser
-                    }, {
-                        $set: obj0
-                    });
-
-                    //set to mine of scrounger
-                    var obj0 = {};
-                    obj0['scrs' + resultScrounger + '.victim'] = currentUser;
-                    obj0['scrs' + resultScrounger + '.stamp'] = new Date();
-                    mine.update({
-                        user: myName
-                    }, {
-                        $set: obj0
-                    });
+            }).mine.supSlots;
+            var resultOwner = -1;
+            for (i = 0; i < amountSupSlots; i++) {
+                if (cursorMineOwner['owns' + slotId]['sup' + i] == "") {
+                    resultOwner = i;
+                    break;
                 }
             }
+            //LAST CHECK: RANGE SLIDER
+            if (!(cursorMineOwner['owns' + slotId].control.min < cursorMyPlayerData.mine.scrItem.benefit < cursorMineOwner['owns' + slotId].control.max)) {
+                console.log('You cant scrounge here: You do not have the right miningrate!');
+                return;
+            }
+
+            //SupSlot with id result is free and correct: update it ?
+            if (resultOwner == -1) {
+                console.log('You cant scrounge here: The owners support slots are all full!');
+                return;
+            }
+            //set to mine of owner
+            var obj0 = {};
+            obj0['owns' + slotId + '.sup' + resultOwner] = myName;
+            mine.update({
+                user: currentUser
+            }, {
+                $set: obj0
+            });
+
+            //set to mine of scrounger
+            var obj0 = {};
+            obj0['scrs' + resultScrounger + '.victim'] = currentUser;
+            obj0['scrs' + resultScrounger + '.stamp'] = new Date();
+            mine.update({
+                user: myName
+            }, {
+                $set: obj0
+            });
+            console.log('Scrounging successul!');
         },
 
         buyMatter: function(matterId) {
@@ -118,36 +136,38 @@ if (Meteor.isServer) {
             }).cost;
 
             //check costs
-            if (matter >= cost) {
-                var amountSlots = playerData.findOne({
-                    user: name
-                }).mine.ownSlots;
+            if (!(matter >= cost)) {
+                console.log('You cant buy this matter: You do not have anough matter!');
+                return;
+            }
+            var amountSlots = playerData.findOne({
+                user: name
+            }).mine.ownSlots;
 
-                var cursor = mine.findOne({
-                    user: name
-                })
+            var cursor = mine.findOne({
+                user: name
+            })
 
-                //Iterate all own slots and fill matter into free one
-                for (i = 0; i < amountSlots; i++) {
-                    if (cursor['owns' + i].input == "0000") {
-                        var obj0 = {};
-                        obj0['owns' + i + '.stamp'] = new Date();
-                        obj0['owns' + i + '.input'] = matterId;
-                        mine.update({
-                            user: name
-                        }, {
-                            $set: obj0
-                        });
-                        //pay matter
-                        var obj1 = {};
-                        obj1['values.' + matterColor + '.matter'] = matter - cost;
-                        resources.update({
-                            user: name
-                        }, {
-                            $set: obj1
-                        });
-                        break;
-                    }
+            //Iterate all own slots and fill matter into free one
+            for (i = 0; i < amountSlots; i++) {
+                if (cursor['owns' + i].input == "0000") {
+                    var obj0 = {};
+                    obj0['owns' + i + '.stamp'] = new Date();
+                    obj0['owns' + i + '.input'] = matterId;
+                    mine.update({
+                        user: name
+                    }, {
+                        $set: obj0
+                    });
+                    //pay matter
+                    var obj1 = {};
+                    obj1['values.' + matterColor + '.matter'] = matter - cost;
+                    resources.update({
+                        user: name
+                    }, {
+                        $set: obj1
+                    });
+                    break;
                 }
             }
         },
@@ -206,14 +226,14 @@ if (Meteor.isServer) {
                 mine: {
                     ownItem: {
                         blank: "",
-                        benefit: 5,
+                        benefit: 1,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
                         blank: "",
-                        benefit: 1,
+                        benefit: 5,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
