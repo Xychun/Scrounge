@@ -137,7 +137,7 @@ if (Meteor.isServer) {
                                 user: allSups[l]
                             });
                             var currentSupScrSlots = playerData.findOne({
-                                user: currentSup
+                                user: allSups[l]
                             }, {
                                 fields: {
                                     mine: 1
@@ -146,6 +146,8 @@ if (Meteor.isServer) {
                             //get index of scr slot
                             var indexScr = -1;
                             for (var m = 0; m < currentSupScrSlots; m++) {
+                                console.log(m);
+                                console.log(sMine['scrs' + m].victim);
                                 if (sMine['scrs' + m].victim == cUser) indexScr = m;
                             }
                             if (indexScr == -1) {
@@ -185,123 +187,263 @@ if (Meteor.isServer) {
         console.log('UPDATE DURATION: ' + DURATION);*/
     }
 
-    function createMapPosition(username) {
-        //Find random position
-        //Find turf highest size
-        var godTurf = Turf.find({}, {
-            fields: {
-                turfSize: 1
-            }
-        }, {
-            sort: {
-                turfSize: -1
-            }
-        }).fetch()[0];
-        //Find lowest density Turf, babyTurf
-        var babyTurfId = getBabyTurf(godTurf._id);
-        var cursorBabyTurf = Turf.findOne({
-            _id: babyTurfId
-        }, {
-            fields: {
-                turfSize: 0
-            }
-        });
+    // var turfUpdateArray = new Array();
 
-        //Check lowest densitiy value
-        if (cursorBabyTurf.density < 60) {
-            //Set player position on free slot and update densitiy
-            //Find all free slots
-            var freeSlots = new Array();
-            for (i = 0; i < 3; i++) {
-                if (worldMapFields.findOne({
-                    _id: cursorBabyTurf['child' + i]
-                }, {
-                    fields: {
-                        user: 1
-                    }
-                }).user != "") freeSlots.push(i);
-            }
-            //Values randomPosition are [0-(freeSlots.length-1)]
-            var randomPosition = Math.floor((Math.random() * freeSlots.length));
-            //Place player into random free slot
-            var obj1 = {};
-            obj1['_id'] = cursorBabyTurf['child' + randomPosition];
-            worldMapFields.update(obj1, {
-                $set: {
-                    user: username
-                }
-            });
-            cursorWorldMap = worldMapFields.findOne({
-                user: username
-            });
-            var obj2 = {};
-            obj2['x'] = cursorWorldMap.x;
-            obj2['y'] = cursorWorldMap.y;
-            Meteor.users.update({
-                username: username
-            }, {
-                $set: obj2
-            })
-            console.log('Position done!');
-            //TO-DO updateDensitiy
-        } else {
-            //Create new Turf and search again
-        }
-    }
+    // function createMapPosition(username) {
+    //     turfUpdateArray.length = 0;
+    //     //Find random position
+    //     //Find turf highest size
+    //     var cursorGodTurf = Turf.find({}, {
+    //         fields: {
+    //             turfSize: 1
+    //         }
+    //     }, {
+    //         sort: {
+    //             turfSize: -1
+    //         }
+    //     }).fetch()[0];
 
-    function getBabyTurf(godTurfId) {
-        var cursorGodTurf = Turf.findOne({
-            _id: godTurfId
-        });
-        //No more Turf childs ?
-        if (cursorGodTurf.turfSize == 0) return godTurfId
-        var cursorChild0 = Turf.findOne({
-            _id: cursorGodTurf.child0
-        }, {
-            fields: {
-                _id: 1,
-                densitiy: 1
-            }
-        });
-        var cursorChild1 = Turf.findOne({
-            _id: cursorGodTurf.child1
-        }, {
-            fields: {
-                _id: 1,
-                densitiy: 1
-            }
-        });
-        var cursorChild2 = Turf.findOne({
-            _id: cursorGodTurf.child2
-        }, {
-            fields: {
-                _id: 1,
-                densitiy: 1
-            }
-        });
-        var cursorChild3 = Turf.findOne({
-            _id: cursorGodTurf.child3
-        }, {
-            fields: {
-                _id: 1,
-                densitiy: 1
-            }
-        });
+    //     //Check average density value: <60% create position:extend mapSize
+    //     if (cursorGodTurf.density < 60) {
+    //         //Set player position on free slot and update density
+    //         //Find lowest density Turf, babyTurf
+    //         var babyTurfId = getBabyTurf(cursorGodTurf._id);
+    //         var cursorBabyTurf = Turf.findOne({
+    //             _id: babyTurfId
+    //         }, {
+    //             fields: {
+    //                 turfSize: 0
+    //             }
+    //         });
+    //         //Find all free slots
+    //         var freeSlots = new Array();
+    //         for (var i = 0; i < 3; i++) {
+    //             if (worldMapFields.findOne({
+    //                 _id: cursorBabyTurf['child' + i]
+    //             }, {
+    //                 fields: {
+    //                     user: 1
+    //                 }
+    //             }).user != "") freeSlots.push(i);
+    //         }
+    //         //Values randomPosition are [0-(freeSlots.length-1)]
+    //         var randomPosition = Math.floor((Math.random() * freeSlots.length));
+    //         //Place player into random free slot
+    //         var obj1 = {};
+    //         obj1['_id'] = cursorBabyTurf['child' + randomPosition];
+    //         worldMapFields.update(obj1, {
+    //             $set: {
+    //                 user: username
+    //             }
+    //         });
+    //         cursorWorldMap = worldMapFields.findOne({
+    //             user: username
+    //         });
+    //         var obj2 = {};
+    //         obj2['x'] = cursorWorldMap.x;
+    //         obj2['y'] = cursorWorldMap.y;
+    //         Meteor.users.update({
+    //             username: username
+    //         }, {
+    //             $set: obj2
+    //         })
+    //         console.log('Position done!');
+    //         updateDensity();
+    //     } else {
+    //         extendMapSize(cursorGodTurf);
+    //         createMapPosition(username);
+    //     }
+    // }
 
-        //Lowest densitiy of Turf childs
-        var lowestDensity = Math.min(cursorChild0.densitiy, cursorChild1.densitiy, cursorChild2.densitiy, cursorChild3.densitiy);
+    // function getBabyTurf(parentTurfId) {
+    //     var cursorParentTurf = Turf.findOne({
+    //         _id: parentTurfId
+    //     });
+    //     //No more Turf childs ?
+    //     if (cursorParentTurf.turfSize == 0) return parentTurfId
+    //     var cursorChild0 = Turf.findOne({
+    //         _id: cursorParentTurf.child0
+    //     }, {
+    //         fields: {
+    //             _id: 1,
+    //             density: 1
+    //         }
+    //     });
+    //     var cursorChild1 = Turf.findOne({
+    //         _id: cursorParentTurf.child1
+    //     }, {
+    //         fields: {
+    //             _id: 1,
+    //             density: 1
+    //         }
+    //     });
+    //     var cursorChild2 = Turf.findOne({
+    //         _id: cursorParentTurf.child2
+    //     }, {
+    //         fields: {
+    //             _id: 1,
+    //             density: 1
+    //         }
+    //     });
+    //     var cursorChild3 = Turf.findOne({
+    //         _id: cursorParentTurf.child3
+    //     }, {
+    //         fields: {
+    //             _id: 1,
+    //             density: 1
+    //         }
+    //     });
 
-        //Recursive: get lowest Turf with lowest densitiy - - -
-        if (cursorChild0.densitiy == lowestDensity) {
-            return getBabyTurf(cursorChild0._id);
-        } else if (cursorChild1.densitiy == lowestDensity) {
-            return getBabyTurf(cursorChild1._id);
-        } else if (cursorChild2.densitiy == lowestDensity) {
-            return getBabyTurf(cursorChild2._id);
-        } else {
-            return getBabyTurf(cursorChild3._id);
-        }
-    }
+    //     //Lowest density of Turf childs
+    //     var lowestDensity = Math.min(cursorChild0.density, cursorChild1.density, cursorChild2.density, cursorChild3.density);
+
+    //     //Recursive: get lowest Turf with lowest density - - -
+    //     if (cursorChild0.density == lowestDensity) {
+    //         turfUpdateArray.push(cursorChild0._id);
+    //         return getBabyTurf(cursorChild0._id);
+    //     } else if (cursorChild1.density == lowestDensity) {
+    //         turfUpdateArray.push(cursorChild1._id);
+    //         return getBabyTurf(cursorChild1._id);
+    //     } else if (cursorChild2.density == lowestDensity) {
+    //         turfUpdateArray.push(cursorChild2._id);
+    //         return getBabyTurf(cursorChild2._id);
+    //     } else {
+    //         turfUpdateArray.push(cursorChild3._id);
+    //         return getBabyTurf(cursorChild3._id);
+    //     }
+    // }
+
+    // // function updateDensity() {
+    // //     //Reverse the Array so that the algorithm starts with the lowest Turf size
+    // //     turfUpdateArray.reverse();
+    // //     //Update BabyTurf - always one element at the beginning of the array
+    // //     var obj0 = {};
+    // //     obj['density'] = getDensity(turfUpdateArray[0]);
+    // //     // Turf.update({
+    // //     //         _id: turfUpdateArray[0]
+    // //     //     }, {
+    // //     //         $set: obj0)
+    // //     // });
+
+    // //     //Update the other Turf
+    // //     for (var i = 1; i < turfUpdateArray.lgenth; i++) {
+    // //         var cursorCurrentTurf = Turf.findOne({
+    // //             _id: turfUpdateArray[i]
+    // //         });
+    // //         var newDensity = getDensity(turfUpdateArray[i]);
+    // //         if (cursorCurrentTurf.density != newDensity) {
+    // //             obj0 = {};
+    // //             obj0['density'] = newDensity;
+    // //             Turf.update({
+    // //                     _id: turfUpdateArray[i]
+    // //                 }, {
+    // //                     $set: obj0
+    // //                 }
+    // //             }
+    // //         }
+    // //     }
+    // // }
+
+    // function getDensity(turfId) {
+    //     var cursorCurrentTurf = Turf.findOne({
+    //         _id: turfId
+    //     });
+    //     if (cursorCurrentTurf.turfSize == 0) {
+    //         console.log(worldMapFields.findOne({
+    //             _id: cursorCurrentTurf.child0
+    //         }, {
+    //             fields: {
+    //                 user: 1
+    //             }
+    //         }).user.length);
+    //         var field0 = worldMapFields.findOne({
+    //             _id: cursorCurrentTurf.child0
+    //         }, {
+    //             fields: {
+    //                 user: 1
+    //             }
+    //         }).user.length;
+    //         if (field0 > 0) field0 = 1;
+    //         var field1 = worldMapFields.findOne({
+    //             _id: cursorCurrentTurf.child1
+    //         }, {
+    //             fields: {
+    //                 user: 1
+    //             }
+    //         }).user.length;
+    //         if (field1 > 0) field1 = 1;
+    //         var field2 = worldMapFields.findOne({
+    //             _id: cursorCurrentTurf.child2
+    //         }, {
+    //             fields: {
+    //                 user: 1
+    //             }
+    //         }).user.length;
+    //         if (field2 > 0) field2 = 1;
+    //         var field3 = worldMapFields.findOne({
+    //             _id: cursorCurrentTurf.child3
+    //         }, {
+    //             fields: {
+    //                 user: 1
+    //             }
+    //         }).user.length;
+    //         if (field3 > 0) field3 = 1;
+    //         return ((field0 + field1 + field2 + field3) / 4);
+    //     } else {
+    //         //Recursive: get density of childs for this density - - -
+    //         return ((getDensity(cursorCurrentTurf.child0) + getDensity(cursorCurrentTurf.child1) + getDensity(cursorCurrentTurf.child2) + getDensity(cursorCurrentTurf.child3)) / 4);
+    //     }
+    // }
+
+    // function extendMapSize(cursorGodTurf) {
+    //     //Get orientation and size of the map
+    //     //Bottom left
+    //     var minX = worldMapFields.findOne({}, {
+    //         fields: {
+    //             x: 1
+    //         }
+    //     }, {
+    //         sort: 1
+    //     }).fetch()[0];
+    //     var minY = worldMapFields.findOne({}, {
+    //         fields: {
+    //             y: 1
+    //         }
+    //     }, {
+    //         sort: 1
+    //     }).fetch()[0];
+    //     //Top right
+    //     var maxX = worldMapFields.findOne({}, {
+    //         fields: {
+    //             x: 1
+    //         }
+    //     }, {
+    //         sort: -1
+    //     }).fetch()[0];
+    //     var maxY = worldMapFields.findOne({}, {
+    //         fields: {
+    //             y: 1
+    //         }
+    //     }, {
+    //         sort: -1
+    //     }).fetch()[0];
+    //     //The Edge length of the whole map
+    //     var mapEdgeLength = Math.pow(2, cursorGodTurf.turfSize + 1);
+
+    //     //Create new GodTurf with the old one as child0
+    //     obj0 = {};
+    //     obj['child0'] = cursorGodTurf._id;
+    //     for (var i = 1; i < 4; i++) {
+    //         obj['child' + i] = createNewTurf(cursorGodTurf.turfSize);
+    //     }
+    //     obj0['turfSize'] = cursorGodTurf.turfSize + 1;
+    //     obj0['density'] = 15;
+    //     Turf.insert(obj0);
+    // }
+
+    // function createNewTurf(turfSize) {
+
+    // }
 
     //Publish
     Meteor.publish("userData", function() {

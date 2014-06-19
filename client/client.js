@@ -23,15 +23,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient) {
-    Meteor.startup(function() {
-        timeClient = new Date();
-        Meteor.call("getServerTime", function(err, result) {
-            timeServer = result;
-            timeDifference = timeClient.getTime() - timeServer.getTime();
-            // console.log('timeServer' + timeServer.getTime());
-        });
-    });
-
     /////////////////////////
     ///// SUBSCRIPTIONS /////
     /////////////////////////
@@ -48,9 +39,15 @@ if (Meteor.isClient) {
     timers = new Array();
 
     ////////////////////////////
-    ///// TEMPLATE RETURNS /////
+    ////// FUNCTION CALLS //////
     ////////////////////////////
 
+    timeClient = new Date();
+        Meteor.call("getServerTime", function(err, result) {
+            timeServer = result;
+            timeDifference = timeClient.getTime() - timeServer.getTime();
+            // console.log('timeServer' + timeServer.getTime());
+        });
 
     setInterval(function() {
         updateTimers();
@@ -58,9 +55,8 @@ if (Meteor.isClient) {
     }, 1 * 1000);
 
     //Client Live Render timers that increase or decrease value by 1 second
-
     function updateTimers() {
-        for (i = 0; i < timers.length; i++) {
+        for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
                 timers[i].miliseconds = timers[i].miliseconds + (timers[i].prefix * 1000);
                 $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
@@ -84,6 +80,10 @@ if (Meteor.isClient) {
 
         return hrs + ':' + mins + ':' + secs;
     }
+
+    ////////////////////////////
+    ///// TEMPLATE RETURNS /////
+    ////////////////////////////
 
     //TO-DO nur für Testzwecke
     Template.mapSimulation.users = function() {
@@ -559,7 +559,7 @@ if (Meteor.isClient) {
             }
         }).fetch();
         var colorArray = new Array();
-        for (i = 0; i < cursorMatterColors.length; i++) {
+        for (var i = 0; i < cursorMatterColors.length; i++) {
             colorArray[i] = cursorMatterColors[i].color;
         }
         var result = distinct(colorArray);
@@ -609,7 +609,6 @@ if (Meteor.isClient) {
     //////////////////
     ///// EVENTS /////
     //////////////////
-
 
     //TO-DO: Testzwecke Map Simulation
     Template.mapSimulation.events({
@@ -908,7 +907,7 @@ if (Meteor.isClient) {
                 $('#AmountScroungerSlots').children().remove();
             }
 
-            for (i = 0; i < 6; i++) {
+            for (var i = 0; i < 6; i++) {
 
                 if (amountSupSlots > i) {
 
@@ -1585,13 +1584,9 @@ if (Meteor.isClient) {
         }
     });
 
-
-
-
-
-    /*DEBUGGING*/
-
-
+    ///////////////////
+    //// DEBUGGING ////
+    ///////////////////
 
     function logRenders() {
         _.each(Template, function(template, name) {
