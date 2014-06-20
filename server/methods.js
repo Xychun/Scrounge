@@ -7,232 +7,232 @@ if (Meteor.isServer) {
 
     //Methods
     Meteor.methods({
-            createMapPosition: function(username) {
-                turfUpdateArray.length = 0;
-                //Find random position
-                //Find turf highest size
-                var cursorGodTurf = Turf.find({}, {
+        createMapPosition: function(username) {
+            turfUpdateArray.length = 0;
+            //Find random position
+            //Find turf highest size
+            var cursorGodTurf = Turf.find({}, {
+                fields: {
+                    turfSize: 1,
+                    density: 1,
+                    _id: 1
+                },
+                sort: {
+                    turfSize: -1
+                }
+            }).fetch()[0];
+            //Check average density value: <60% create position:extend mapSize
+            console.log('Avg. Density: ' + cursorGodTurf.density);
+            if (cursorGodTurf.density < 55) {
+                //Set player position on free slot and update density
+                //Find lowest density Turf, babyTurf
+                turfUpdateArray.push(cursorGodTurf._id);
+                var babyTurfId = Meteor.call('getBabyTurf', cursorGodTurf._id);
+                var cursorBabyTurf = Turf.findOne({
+                    _id: babyTurfId
+                }, {
                     fields: {
-                        turfSize: 1,
-                        density: 1,
-                        _id: 1
-                    },
-                    sort: {
-                        turfSize: -1
+                        turfSize: 0
                     }
-                }).fetch()[0];
-                //Check average density value: <60% create position:extend mapSize
-                console.log('Avg. Density: ' + cursorGodTurf.density);
-                if (cursorGodTurf.density < 55) {
-                    //Set player position on free slot and update density
-                    //Find lowest density Turf, babyTurf
-                    turfUpdateArray.push(cursorGodTurf._id);
-                    var babyTurfId = Meteor.call('getBabyTurf', cursorGodTurf._id);
-                    var cursorBabyTurf = Turf.findOne({
-                        _id: babyTurfId
+                });
+                //Find all free slots
+                var freeSlots = new Array();
+                for (var i = 0; i < 4; i++) {
+                    if (worldMapFields.findOne({
+                        _id: cursorBabyTurf['child' + i]
                     }, {
                         fields: {
-                            turfSize: 0
+                            user: 1
                         }
-                    });
-                    //Find all free slots
-                    var freeSlots = new Array();
-                    for (var i = 0; i < 4; i++) {
-                        if (worldMapFields.findOne({
-                            _id: cursorBabyTurf['child' + i]
-                        }, {
-                            fields: {
-                                user: 1
-                            }
-                        }).user == "") {
-                            freeSlots.push(i);
-                        }
+                    }).user == "") {
+                        freeSlots.push(i);
                     }
-                    //Values randomPosition are [0-(freeSlots.length-1)]
-                    var randomPosition = Math.floor((Math.random() * freeSlots.length));
-                    //Place player into random free slot
-                    var obj1 = {};
-                    obj1['_id'] = cursorBabyTurf['child' + freeSlots[randomPosition]];
-                    worldMapFields.update(obj1, {
-                        $set: {
-                            user: username
-                        }
-                    });
-                    cursorWorldMap = worldMapFields.findOne({
+                }
+                //Values randomPosition are [0-(freeSlots.length-1)]
+                var randomPosition = Math.floor((Math.random() * freeSlots.length));
+                //Place player into random free slot
+                var obj1 = {};
+                obj1['_id'] = cursorBabyTurf['child' + freeSlots[randomPosition]];
+                worldMapFields.update(obj1, {
+                    $set: {
                         user: username
-                    });
-                    var obj2 = {};
-                    obj2['x'] = cursorWorldMap.x;
-                    obj2['y'] = cursorWorldMap.y;
-                    Meteor.users.update({
-                        username: username
-                    }, {
-                        $set: obj2
-                    });
-                    //Show the new generated map position in the console
-                    console.log('Position done - ' + username + ' (x: ' + obj2['x'] + ' y: ' + obj2['y'] + ')!');
-                    Meteor.call('updateDensity');
-                } else {
-                    //WorldMap has to high density: Extend and create position again
-                    Meteor.call('extendMapSize', cursorGodTurf);
-                    Meteor.call('createMapPosition', username);
+                    }
+                });
+                cursorWorldMap = worldMapFields.findOne({
+                    user: username
+                });
+                var obj2 = {};
+                obj2['x'] = cursorWorldMap.x;
+                obj2['y'] = cursorWorldMap.y;
+                Meteor.users.update({
+                    username: username
+                }, {
+                    $set: obj2
+                });
+                //Show the new generated map position in the console
+                console.log('Position done - ' + username + ' (x: ' + obj2['x'] + ' y: ' + obj2['y'] + ')!');
+                Meteor.call('updateDensity');
+            } else {
+                //WorldMap has to high density: Extend and create position again
+                Meteor.call('extendMapSize', cursorGodTurf);
+                Meteor.call('createMapPosition', username);
+            }
+        },
+
+        getBabyTurf: function(parentTurfId) {
+            var cursorParentTurf = Turf.findOne({
+                _id: parentTurfId
+            });
+            //No more Turf childs ?
+            if (cursorParentTurf.turfSize == 0) {
+                return parentTurfId;
+            }
+            var cursorChild0 = Turf.findOne({
+                _id: cursorParentTurf.child0
+            }, {
+                fields: {
+                    _id: 1,
+                    density: 1
                 }
-            },
-
-            getBabyTurf: function(parentTurfId) {
-                var cursorParentTurf = Turf.findOne({
-                    _id: parentTurfId
-                });
-                //No more Turf childs ?
-                if (cursorParentTurf.turfSize == 0) {
-                    return parentTurfId;
+            });
+            var cursorChild1 = Turf.findOne({
+                _id: cursorParentTurf.child1
+            }, {
+                fields: {
+                    _id: 1,
+                    density: 1
                 }
-                var cursorChild0 = Turf.findOne({
-                    _id: cursorParentTurf.child0
-                }, {
-                    fields: {
-                        _id: 1,
-                        density: 1
-                    }
-                });
-                var cursorChild1 = Turf.findOne({
-                    _id: cursorParentTurf.child1
-                }, {
-                    fields: {
-                        _id: 1,
-                        density: 1
-                    }
-                });
-                var cursorChild2 = Turf.findOne({
-                    _id: cursorParentTurf.child2
-                }, {
-                    fields: {
-                        _id: 1,
-                        density: 1
-                    }
-                });
-                var cursorChild3 = Turf.findOne({
-                    _id: cursorParentTurf.child3
-                }, {
-                    fields: {
-                        _id: 1,
-                        density: 1
-                    }
-                });
-
-                //Lowest density of Turf childs
-                var lowestDensity = Math.min(cursorChild0.density, cursorChild1.density, cursorChild2.density, cursorChild3.density);
-
-                //Recursive: get lowest Turf with lowest density - - -
-                if (cursorChild0.density == lowestDensity) {
-                    turfUpdateArray.push(cursorChild0._id);
-                    return Meteor.call('getBabyTurf', cursorChild0._id);
-                } else if (cursorChild1.density == lowestDensity) {
-                    turfUpdateArray.push(cursorChild1._id);
-                    return Meteor.call('getBabyTurf', cursorChild1._id);
-                } else if (cursorChild2.density == lowestDensity) {
-                    turfUpdateArray.push(cursorChild2._id);
-                    return Meteor.call('getBabyTurf', cursorChild2._id);
-                } else {
-                    turfUpdateArray.push(cursorChild3._id);
-                    return Meteor.call('getBabyTurf', cursorChild3._id);
+            });
+            var cursorChild2 = Turf.findOne({
+                _id: cursorParentTurf.child2
+            }, {
+                fields: {
+                    _id: 1,
+                    density: 1
                 }
-            },
-
-            updateDensity: function() {
-                //Reverse the Array so that the algorithm starts with the lowest Turf size
-                turfUpdateArray.reverse();
-                //Update BabyTurf - always one element at the beginning of the array
-                var obj0 = {};
-                obj0['density'] = Meteor.call('getDensity', turfUpdateArray[0]);
-                Turf.update({
-                    _id: turfUpdateArray[0]
-                }, {
-                    $set: obj0
-                });
-                //Update the other Turf
-                for (var i = 1; i < turfUpdateArray.length; i++) {
-                    var cursorCurrentTurf = Turf.findOne({
-                        _id: turfUpdateArray[i]
-                    });
-                    var newDensity = Meteor.call('getDensity', turfUpdateArray[i]);
-                    if (cursorCurrentTurf.density != newDensity) {
-                        obj0 = {};
-                        obj0['density'] = newDensity;
-                        Turf.update({
-                            _id: turfUpdateArray[i]
-                        }, {
-                            $set: obj0
-                        });
-                    }
+            });
+            var cursorChild3 = Turf.findOne({
+                _id: cursorParentTurf.child3
+            }, {
+                fields: {
+                    _id: 1,
+                    density: 1
                 }
-            },
+            });
 
-            getDensity: function(turfId) {
+            //Lowest density of Turf childs
+            var lowestDensity = Math.min(cursorChild0.density, cursorChild1.density, cursorChild2.density, cursorChild3.density);
+
+            //Recursive: get lowest Turf with lowest density - - -
+            if (cursorChild0.density == lowestDensity) {
+                turfUpdateArray.push(cursorChild0._id);
+                return Meteor.call('getBabyTurf', cursorChild0._id);
+            } else if (cursorChild1.density == lowestDensity) {
+                turfUpdateArray.push(cursorChild1._id);
+                return Meteor.call('getBabyTurf', cursorChild1._id);
+            } else if (cursorChild2.density == lowestDensity) {
+                turfUpdateArray.push(cursorChild2._id);
+                return Meteor.call('getBabyTurf', cursorChild2._id);
+            } else {
+                turfUpdateArray.push(cursorChild3._id);
+                return Meteor.call('getBabyTurf', cursorChild3._id);
+            }
+        },
+
+        updateDensity: function() {
+            //Reverse the Array so that the algorithm starts with the lowest Turf size
+            turfUpdateArray.reverse();
+            //Update BabyTurf - always one element at the beginning of the array
+            var obj0 = {};
+            obj0['density'] = Meteor.call('getDensity', turfUpdateArray[0]);
+            Turf.update({
+                _id: turfUpdateArray[0]
+            }, {
+                $set: obj0
+            });
+            //Update the other Turf
+            for (var i = 1; i < turfUpdateArray.length; i++) {
                 var cursorCurrentTurf = Turf.findOne({
-                    _id: turfId
+                    _id: turfUpdateArray[i]
                 });
-                if (cursorCurrentTurf.turfSize == 0) {
-                    var field0 = worldMapFields.findOne({
-                        _id: cursorCurrentTurf.child0
+                var newDensity = Meteor.call('getDensity', turfUpdateArray[i]);
+                if (cursorCurrentTurf.density != newDensity) {
+                    obj0 = {};
+                    obj0['density'] = newDensity;
+                    Turf.update({
+                        _id: turfUpdateArray[i]
                     }, {
-                        fields: {
-                            user: 1
-                        }
-                    }).user.length;
-                    if (field0 > 0) field0 = 1;
-                    var field1 = worldMapFields.findOne({
-                        _id: cursorCurrentTurf.child1
-                    }, {
-                        fields: {
-                            user: 1
-                        }
-                    }).user.length;
-                    if (field1 > 0) field1 = 1;
-                    var field2 = worldMapFields.findOne({
-                        _id: cursorCurrentTurf.child2
-                    }, {
-                        fields: {
-                            user: 1
-                        }
-                    }).user.length;
-                    if (field2 > 0) field2 = 1;
-                    var field3 = worldMapFields.findOne({
-                        _id: cursorCurrentTurf.child3
-                    }, {
-                        fields: {
-                            user: 1
-                        }
-                    }).user.length;
-                    if (field3 > 0) field3 = 1;
-                    return (((field0 + field1 + field2 + field3) / 4) * 100);
-                } else {
-                    //Get density of childs for this density
-                    return ((Turf.findOne({
-                        _id: cursorCurrentTurf.child0
-                    }, {
-                        fields: {
-                            density: 1
-                        }
-                    }).density + Turf.findOne({
-                        _id: cursorCurrentTurf.child1
-                    }, {
-                        fields: {
-                            density: 1
-                        }
-                    }).density + Turf.findOne({
-                        _id: cursorCurrentTurf.child2
-                    }, {
-                        fields: {
-                            density: 1
-                        }
-                    }).density + Turf.findOne({
-                        _id: cursorCurrentTurf.child3
-                    }, {
-                        fields: {
-                            density: 1
-                        }
-                    }).density) / 4);
+                        $set: obj0
+                    });
+                }
+            }
+        },
+
+        getDensity: function(turfId) {
+            var cursorCurrentTurf = Turf.findOne({
+                _id: turfId
+            });
+            if (cursorCurrentTurf.turfSize == 0) {
+                var field0 = worldMapFields.findOne({
+                    _id: cursorCurrentTurf.child0
+                }, {
+                    fields: {
+                        user: 1
+                    }
+                }).user.length;
+                if (field0 > 0) field0 = 1;
+                var field1 = worldMapFields.findOne({
+                    _id: cursorCurrentTurf.child1
+                }, {
+                    fields: {
+                        user: 1
+                    }
+                }).user.length;
+                if (field1 > 0) field1 = 1;
+                var field2 = worldMapFields.findOne({
+                    _id: cursorCurrentTurf.child2
+                }, {
+                    fields: {
+                        user: 1
+                    }
+                }).user.length;
+                if (field2 > 0) field2 = 1;
+                var field3 = worldMapFields.findOne({
+                    _id: cursorCurrentTurf.child3
+                }, {
+                    fields: {
+                        user: 1
+                    }
+                }).user.length;
+                if (field3 > 0) field3 = 1;
+                return (((field0 + field1 + field2 + field3) / 4) * 100);
+            } else {
+                //Get density of childs for this density
+                return ((Turf.findOne({
+                    _id: cursorCurrentTurf.child0
+                }, {
+                    fields: {
+                        density: 1
+                    }
+                }).density + Turf.findOne({
+                    _id: cursorCurrentTurf.child1
+                }, {
+                    fields: {
+                        density: 1
+                    }
+                }).density + Turf.findOne({
+                    _id: cursorCurrentTurf.child2
+                }, {
+                    fields: {
+                        density: 1
+                    }
+                }).density + Turf.findOne({
+                    _id: cursorCurrentTurf.child3
+                }, {
+                    fields: {
+                        density: 1
+                    }
+                }).density) / 4);
             }
         },
 
@@ -462,7 +462,7 @@ if (Meteor.isServer) {
             console.log('Scrounging successul!');
         },
 
-        buyMatter: function(matterId,slider_range) {
+        buyMatter: function(matterId, slider_range) {
             var name = Meteor.users.findOne({
                 _id: this.userId
             }).username;
@@ -497,35 +497,33 @@ if (Meteor.isServer) {
                 user: name
             })
 
-                //Iterate all own slots and fill matter into free one
-                for (i = 0; i < amountSlots; i++) {
-                    if (cursor['owns' + i].input == "0000") {
-                        var obj0 = {};
-                        obj0['owns' + i + '.stamp'] = new Date();
-                        obj0['owns' + i + '.input'] = matterId;
-                        obj0['owns' + i + '.control.min'] = slider_range[0];
-                        obj0['owns' + i + '.control.max'] = slider_range[1];
-                        mine.update({
-                            user: name
-                        }, {
-                            $set: obj0
-                        });
-                        //pay matter
-                        var obj1 = {};
-                        obj1['values.' + matterColor + '.matter'] = matter - cost;
-                        resources.update({
-                            user: name
-                        }, {
-                            $set: obj1
-                        });
-                        break;
-                    }
+            //Iterate all own slots and fill matter into free one
+            for (i = 0; i < amountSlots; i++) {
+                if (cursor['owns' + i].input == "0000") {
+                    var obj0 = {};
+                    obj0['owns' + i + '.stamp'] = new Date();
+                    obj0['owns' + i + '.input'] = matterId;
+                    obj0['owns' + i + '.control.min'] = slider_range[0];
+                    obj0['owns' + i + '.control.max'] = slider_range[1];
+                    mine.update({
+                        user: name
+                    }, {
+                        $set: obj0
+                    });
+                    //pay matter
+                    var obj1 = {};
+                    obj1['values.' + matterColor + '.matter'] = matter - cost;
+                    resources.update({
+                        user: name
+                    }, {
+                        $set: obj1
+                    });
+                    break;
                 }
             }
         },
 
         init: function() {
-
             var self = Meteor.users.findOne({
                 _id: this.userId
             });
