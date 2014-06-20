@@ -43,11 +43,11 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     timeClient = new Date();
-        Meteor.call("getServerTime", function(err, result) {
-            timeServer = result;
-            timeDifference = timeClient.getTime() - timeServer.getTime();
-            // console.log('timeServer' + timeServer.getTime());
-        });
+    Meteor.call("getServerTime", function(err, result) {
+        timeServer = result;
+        timeDifference = timeClient.getTime() - timeServer.getTime();
+        // console.log('timeServer' + timeServer.getTime());
+    });
 
     setInterval(function() {
         updateTimers();
@@ -55,6 +55,7 @@ if (Meteor.isClient) {
     }, 1 * 1000);
 
     //Client Live Render timers that increase or decrease value by 1 second
+
     function updateTimers() {
         for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
@@ -901,7 +902,7 @@ if (Meteor.isClient) {
             var amountSupSlots = cursorPlayerData.mine.supSlots;
 
             range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
-            $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display","block");
+            $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
             if ($('#AmountScroungerSlots').children()) {
                 $('#AmountScroungerSlots').children().remove();
@@ -981,10 +982,10 @@ if (Meteor.isClient) {
             });
 
             // Werte des Range Sliders
-            var slider_range = $('#range_slider_Buy_Menu').slider( "option", "values" );
+            var slider_range = $('#range_slider_Buy_Menu').slider("option", "values");
 
             //updating the database
-            Meteor.call('buyMatter', Session.get("clickedMatter"),slider_range, function(err) {
+            Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -1302,8 +1303,11 @@ if (Meteor.isClient) {
 
 
     function slide_start(direction, endless, element1, element2) {
-        element2 = (typeof element2 === "undefined") ? "0" : element2; // optionaler Parameter wenn nicht vorhanden dann = 0
-        //console.log(direction + " " + endless + " " + element1 + " " + element2);
+
+        if (!element2) {
+            element2 = 0;
+        }
+        console.log(direction + " " + endless + " " + element1 + " " + element2);
     }
 
     function slide_left() {
