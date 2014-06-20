@@ -26,7 +26,7 @@ if (Meteor.isServer) {
     });
 
     function update() {
-        var START = new Date().getTime();
+        // var START = new Date().getTime();
 
         var allUsers = Meteor.users.find({}).fetch();
         //Iterate all users
@@ -102,13 +102,12 @@ if (Meteor.isServer) {
                             ownProfit = cValue;
                         } else {
                             ownProfit = 0.5 * cValue;
+                            var supProfit = (0.5 * cValue) / (allSups.length);
                         }
-                        var supProfit = (0.5 * cValue) / (allSups.length);
                         var cUserResources = resources.findOne({
                             user: cUser
                         });
                         var cUserMatter = cUserResources.values[matterColor].matter;
-
                         //owner
                         var obj0 = {};
                         obj0['values.' + matterColor + '.matter'] = cUserMatter + ownProfit;
@@ -117,15 +116,14 @@ if (Meteor.isServer) {
                         }, {
                             $set: obj0
                         });
-
                         //sups
                         for (var l = 0; l < allSups.length; l++) {
-                            var obj1 = {};
+                            var obj0 = {};
                             var cSupResources = resources.findOne({
                                 user: allSups[l]
                             });
                             var cSupMatter = cSupResources.values[matterColor].matter;
-                            obj1['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
+                            obj0['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
                             resources.update({
                                 user: allSups[l]
                             }, {
@@ -154,26 +152,26 @@ if (Meteor.isServer) {
                             }
                             var result = indexScr;
 
-                            var obj2 = {};
-                            obj2['scrs' + result + '.victim'] = '';
+                            var obj0 = {};
+                            obj0['scrs' + result + '.victim'] = "";
 
                             mine.update({
                                 user: allSups[l]
                             }, {
-                                $set: obj2
+                                $set: obj0
                             });
                         }
 
                         //reset owner slots
-                        var obj3 = {};
-                        obj3[cSlot + '.input'] = '0000';
+                        var obj0 = {};
+                        obj0[cSlot + '.input'] = '0000';
                         for (var m = 0; m < cPData.mine.supSlots; m++) {
-                            obj3[cSlot + '.sup' + m] = '';
+                            obj0[cSlot + '.sup' + m] = "";
                         }
                         mine.update({
                             user: cUser
                         }, {
-                            $set: obj3
+                            $set: obj0
                         });
                     }
                 }
