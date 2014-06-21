@@ -23,15 +23,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient) {
-    Meteor.startup(function() {
-        timeClient = new Date();
-        Meteor.call("getServerTime", function(err, result) {
-            timeServer = result;
-            timeDifference = timeClient.getTime() - timeServer.getTime();
-            // console.log('timeServer' + timeServer.getTime());
-        });
-    });
-
     /////////////////////////
     ///// SUBSCRIPTIONS /////
     /////////////////////////
@@ -45,44 +36,38 @@ if (Meteor.isClient) {
     ///// GLOBAL VARIABLES /////
     ////////////////////////////
 
-    timersInc = new Array();
-    timersDec = new Array();
+    timers = new Array();
 
     ////////////////////////////
-    ///// TEMPLATE RETURNS /////
+    ////// FUNCTION CALLS //////
     ////////////////////////////
 
+    timeClient = new Date();
+    Meteor.call("getServerTime", function(err, result) {
+        timeServer = result;
+        timeDifference = timeClient.getTime() - timeServer.getTime();
+        // console.log('timeServer' + timeServer.getTime());
+    });
 
     setInterval(function() {
-        updateTimersInc();
-        updateTimersDec();
+        updateTimers();
+        updateTimers();
     }, 1 * 1000);
 
-    //Client Live Render timers that increase value by 1 second
+    //Client Live Render timers that increase or decrease value by 1 second
 
-    function updateTimersInc() {
-        for (i = 0; i < timersInc.length; i++) {
-            if ($('#' + timersInc[i].id).length > 0) {
-                obj0 = {};
-                obj0['id'] = timersInc[i].id;
-                obj0['miliseconds'] = timersInc[i].miliseconds + 1000;
-                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
-                timersInc[i] = obj0;
-            }
-        }
-    }
-
-    //Client Live Render timers that decrease value by 1 second
-
-    function updateTimersDec() {
-        for (i = 0; i < timersDec.length; i++) {
-            if ($('#' + timersDec[i].id).length > 0) {
-                obj0 = {};
-                obj0['id'] = timersDec[i].id;
-                obj0['miliseconds'] = timersDec[i].miliseconds - 1000;
-                if (obj0['miliseconds'] < 0) obj0['miliseconds'] = 0;
-                $('#' + obj0['id']).text(msToTime(obj0['miliseconds']));
-                timersDec[i] = obj0;
+    function updateTimers() {
+        for (var i = 0; i < timers.length; i++) {
+            if ($('#' + timers[i].id).length > 0) {
+                timers[i].miliseconds = timers[i].miliseconds + (timers[i].prefix * 1000);
+                $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
+            } else {
+                //Element not found and deleted after 3rd time
+                if (timers[i].notFound > 2) {
+                    timers.splice(i, 1);
+                } else {
+                    timers[i].notFound++;
+                }
             }
         }
     }
@@ -97,7 +82,30 @@ if (Meteor.isClient) {
         return hrs + ':' + mins + ':' + secs;
     }
 
-    //To-DO für andere Menüs anpassen
+    ////////////////////////////
+    ///// TEMPLATE RETURNS /////
+    ////////////////////////////
+
+    //TO-DO nur für Testzwecke
+    Template.mapSimulation.users = function() {
+        var test = Meteor.users.find({}, {
+            fields: {
+                username: 1
+            }
+        }).fetch();
+        return test;
+    };
+
+    Template.mineScrounge.current = function() {
+        return Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1
+            }
+        });
+    }
+
     Template.mineBase.mineUnusedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
@@ -119,15 +127,6 @@ if (Meteor.isClient) {
         return objects;
     };
 
-
-    // supSlotsMemory = new Array();
-
-    // Template.mineBase.supSlots = function() {
-    //     console.log(supSlotsMemory);
-    //     return supSlotsMemory;
-    // }
-
-    //To-DO für andere Menüs anpassen
     Template.mineBase.mineUsedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
@@ -142,9 +141,7 @@ if (Meteor.isClient) {
         });
         var objects = new Array();
 
-        var calculatedServerTime = (new Date()).getTime() - timeDifference;
-        var timersHelperInc = new Array();
-        var timersHelperDec = new Array();
+        var calculatedServerTime = new Date().getTime() - timeDifference;
         //Iterate OwnSlots
         for (var i = 0; i < amountOwnSlots; i++) {
             var matterId = cursorMine['owns' + i].input;
@@ -173,29 +170,38 @@ if (Meteor.isClient) {
                         var supMine = mine.findOne({
                             user: currentSup
                         });
-                        //get index of scr slot
-                        var index = 0;
-                        var result = -1;
-                        while (result == -1) {
-                            if (supMine['scrs' + index].victim == name) {
-                                result = index;
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                mine: 1
                             }
-                            index++;
+                        }).mine.scrSlots;
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (supMine['scrs' + m].victim == name) indexScr = m;
                         }
-                        //calculate mined by cSup
+                        if (indexScr == -1) {
+                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        var result = indexScr;
+                        //calculate mined by currentSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
                         obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
-                        timersHelperInc.push(obj01);
+                        obj01['notFound'] = 0;
+                        obj01['prefix'] = 1;
+                        timers.push(obj01);
                         obj00['timeSpent'] = msToTime(obj01['miliseconds']);
 
                         var supRate = supMine['scrs' + result].benefit;
                         supRates = supRates + supRate;
                         progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
-
                         obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
                         obj00['miningrate'] = supRate + '/hr';
                         supSlotsMemory[k] = obj00;
@@ -213,27 +219,337 @@ if (Meteor.isClient) {
                 var obj1 = {};
                 obj1['id'] = obj0['remainingId'];
                 obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-                timersHelperDec.push(obj1);
+                obj1['notFound'] = 0;
+                obj1['prefix'] = -1;
+                timers.push(obj1);
                 obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
 
                 var obj2 = {};
                 obj2['id'] = obj0['timeSpentId'];
                 obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
-                timersHelperInc.push(obj2);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
                 obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
 
-                //TO-DO Anteile richtig berechnen
-                obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
+                if (amountUsedSupSlots == 0) {
+                    obj0['profit'] = Math.floor(cursorMatterBlock.value) + '(100%)';
+                } else {
+                    obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
+                }
                 obj0['miningrate'] = (7.5 + supRates) + '/hr';
 
+                obj0['supporter'] = supSlotsMemory;
+
+                //für den range slider
+                obj0['slot'] = i;
+
+                objects[i] = obj0;
+            }
+        }
+        // für den Range Slider
+        Meteor.call("slider_init", function(err, result) {
+            for (var i = 0; i < amountOwnSlots; i++) {
+                var matterId = cursorMine['owns' + i].input;
+                if (matterId > 0) {
+                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
+                }
+            }
+        });
+        return objects;
+    };
+
+    Template.rightBaseUnusedSlots.mineUnusedScroungeSlots = function() {
+        //Mine Scrounging
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        }, {
+            fields: {
+                mine: 1
+            }
+        }).mine;
+        var amountScrSlots = cursorPlayerData.scrSlots;
+        var cursorMine = mine.findOne({
+            user: name
+        });
+        var objects = new Array();
+        for (var i = 0; i < amountScrSlots; i++) {
+            if (cursorMine['scrs' + i].victim == "")
+                objects[i] = {};
+        }
+        return objects;
+    };
+
+    Template.rightBaseUsedSlots.mineUsedScroungeSlots = function() {
+        //Mine Scrounging
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        }, {
+            fields: {
+                mine: 1
+            }
+        }).mine;
+        var cursorMyMine = mine.findOne({
+            user: name
+        });
+        var calculatedServerTime = new Date().getTime() - timeDifference;
+        var amountScrSlots = cursorPlayerData.scrSlots;
+        var objects = new Array();
+
+        //Iterate all Scrounging Slots
+        for (var i = 0; i < amountScrSlots; i++) {
+            //Is used?
+            if (cursorMyMine['scrs' + i].victim != "") {
+                var victimName = cursorMyMine['scrs' + i].victim;
+                var cursorVictimMine = mine.findOne({
+                    user: victimName
+                });
+                var cursorPlayerDataVictim = playerData.findOne({
+                    user: victimName
+                }, {
+                    fields: {
+                        mine: 1
+                    }
+                });
+                var amountVictimOwnSlots = cursorPlayerDataVictim.mine.ownSlots;
+                var amountVictimSupSlots = cursorPlayerDataVictim.mine.supSlots;
+                //get index of the right own slot
+                var indexOwn = -1;
+                for (var j = 0; j < amountVictimOwnSlots; j++) {
+                    for (var k = 0; k < amountVictimSupSlots; k++) {
+                        if (cursorVictimMine['owns' + j]['sup' + k] == name) indexOwn = j
+                    }
+                }
+                if (indexOwn == -1) {
+                    console.log('Template.rightBaseUsedSlots slot calculation problem - index own Slot');
+                    break;
+                }
+                //Calculate input values
+                var matterId = cursorVictimMine['owns' + indexOwn].input;
+                var cursorMatterBlock = MatterBlocks.findOne({
+                    matter: matterId
+                });
+                var progressOwn = (calculatedServerTime - cursorVictimMine['owns' + indexOwn].stamp.getTime()) * (7.5 / 3600000);
+                var progressSups = 0;
+                var supRates = 0;
+                var amountUsedSupSlots = 0;
+                //Iterate Supporter
+                for (var l = 0; l < cursorPlayerDataVictim.mine.supSlots; l++) {
+                    var currentSup = cursorVictimMine['owns' + indexOwn]['sup' + l];
+                    //SupSlot used?
+                    if (currentSup.length != "") {
+                        amountUsedSupSlots++;
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                mine: 1
+                            }
+                        }).mine.scrSlots;
+                        var cursorSupMine = mine.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (cursorSupMine['scrs' + m].victim == victimName) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.rightBaseUsedSlots slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        //calculate mined by cSup
+                        var supTime = cursorSupMine['scrs' + indexScr].stamp.getTime();
+                        var supRate = cursorSupMine['scrs' + indexScr].benefit;
+                        supRates = supRates + supRate;
+                        progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+                    }
+                }
+                var obj0 = {};
+                var progressTotal = progressOwn + progressSups;
+                obj0['color'] = cursorMatterBlock.color;
+                obj0['victim'] = victimName;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountVictimSupSlots;
+                obj0['remainingId'] = 'timerDec_' + i + '_mine_scr';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_mine_scr';
+
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                obj1['notFound'] = 0;
+                obj1['prefix'] = -1;
+                timers.push(obj1);
+                obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMyMine['scrs' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMyMine['scrs' + i].stamp));
+
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorMatterBlock.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['miningrate'] = cursorMyMine['scrs' + i].benefit + '/hr';
+                obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (cursorMyMine['scrs' + i].benefit / 3600000));
+                objects[i] = obj0;
+            }
+        }
+        return objects;
+    };
+
+    Template.mineScrounge.mineSupporterSlots = function() {
+        //Mine
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        });
+        var name = self.cu;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+        var cursorMine = mine.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        //Iterate OwnSlots
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var matterId = cursorMine['owns' + i].input;
+            if (matterId > 0) {
+                var cursorMatterBlock = MatterBlocks.findOne({
+                    matter: matterId
+                });
+                var amountMaxSupSlots = cursorPlayerData.mine.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+
+                var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                var progressSups = 0;
+                var supRates = 0;
+
+                var supSlotsMemory = new Array();
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
+                    var currentSup = cursorMine['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
+                        var supMine = mine.findOne({
+                            user: currentSup
+                        });
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                mine: 1
+                            }
+                        }).mine.scrSlots;
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (supMine['scrs' + m].victim == name) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        var result = indexScr;
+                        //calculate mined by cSup
+                        var supTime = supMine['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        obj01['notFound'] = 0;
+                        obj01['prefix'] = 1;
+                        timers.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                        var supRate = supMine['scrs' + result].benefit;
+                        supRates = supRates + supRate;
+                        progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+
+                        obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
+                        obj00['miningrate'] = supRate + '/hr';
+                        supSlotsMemory[k] = obj00;
+                    }
+                }
+
+
+                var progressTotal = progressOwn + progressSups;
+                obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
+                obj0['color'] = cursorMatterBlock.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountMaxSupSlots;
+                obj0['remainingId'] = 'timerDec_' + i + '_mine';
+                obj0['remainingChangeId'] = 'timerDec_' + i + '_mineChange';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_mine';
+
+                //Remaining calculation
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                obj1['notFound'] = 0;
+                obj1['prefix'] = -1;
+                timers.push(obj1);
+                obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+
+                //RemainingChange calcuation
+                var obj3 = {};
+                obj3['id'] = obj0['remainingChangeId'];
+                var myRate = playerData.findOne({
+                    user: self.username
+                }, {
+                    fields: {
+                        mine: 1
+                    }
+                }).mine.scrItem.benefit;
+                obj3['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
+                obj3['notFound'] = 0;
+                obj3['prefix'] = -1;
+                timers.push(obj3);
+                obj0['remainingChange'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
+
+                obj0['miningrate'] = (7.5 + supRates) + '/hr';
+                obj0['miningrateChange'] = (7.5 + supRates + myRate) + '/hr';;
+
+                //Make Slot scroungeable
+                obj0['goScrounging'] = 'goScroungingMine_' + i;
+
                 obj0['index'] = i;
-                obj0['scroungers'] = supSlotsMemory;
+                obj0['supporter'] = supSlotsMemory;
                 objects[i] = obj0;
 
             }
         }
-        timersInc = timersHelperInc;
-        timersDec = timersHelperDec;
         return objects;
     };
 
@@ -244,7 +560,7 @@ if (Meteor.isClient) {
             }
         }).fetch();
         var colorArray = new Array();
-        for (i = 0; i < cursorMatterColors.length; i++) {
+        for (var i = 0; i < cursorMatterColors.length; i++) {
             colorArray[i] = cursorMatterColors[i].color;
         }
         var result = distinct(colorArray);
@@ -259,7 +575,11 @@ if (Meteor.isClient) {
 
     Template.mineBase.matterBlocks = function() {
 
-        return MatterBlocks.find({});
+        return MatterBlocks.find({}, {
+            sort: {
+                matter: 1
+            }
+        });
 
     };
 
@@ -287,145 +607,90 @@ if (Meteor.isClient) {
 
     };
 
-    ////////////////////
-    ///// Rendered /////
-    ////////////////////
-
-    Template.masterLayout.rendered = function() {
-
-        // $("#disable_range_slider").draggable();
-
-        console.log("masterLayout rendered successfully");
-
-        if (!$('#range_slider').data('uiSlider')) {
-            // The data attribute for the slider is not set, so the slider has not yet been created
-            // If the slider is still around, we don't want to initialize it again
-            var slider = $('#range_slider'),
-                tooltip = $('.tooltip'),
-                tooltip_left_handle = $('#tooltip_left_handle'),
-                tooltip_right_handle = $('#tooltip_right_handle'),
-                left_handle,
-                right_handle,
-                min_control = 0.5, //Untere Grenze 
-                max_control = 0.8, //Obere Grenze
-                full_control = max_control - min_control
-                lower_control = 0.6, //Aktueller untere Wert
-                higher_control = 0.7, //Aktueller oberer Wert
-                slider_threshold = (max_control - min_control) / 10;
-
-            tooltip_left_handle.css('left', ((lower_control - min_control) * 100 / full_control) * 1.5).text(lower_control);
-            tooltip_right_handle.css('left', ((higher_control - min_control) * 100 / full_control) * 1.5).text(higher_control);
-
-            tooltip.hide();
-
-            slider.slider({
-                range: true,
-                step: 0.01,
-                min: min_control,
-                max: max_control,
-                values: [lower_control, higher_control],
-
-                start: function(event, ui) {
-                    left_handle = ui.values[0];
-                    right_handle = ui.values[1];
-                    //Initialisierung der Tooltip Fenster an den stellen der Handle
-                    tooltip_left_handle.css('left', ((ui.values[0] - min_control) * 100 / full_control) * 1.5).text(ui.values[0]);
-                    tooltip_right_handle.css('left', ((ui.values[1] - min_control) * 100 / full_control) * 1.5).text(ui.values[1]);
-                    fade_In_and_Out("handle", "in");
-                },
-
-                slide: function(event, ui) {
-
-                    px_left = ((ui.values[0] - min_control) * 100 / full_control) * 1.5;
-                    px_right = ((ui.values[1] - min_control) * 100 / full_control) * 1.5;
-                    console.log(px_left + " " + px_right);
-
-                    if (ui.values[1] - ui.values[0] > slider_threshold) {
-                        if (left_handle != ui.values[0]) {
-                            if ((px_left + 40) <= px_right) {
-                                tooltip_left_handle.css('left', px_left).text(ui.values[0]);
-                            } else {
-                                console.log("stop_left");
-                                tooltip_left_handle.css('left', px_right - 40).text(ui.values[0]);
-                            }
-                        } else if (right_handle != ui.values[1]) {
-                            if ((px_right - 40) >= px_left) {
-                                tooltip_right_handle.css('left', px_right).text(ui.values[1]);
-                            } else {
-                                console.log("stop_right");
-                                tooltip_right_handle.css('left', px_left + 40).text(ui.values[1]);
-                            }
-                        }
-                    } else if (ui.values[1] - ui.values[0] < slider_threshold) {
-                        return (false);
-                    }
-                },
-                stop: function(event, ui) {
-                    fade_In_and_Out("handle", "out");
-                }
-            });
-
-        }
-
-    };
-
     //////////////////
     ///// EVENTS /////
     //////////////////
+
+    //TO-DO: Testzwecke Map Simulation
+    Template.mapSimulation.events({
+        'click .testUserChange': function(e, t) {
+            var current = e.currentTarget.id;
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1
+                }
+            });
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    cu: current
+                }
+            });
+            Router.go('game', {
+                name: current,
+                menu: 'mine'
+            });
+        }
+    });
 
     /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
 
-          Router.current().render('mineBase', {
-                      to: 'middle'
-                  });
+            Router.current().render('mineBase', {
+                to: 'middle'
+            });
 
         },
 
         'click #testButton2': function(e, t) {
 
-          logRenders();
+            logRenders();
 
         },
 
         'click #character': function(e, t) {
 
-              if (!$("#characterView").length) {
+            if (!$("#characterView").length) {
 
-                  Router.current().render('characterView', {
-                      to: 'middle'
-                  });
+                Router.current().render('characterView', {
+                    to: 'middle'
+                });
 
-              } else {
+            } else {
 
-                  $('#characterView').show();
+                $('#characterView').show();
 
-              }
+            }
         },
 
         'click #scrounge': function(e, t) {
 
-             if($('#scrounge').css("background-position") == "0px 0px" || $('#scrounge').css("background-position") == "0% 0%") {
+            if ($('#scrounge').css("background-position") == "0px 0px" || $('#scrounge').css("background-position") == "0% 0%") {
 
-                    Router.current().render('mineScrounge', {
-                        to: 'middle'
-                    });
+                Router.current().render('mineScrounge', {
+                    to: 'middle'
+                });
 
-                    $('#scrounge').css({backgroundPosition: "0 -306px"});
+                $('#scrounge').css({
+                    backgroundPosition: "0 -306px"
+                });
+            } else {
+
+                Router.current().render('mineBase', {
+                    to: 'middle'
+                });
+
+                $('#scrounge').css({
+                    backgroundPosition: "0px 0px"
+                });
             }
 
-            else {
 
-                  Router.current().render('mineBase', {
-                        to: 'middle'
-                    });
-
-                  $('#scrounge').css({backgroundPosition: "0px 0px"});
-            }
-
-            
 
         },
 
@@ -511,6 +776,9 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
+        'mousedown img': function(e, t) {
+            return false;
+        },
         'mouseover .slider': function(e, t) {
             slide($(e.target).attr('id'));
         },
@@ -595,7 +863,12 @@ if (Meteor.isClient) {
                 }, 1000);
             }*/
         },
-
+        'mouseenter .tooltip_hover': function(e, t) {
+            fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "in");
+        },
+        'mouseleave .tooltip_hover': function(e, t) {
+            fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "out");
+        },
         'click .item': function(e, t) {
             Session.set("clickedMatter", e.currentTarget.id);
 
@@ -613,7 +886,6 @@ if (Meteor.isClient) {
           $('#matter').text("Matter: "+cursor.value);*/
 
             //Variante B
-
             $('#mineBuyMenu').fadeIn();
             $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#price').text("Price: " + this.cost);
@@ -629,11 +901,14 @@ if (Meteor.isClient) {
 
             var amountSupSlots = cursorPlayerData.mine.supSlots;
 
+            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
+
             if ($('#AmountScroungerSlots').children()) {
                 $('#AmountScroungerSlots').children().remove();
             }
 
-            for (i = 0; i < 6; i++) {
+            for (var i = 0; i < 6; i++) {
 
                 if (amountSupSlots > i) {
 
@@ -682,8 +957,17 @@ if (Meteor.isClient) {
                     "margin-top": "0px"
                 }, 150);
             }
+        },
+
+        'click .goScrounging': function(e, t) {
+            var slotId = e.currentTarget.id.split("_").pop();
+            Meteor.call('goScrounging', slotId, function(err) {
+                if (err) {
+                    console.log('goScrounging: ' + err);
+                }
+            });
         }
-      });
+    });
 
     //TODO: noch nicht fertig !
     Template.mineBuyMenu.events({
@@ -697,8 +981,11 @@ if (Meteor.isClient) {
                 user: currentUser
             });
 
+            // Werte des Range Sliders
+            var slider_range = $('#range_slider_Buy_Menu').slider("option", "values");
+
             //updating the database
-            Meteor.call('buyMatter', Session.get("clickedMatter"), function(err) {
+            Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -709,7 +996,6 @@ if (Meteor.isClient) {
         },
 
         'click #buyMenuNo': function(e, t) {
-
             $('#mineBuyMenu').fadeOut();
 
         },
@@ -723,6 +1009,8 @@ if (Meteor.isClient) {
     var ready_check;
     var size;
     var slots_count = 10;
+    var handle_check = false;
+    var hover_check = false;
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -735,6 +1023,130 @@ if (Meteor.isClient) {
     if ($(window).width() >= 1280) {
         // console.log("1920");
         ready_check = 3;
+    }
+
+    // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
+
+    function fade_In_and_Out(element, slot, state) {
+
+        //console.log('element: ' + element + ' slot: ' + slot + ' state: ' + state);
+
+        // Solange der User den Handle vom Range Slider festhält soll der Tooltip anbleiben
+        // zusätzlich soll er anbleiben solange man mit der Maus über dem Range Slider ist
+        if (element === "handle" && state === "out") {
+            //console.log("handle.out");
+            handle_check = false;
+        } else if (element === "handle" && state === "in") {
+            //console.log("handle.in");
+            handle_check = true;
+        }
+        if (element === "tooltip" && state === "out") {
+            //console.log("hover.out");
+            hover_check = false;
+        } else if (element === "tooltip" && state === "in") {
+            //console.log("hover.in");
+            hover_check = true;
+        }
+
+        // Tooltip geht an wenn entweder der Handle verschoben wird oder man mit der Maus über den Range Slider hovert
+        // Tooltip geht nur aus wenn Maus nicht mehr auf dem Range Slider und kein Handle gezogen wird
+        if (handle_check === true || hover_check === true) {
+            $("#tooltip_left_handle_" + slot).filter(':not(:animated)').fadeIn('fast');
+            $("#tooltip_right_handle_" + slot).filter(':not(:animated)').fadeIn('fast');
+        } else if (handle_check === false && hover_check === false) {
+            $("#tooltip_left_handle_" + slot).fadeOut('fast');
+            $("#tooltip_right_handle_" + slot).fadeOut('fast');
+        }
+
+    }
+
+    function range_slider(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl) {
+        //console.log('slot: ' + slot + ' min_ctrl: ' + min_ctrl + ' max_ctrl: ' + max_ctrl + ' lower_ctrl: ' + lower_ctrl + ' higher_ctrl: ' + higher_ctrl);
+        if (!$("#range_slider_" + slot).data('uiSlider')) { // Wenn der Slider noch nicht Initialisiert ist -> True
+            var left_handle;
+            var right_handle;
+            var current_handle;
+            var disable_boolean = true;
+
+            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());
+
+            tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, "left");
+            $('.tooltip').hide();
+
+            if (slot === "Buy_Menu") {
+                disable_boolean = false;
+            }
+
+            $("#range_slider_" + slot).slider({
+                range: true,
+                step: 0.01,
+                min: min_ctrl,
+                max: max_ctrl,
+                values: [lower_ctrl, higher_ctrl],
+                disabled: disable_boolean,
+
+                start: function(event, ui) {
+                    left_handle = ui.values[0];
+                    right_handle = ui.values[1];
+                    //Initialisierung der Tooltip Fenster an den stellen der Handle
+                    tooltip_adjustment(slot, min_ctrl, max_ctrl, ui.values[0], ui.values[1], "last");
+                    fade_In_and_Out("handle", slot, "in");
+                },
+
+                slide: function(event, ui) {
+                    if (left_handle != ui.values[0])
+                        current_handle = "left";
+                    else if (right_handle != ui.values[1])
+                        current_handle = "right";
+                    if (left_handle === ui.values[0] && right_handle === ui.values[1])
+                        current_handle = "last";
+                    var slide_check = tooltip_adjustment(slot, min_ctrl, max_ctrl, ui.values[0], ui.values[1], current_handle);
+                    return slide_check;
+                },
+                stop: function(event, ui) {
+                    fade_In_and_Out("handle", slot, "out");
+                }
+            });
+        }
+    };
+
+    function tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, handle) {
+        var ctrl_range = max_ctrl - min_ctrl,
+            slider_threshold = ctrl_range * 0.1,
+            lower_pixel = ((lower_ctrl - min_ctrl) * 100 / ctrl_range) * $("#range_slider_" + slot).width() / 100,
+            higher_pixel = ((higher_ctrl - min_ctrl) * 100 / ctrl_range) * $("#range_slider_" + slot).width() / 100,
+            last,
+            range_end_left,
+            range_end_right;
+
+        if (handle === "last")
+            handle = last;
+
+        if (higher_ctrl - lower_ctrl >= slider_threshold) {
+
+            if (lower_pixel < 27)
+                lower_pixel = 27;
+
+            if (higher_pixel > $("#range_slider_" + slot).width() - 27)
+                higher_pixel = $("#range_slider_" + slot).width() - 27;
+
+            if (handle === "left") {
+                last = handle;
+                if (lower_pixel > higher_pixel - 54)
+                    lower_pixel = higher_pixel - 54;
+            }
+            if (handle === "right") {
+                last = handle;
+                if (higher_pixel < lower_pixel + 54)
+                    higher_pixel = lower_pixel + 54;
+            }
+
+            $("#tooltip_left_handle_" + slot).css('left', lower_pixel).text(lower_ctrl);
+            $("#tooltip_right_handle_" + slot).css('left', higher_pixel).text(higher_ctrl);
+            return true;
+        } else if (higher_ctrl - lower_ctrl < slider_threshold) {
+            return false;
+        }
     }
 
     function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
@@ -891,8 +1303,11 @@ if (Meteor.isClient) {
 
 
     function slide_start(direction, endless, element1, element2) {
-        element2 = (typeof element2 === "undefined") ? "0" : element2; // optionaler Parameter wenn nicht vorhanden dann = 0
-        //console.log(direction + " " + endless + " " + element1 + " " + element2);
+
+        if (!element2) {
+            element2 = 0;
+        }
+        console.log(direction + " " + endless + " " + element1 + " " + element2);
     }
 
     function slide_left() {
@@ -913,12 +1328,12 @@ if (Meteor.isClient) {
                 });
             }
             // Vorab Animation da Intervall erst nach [Time] anfängt
-            $("#k1").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
-            $("#k2").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
+            // $("#k1").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
+            // $("#k2").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
             //Rekursiver Intervall (unendlich)
             var action = function() {
                 if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
@@ -937,11 +1352,11 @@ if (Meteor.isClient) {
                 $("#k2").animate({
                     left: pos_p
                 }, time, "linear");
-                update("left");
+                update_category("left");
             };
             //Start des Intervalls
             interval = setInterval(action, time);
-            update("left");
+            update_category("left");
         }
     }
 
@@ -963,12 +1378,12 @@ if (Meteor.isClient) {
                 });
             }
             // Vorab Animation da Intervall erst nach [Time] anfängt
-            $("#k1").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
-            $("#k2").filter(':not(:animated)').animate({
-                left: pos_p
-            }, time, "linear");
+            // $("#k1").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
+            // $("#k2").filter(':not(:animated)').animate({
+            //     left: pos_p
+            // }, time, "linear");
             //Rekursiver Intervall (unendlich)
             var action = function() {
                 if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
@@ -987,11 +1402,11 @@ if (Meteor.isClient) {
                 $("#k2").animate({
                     left: pos_p
                 }, time, "linear");
-                update("right");
+                update_category("right");
             };
             //Start des Intervalls
             interval = setInterval(action, time);
-            update("right");
+            update_category("right");
         }
     }
 
@@ -1005,9 +1420,9 @@ if (Meteor.isClient) {
         {
             if ($("#base_area_content").position().top <= 0) {
                 // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("#base_area_content").filter(':not(:animated)').animate({
-                    "top": "-=80px"
-                }, 300, "linear");
+                // $("#base_area_content").filter(':not(:animated)').animate({
+                //     "top": "-=80px"
+                // }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
                     //Animation im laufenden Intervall  
@@ -1031,9 +1446,9 @@ if (Meteor.isClient) {
         {
             if ($("#base_area_content").position().top <= -80) {
                 // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("#base_area_content").filter(':not(:animated)').animate({
-                    "top": "+=80px"
-                }, 300, "linear");
+                // $("#base_area_content").filter(':not(:animated)').animate({
+                //     "top": "+=80px"
+                // }, 300, "linear");
                 //Rekursiver Intervall (unendlich)
                 var action = function() {
                     //Animation im laufenden Intervall  
@@ -1052,7 +1467,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    function update(direction) {
+    function update_category(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
         if (direction == "left") {
             c--;
         } else if (direction == "right") {
@@ -1092,7 +1507,6 @@ if (Meteor.isClient) {
             pr: pos_reset
         };
     }
-
 
     function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
     {
@@ -1146,11 +1560,26 @@ if (Meteor.isClient) {
         } else {
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
+            }, {
+                fields: {
+                    menu: 1,
+                    cu: 1,
+                    username: 1
+                }
             });
             var menu = self.menu;
             var cu = self.cu;
             if (cu && menu) {
                 Meteor.subscribe(menu, cu, function(rdy) {
+                    // if (cu == self.username) {
+                    //     Router.current().render('mineBase', {
+                    //         to: 'middle'
+                    //     });
+                    // } else {
+                    //     Router.current().render('mineScrounge', {
+                    //         to: 'middle'
+                    //     });
+                    // }
                     // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
                 });
             } else {
@@ -1159,25 +1588,21 @@ if (Meteor.isClient) {
         }
     });
 
+    ///////////////////
+    //// DEBUGGING ////
+    ///////////////////
 
-
-
-
-      /*DEBUGGING*/
-
-
-
-              function logRenders () {
-          _.each(Template, function (template, name) {
+    function logRenders() {
+        _.each(Template, function(template, name) {
             var oldRender = template.rendered;
             var counter = 0;
-       
-            template.rendered = function () {
-              console.log(name, "render count: ", ++counter);
-              oldRender && oldRender.apply(this, arguments);
+
+            template.rendered = function() {
+                console.log(name, "render count: ", ++counter);
+                oldRender && oldRender.apply(this, arguments);
             };
-          });
-  }
+        });
+    }
 }
 
 /*  function hoverScroungeBase() {

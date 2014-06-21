@@ -17,16 +17,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isServer) {
-    // Meteor.startup(function() {
-    //     // code to run on server at startup
-    //     update();
-    //     Meteor.setInterval(function() {
-    //         update();
-    //     }, 20 * 1000);
-    // });
+    Meteor.startup(function() {
+        // code to run on server at startup
+        update();
+        Meteor.setInterval(function() {
+            update();
+        }, 20 * 1000);
+    });
 
     function update() {
-        var START = new Date().getTime();
+        // var START = new Date().getTime();
 
         var allUsers = Meteor.users.find({}).fetch();
         //Iterate all users
@@ -66,15 +66,23 @@ if (Meteor.isServer) {
                             var sMine = mine.findOne({
                                 user: cSup
                             });
-                            //get index of scr slot
-                            var index = 0;
-                            var result = -1;
-                            while (result == -1) {
-                                if (sMine['scrs' + index].victim == cUser) {
-                                    result = index;
+                            var currentSupScrSlots = playerData.findOne({
+                                user: cSup
+                            }, {
+                                fields: {
+                                    mine: 1
                                 }
-                                index++;
+                            }).mine.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sMine['scrs' + m].victim == cUser) indexScr = m;
                             }
+                            if (indexScr == -1) {
+                                console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
 
                             allSups[k] = cSup;
                             //calculate mined by cSup
@@ -89,13 +97,17 @@ if (Meteor.isServer) {
                     if (progress > cValue) {
                         //split matter
                         var matterColor = cMatter.color;
-                        var ownProfit = 0.5 * cValue;
-                        var supProfit = (0.5 * cValue) / (allSups.length);
+                        var ownProfit = 0;
+                        if (allSups.length == 0) {
+                            ownProfit = cValue;
+                        } else {
+                            ownProfit = 0.5 * cValue;
+                            var supProfit = (0.5 * cValue) / (allSups.length);
+                        }
                         var cUserResources = resources.findOne({
                             user: cUser
                         });
                         var cUserMatter = cUserResources.values[matterColor].matter;
-
                         //owner
                         var obj0 = {};
                         obj0['values.' + matterColor + '.matter'] = cUserMatter + ownProfit;
@@ -104,15 +116,14 @@ if (Meteor.isServer) {
                         }, {
                             $set: obj0
                         });
-
                         //sups
                         for (var l = 0; l < allSups.length; l++) {
-                            var obj1 = {};
+                            var obj0 = {};
                             var cSupResources = resources.findOne({
                                 user: allSups[l]
                             });
                             var cSupMatter = cSupResources.values[matterColor].matter;
-                            obj1['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
+                            obj0['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
                             resources.update({
                                 user: allSups[l]
                             }, {
@@ -120,38 +131,47 @@ if (Meteor.isServer) {
                             });
                             //reset scr slot of sup
                             //get index of scr slot
-                            var sMine2 = mine.findOne({
+                            var sMine = mine.findOne({
                                 user: allSups[l]
                             });
-                            var index2 = 0;
-                            var result2 = 0;
-                            while (result2 == 0) {
-                                if (sMine2['scrs' + index2].victim == cUser) {
-                                    result2 = index2;
+                            var currentSupScrSlots = playerData.findOne({
+                                user: allSups[l]
+                            }, {
+                                fields: {
+                                    mine: 1
                                 }
-                                index2++;
+                            }).mine.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sMine['scrs' + m].victim == cUser) indexScr = m;
                             }
+                            if (indexScr == -1) {
+                                console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
 
-                            var obj2 = {};
-                            obj2['scrs' + result2 + '.victim'] = '';
+                            var obj0 = {};
+                            obj0['scrs' + result + '.victim'] = "";
 
                             mine.update({
                                 user: allSups[l]
                             }, {
-                                $set: obj2
+                                $set: obj0
                             });
                         }
 
                         //reset owner slots
-                        var obj3 = {};
-                        obj3[cSlot + '.input'] = '0000';
+                        var obj0 = {};
+                        obj0[cSlot + '.input'] = '0000';
                         for (var m = 0; m < cPData.mine.supSlots; m++) {
-                            obj3[cSlot + '.sup' + m] = '';
+                            obj0[cSlot + '.sup' + m] = "";
                         }
                         mine.update({
                             user: cUser
                         }, {
-                            $set: obj3
+                            $set: obj0
                         });
                     }
                 }
@@ -163,8 +183,6 @@ if (Meteor.isServer) {
         console.log('UPDATE DURATION: ' + DURATION);*/
     }
 
-
-
     //Publish
     Meteor.publish("userData", function() {
         if (this.userId) {
@@ -172,7 +190,9 @@ if (Meteor.isServer) {
                 fields: {
                     'username': 1,
                     'menu': 1,
-                    'cu': 1
+                    'cu': 1,
+                    'x': 1,
+                    'y': 1
                 }
             });
         } else {
