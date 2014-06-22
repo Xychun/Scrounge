@@ -258,6 +258,14 @@ if (Meteor.isServer) {
         }
     });
 
+    Meteor.publish("worldMapFields", function() {
+        if (this.userId) {
+            return worldMapFields.find({});
+        } else {
+            this.ready();
+        }
+    });
+
     Meteor.users.allow({
         update: function(userId, docs, fields, modifier) {
             if (fields == 'menu' || fields == 'cu') {

@@ -31,6 +31,7 @@ if (Meteor.isClient) {
     Meteor.subscribe("playerData");
     Meteor.subscribe("MatterBlocks");
     Meteor.subscribe("resources");
+    Meteor.subscribe("worldMapFields");
 
     ////////////////////////////
     ///// GLOBAL VARIABLES /////
@@ -607,6 +608,16 @@ if (Meteor.isClient) {
 
     };
 
+    Template.standardBorder.worldMapFields = function() {
+
+        return worldMapFields.find({});
+
+    }
+
+    Template.worldMap.rendered= function() {
+      createWorldMap();
+    }
+
     //////////////////
     ///// EVENTS /////
     //////////////////
@@ -636,14 +647,9 @@ if (Meteor.isClient) {
         }
     });
 
-    /*Seltsame Darstellungsfehler bedürfen es, dass der Hintergrund um ein Pixel weiter verschoben wird, als die Datei es hergibt (beobachtet in Chrome)*/
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-
-            Router.current().render('mineBase', {
-                to: 'middle'
-            });
 
         },
 
@@ -651,6 +657,23 @@ if (Meteor.isClient) {
 
             logRenders();
 
+        },
+
+        'click #switchToWorldMap': function(e, t) {
+
+            if (!$("#world").length) {
+
+                Router.current().render('worldMap', {
+                    to: 'middle'
+                });
+
+            } else {
+
+                Router.current().render('mineBase', {
+                    to: 'middle'
+                });
+
+            }
         },
 
         'click #character': function(e, t) {
@@ -999,7 +1022,15 @@ if (Meteor.isClient) {
             $('#mineBuyMenu').fadeOut();
 
         },
-    })
+    });
+
+    Template.worldMap.events({
+
+      'click .worldMapNavigators': function(e, t) {
+            navigateWorldMap($(e.currentTarget).attr('id'));
+        },
+
+    });
 
 
     var time = 1200; //Animationszeit in ms
@@ -1551,6 +1582,157 @@ if (Meteor.isClient) {
         })
         return uniqueArray
     }
+
+    
+
+    //WORLD MAP FRONTEND//
+    function createWorldMap() {
+
+      var WorldMapSize = worldMapFields.find({},{ fields:{ 'x': 1 }}).fetch().length;
+      var EdgeLength = Math.sqrt(WorldMapSize)*300;
+
+      $('#world').css({
+          "width": EdgeLength,
+          "height": EdgeLength,
+          "margin-top": -EdgeLength/2,
+          "margin-left": -EdgeLength/2,
+        })
+
+      fillWorldMap(EdgeLength);
+    }
+
+
+    function fillWorldMap(EdgeLength) {
+
+      var left = 0;
+      var top = EdgeLength/2+300;
+
+      var WorldMapPositionsX = worldMapFields.find({}, {
+            fields: {
+                'x': 1
+            }
+        }).fetch();
+
+      var Users = worldMapFields.find({}, {
+            fields: {
+                'user': 1
+            }
+        }).fetch();
+
+      var WorldMapPositionsY = worldMapFields.find({}, {
+            fields: {
+                'y': 1
+            }
+        }).fetch();
+
+          for(i= 0; i < WorldMapPositionsX.length; i++) {
+
+            var x = WorldMapPositionsX[i].x;
+            var y = WorldMapPositionsY[i].y;
+            var user = Users[i].user;
+
+/*            console.log(x+"  "+y);
+            console.log("Left  "+(left+x*300)+"px");
+            console.log("Top  "+(top-y*300)+"px");*/
+
+            var playerPlace = document.createElement("div");
+            playerPlace.className = "playerPlace";
+            playerPlace.id = x+" "+y;
+            document.getElementById("world").appendChild(playerPlace);
+            document.getElementById(playerPlace.id).style.top=(top-y*300)+"px";
+            document.getElementById(playerPlace.id).style.left=(left+x*300)+"px";
+            document.getElementById(playerPlace.id).style.width="300px";
+            document.getElementById(playerPlace.id).style.height="300px";
+
+
+            var text = document.createTextNode(x+"  "+y+"  "+user);
+            document.getElementById(playerPlace.id).style.fontSize="50pt";
+            document.getElementById(playerPlace.id).appendChild(text);
+      }
+    }
+
+    var upDisabled = false;
+    var downDisabled = false;
+    var leftDisabled = false;
+    var rightDisabled = false;
+
+    function navigateWorldMap(id) {
+
+        var top = parseInt($('#world').css("margin-top"));
+        var left = parseInt($('#world').css("margin-left"));
+        var mapSize = parseInt($('#world').css("width"));
+        console.log(mapSize);
+
+        if(top == -mapSize) {
+            upDisabled = true;
+            $('#worldMapGoUp').css({"opacity": "0.3"});
+        }
+        if(top == 0) {
+            downDisabled = true;
+            $('#worldMapGoDown').css({"opacity": "0.3"});
+        }
+        if(left == 0) {
+            leftDisabled = true;
+            $('#worldMapGoLeft').css({"opacity": "0.3"});
+        }
+        if(left == -mapSize) {
+            rightDisabled = true;
+            $('#worldMapGoRight').css({"opacity": "0.3"});
+            
+        }
+
+        switch(id) {
+
+            case 'worldMapGoUp':
+                
+/*                $('#world').css({"margin-top": (top-300)+"px"});*/
+                if (upDisabled == false) {
+                $('#world').filter(':not(:animated)').animate({ "margin-top": (top-300)+"px" }, 500);
+                downDisabled = false;
+                $('#worldMapGoDown').css({"opacity": "1"});
+              }
+
+                break;
+            case 'worldMapGoDown':
+                
+                if(downDisabled == false) {
+                 $('#world').filter(':not(:animated)').animate({ "margin-top": (top+300)+"px" }, 500);
+                 upDisabled = false;
+                 $('#worldMapGoUp').css({"opacity": "1"});
+                }
+
+                break;
+            case 'worldMapGoRight':
+                
+                if(rightDisabled == false) {
+                $('#world').filter(':not(:animated)').animate({"margin-left": (left-300)+"px"}, 500);
+                leftDisabled = false;
+                $('#worldMapGoLeft').css({"opacity": "1"});
+
+                }
+
+                break;
+            case 'worldMapGoLeft':
+                
+                if(leftDisabled == false) {
+                $('#world').filter(':not(:animated)').animate({"margin-left": (left+300)+"px"}, 500);
+                rightDisabled = false;
+                $('#worldMapGoRight').css({"opacity": "1"});
+                }
+
+                break;
+            default:
+                //console.log("Slide für diesen Hover nicht definiert !");
+                break;
+
+        }
+
+    }
+
+
+
+
+
 
     //Deps.Autorun
     Deps.autorun(function() {

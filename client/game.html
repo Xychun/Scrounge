@@ -1,4 +1,5 @@
 <template name="standardBorder">
+	<div id="switchToWorldMap" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 5; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)"></div>
     <div id="links" class="top left">
         <div class="corner top left">
             <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
@@ -147,7 +148,7 @@
     </div>
 
     <!-- Zu Testzwecken -->
-    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"></div>
 
 </template>
@@ -168,7 +169,7 @@
     <div id="mitte">
         <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own menu!</div>
         <div class="areas left bot">
-            <div id="up_slider_base" class="hover_slide_height top">
+            <div id="up_slider_base" class="hover_slide_height top slider_base_height">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
             </div>
             <div id="base_area">
@@ -482,6 +483,23 @@
 
 
     </div>
+
+</template>
+
+<template name="worldMap">
+
+	<div id="worldViewPort">
+
+		<div class="worldMapNavigators" id="worldMapGoUp">  </div>
+		<div class="worldMapNavigators" id="worldMapGoDown">  </div>
+		<div class="worldMapNavigators" id="worldMapGoRight">  </div>
+		<div class="worldMapNavigators" id="worldMapGoLeft">  </div>
+
+<!-- 		<div style="background-color: blue; width: 3600px; height: 3600px; position: absolute; z-index: -1; right: 50%; top: 50%; margin-right: -1000px; margin-top: -1000px "> -->
+
+		<div id="world">  </div>
+
+	</div>
 
 </template>
 
