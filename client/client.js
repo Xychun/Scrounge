@@ -1583,72 +1583,152 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
-    
+    var sizePlayerPlace = 300;
 
     //WORLD MAP FRONTEND//
     function createWorldMap() {
 
       var WorldMapSize = worldMapFields.find({},{ fields:{ 'x': 1 }}).fetch().length;
-      var EdgeLength = Math.sqrt(WorldMapSize)*300;
+      var EdgeLengthFields = Math.sqrt(WorldMapSize);
+      var EdgeLengthPixel = EdgeLengthFields*sizePlayerPlace;
 
       $('#world').css({
-          "width": EdgeLength,
-          "height": EdgeLength,
-          "margin-top": -EdgeLength/2,
-          "margin-left": -EdgeLength/2,
+          "width": EdgeLengthPixel,
+          "height": EdgeLengthPixel,
+          "margin-top": -EdgeLengthPixel/2,
+          "margin-left": -EdgeLengthPixel/2,
         })
 
-      fillWorldMap(EdgeLength);
+/*      $('#world').css({
+          "width": 8*sizePlayerPlace,
+          "height": 8*sizePlayerPlace,
+          "margin-top": -4*sizePlayerPlace,
+          "margin-left": -4*sizePlayerPlace,
+        })*/
+      
+      //Stellt per Definition ein, wie weit die Map von Beginn an mit Daten gefüllt sein soll
+      fillWorldMap(0, 3, 0, 3);
     }
 
+    function fillWorldMap(xLeft, xRight, yBot, yTop) {
 
-    function fillWorldMap(EdgeLength) {
+      //Mehrdimensionales Array, welches die Positions-Daten (x, y, user) aus der Datenbank enthält
+      var worldPositions = worldMapFields.find({}, { fields: { 'x': 1, 'y': 1, 'user': 1 }, }).fetch();
 
-      var left = 0;
-      var top = EdgeLength/2+300;
+/*      for(i=0; i < worldPositions.length; i++) {
 
-      var WorldMapPositionsX = worldMapFields.find({}, {
-            fields: {
-                'x': 1
+        console.log(worldPositions[i].user+"  "+worldPositions[i].x+"  "+worldPositions[i].y);
+
+      }*/
+
+      //sizePlayerPlace: Größe eines Feldes auf der WorldMap
+      //Breite der gesamten Welt: Math.sqrt(worldPositions.length)*sizePlayerPlace
+      //Breite des zu zeichnenden WorldMap-Abschnitts: Math.abs(xRight-xLeft)*sizePlayerPlace
+
+      //Beispiel mit Zahlen, WorldSize 64:
+      // left = (sqrt(64) * 300) /2 - ((abs(3-0))+1) * 300/2 = 600
+      // top = -300 + (sqrt(64)*300) /2 + ((3 + 1) * 300) /2 = 1500
+
+      // Beispiel bei WorldSize von 64
+      // var left = 8*sizePlayerPlace/2-((Math.abs(xRight-xLeft))+1)*sizePlayerPlace/2;
+      // var top = -300+(8*sizePlayerPlace/2+((yHeight+1)*sizePlayerPlace/2));
+
+      //Nur beim ersten Aufruf ist wegen der leidigen "Bei 0 Anfangen"-Geschichte die "+1-Korrektur" notwendig
+
+      var left = Math.sqrt(worldPositions.length)*sizePlayerPlace/2-((Math.abs(xRight-xLeft))+1)*sizePlayerPlace/2;
+      var top = -300+(Math.sqrt(worldPositions.length)*sizePlayerPlace/2+((Math.abs(yTop-yBot))+1)*sizePlayerPlace/2);
+
+      for(i=0; i < worldPositions.length; i++) {
+
+            var x;
+            var y;
+            var user = "";
+
+            if((worldPositions[i].x >= xLeft && worldPositions[i].x <= xRight) && (worldPositions[i].y >= yBot) && (worldPositions[i].y <= yTop)){
+
+              x = worldPositions[i].x;
+              y = worldPositions[i].y;
+              user = worldPositions[i].user;
+
+              drawPlayerPlace(x, y, user, left, top);
+/*              console.log(i+"  "+x+"  "+y);*/
             }
-        }).fetch();
-
-      var Users = worldMapFields.find({}, {
-            fields: {
-                'user': 1
-            }
-        }).fetch();
-
-      var WorldMapPositionsY = worldMapFields.find({}, {
-            fields: {
-                'y': 1
-            }
-        }).fetch();
-
-          for(i= 0; i < WorldMapPositionsX.length; i++) {
-
-            var x = WorldMapPositionsX[i].x;
-            var y = WorldMapPositionsY[i].y;
-            var user = Users[i].user;
-
-/*            console.log(x+"  "+y);
-            console.log("Left  "+(left+x*300)+"px");
-            console.log("Top  "+(top-y*300)+"px");*/
-
-            var playerPlace = document.createElement("div");
-            playerPlace.className = "playerPlace";
-            playerPlace.id = x+" "+y;
-            document.getElementById("world").appendChild(playerPlace);
-            document.getElementById(playerPlace.id).style.top=(top-y*300)+"px";
-            document.getElementById(playerPlace.id).style.left=(left+x*300)+"px";
-            document.getElementById(playerPlace.id).style.width="300px";
-            document.getElementById(playerPlace.id).style.height="300px";
-
-
-            var text = document.createTextNode(x+"  "+y+"  "+user);
-            document.getElementById(playerPlace.id).style.fontSize="50pt";
-            document.getElementById(playerPlace.id).appendChild(text);
+/*          console.log(x+"  "+y);
+            console.log("Left  "+(left+x*sizePlayerPlace)+"px");
+            console.log("Top  "+(top-y*sizePlayerPlace)+"px");*/         
       }
+/*      setViewPosition(1, 1);*/
+    }
+
+    function extendWorld(direction) {
+
+      var worldPositions = worldMapFields.find({}, { fields: { 'x': 1, 'y': 1, 'user': 1 }, }).fetch();
+
+        switch(direction) {
+
+        case 'up':
+
+          extendUpCount = extendUpCount+2;
+
+          var xLeft = 0; //per Definition, je nachdem wie groß der Anfang ist
+          var xRight = 1; //per Definition, je nachdem wie groß der Anfang ist
+          var yBot = 0+extendUpCount;
+          var yTop = yBot+1;
+
+          fillWorldMap(xLeft, xRight, yBot, yTop);
+          
+
+        case 'down':
+
+        break;
+
+        case 'right':
+
+          extendRightCount = extendRightCount+2;
+
+          var xLeft = 0+extendRightCount; //per Definition, je nachdem wie groß der Anfang ist
+          var xRight = xLeft+1; //per Definition, je nachdem wie groß der Anfang ist
+          var yBot = 0+extendDownCount;
+          var yTop = 1+extendUpCount;
+
+          fillWorldMap(xLeft, xRight, yBot, yTop);
+
+        break;
+
+        case 'left':
+
+        break;
+
+        default:
+
+            console.log("verdammter Scheiß...");
+
+        break;
+      }
+    }
+
+    function setViewPosition(xView, yView) {
+        var top = parseInt($('#world').css("margin-top"));
+        var left = parseInt($('#world').css("margin-left"));
+        $('#world').css({ "margin-left": left+(xView*300)+"px" });
+        $('#world').css({ "margin-top": top-(yView*300)+"px" });
+    }
+
+    function drawPlayerPlace(x, y, user, left, top) {
+        var playerPlace = document.createElement("div");
+        playerPlace.className = "playerPlace";
+        playerPlace.id = x+" "+y;
+        document.getElementById("world").appendChild(playerPlace);
+        document.getElementById(playerPlace.id).style.top=(top-y*300)+"px";
+        document.getElementById(playerPlace.id).style.left=(left+x*300)+"px";
+        document.getElementById(playerPlace.id).style.width="300px";
+        document.getElementById(playerPlace.id).style.height="300px";
+        document.getElementById(playerPlace.id).style.backgroundImage="url(/Aufloesung1920x1080/Interface/BackgroundWorldMap8.png)";
+
+
+        var text = document.createTextNode(x+"  "+y+"  "+user);
+        document.getElementById(playerPlace.id).style.fontSize="50pt";
+        document.getElementById(playerPlace.id).appendChild(text);
     }
 
     var upDisabled = false;
@@ -1656,18 +1736,27 @@ if (Meteor.isClient) {
     var leftDisabled = false;
     var rightDisabled = false;
 
-    function navigateWorldMap(id) {
+    var extendUpCount = 0;
+    var extendDownCount = 0;
+    var extendRightCount = 0;
+    var extendLeftCount = 0;
+
+    var navUpCount = 0;
+    var navDownCount = 0;
+    var navRightCount = 0;
+    var navLeftCount = 0;
+
+    function navigateWorldMap(direction) {
 
         var top = parseInt($('#world').css("margin-top"));
         var left = parseInt($('#world').css("margin-left"));
         var mapSize = parseInt($('#world').css("width"));
-        console.log(mapSize);
 
-        if(top == -mapSize) {
+        if(top == 0) {
             upDisabled = true;
             $('#worldMapGoUp').css({"opacity": "0.3"});
         }
-        if(top == 0) {
+        if(top == -mapSize) {
             downDisabled = true;
             $('#worldMapGoDown').css({"opacity": "0.3"});
         }
@@ -1681,43 +1770,88 @@ if (Meteor.isClient) {
             
         }
 
-        switch(id) {
+        switch(direction) {
 
             case 'worldMapGoUp':
                 
-/*                $('#world').css({"margin-top": (top-300)+"px"});*/
+/*                var margin = Math.abs(parseInt($('#world').css("margin-top")))+300;
+                var verschiebung = höhe/2 - Math.abs(margin);
+                console.log("HÖHE "+höhe/2+"  "+"MARGIN "+Math.abs(margin)+"  "+"VERSCHIEBUNG "+verschiebung);
+                console.log(navUpCount%2 == 0 && extendUpCount <= navUpCount/2);*/
+
+                //navUpCount%X: X entsprechend definieren je nachdem wie groß die refill-Schritte sein sollen
+                //X = 2 eignet sich bei Beginn mit 4 Feldern
+                //X =
+
+                if(navUpCount != 0 && navUpCount%4 == 0 && extendUpCount <= navUpCount/4 && navUpCount < (mapSize/4)/300 ) {
+                  extendWorld("up");
+                }
+
                 if (upDisabled == false) {
-                $('#world').filter(':not(:animated)').animate({ "margin-top": (top-300)+"px" }, 500);
+                $('#world').filter(':not(:animated)').animate({ "margin-top": (top+300)+"px" }, 250);
                 downDisabled = false;
                 $('#worldMapGoDown').css({"opacity": "1"});
+
+                navUpCount++;
+                navDownCount--;
+                console.log(navUpCount+"  "+extendUpCount);
+                console.log(navDownCount+"  "+extendDownCount);
               }
 
                 break;
             case 'worldMapGoDown':
                 
+                if(navDownCount != 0 && navDownCount%4 == 0 && extendDownCount <= navDownCount/4 && navDownCount < (mapSize/4)/300 ) {
+                  extendWorld("down");
+                }
+
                 if(downDisabled == false) {
-                 $('#world').filter(':not(:animated)').animate({ "margin-top": (top+300)+"px" }, 500);
+                 $('#world').filter(':not(:animated)').animate({ "margin-top": (top-300)+"px" }, 250);
                  upDisabled = false;
                  $('#worldMapGoUp').css({"opacity": "1"});
+
+                 navDownCount++;
+                 navUpCount--;
+                 console.log(navUpCount+"  "+extendUpCount);
+                 console.log(navDownCount+"  "+extendDownCount);
                 }
 
                 break;
             case 'worldMapGoRight':
                 
+                if(navRightCount != 0 && navRightCount%4 == 0 && extendRightCount <= navRightCount/4 && navRightCount < (mapSize/4)/300 ) {
+                  extendWorld("right");
+                }
+
                 if(rightDisabled == false) {
-                $('#world').filter(':not(:animated)').animate({"margin-left": (left-300)+"px"}, 500);
+                $('#world').filter(':not(:animated)').animate({"margin-left": (left-300)+"px"}, 250);
                 leftDisabled = false;
                 $('#worldMapGoLeft').css({"opacity": "1"});
+
+                navRightCount++;
+                navLeftCount--;
+                console.log(navRightCount+"  "+extendRightCount);
+                console.log(navLeftCount+"  "+extendLeftCount);
 
                 }
 
                 break;
             case 'worldMapGoLeft':
                 
+                if(navLeftCount != 0 && navLeftCount%4 == 0 && extendLeftCount <= navLeftCount/4 && navLeftCount < (mapSize/4)/300 ) {
+                  extendWorld("left");
+                }
+
                 if(leftDisabled == false) {
-                $('#world').filter(':not(:animated)').animate({"margin-left": (left+300)+"px"}, 500);
+                $('#world').filter(':not(:animated)').animate({"margin-left": (left+300)+"px"}, 250);
                 rightDisabled = false;
                 $('#worldMapGoRight').css({"opacity": "1"});
+
+                navLeftCount++;
+                navRightCount--;
+                console.log(navRightCount+"  "+extendRightCount);
+                console.log(navLeftCount+"  "+extendLeftCount);
+
                 }
 
                 break;

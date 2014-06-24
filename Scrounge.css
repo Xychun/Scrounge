@@ -210,9 +210,10 @@ img.i7 {
     bottom:40px;
 }
 #scrounge_area {
-    overflow:auto;
-    top:114px;
-    height:auto;
+    overflow:hidden;
+    width:100%;
+    top:40px;
+    bottom:40px;
 }
 .slot {
     z-index:2;
@@ -511,43 +512,43 @@ img.i7 {
 }
 
 #worldMapGoUp {
-	width: 110px; 
+	width: 61px; 
 	height: 30px; 
-	top: 0px; 
-	left: 50%; 
-	margin-left: -55px;
-	background-image: url(/Aufloesung1920x1080/Interface/NavWorldUp.png);
+	right: 30px; 
+	bottom: 90px;
+	background-image: url(/Aufloesung1920x1080/Interface/NavWorldUp1.png);
+	background-repeat: no-repeat;
 }
 #worldMapGoDown {
-	width: 110px; 
+	width: 61px; 
 	height: 30px; 
-	bottom: 0px; 
-	left: 50%; 
-	margin-left: -55px;
-	background-image: url(/Aufloesung1920x1080/Interface/NavWorldDown.png);
+	right: 30px;
+	bottom: 0px;
+	background-image: url(/Aufloesung1920x1080/Interface/NavWorldDown1.png);
+	background-repeat: no-repeat;
 }
 #worldMapGoRight {
 	width: 30px; 
-	height: 110px; 
+	height: 61px; 
 	right: 0px; 
-	top: 50%; 
-	margin-top: -55px;
-	background-image: url(/Aufloesung1920x1080/Interface/NavWorldRight.png);
+	bottom: 30px;
+	background-image: url(/Aufloesung1920x1080/Interface/NavWorldRight1.png);
+	background-repeat: no-repeat;
 }
 #worldMapGoLeft {
 	width: 30px; 
-	height: 110px; 
-	left: 0px; 
-	top: 50%; 
-	margin-top: -55px;
-	background-image: url(/Aufloesung1920x1080/Interface/NavWorldLeft.png);
+	height: 61px; 
+	right: 90px; 
+	bottom: 30px;
+	background-image: url(/Aufloesung1920x1080/Interface/NavWorldLeft1.png);
+	background-repeat: no-repeat;
 }
 #world {
 	position: absolute; 
 	z-index: -1; 
 	top: 50%; 
 	left: 50%; 
-	background-image: url(/Aufloesung1920x1080/Interface/BackgroundWorldMap8.png);
+/*	background-image: url(/Aufloesung1920x1080/Interface/BackgroundWorldMap8.png);*/
 }
 #worldViewPort {
 	top: 152px; 
