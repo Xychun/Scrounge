@@ -1723,7 +1723,7 @@ if (Meteor.isClient) {
         document.getElementById(playerPlace.id).style.left=(left+x*300)+"px";
         document.getElementById(playerPlace.id).style.width="300px";
         document.getElementById(playerPlace.id).style.height="300px";
-        document.getElementById(playerPlace.id).style.backgroundImage="url(/Aufloesung1920x1080/Interface/BackgroundWorldMap8.png)";
+        document.getElementById(playerPlace.id).style.backgroundImage="url(/Aufloesung1920x1080/Interface/BackgroundWorldMap3.png)";
 
 
         var text = document.createTextNode(x+"  "+y+"  "+user);
