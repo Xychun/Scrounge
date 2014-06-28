@@ -6,7 +6,7 @@
     cursor:default;
 }
 body {
-    background-image:url(/Aufloesung1920x1080/Interface/TempImages/Gras.gif);
+    background-image:url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
     background-repeat: repeat;
 }
 #bg {
@@ -515,20 +515,92 @@ img.i7 {
 	background-image: url(/Aufloesung1920x1080/Interface/NavWorldLeft1.png);
 	background-repeat: no-repeat;
 }
-#world {
-	position: absolute; 
-	z-index: -1; 
-	top: 50%; 
-	left: 50%; 
-/*	background-image: url(/Aufloesung1920x1080/Interface/BackgroundWorldMap8.png);*/
+#currentMapView {
+ width: 1800px; 
+ height: 1000px; 
+ position: absolute; 
+ z-index: -1; 
+ right: 50%; 
+ top: 50%; 
+ margin-right: -900px; 
+ margin-top: -500px;
 }
 #worldViewPort {
-	top: 152px; 
-	bottom: 152px; 
-	right: 152px; 
-	left: 152px; 
+	top: 160px; 
+	bottom: 160px; 
+	right: 160px; 
+	left: 160px; 
 	position: absolute; 
 	overflow: hidden;
+	z-index: -2;
+	background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
+ 	background-repeat: repeat;
+}
+.worldMapPlayerPlace {
+	width: 300px; 
+	height: 250px; 
+	position: absolute; 
+	z-index: -1; 
+}
+.worldMapSlotsPreview{ 
+	width: 100px; 
+	height: 100px; 
+	position: absolute;
+}
+.worldMapSlotsPreviewText{
+	display: inline;
+    width: 100px;
+    bottom: 5px;
+    margin: 0px;
+    color: black;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+}
+#worldMapSlotsPreview{
+	background-color: yellow;
+	width: 300px; 
+	height: 250px; 
+	position: absolute; 
+	z-index: -1;
+}
+.worldMapPlayerStats{ 
+	top: 55px; 
+	bottom: 55px; 
+	right: 60px; 
+	left: 60px; 
+}
+.worldMapPlayerImage{
+	 width: 80px; 
+	 height: 80px; 
+	 top: 50%; 
+	 left: 50%; 
+	 margin-top: -40px; 
+	 margin-left: -40px;
+	 background-image: url(/Aufloesung1920x1080/Interface/PlayerImage01.png);
+	 background-repeat: no-repeat;
+}
+.worldMapPlayerLevel{
+	display: inline;
+    width: 100%;
+    height: 20px;
+    color: black;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+}
+.worldMapPlayerName{
+	display: inline;
+    height: 20px;
+    bottom: 0px;
+    width: 100%;
+    color: black;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 
 
