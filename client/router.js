@@ -29,14 +29,15 @@ Router.map(function() {
             'standardBorder': {
                 to: 'border'
             },
-            'mineBuyMenu': {
-                to: 'buyMenu'
+            'buyMenu': {
+                to: 'buyMenuField'
             },
             'mapSimulation': {
                 to: 'rightSideTest'
             },
         },
 
+        //like autorun
         onData: function() {
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
@@ -48,28 +49,34 @@ Router.map(function() {
                 }
             });
             var cu = self.cu;
+            var menu = self.menu;
+            //in your own menu? base:scrounge
             if (cu == self.username) {
-                Router.current().render('mineBase', {
+                Router.current().render(menu + 'Base', {
                     to: 'middle'
                 });
             } else {
-                Router.current().render('mineScrounge', {
+                Router.current().render(menu + 'Scrounge', {
                     to: 'middle'
                 });
             }
         },
 
+        //returns true or false for the array: does NOT stop or pause
         waitOn: function() {
             return [
                 Meteor.subscribe("userData"),
                 Meteor.subscribe("playerData"),
                 Meteor.subscribe("MatterBlocks"),
+                Meteor.subscribe("FightArenas"),
                 Meteor.subscribe("resources"),
-                Meteor.subscribe("mine")
+                Meteor.subscribe("mine"),
+                Meteor.subscribe("battlefield")
             ];
         },
 
         action: function() {
+            //render if waitOn is true
             if (this.ready()) this.render();
         }
 
@@ -79,7 +86,7 @@ Router.map(function() {
       this.render('standardBorder', {to: 'border'});
       this.render('mineMiddle', {to: 'middle'});
 
-      console.log(getRenderPara("mineBuyMenu"));
+      console.log(getRenderPara("buyMenu"));
     },*/
     });
 });

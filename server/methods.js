@@ -7,6 +7,10 @@ if (Meteor.isServer) {
 
     //Methods
     Meteor.methods({
+        getServerTime: function() {
+            return new Date();
+        },
+
         createMapPosition: function(username) {
             turfUpdateArray.length = 0;
             //Find random position
@@ -354,11 +358,7 @@ if (Meteor.isServer) {
             }
         },
 
-        getServerTime: function() {
-            return new Date();
-        },
-
-        goScrounging: function(slotId) {
+        goScroungingMine: function(slotId) {
             var currentUser = Meteor.users.findOne({
                 _id: this.userId
             }, {
@@ -462,6 +462,110 @@ if (Meteor.isServer) {
             console.log('Scrounging successul!');
         },
 
+        goScroungingBattlefield: function(slotId) {
+            var currentUser = Meteor.users.findOne({
+                _id: this.userId
+            }, {
+                fields: {
+                    cu: 1
+                }
+            }).cu;
+            var myName = Meteor.users.findOne({
+                _id: this.userId
+            }, {
+                fields: {
+                    username: 1
+                }
+            }).username;
+            //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
+            if (currentUser == myName) {
+                console.log('You cant scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O');
+                return;
+            }
+            var cursorMyPlayerData = playerData.findOne({
+                user: myName
+            }, {
+                fields: {
+                    battlefield: 1
+                }
+            });
+            var amountScrSlots = cursorMyPlayerData.battlefield.scrSlots;
+            var cursorBattlefieldScrounger = battlefield.findOne({
+                user: myName
+            });
+            for (i = 0; i < amountScrSlots; i++) {
+                if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
+                    console.log('You cant scrounge here: You allready scrounge this user!');
+                    return;
+                }
+            }
+            //CHECK FREE SCRSLOTS OF SCROUNGER DATA
+            var resultScrounger = -1;
+            for (i = 0; i < amountScrSlots; i++) {
+                if (cursorBattlefieldScrounger['scrs' + i].victim == "") {
+                    resultScrounger = i;
+                    break;
+                }
+            }
+            if (resultScrounger == -1) {
+                console.log('You cant scrounge here: Your Scrounge slots are all in use!');
+                return;
+            }
+            //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
+            var obj0 = {};
+            obj0['owns' + slotId] = 1;
+            var cursorBattlefieldOwner = battlefield.findOne({
+                user: currentUser
+            }, {
+                fields: obj0
+            });
+            //Get free SupSlots index
+            var amountSupSlots = playerData.findOne({
+                user: currentUser
+            }, {
+                fields: {
+                    battlefield: 1
+                }
+            }).battlefield.supSlots;
+            var resultOwner = -1;
+            for (i = 0; i < amountSupSlots; i++) {
+                if (cursorBattlefieldOwner['owns' + slotId]['sup' + i] == "") {
+                    resultOwner = i;
+                    break;
+                }
+            }
+            //LAST CHECK: RANGE SLIDER
+            if (!(cursorBattlefieldOwner['owns' + slotId].control.min < cursorMyPlayerData.battlefield.scrItem.benefit < cursorBattlefieldOwner['owns' + slotId].control.max)) {
+                console.log('You cant scrounge here: You do not have the right epicness!');
+                return;
+            }
+
+            //SupSlot with id result is free and correct: update it ?
+            if (resultOwner == -1) {
+                console.log('You cant scrounge here: The owners support slots are all full!');
+                return;
+            }
+            //set to battlefield of owner
+            var obj0 = {};
+            obj0['owns' + slotId + '.sup' + resultOwner] = myName;
+            battlefield.update({
+                user: currentUser
+            }, {
+                $set: obj0
+            });
+
+            //set to battlefield of scrounger
+            var obj0 = {};
+            obj0['scrs' + resultScrounger + '.victim'] = currentUser;
+            obj0['scrs' + resultScrounger + '.stamp'] = new Date();
+            battlefield.update({
+                user: myName
+            }, {
+                $set: obj0
+            });
+            console.log('Scrounging successul!');
+        },
+
         buyMatter: function(matterId, slider_range) {
             var name = Meteor.users.findOne({
                 _id: this.userId
@@ -500,6 +604,15 @@ if (Meteor.isServer) {
             //Iterate all own slots and fill matter into free one
             for (i = 0; i < amountSlots; i++) {
                 if (cursor['owns' + i].input == "0000") {
+                    //pay matter
+                    var obj1 = {};
+                    obj1['values.' + matterColor + '.matter'] = matter - cost;
+                    resources.update({
+                        user: name
+                    }, {
+                        $set: obj1
+                    });
+                    //add purchased item
                     var obj0 = {};
                     obj0['owns' + i + '.stamp'] = new Date();
                     obj0['owns' + i + '.input'] = matterId;
@@ -510,6 +623,49 @@ if (Meteor.isServer) {
                     }, {
                         $set: obj0
                     });
+                    break;
+                }
+            }
+        },
+
+        buyFight: function(fightId, slider_range) {
+            var name = Meteor.users.findOne({
+                _id: this.userId
+            }).username;
+            var colorCode = fightId.substring(0, 2);
+            switch (colorCode) {
+                case "01":
+                    var matterColor = "green";
+                    break;
+                case "02":
+                    var matterColor = "red";
+                    break;
+                default:
+                    console.log("methods.js: something's wrong...");
+            }
+            var matter = resources.findOne({
+                user: name
+            }).values[matterColor].matter;
+            var cost = FightArenas.findOne({
+                fight: fightId
+            }).cost;
+
+            //check costs
+            if (!(matter >= cost)) {
+                console.log('You cant buy this matter: You do not have anough matter!');
+                return;
+            }
+            var amountSlots = playerData.findOne({
+                user: name
+            }).battlefield.ownSlots;
+
+            var cursor = battlefield.findOne({
+                user: name
+            })
+
+            //Iterate all own slots and fill matter into free one
+            for (i = 0; i < amountSlots; i++) {
+                if (cursor['owns' + i].input == "0000") {
                     //pay matter
                     var obj1 = {};
                     obj1['values.' + matterColor + '.matter'] = matter - cost;
@@ -517,6 +673,17 @@ if (Meteor.isServer) {
                         user: name
                     }, {
                         $set: obj1
+                    });
+                    //add purchased item
+                    var obj0 = {};
+                    obj0['owns' + i + '.stamp'] = new Date();
+                    obj0['owns' + i + '.input'] = fightId;
+                    obj0['owns' + i + '.control.min'] = slider_range[0];
+                    obj0['owns' + i + '.control.max'] = slider_range[1];
+                    battlefield.update({
+                        user: name
+                    }, {
+                        $set: obj0
                     });
                     break;
                 }
@@ -572,7 +739,7 @@ if (Meteor.isServer) {
             // PLAYERDATA //
             playerData.insert({
                 user: name,
-                level: 1,
+                level: 0,
                 mine: {
                     ownItem: {
                         blank: "",
@@ -654,9 +821,9 @@ if (Meteor.isServer) {
                         stolen: "null",
                         active: "false"
                     },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
+                    ownSlots: 3,
+                    scrSlots: 6,
+                    supSlots: 2,
                     science: 0.1,
                     minControl: 0.1,
                     maxControl: 10
@@ -845,9 +1012,55 @@ if (Meteor.isServer) {
                             min: 50,
                             max: 80
                         },
-                        sup0: ""
+                        sup0: "",
+                        sup1: ""
+                    },
+                    owns1: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 50,
+                            max: 80
+                        },
+                        sup0: "",
+                        sup1: ""
+                    },
+                    owns2: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 50,
+                            max: 80
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
                     scrs0: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 50
+                    },
+                    scrs1: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 50
+                    },
+                    scrs2: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 50
+                    },
+                    scrs3: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 50
+                    },
+                    scrs4: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 50
+                    },
+                    scrs5: {
                         victim: "",
                         stamp: "",
                         benefit: 50

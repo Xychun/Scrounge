@@ -45,15 +45,7 @@ if (Meteor.isClient) {
     ////// FUNCTION CALLS //////
     ////////////////////////////
 
-    timeClient = new Date();
-    Meteor.call("getServerTime", function(err, result) {
-        timeServer = result;
-        timeDifference = timeClient.getTime() - timeServer.getTime();
-        // console.log('timeServer' + timeServer.getTime());
-    });
-
     setInterval(function() {
-        updateTimers();
         updateTimers();
     }, 1 * 1000);
 
@@ -94,6 +86,9 @@ if (Meteor.isClient) {
         var test = Meteor.users.find({}, {
             fields: {
                 username: 1
+            },
+            sort: {
+                username: 1
             }
         }).fetch();
         return test;
@@ -109,6 +104,19 @@ if (Meteor.isClient) {
         });
     }
 
+    Template.battlefieldScrounge.current = function() {
+        return Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1
+            }
+        });
+    }
+
+    //////////////////
+    ////// MINE //////
+    //////////////////
     Template.mineBase.mineUnusedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
@@ -262,7 +270,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
-    Template.rightBaseUnusedSlots.mineUnusedScroungeSlots = function() {
+    Template.mineRightBaseUnusedSlots.mineUnusedScroungeSlots = function() {
         //Mine Scrounging
         var name = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -290,7 +298,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
-    Template.rightBaseUsedSlots.mineUsedScroungeSlots = function() {
+    Template.mineRightBaseUsedSlots.mineUsedScroungeSlots = function() {
         //Mine Scrounging
         var name = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -577,10 +585,465 @@ if (Meteor.isClient) {
     };
 
     Template.mineBase.matterBlocks = function() {
-
         return MatterBlocks.find({}, {
             sort: {
                 matter: 1
+            }
+        });
+
+    };
+
+    /////////////////////////
+    ////// BATTLEFIELD //////
+    /////////////////////////
+    Template.battlefieldBase.battlefieldUnusedSlots = function() {
+        //Battlefield
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        for (var i = 0; i < amountOwnSlots; i++) {
+            if (cursorBattlefield['owns' + i].input == "0000")
+                objects[i] = {};
+        }
+        return objects;
+    };
+
+    Template.battlefieldBase.battlefieldUsedSlots = function() {
+        //Battlefield
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = new Date().getTime() - timeDifference;
+        //Iterate OwnSlots
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var fightId = cursorBattlefield['owns' + i].input;
+            if (fightId > 0) {
+                var cursorFightArena = FightArenas.findOne({
+                    fight: fightId
+                });
+                var amountMaxSupSlots = cursorPlayerData.battlefield.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorBattlefield['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+                var supEpics = 0;
+
+                var supSlotsMemory = new Array();
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.battlefield.supSlots; k++) {
+                    var currentSup = cursorBattlefield['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
+                        var supBattlefield = battlefield.findOne({
+                            user: currentSup
+                        });
+                        var cursorCurrentSup = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                battlefield: 1,
+                                level: 1
+                            }
+                        });
+                        var currentSupScrSlots = cursorCurrentSup.battlefield.scrSlots;
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (supBattlefield['scrs' + m].victim == name) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        var result = indexScr;
+                        //calculate timeSpent of currentSup
+                        var supTime = supBattlefield['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        obj01['notFound'] = 0;
+                        obj01['prefix'] = 1;
+                        timers.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                        var supEpic = supBattlefield['scrs' + result].benefit;
+                        supEpics = supEpics + supEpic;
+                        obj00['epicness'] = supEpic + '%';
+                        obj00['level'] = cursorCurrentSup.level;
+                        supSlotsMemory[k] = obj00;
+                    }
+                }
+
+                obj0['color'] = cursorFightArena.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['xp'] = Math.floor((cursorFightArena.value * (100 + supEpics)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield';
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorBattlefield['owns' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorBattlefield['owns' + i].stamp));
+
+                obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+
+                if (amountUsedSupSlots == 0) {
+                    obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
+                } else {
+                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                }
+                obj0['epicness'] = supEpics + '%';
+
+                obj0['supporter'] = supSlotsMemory;
+
+                //für den range slider
+                obj0['slot'] = i;
+
+                objects[i] = obj0;
+            }
+        }
+        // für den Range Slider
+        Meteor.call("slider_init", function(err, result) {
+            for (var i = 0; i < amountOwnSlots; i++) {
+                var fightId = cursorBattlefield['owns' + i].input;
+                if (fightId > 0) {
+                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
+                }
+            }
+        });
+        return objects;
+    };
+
+    Template.battlefieldRightBaseUnusedSlots.battlefieldUnusedScroungeSlots = function() {
+        //Battlefield Scrounging
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        }).battlefield;
+        var amountScrSlots = cursorPlayerData.scrSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+        for (var i = 0; i < amountScrSlots; i++) {
+            if (cursorBattlefield['scrs' + i].victim == "")
+                objects[i] = {};
+        }
+        return objects;
+    };
+
+    Template.battlefieldRightBaseUsedSlots.battlefieldUsedScroungeSlots = function() {
+        //Battlefield Scrounging
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        }).battlefield;
+        var cursorMyBattlefield = battlefield.findOne({
+            user: name
+        });
+        var calculatedServerTime = new Date().getTime() - timeDifference;
+        var amountScrSlots = cursorPlayerData.scrSlots;
+        var objects = new Array();
+
+        //Iterate all Scrounging Slots
+        for (var i = 0; i < amountScrSlots; i++) {
+            //Is used?
+            if (cursorMyBattlefield['scrs' + i].victim != "") {
+                var victimName = cursorMyBattlefield['scrs' + i].victim;
+                var cursorVictimBattlefield = battlefield.findOne({
+                    user: victimName
+                });
+                var cursorPlayerDataVictim = playerData.findOne({
+                    user: victimName
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                });
+                var amountVictimOwnSlots = cursorPlayerDataVictim.battlefield.ownSlots;
+                var amountVictimSupSlots = cursorPlayerDataVictim.battlefield.supSlots;
+                //get index of the right own slot
+                var indexOwn = -1;
+                for (var j = 0; j < amountVictimOwnSlots; j++) {
+                    for (var k = 0; k < amountVictimSupSlots; k++) {
+                        if (cursorVictimBattlefield['owns' + j]['sup' + k] == name) indexOwn = j
+                    }
+                }
+                if (indexOwn == -1) {
+                    console.log('Template.rightBaseUsedSlots slot calculation problem - index own Slot');
+                    break;
+                }
+                //Calculate input values
+                var fightId = cursorVictimBattlefield['owns' + indexOwn].input;
+                var cursorFightArena = FightArenas.findOne({
+                    fight: fightId
+                });
+                var supEpics = 0;
+                var amountUsedSupSlots = 0;
+                //Iterate Supporter
+                for (var l = 0; l < cursorPlayerDataVictim.battlefield.supSlots; l++) {
+                    var currentSup = cursorVictimBattlefield['owns' + indexOwn]['sup' + l];
+                    //SupSlot used?
+                    if (currentSup.length != "") {
+                        amountUsedSupSlots++;
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                battlefield: 1
+                            }
+                        }).battlefield.scrSlots;
+                        var cursorSupBattlefield = battlefield.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (cursorSupBattlefield['scrs' + m].victim == victimName) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.rightBaseUsedSlots slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        //calculate timeSpent and epicness of cSup
+                        var supTime = cursorSupBattlefield['scrs' + indexScr].stamp.getTime();
+                        var supEpic = cursorSupBattlefield['scrs' + indexScr].benefit;
+                        supEpics = supEpics + supEpic;
+                    }
+                }
+                var obj0 = {};
+                obj0['color'] = cursorFightArena.color;
+                obj0['victim'] = victimName;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountVictimSupSlots;
+                obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield_scr';
+                obj0['remainingId'] = 'timerDec_' + i + '_battlefield_scr';
+
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = (cursorFightArena.time) - (calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp)
+                obj1['notFound'] = 0;
+                obj1['prefix'] = -1;
+                timers.push(obj1);
+                obj0['remaining'] = msToTime(obj1['miliseconds']);
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp));
+
+                obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['epicness'] = supEpics + '%';
+                objects[i] = obj0;
+            }
+        }
+        return objects;
+    };
+
+    Template.battlefieldScrounge.battlefieldSupporterSlots = function() {
+        //Battlefield
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        });
+        var name = self.cu;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        //Iterate OwnSlots
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var fightId = cursorBattlefield['owns' + i].input;
+            if (fightId > 0) {
+                var cursorFightArena = FightArenas.findOne({
+                    fight: fightId
+                });
+                var amountMaxSupSlots = cursorPlayerData.battlefield.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorBattlefield['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+                var supEpics = 0;
+
+                var supSlotsMemory = new Array();
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.battlefield.supSlots; k++) {
+                    var currentSup = cursorBattlefield['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
+                        var cursorCurrentSup = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                battlefield: 1,
+                                level: 1
+                            }
+                        });
+                        var currentSupScrSlots = cursorCurrentSup.battlefield.scrSlots;
+
+                        var supBattlefield = battlefield.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (supBattlefield['scrs' + m].victim == name) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        var result = indexScr;
+                        //calculate timespent by cSup
+                        var supTime = supBattlefield['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        obj01['notFound'] = 0;
+                        obj01['prefix'] = 1;
+                        timers.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                        var supEpic = supBattlefield['scrs' + result].benefit;
+                        supEpics = supEpics + supEpic;
+
+                        obj00['epicness'] = supEpic + '%';
+                        obj00['level'] = cursorCurrentSup.level;
+                        supSlotsMemory[k] = obj00;
+                    }
+                }
+
+
+                obj0['color'] = cursorFightArena.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountMaxSupSlots;
+                obj0['xp'] = Math.floor((cursorFightArena.value * (100 + supEpics)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                var myEpic = playerData.findOne({
+                    user: self.username
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                }).battlefield.scrItem.benefit;
+                obj0['xpChange'] = Math.floor((cursorFightArena.value * (100 + supEpics + myEpic)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield';
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorBattlefield['owns' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorBattlefield['owns' + i].stamp));
+
+                obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+
+                if (amountUsedSupSlots == 0) {
+                    obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
+                } else {
+                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                }
+                obj0['epicness'] = supEpics + '%';
+                obj0['epicnessChange'] = (supEpics + myEpic) + '%';
+
+                obj0['supporter'] = supSlotsMemory;
+
+                //für den range slider
+                obj0['slot'] = i;
+
+                //Make Slot scroungeable
+                obj0['goScrounging'] = 'goScroungingBattlefield_' + i;
+
+                obj0['index'] = i;
+                obj0['supporter'] = supSlotsMemory;
+                objects[i] = obj0;
+            }
+        }
+        return objects;
+    };
+
+    Template.battlefieldBase.arenaColors = function() {
+        var cursorArenaColors = FightArenas.find({}, {
+            fields: {
+                'color': 1
+            }
+        }).fetch();
+        var colorArray = new Array();
+        for (var i = 0; i < cursorArenaColors.length; i++) {
+            colorArray[i] = cursorArenaColors[i].color;
+        }
+        var result = distinct(colorArray);
+        var objects = new Array();
+        for (var j = 0; j < result.length; j++) {
+            objects[j] = {
+                'color': result[j]
+            };
+        }
+        return objects;
+    };
+
+    Template.battlefieldBase.fightArenas = function() {
+
+        return FightArenas.find({}, {
+            sort: {
+                fight: 1
             }
         });
 
@@ -590,13 +1053,13 @@ if (Meteor.isClient) {
         return Session.get("worldMapArray");
     };
 
-    Template.mineBuyMenu.playerData = function() {
+    Template.buyMenu.playerData = function() {
 
         return playerData.find({});
 
     };
 
-    Template.mineBuyMenu.mineSlots = function() {
+    Template.buyMenu.mineSlots = function() {
 
         return mineSlots.find({});
 
@@ -665,9 +1128,60 @@ if (Meteor.isClient) {
 
         },
 
+        'click #testButton3': function(e, t) {
+
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    cu: 1
+                }
+            });
+            var current = self.cu;
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    menu: 'mine'
+                }
+            });
+            Router.go('game', {
+                name: current,
+                menu: 'mine'
+            });
+
+        },
+
+        'click #testButton4': function(e, t) {
+
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    cu: 1
+                }
+            });
+            var current = self.cu;
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    menu: 'battlefield'
+                }
+            });
+            Router.go('game', {
+                name: current,
+                menu: 'battlefield'
+            });
+
+        },
+
         'click #switchToWorldMap': function(e, t) {
 
             if (!$("#world").length) {
+                Router.current().render('worldMap', {
+                    to: 'middle'
+                });
                 //if worldMapArray not initilazed: do it - otherwise use last active orientation
                 if (worldMapArray.length == 0) {
                     var currentUser = Meteor.users.findOne({
@@ -687,14 +1201,16 @@ if (Meteor.isClient) {
                     });
                     initWorldMapArray(cursorUser.x, cursorUser.y);
                 }
-                Router.current().render('worldMap', {
-                    to: 'middle'
-                });
-
 
             } else {
-
-                Router.current().render('mineBase', {
+            	var currentMenu = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }, {
+                        fields: {
+                            menu: 1
+                        }
+                    }).menu;
+                Router.current().render(currentMenu + 'Base', {
                     to: 'middle'
                 });
 
@@ -917,39 +1433,115 @@ if (Meteor.isClient) {
         'mouseleave .tooltip_hover': function(e, t) {
             fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "out");
         },
+
         'click .item': function(e, t) {
+            //Variante B
+            var currentUser = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1,
+                }
+            }).username;
+            var cursorPlayerData = playerData.findOne({
+                user: currentUser
+            });
+            $('#buyMenu').fadeIn();
             Session.set("clickedMatter", e.currentTarget.id);
+            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
+            $('#item').text("Matter: " + this.value);
+            var amountSupSlots = cursorPlayerData.mine.supSlots;
+            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            $('#price').text("Price: " + this.cost);
+
+            $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
+
+            if ($('#AmountScroungerSlots').children()) {
+                $('#AmountScroungerSlots').children().remove();
+            }
+
+            for (var i = 0; i < 6; i++) {
+
+                if (amountSupSlots > i) {
+
+                    $('#AmountScroungerSlots').append("<div class='sslots_available'> </div>");
+
+                } else {
+
+                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable'> </div>");
+
+                }
+            }
 
             //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
-
             //Variante A
-
             /*        var cursor = MatterBlocks.findOne({matter: e.currentTarget.id});
 
           console.log(cursor);
 
-          $('#mineBuyMenu').fadeIn();
-          $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
+          $('#buyMenu').fadeIn();
+          $("#buyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
           $('#price').text("Price: "+cursor.cost);
           $('#matter').text("Matter: "+cursor.value);*/
+        }
+    });
 
+    Template.battlefieldBase.events({
+    	'click .used_slot': function(e, t) {
+
+            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "100%"
+                }, 0);
+                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 13 + "px";
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                    "height": "0px"
+                }, 0, function() {
+
+                    $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                        "margin-top": "-13px"
+                    }, 150, function() {
+
+                        $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                    });
+                });
+
+            } else {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
+            }
+        },
+
+        'click .item': function(e, t) {
             //Variante B
-            $('#mineBuyMenu').fadeIn();
-            $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
-            $('#price').text("Price: " + this.cost);
-            $('#matter').text("Matter: " + this.value);
-
             var currentUser = Meteor.users.findOne({
                 _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1,
+                }
             }).username;
-
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
+            $('#buyMenu').fadeIn();
+            Session.set("clickedFight", e.currentTarget.id);
+            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Colosseum_" + this.color + ".png");
+            $('#item').text("XP: " + this.value);
+            var amountSupSlots = cursorPlayerData.battlefield.supSlots;
+            range_slider("Buy_Menu", cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl);
+            $('#time').text("Time: " + msToTime(this.time));
+            $('#price').text("Price: " + this.cost);
 
-            var amountSupSlots = cursorPlayerData.mine.supSlots;
-
-            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
             if ($('#AmountScroungerSlots').children()) {
@@ -969,7 +1561,6 @@ if (Meteor.isClient) {
                 }
             }
         }
-
     });
 
     Template.mineScrounge.events({
@@ -1007,44 +1598,97 @@ if (Meteor.isClient) {
             }
         },
 
-        'click .goScrounging': function(e, t) {
+        'click .goScroungingMine': function(e, t) {
             var slotId = e.currentTarget.id.split("_").pop();
-            Meteor.call('goScrounging', slotId, function(err) {
+            Meteor.call('goScroungingMine', slotId, function(err) {
                 if (err) {
-                    console.log('goScrounging: ' + err);
+                    console.log('goScroungingMine: ' + err);
                 }
             });
         }
     });
 
-    //TODO: noch nicht fertig !
-    Template.mineBuyMenu.events({
+	Template.battlefieldScrounge.events({
+		'click .scroungable': function(e, t) {
 
+            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".scroungable_advanced").height() == 0) {
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "height": "100%"
+                }, 0);
+                var height = $(e.currentTarget).next(".scroungable_advanced").height() + 13 + "px";
+                $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                    "height": "0px"
+                }, 0, function() {
+
+                    $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                        "margin-top": "-13px"
+                    }, 150, function() {
+
+                        $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                    });
+                });
+
+            } else {
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
+            }
+        },
+
+        'click .goScroungingBattlefield': function(e, t) {
+            var slotId = e.currentTarget.id.split("_").pop();
+            Meteor.call('goScroungingBattlefield', slotId, function(err) {
+                if (err) {
+                    console.log('goScroungingBattlefield: ' + err);
+                }
+            });
+        }
+	});
+
+    //TODO: noch nicht fertig !
+    Template.buyMenu.events({
         'click #buyMenuYes': function(e, t) {
 
-            var currentUser = Meteor.users.findOne({
+            var menu = Meteor.users.findOne({
                 _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: currentUser
-            });
+            }, {
+                fields: {
+                    menu: 1,
+                }
+            }).menu;
 
             // Werte des Range Sliders
             var slider_range = $('#range_slider_Buy_Menu').slider("option", "values");
 
             //updating the database
-            Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
-                if (err) {
-                    console.log(err);
-                }
-            });
-
-            $('#mineBuyMenu').fadeOut();
+            if (menu == 'mine') {
+                Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+            if (menu == 'battlefield'){
+            	Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+            $('#buyMenu').fadeOut();
 
         },
 
         'click #buyMenuNo': function(e, t) {
-            $('#mineBuyMenu').fadeOut();
+            $('#buyMenu').fadeOut();
 
         },
     });
@@ -1077,9 +1721,6 @@ if (Meteor.isClient) {
                     break;
             }
             Session.set("worldMapArray", worldMapArray);
-            // Router.current().render('worldMap', {
-            //     to: 'middle'
-            // });
         },
 
     });
@@ -1708,7 +2349,7 @@ if (Meteor.isClient) {
         for (var i = 0; i < mapRows; i++) {
             worldMapArray.push(createRowObject(orientationX, orientationY, maxX, maxY, i));
         }
-        console.log(worldMapArray);
+        Session.set("worldMapArray", worldMapArray);
     }
 
     function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
@@ -1819,15 +2460,6 @@ if (Meteor.isClient) {
             var cu = self.cu;
             if (cu && menu) {
                 Meteor.subscribe(menu, cu, function(rdy) {
-                    // if (cu == self.username) {
-                    //     Router.current().render('mineBase', {
-                    //         to: 'middle'
-                    //     });
-                    // } else {
-                    //     Router.current().render('mineScrounge', {
-                    //         to: 'middle'
-                    //     });
-                    // }
                     // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
                 });
             } else {

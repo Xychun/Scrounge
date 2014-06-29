@@ -230,6 +230,14 @@ if (Meteor.isServer) {
         }
     });
 
+    Meteor.publish("FightArenas", function() {
+        if (this.userId) {
+            return FightArenas.find({});
+        } else {
+            this.ready();
+        }
+    });
+
     Meteor.publish("mine", function(current) {
         if (this.userId) {
             return mine.find({});
@@ -248,11 +256,9 @@ if (Meteor.isServer) {
         }
     });
 
-    Meteor.publish("colosseum", function(current) {
+    Meteor.publish("battlefield", function(current) {
         if (this.userId) {
-            return colosseum.find({
-                user: current
-            });
+            return battlefield.find({});
         } else {
             this.ready();
         }

@@ -149,7 +149,9 @@
 
     <!-- Zu Testzwecken -->
     <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
-    <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"></div>
+    <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div>
+    <div id="testButton3" style="position: absolute; left: 150px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: green">M</div>
+    <div id="testButton4" style="position: absolute; left: 210px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: purple">B</div>
 
 </template>
 
@@ -167,7 +169,7 @@
 
 <template name="mineBase">
     <div id="mitte">
-        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own menu!</div>
+        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own mine menu!</div>
         <div class="areas left bot">
             <div id="up_slider_base" class="hover_slide_height top slider_base_height">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
@@ -266,7 +268,7 @@
             </div>
             <div id="scrounge_area">
                 <div id="scrounge_area_content" class="relative">
-                    {{> rightBaseUnusedSlots}} {{> rightBaseUsedSlots}}
+                    {{> mineRightBaseUnusedSlots}} {{> mineRightBaseUsedSlots}}
                 </div>
             </div>
 
@@ -277,7 +279,7 @@
     </div>
 </template>
 
-<template name="rightBaseUnusedSlots">
+<template name="mineRightBaseUnusedSlots">
     {{#each mineUnusedScroungeSlots}}
     <div class="unused_slot relative">
         <img src="/Aufloesung1920x1080/Interface/ActionsYellowSlot.png">
@@ -288,7 +290,7 @@
     {{/each}}
 </template>
 
-<template name="rightBaseUsedSlots">
+<template name="mineRightBaseUsedSlots">
     {{#each mineUsedScroungeSlots}}
     <div class="used_slot relative">
         <img src="/Aufloesung1920x1080/Interface/ActionsYellowSlot.png">
@@ -382,7 +384,7 @@
                         <!-- TO-DO: Muss noch umgebaut werden: nach rechts (ein großes Div?)-->
                         <div class="scroungable relative">
                             <img src="/Aufloesung1920x1080/Interface/ActionsScroungingAvailable.png">
-                            <div id="{{goScrounging}}" class="goScrounging">
+                            <div id="{{goScrounging}}" class="goScroungingMine">
                                 <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
                             </div>
                             <div class="scroungableText">
@@ -419,17 +421,268 @@
     </div>
 </template>
 
-<template name="mineBuyMenu">
+<!-- BATTLEFIELDBASE -->
 
-    <div id="mineBuyMenu" class="left right">
+<template name="battlefieldBase">
+    <div id="mitte">
+        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own battlefield menu!</div>
+        <div class="areas left bot">
+            <div id="up_slider_base" class="hover_slide_height top slider_base_height">
+                <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
+            </div>
+            <div id="base_area">
+                <div id="base_area_content" class="relative">
 
-        <div id="mineBuyMenuFrame" class="left right">
+                    {{#each battlefieldUnusedSlots}}
+                    <div class="unused_slot relative">
+                        <img src="/Aufloesung1920x1080/Interface/ActionsGreenSlot.png">
+                        <div class="slot_icon">
+                            <img src="/Aufloesung1920x1080/Battlefield/ColosseumEmptySlot.png">
+                        </div>
+                        <div class="slot_upper_bar">
+                            <div id="left_slider_slot_colors" class="left slot_colors_slider test_colors_pfeil_left"></div>
+                            <div class="slot_colors_wrapper">
+                                <div class="left slot_colors_edges"></div>
+                                <div class="slot_colors_content">
+                                    {{#each arenaColors}}
+                                    <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItem{{color}}Normal.png">{{/each}}
+                                </div>
+                                <div class="right slot_colors_edges"></div>
+                            </div>
+                            <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
+                        </div>
+                        <div class="slot_items">
+                            <div id="left_slider_slot_items" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                            <div class="slot_items_wrapper">
+                                <div class="slot_items_content relative">
+                                    {{#each fightArenas}}
+                                    <div id={{fight}} class="item relative">
+                                        <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Colosseum_{{color}}.png">
+                                        <div class="itemTextValue">{{value}}XP</div>
+                                        <div class="itemTextCost">{{cost}}</div>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div id="right_slider_slot_items" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                        </div>
+                    </div>
+                    {{/each}} {{#each battlefieldUsedSlots}}
+                    <div class="used_slot relative">
+                        <img src="/Aufloesung1920x1080/Interface/ActionsGreenSlot.png">
+                        <div class="slot_icon">
+                            <img src="/Aufloesung1920x1080/Battlefield/Colosseum_{{color}}.png">
+                        </div>
+                        <div class="slot_upper_bar tooltip_hover">
+                            <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
+                            <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
+                            <div id="range_slider_{{slot}}" class="range_slider"></div>
+                        </div>
+                        <div class="slot_stats">
+                            <p class='text relative'>Time: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>/{{timeOverall}}</p>
+                            <p class='text relative'>Slots: {{slots}}</p>
+                            <p class='text relative'>XP: {{xp}}</p>
+                        </div>
+                    </div>
 
-            <img id="mineBuyMenuMatterBlock">
+                    <div class="used_slot_advanced relative">
+                        <div class="slot_advanced_stats relative">
+                            <p class='text relative'>Profit: {{profit}}</p>
+                            <p class='text relative'>Epicness: {{epicness}}</p>
+                        </div>
+                        {{#each supporter}}
+                        <div class="scrounger_slot relative">
+                            <div class="scrounger_icon"></div>
+                            <div class="scrounger_stats_wrapper">
+                                <div class="scrounger_stats relative">
+                                    <p class='text relative'>Epicness: {{epicness}}</p>
+                                    <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                                        <p class='text relative'>Level: {{level}}</p>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <img id="base_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
+            </div>
+        </div>
 
-            <div id="mineBuyMenuText">
+        <div id="seperation_bar" class="left right"></div>
+
+
+        <div class="areas right bot">
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
+            </div>
+            <div id="scrounge_area">
+                <div id="scrounge_area_content" class="relative">
+                    {{> battlefieldRightBaseUnusedSlots}} {{> battlefieldRightBaseUsedSlots}}
+                </div>
+            </div>
+
+            <div id="down_slider_scrounge" class="hover_slide_height bot">
+                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="battlefieldRightBaseUnusedSlots">
+    {{#each battlefieldUnusedScroungeSlots}}
+    <div class="unused_slot relative">
+        <img src="/Aufloesung1920x1080/Interface/ActionsYellowSlot.png">
+        <div class="slot_icon">
+            <img src="/Aufloesung1920x1080/Battlefield/ColosseumEmptySlot.png">
+        </div>
+    </div>
+    {{/each}}
+</template>
+
+<template name="battlefieldRightBaseUsedSlots">
+    {{#each battlefieldUsedScroungeSlots}}
+    <div class="used_slot relative">
+        <img src="/Aufloesung1920x1080/Interface/ActionsYellowSlot.png">
+        <div class="slot_icon">
+            <img src="/Aufloesung1920x1080/Battlefield/Colosseum_{{color}}.png">
+        </div>
+        <!-- Falls nacher der Range Slider bei den Scrounge Slots auch angezeit werden soll -->
+        <!-- <div class="slot_upper_bar tooltip_hover">
+            <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
+            <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
+            <div id="range_slider_{{slot}}" class="range_slider"></div>
+        </div> -->
+        <div class="slot_stats">
+            <p class='text relative'>Profit: {{profit}}</p>
+            <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="used_slot_advanced relative">
+        <div class="slot_advanced_stats relative">
+            <p class='text relative'>Battlefieldd: {{battlefieldd}}</p>
+            <p class='text relative'>Slots: {{slots}}</p>
+            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                <p class='text relative'>Miningrate: {{miningrate}}</p>
+            </p>
+        </div>
+    </div>
+    {{/each}}
+</template>
+
+
+
+<!-- BATTLEFIELDSCROUNGE -->
+
+<template name="battlefieldScrounge">
+    <div id="mitte">
+
+        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; Current user menu is {{#with current}} {{cu}} {{/with}}</div>
+
+        <div id="scroungeArea" class="bot">
+
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <img id="scroungeUp" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+            </div>
+
+            <div id="scroungeAreaWrapper">
+
+                <div id="scroungeAreaContent" class="relative top">
+
+                    <div id="scroungeAreaContentLeft" class="left">
+
+                        {{#each battlefieldSupporterSlots}}
+                        <div class="scroungable relative">
+                            <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
+                            <div class="slot_icon">
+                                <img src="/Aufloesung1920x1080/Battlefield/Colosseum_green.png">
+                            </div>
+                            <div class="slot_upper_bar">
+                                <div class="slot_range"></div>
+                            </div>
+                            <div class="slot_stats">
+                                <p class='text relative'>Time: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>/{{timeOverall}}</p>
+                                <p class='text relative'>Slots: {{slots}}</p>
+                                <p class='text relative'>XP: {{xp}}</p>
+                            </div>
+                        </div>
+
+                        <div class="scroungable_advanced relative">
+                            <div class="slot_advanced_stats relative">
+                                <p class='text relative'>Epicness: {{epicness}}</p>
+                            </div>
+                            {{#each supporter}}
+                            <div class="scrounger_slot relative">
+                                <div class="scrounger_icon"></div>
+                                <div class="scrounger_stats_wrapper">
+                                    <div class="scrounger_stats relative">
+                                        <p class='text relative'>Epicness: {{epicness}}</p>
+                                        <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                                        </p>
+                                        <p class='text relative'>Level: {{level}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+
+                        <!-- TO-DO: Muss noch umgebaut werden: nach rechts (ein großes Div?)-->
+                        <div class="scroungable relative">
+                            <img src="/Aufloesung1920x1080/Interface/ActionsScroungingAvailable.png">
+                            <div id="{{goScrounging}}" class="goScroungingBattlefield">
+                                <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
+                            </div>
+                            <div class="scroungableText">
+                                <p class='text relative'>Epicness: {{epicnessChange}}</p>
+                                <p class='text relative'>Slots: {{slotsChange}}</p>
+                                <p class='text relative'>XP: {{xpChange}}</p>
+                            </div>
+
+                        </div>
+                        {{/each}}
+                    </div>
+
+                    <div id="scroungeAreaContentRight" class="right">
+
+
+
+
+                        <div class="scroungable relative">
+                            <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="seperationBarScrounge" class="left right"></div>
+
+            </div>
+
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <img id="scroungeDown" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- BUYMENU -->
+
+<template name="buyMenu">
+
+    <div id="buyMenu" class="left right">
+
+        <div id="buyMenuFrame" class="left right">
+
+            <img id="buyMenuItem">
+
+            <div id="buyMenuText">
                 <p id="price" class='relative'></p>
-                <p id="matter" class='relative'></p>
+                <p id="item" class='relative'></p>
                 <p id="time" class='relative'></p>
             </div>
 
@@ -453,10 +706,13 @@
 
         </div>
 
-        <div id="mineBuyMenuBottomEnd" class="left right"></div>
+        <div id="buyMenuBottomEnd" class="left right"></div>
     </div>
 
 </template>
+
+
+
 
 <template name="characterView">
 
@@ -556,7 +812,7 @@
             <!-- Beispiel Möglichkeit zur Variabilität 2: Diese sechs slots bei allen inneren divs im HTML-Gerüst vorhalten und entsprechen auf "hide" oder "visible" setzen -->
             <!-- Alternativ siehe oben: diese sechs slots aus den "worldMapPlayerPlace"-div ganz raushalten und als gesondertes div je nach Bedarf drüberschieben -->
 
-            <div id="worldMapSlotsPreviewMine" class="worldMapSlotsPreview" style="right: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png)">
+            <div id="worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="right: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)">
 
                 <div class="worldMapSlotsPreviewText">0 / 4</div>
 

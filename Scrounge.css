@@ -228,7 +228,7 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
 /*///////////////////////////////////////////////////////////////////////////   MINE BUY MENU   ///////////////////////////////////////////////////////////////////////////*/
- #mineBuyMenu {
+ #buyMenu {
     margin: 0px auto;
     top:162px;
     bottom:162px;
@@ -236,7 +236,7 @@ img.i7 {
     z-index: 5;
     display: none;
 }
-#mineBuyMenuFrame {
+#buyMenuFrame {
     top: 0px;
     display: block;
     bottom: 15px;
@@ -244,7 +244,7 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackground.png);
     background-repeat: no-repeat;
 }
-#mineBuyMenuBottomEnd {
+#buyMenuBottomEnd {
     margin: 0px auto;
     bottom: 0px;
     width: 778px;
@@ -268,7 +268,7 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png);
     background-repeat: no-repeat;
 }
-#mineBuyMenuText {
+#buyMenuText {
     left:150px;
     top: 70px;
     font-family:"OCR A Std";
@@ -276,7 +276,7 @@ img.i7 {
     color: white;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
-#mineBuyMenuMatterBlock {
+#buyMenuItem {
     width: 85px;
     height: 85px;
     left: 33px;
