@@ -38,6 +38,8 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     timers = new Array();
+    mapRows = 4;
+    mapColumns = 6;
 
     ////////////////////////////
     ////// FUNCTION CALLS //////
@@ -584,6 +586,10 @@ if (Meteor.isClient) {
 
     };
 
+    Template.worldMap.worldMapArray = function() {
+        return Session.get("worldMapArray");
+    };
+
     Template.mineBuyMenu.playerData = function() {
 
         return playerData.find({});
@@ -614,7 +620,7 @@ if (Meteor.isClient) {
 
     }
 
-/*    Template.worldMap.rendered= function() {
+    /*    Template.worldMap.rendered= function() {
       createWorldMap();
     }*/
 
@@ -662,10 +668,29 @@ if (Meteor.isClient) {
         'click #switchToWorldMap': function(e, t) {
 
             if (!$("#world").length) {
-
+                //if worldMapArray not initilazed: do it - otherwise use last active orientation
+                if (worldMapArray.length == 0) {
+                    var currentUser = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }, {
+                        fields: {
+                            cu: 1
+                        }
+                    }).cu;
+                    var cursorUser = Meteor.users.findOne({
+                        username: currentUser
+                    }, {
+                        fields: {
+                            x: 1,
+                            y: 1
+                        }
+                    });
+                    initWorldMapArray(cursorUser.x, cursorUser.y);
+                }
                 Router.current().render('worldMap', {
                     to: 'middle'
                 });
+
 
             } else {
 
@@ -1025,9 +1050,36 @@ if (Meteor.isClient) {
     });
 
     Template.worldMap.events({
-
-      'click .worldMapNavigators': function(e, t) {
-            navigateWorldMap($(e.currentTarget).attr('id'));
+        'click .worldMapNavigators': function(e, t) {
+            switch (e.currentTarget.id) {
+                case "worldMapGoUp":
+                    var yValue = worldMapArray[0].columns[0].y + 1;
+                    if (yValue > mapRows - 1) yValue = 0
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue);
+                    break;
+                case "worldMapGoDown":
+                    var yValue = worldMapArray[0].columns[0].y - 1;
+                    if (yValue < 0) yValue = mapRows - 1
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue);
+                    break;
+                case "worldMapGoRight":
+                    var xValue = worldMapArray[0].columns[0].x + 1;
+                    if (xValue > mapColumns - 1) xValue = 0
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y);
+                    break;
+                case "worldMapGoLeft":
+                    var xValue = worldMapArray[0].columns[0].x - 1;
+                    if (xValue < 0) xValue = mapColumns - 1
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y);
+                    break;
+                default:
+                    console.log('default case: worldMapNavigators');
+                    break;
+            }
+            Session.set("worldMapArray", worldMapArray);
+            // Router.current().render('worldMap', {
+            //     to: 'middle'
+            // });
         },
 
     });
@@ -1588,29 +1640,37 @@ if (Meteor.isClient) {
         var top = parseInt($('#currentMapView').css("margin-top"));
         var right = parseInt($('#currentMapView').css("margin-right"));
 
-        switch(direction) {
+        switch (direction) {
 
             case 'worldMapGoUp':
 
-                $('#currentMapView').filter(':not(:animated)').animate({ "margin-top": (top+300)+"px" }, 250);
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-top": (top + 300) + "px"
+                }, 250);
 
                 break;
 
             case 'worldMapGoDown':
-                
-                $('#currentMapView').filter(':not(:animated)').animate({ "margin-top": (top-300)+"px" }, 250);
+
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-top": (top - 300) + "px"
+                }, 250);
 
                 break;
 
             case 'worldMapGoRight':
-                
-                $('#currentMapView').filter(':not(:animated)').animate({ "margin-right": (right+300)+"px" }, 250);
+
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-right": (right + 300) + "px"
+                }, 250);
 
                 break;
 
             case 'worldMapGoLeft':
-                
-                $('#currentMapView').filter(':not(:animated)').animate({ "margin-right": (right-300)+"px" }, 250);
+
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-right": (right - 300) + "px"
+                }, 250);
 
                 break;
 
@@ -1621,6 +1681,124 @@ if (Meteor.isClient) {
         }
 
     }
+
+    var worldMapArray = new Array();
+
+    function initWorldMapArray(orientationX, orientationY) {
+        //get max map size
+        var maxX = worldMapFields.find({}, {
+            fields: {
+                x: 1
+            },
+            sort: {
+                x: -1
+            }
+        }).fetch()[0].x;
+        var maxY = worldMapFields.find({}, {
+            fields: {
+                y: 1
+            },
+            sort: {
+                y: -1
+            }
+        }).fetch()[0].y;
+        //reset array
+        worldMapArray.length = 0;
+        //go all rows
+        for (var i = 0; i < mapRows; i++) {
+            worldMapArray.push(createRowObject(orientationX, orientationY, maxX, maxY, i));
+        }
+        console.log(worldMapArray);
+    }
+
+    function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
+        var row = {};
+        var column = new Array();
+        //go all columns
+        for (var j = 0; j < mapColumns; j++) {
+            //if coordinates are bigger than map max: get new data with modulo for infinite map size
+            var user = worldMapFields.findOne({
+                x: (orientationX + j) % (maxX + 1),
+                y: (orientationY + rowNo) % (maxY + 1)
+            }, {
+                fields: {
+                    user: 1
+                }
+            }).user;
+            var infoMemory = {};
+            //without user push empty object
+            if (user != '') {
+                var playerLevel = playerData.findOne({
+                    user: user
+                }, {
+                    fields: {
+                        level: 1
+                    }
+                }).level;
+                infoMemory['playerLevel'] = playerLevel;
+                infoMemory['playerImage'] = "worldMapPlayerImage";
+                infoMemory['playerName'] = user;
+            }
+            infoMemory['x'] = (orientationX + j) % (maxX + 1);
+            infoMemory['y'] = (orientationY + rowNo) % (maxY + 1);
+            infoMemory['left'] = j * 300;
+            infoMemory['bottom'] = rowNo * 250;
+            column.push(infoMemory);
+        }
+        row['columns'] = column;
+        return row;
+    }
+
+    //TO-DO: Datenbankanfrage optimieren + debuggen
+    // function updateWorldMapArray(direction) {
+    //     //get max map size
+    //     var maxX = worldMapFields.find({}, {
+    //         fields: {
+    //             x: 1
+    //         },
+    //         sort: {
+    //             x: -1
+    //         }
+    //     }).fetch()[0].x;
+    //     var maxY = worldMapFields.find({}, {
+    //         fields: {
+    //             y: 1
+    //         },
+    //         sort: {
+    //             y: -1
+    //         }
+    //     }).fetch()[0].y;
+    //     if (direction == "worldMapGoUp" || direction == "worldMapGoDown") {
+    //         var result = getNewRow(direction, maxX, maxY);
+    //     } else {
+    //     	//To-DO: getNewColumn implementieren
+    //     }
+    //     return result;
+    // }
+
+    // function getNewRow(direction, maxX, maxY) {
+    //     var newArray = new Array();
+    //     if (direction == "worldMapGoUp") {
+    //         //slide useable data
+    //         for (var i = 0; i < worldMapArray.length - 1; i++) {
+    //             newArray[i] = worldMapArray[i + 1];
+    //         }
+    //         //create the NEW row
+    //         newArray[mapRows - 1] = createRowObject(worldMapArray[0].columns[0].x, worldMapArray[0].columns[0].y + 1, maxX, maxY, mapRows - 1, mapColumns);
+    //     } else {
+    //         //slide useable data
+    //         for (var i = worldMapArray.length - 1; i > 0; i--) {
+    //             newArray[i] = worldMapArray[i - 1];
+    //         }
+    //         //create the NEW row
+    //         newArray[0] = createRowObject(worldMapArray[0].columns[0].x, worldMapArray[0].columns[0].y - 1, maxX, maxY, mapRows - 1, mapColumns);
+    //     }
+    //     return newArray;
+    // }
+
+    // function getNewColumn(direction, maxX, maxY) {
+    //     too complex
+    // }
 
     //Deps.Autorun
     Deps.autorun(function() {

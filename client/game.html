@@ -1,5 +1,5 @@
 <template name="standardBorder">
-	<div id="switchToWorldMap" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 5; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)"></div>
+    <div id="switchToWorldMap" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 5; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)"></div>
     <div id="links" class="top left">
         <div class="corner top left">
             <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
@@ -148,7 +148,7 @@
     </div>
 
     <!-- Zu Testzwecken -->
-<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"></div>
 
 </template>
@@ -488,390 +488,109 @@
 
 <template name="worldMap">
 
-	<div id="worldViewPort">
+    <div id="worldViewPort">
 
-		<div class="worldMapNavigators" id="worldMapGoUp">  </div>
-		<div class="worldMapNavigators" id="worldMapGoDown">  </div>
-		<div class="worldMapNavigators" id="worldMapGoRight">  </div>
-		<div class="worldMapNavigators" id="worldMapGoLeft">  </div>
+        <div class="worldMapNavigators" id="worldMapGoUp"></div>
+        <div class="worldMapNavigators" id="worldMapGoDown"></div>
+        <div class="worldMapNavigators" id="worldMapGoRight"></div>
+        <div class="worldMapNavigators" id="worldMapGoLeft"></div>
 
 
-		<!-- currentMapView umfasst alle slots, die ein Spieler sehen kann. Beim Navigieren via der Richtungspfeile, werden entsprechend der Bewegungsrichtung die divs neu mit Daten befüllt -->
-		<div id="currentMapView">
+        <!-- currentMapView umfasst alle slots, die ein Spieler sehen kann. Beim Navigieren via der Richtungspfeile, werden entsprechend der Bewegungsrichtung die divs neu mit Daten befüllt -->
+        <div id="currentMapView">
 
 
 
-		<!-- Möglichkeit zur Variabilität 1: Diese sechs slots selbst in ein div packen und dieses eine div variabel über das jeweils angewählte div legen mit den entsprechenden Daten -->
-		<!-- Hierbei handelt es sich um die slot-preview, die um jeden PlayerPlace herum angezeigt werden soll. Mit der Info, ob man hier scroungen kann und wie viele slots noch frei sind -->
+            <!-- Möglichkeit zur Variabilität 1: Diese sechs slots selbst in ein div packen und dieses eine div variabel über das jeweils angewählte div legen mit den entsprechenden Daten -->
+            <!-- Hierbei handelt es sich um die slot-preview, die um jeden PlayerPlace herum angezeigt werden soll. Mit der Info, ob man hier scroungen kann und wie viele slots noch frei sind -->
 
-		<!-- worldMapSlotsPreview enthält die sechs Divs mit der Slotpreview. Positionierung müsste dann via javascript variabel erfolgen. Bisher hardcoded auf DIV links (GELB) -->
-		<div id="worldMapSlotsPreview" style="right: 1200px; top: 250px;"> 
+            <!-- worldMapSlotsPreview enthält die sechs Divs mit der Slotpreview. Positionierung müsste dann via javascript variabel erfolgen. Bisher hardcoded auf DIV links (GELB) -->
+            <div id="worldMapSlotsPreview" style="right: 1200px; top: 250px;">
 
-			<div class="worldMapSlotsPreview" style="right: -50px; top: -50px;"> 
+                <div class="worldMapSlotsPreview" style="right: -50px; top: -50px;">
 
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
+                    <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
-			<div class="worldMapSlotsPreview" style="right: -50px; bottom: -50px;"> 
+                </div>
+                <div class="worldMapSlotsPreview" style="right: -50px; bottom: -50px;">
 
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
+                    <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
-			<div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px;"> 
+                </div>
+                <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px;">
 
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
+                    <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
-			<div class="worldMapSlotsPreview" style="left: -50px; top: -50px;"> 
+                </div>
+                <div class="worldMapSlotsPreview" style="left: -50px; top: -50px;">
 
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
+                    <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
-			<div class="worldMapSlotsPreview" style="left: -50px; bottom: -50px;"> 
+                </div>
+                <div class="worldMapSlotsPreview" style="left: -50px; bottom: -50px;">
 
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
+                    <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
-			<div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px;"> 
+                </div>
+                <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px;">
 
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
+                    <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
+                </div>
 
-		</div>
+            </div>
 
+            <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
+            {{#each worldMapArray}} {{#each columns}}
+            <div class="worldMapPlayerPlace" style="left: {{left}}px; bottom: {{bottom}}px; opacity: 0.5">
+                <div class="worldMapPlayerStats">
 
+                    <div class="worldMapPlayerLevel">{{playerLevel}}</div>
+                    <div class="{{playerImage}}"></div>
+                    <div class="worldMapPlayerName">{{playerName}}</div>
 
+                </div>
+            </div>
+            {{/each}} {{/each}}
 
+            <!-- Beispiel Möglichkeit zur Variabilität 2: Diese sechs slots bei allen inneren divs im HTML-Gerüst vorhalten und entsprechen auf "hide" oder "visible" setzen -->
+            <!-- Alternativ siehe oben: diese sechs slots aus den "worldMapPlayerPlace"-div ganz raushalten und als gesondertes div je nach Bedarf drüberschieben -->
 
+            <div id="worldMapSlotsPreviewMine" class="worldMapSlotsPreview" style="right: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png)">
 
-		<!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-		<!-- Row 1 -->
+            </div>
+            <div id="worldMapSlotsPreviewLaboratory" class="worldMapSlotsPreview" style="right: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewLaboratory.png)">
 
-		<div class="worldMapPlayerPlace" style="right: 0px; top: 0px; opacity: 0.5"> 
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			<div class="worldMapPlayerStats"> 
+            </div>
+            <div id="worldMapSlotsPreviewWorkshop" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewWorkshop.png)">
 
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
+            </div>
+            <div id="worldMapSlotsPreviewThievery" class="worldMapSlotsPreview" style="left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewThievery.png)">
 
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 300px; top: 0px; opacity: 0.5"> 
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			<div class="worldMapPlayerStats"> 
+            </div>
+            <div id="worldMapSlotsPreviewSmelter" class="worldMapSlotsPreview" style="left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewSmelter.png)">
 
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			</div>
+            </div>
+            <div id="worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)">
 
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 600px; top: 0px; opacity: 0.5"> 
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-			<div class="worldMapPlayerStats"> 
+            </div>
 
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
+        </div>
+    </div>
 
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 900px; top: 0px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1200px; top: 0px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1500px; top: 0px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-
-		<!-- Row 2 -->
-
-		<div class="worldMapPlayerPlace" style="right: 0px; top: 250px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		
-
-
-		<div class="worldMapPlayerPlace" style="background-color: green; right: 300px; top: 250px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-
-			<!-- Beispiel Möglichkeit zur Variabilität 2: Diese sechs slots bei allen inneren divs im HTML-Gerüst vorhalten und entsprechen auf "hide" oder "visible" setzen -->
-			<!-- Alternativ siehe oben: diese sechs slots aus den "worldMapPlayerPlace"-div ganz raushalten und als gesondertes div je nach Bedarf drüberschieben -->
-
-			<div id= "worldMapSlotsPreviewMine" class="worldMapSlotsPreview" style="right: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png)"> 
-
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
-
-			</div>
-			<div id= "worldMapSlotsPreviewLaboratory" class="worldMapSlotsPreview" style="right: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewLaboratory.png)"> 
-
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
-
-			</div>
-			<div id= "worldMapSlotsPreviewWorkshop" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewWorkshop.png)"> 
-
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
-
-			</div>
-			<div id= "worldMapSlotsPreviewThievery" class="worldMapSlotsPreview" style="left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewThievery.png)"> 
-
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
-
-			</div>
-			<div id= "worldMapSlotsPreviewSmelter" class="worldMapSlotsPreview" style="left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewSmelter.png)"> 
-
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
-
-			</div>
-			<div id= "worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)"> 
-
-				<div class="worldMapSlotsPreviewText"> 0 / 4 </div>
-
-			</div>
-
-		</div>
-
-
-
-
-		<div class="worldMapPlayerPlace" style="right: 600px; top: 250px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 900px; top: 250px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1200px; top: 250px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1500px; top: 250px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-
-		<!-- Row 3 -->
-
-		<div class="worldMapPlayerPlace" style="right: 0px; top: 500px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 300px; top: 500px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 600px; top: 500px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 900px; top: 500px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1200px; top: 500px"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1500px; top: 500px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-
-		<!-- Row 4 -->
-
-		<div class="worldMapPlayerPlace" style="right: 0px; top: 750px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 300px; top: 750px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 600px; top: 750px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 900px; top: 750px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1200px; top: 750px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-		<div class="worldMapPlayerPlace" style="right: 1500px; top: 750px; opacity: 0.5"> 
-
-			<div class="worldMapPlayerStats"> 
-
-				<div class="worldMapPlayerLevel"> LVL 1</div>
-				<div class="worldMapPlayerImage"> </div>
-				<div class="worldMapPlayerName"> Hurricane </div>
-
-			</div>
-
-		</div>
-
-
-		</div>
-
-		<div id="world">  </div>
-
-	</div>
-
+    <div id="world"></div>
 </template>
 
 <!-- <template name="characterScreen">
