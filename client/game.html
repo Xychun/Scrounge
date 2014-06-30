@@ -155,16 +155,6 @@
 
 </template>
 
-
-<!-- TEST SECTION FOR USER SWITCH -->
-<template name="mapSimulation">
-    <div style="position: absolute; right: 20px; top: 20%">
-        {{#each users}}
-        <div id="{{username}}" class="testUserChange" style="position: relative; background-color: yellow; font-size: 20pt; font-weight: bold; margin-right: 0">{{username}}</div>
-        <br>{{/each}}
-    </div>
-</template>
-
 <!-- MINEBASE -->
 
 <template name="mineBase">
@@ -565,7 +555,6 @@
 
     <div class="used_slot_advanced relative">
         <div class="slot_advanced_stats relative">
-            <p class='text relative'>Battlefieldd: {{battlefieldd}}</p>
             <p class='text relative'>Slots: {{slots}}</p>
             <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
                 <p class='text relative'>Miningrate: {{miningrate}}</p>
@@ -798,7 +787,7 @@
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
-            <div class="worldMapPlayerPlace" style="left: {{left}}px; bottom: {{bottom}}px; opacity: 0.5">
+            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; opacity: 0.5">
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>

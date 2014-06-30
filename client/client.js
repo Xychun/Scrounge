@@ -80,20 +80,6 @@ if (Meteor.isClient) {
     ////////////////////////////
     ///// TEMPLATE RETURNS /////
     ////////////////////////////
-
-    //TO-DO nur für Testzwecke
-    Template.mapSimulation.users = function() {
-        var test = Meteor.users.find({}, {
-            fields: {
-                username: 1
-            },
-            sort: {
-                username: 1
-            }
-        }).fetch();
-        return test;
-    };
-
     Template.mineScrounge.current = function() {
         return Meteor.users.findOne({
             _id: Meteor.userId()
@@ -1090,32 +1076,6 @@ if (Meteor.isClient) {
     //////////////////
     ///// EVENTS /////
     //////////////////
-
-    //TO-DO: Testzwecke Map Simulation
-    Template.mapSimulation.events({
-        'click .testUserChange': function(e, t) {
-            var current = e.currentTarget.id;
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            });
-            Meteor.users.update({
-                _id: Meteor.userId()
-            }, {
-                $set: {
-                    cu: current
-                }
-            });
-            Router.go('game', {
-                name: current,
-                menu: 'mine'
-            });
-        }
-    });
-
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
@@ -1722,6 +1682,41 @@ if (Meteor.isClient) {
             }
             Session.set("worldMapArray", worldMapArray);
         },
+
+        'click .worldMapPlayerPlace': function(e, t){
+        	var current = e.currentTarget.id;
+            var currentMenu = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    menu: 1
+                }
+            }).menu;
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    cu: current
+                }
+            });
+            var myName = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1
+                }
+            }).username;
+            //in your own menu? base:scrounge
+            if (current == myName) {
+                Router.current().render(currentMenu + 'Base', {
+                    to: 'middle'
+                });
+            } else {
+                Router.current().render(currentMenu + 'Scrounge', {
+                    to: 'middle'
+                });
+            }
+        }
 
     });
 

@@ -32,9 +32,6 @@ Router.map(function() {
             'buyMenu': {
                 to: 'buyMenuField'
             },
-            'mapSimulation': {
-                to: 'rightSideTest'
-            },
         },
 
         //like autorun

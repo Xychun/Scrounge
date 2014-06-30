@@ -740,6 +740,8 @@ if (Meteor.isServer) {
             playerData.insert({
                 user: name,
                 level: 0,
+                XP: 0,
+                requiredXP: 2014,
                 mine: {
                     ownItem: {
                         blank: "",
@@ -809,14 +811,14 @@ if (Meteor.isServer) {
                 battlefield: {
                     ownItem: {
                         blank: "",
-                        benefit: 5,
+                        benefit: 0.5,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
                         blank: "",
-                        benefit: 1,
+                        benefit: 50,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
@@ -825,8 +827,8 @@ if (Meteor.isServer) {
                     scrSlots: 6,
                     supSlots: 2,
                     science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
+                    minControl: 50,
+                    maxControl: 80
                 },
                 thivery: {
                     ownItem: {
