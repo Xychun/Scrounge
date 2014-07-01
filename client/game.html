@@ -1,5 +1,5 @@
 <template name="standardBorder">
-	<div id="switchToWorldMap" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 5; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)"></div>
+    <div id="switchToWorldMap" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 5; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)"></div>
     <div id="links" class="top left">
         <div class="corner top left">
             <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
@@ -8,15 +8,101 @@
             <img id="up_slider_stolen" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
         </div>
         <div class="inventory left">
-            <div class="inv_edge inv_top top inventory_left_background_top"></div>
-            <div class="inventory_content inventory_left_background">
-
-                <div class="inventory_slots"></div>
-                <div class="inventory_slots"></div>
-                <div class="inventory_slots"></div>
-
+            <div class="inv_edge top inventory_left_background_top"></div>
+            <div class="inventory_wrapper inventory_left_background">
+                <div class="inventory_content">
+                    <div class="inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}green_pick.png)" title="
+                                <div class='item_tooltip_window_name'>
+                                    <p class='text headline'>{{item_name}} Green Pick</p>
+                                </div>
+                                <div class='item_tooltip_window_wrapper'>
+                                    <div class='item_tooltip_window_icon inventory_slots'>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}green_pick.png)'></div>
+                                    </div>
+                                    <div class='item_tooltip_window_content'>
+                                        <p class='text'>
+                                            <nobr>
+                                                {{item_type}} Type: Pick
+                                            </nobr>
+                                        </p>
+                                        <p class='text h1'>
+                                            <nobr>
+                                                {{item_value}} Miningrate: 5 / hr.
+                                            </nobr>
+                                        </p>
+                                    </div>
+                                </div>
+                                ">
+                            <!-- Informationen für den Tooltip stecken im Titel drin und werden beim drüber hovern in ein Extra Tooltip Fenster (item_tooltip_window) gepackt -->
+                            <!-- Beim mouseout wird alles aus dem Tooltip Fenster wieder zurück in den title gespeichert -->
+                        </div>
+                    </div>
+                    <div class="inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}red_pick.png)" title="
+                                <div class='item_tooltip_window_name'>
+                                    <p class='text headline'>{{item_name}} Red Pick</p>
+                                </div>
+                                <div class='item_tooltip_window_wrapper'>
+                                    <div class='item_tooltip_window_icon inventory_slots'>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}red_pick.png)'></div>
+                                    </div>
+                                    <div class='item_tooltip_window_content'>
+                                        <p class='text'>
+                                            <nobr>
+                                                {{item_type}} Type: Pick
+                                            </nobr> 
+                                        </p>
+                                        <p class='text h1'>
+                                            <nobr>
+                                                {{item_value}} Miningrate: 10 / hr.
+                                            </nobr>
+                                        </p>
+                                    </div>
+                                </div>
+                                ">
+                        </div>
+                    </div>
+                    <div class="inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)" title="
+                                <div class='item_tooltip_window_name'>
+                                    <p class='text headline'>{{item_name}} Green Gloves</p>
+                                </div>
+                                <div class='item_tooltip_window_wrapper'>
+                                    <div class='item_tooltip_window_icon inventory_slots'>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)'></div>
+                                    </div>
+                                    <div class='item_tooltip_window_content'>
+                                        <p class='text'>
+                                            <nobr>
+                                                {{item_type}} Type: Gloves
+                                            </nobr> 
+                                        </p>
+                                        <p class='text h1'>
+                                            <nobr>
+                                                {{item_value}} Blubablub slfnsdflsnflk
+                                            </nobr>
+                                        </p>
+                                    </div>
+                                </div>
+                                ">
+                        </div>
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                </div>
             </div>
-            <div class="inv_edge inv_bot bot inventory_left_background_bot"></div>
+            <div class="inv_edge bot inventory_left_background_bot"></div>
         </div>
         <div class="corner bot left">
             <img id="social" class="corner bot left inherit SSsocialButton">
@@ -137,7 +223,7 @@
         </div>
         <div class="inventory right">
             <div class="inv_edge inv_top top inventory_right_background_top"></div>
-            <div class="inventory_content inventory_right_background"></div>
+            <div class="inventory_wrapper inventory_right_background"></div>
             <div class="inv_edge inv_bot bot inventory_right_background_bot"></div>
         </div>
         <div class="corner bot right">
@@ -148,9 +234,13 @@
     </div>
 
     <!-- Zu Testzwecken -->
-<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red"></div>
 
+    <script>
+    // console.log(Session.get("init_bool"));
+    // Session.set("init",Session.get("init_bool"));
+    </script>
 </template>
 
 
@@ -249,6 +339,12 @@
                         </div>
                         {{/each}}
                     </div>
+
+                    <script>
+                    //console.log(mineUsedSlots);
+                    Session.set("middle", "mineBase");
+                    </script>
+
                     {{/each}}
                 </div>
             </div>
@@ -456,6 +552,10 @@
         <div id="mineBuyMenuBottomEnd" class="left right"></div>
     </div>
 
+    <script>
+    Session.set("init", 0);
+    </script>
+
 </template>
 
 <template name="characterView">
@@ -466,7 +566,12 @@
 
             <div id="scroungeItemsWrapper">
 
-                <div id="scroungeItemSlot1"></div>
+                <div id="scrounge_item_slot_1" class="scroungeItemSlots"></div>
+                <div id="scrounge_item_slot_2" class="scroungeItemSlots"></div>
+                <div id="scrounge_item_slot_3" class="scroungeItemSlots"></div>
+                <div id="scrounge_item_slot_4" class="scroungeItemSlots"></div>
+                <div id="scrounge_item_slot_5" class="scroungeItemSlots"></div>
+                <div id="scrounge_item_slot_6" class="scroungeItemSlots"></div>
 
             </div>
 
@@ -480,26 +585,28 @@
 
         </div>
 
-
-
     </div>
+
+    <script>
+    Session.set("middle", "characterView");
+    </script>
 
 </template>
 
 <template name="worldMap">
 
-	<div id="worldViewPort">
+    <div id="worldViewPort">
 
-		<div class="worldMapNavigators" id="worldMapGoUp">  </div>
-		<div class="worldMapNavigators" id="worldMapGoDown">  </div>
-		<div class="worldMapNavigators" id="worldMapGoRight">  </div>
-		<div class="worldMapNavigators" id="worldMapGoLeft">  </div>
+        <div class="worldMapNavigators" id="worldMapGoUp"></div>
+        <div class="worldMapNavigators" id="worldMapGoDown"></div>
+        <div class="worldMapNavigators" id="worldMapGoRight"></div>
+        <div class="worldMapNavigators" id="worldMapGoLeft"></div>
 
-<!-- 		<div style="background-color: blue; width: 3600px; height: 3600px; position: absolute; z-index: -1; right: 50%; top: 50%; margin-right: -1000px; margin-top: -1000px "> -->
+        <!--        <div style="background-color: blue; width: 3600px; height: 3600px; position: absolute; z-index: -1; right: 50%; top: 50%; margin-right: -1000px; margin-top: -1000px "> -->
 
-		<div id="world">  </div>
+        <div id="world"></div>
 
-	</div>
+    </div>
 
 </template>
 

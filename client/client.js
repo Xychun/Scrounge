@@ -248,15 +248,6 @@ if (Meteor.isClient) {
                 objects[i] = obj0;
             }
         }
-        // für den Range Slider
-        Meteor.call("slider_init", function(err, result) {
-            for (var i = 0; i < amountOwnSlots; i++) {
-                var matterId = cursorMine['owns' + i].input;
-                if (matterId > 0) {
-                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
-                }
-            }
-        });
         return objects;
     };
 
@@ -614,8 +605,12 @@ if (Meteor.isClient) {
 
     }
 
-    Template.worldMap.rendered= function() {
-      createWorldMap();
+    Template.worldMap.rendered = function() {
+        createWorldMap();
+    }
+
+    Template.masterLayout.rendered = function() {
+        $("body").append("<div id='item_tooltip_window' title=''></div>");
     }
 
     //////////////////
@@ -719,6 +714,8 @@ if (Meteor.isClient) {
 
     });
 
+    // Template.characterView.rendered = function() {
+    // }
 
     /*
         Events Frame-Buttons + Hover
@@ -801,6 +798,30 @@ if (Meteor.isClient) {
     Template.masterLayout.events({
         'mousedown img': function(e, t) {
             return false;
+        },
+        'mouseover .item_tooltip': function(e, t) {
+            //Session.set("changes", "onMouseOver");
+            $("#item_tooltip_window").html($(e.target).attr("title"));
+            $(e.target).attr("title", "");
+            $("#item_tooltip_window").css({
+                display: "table"
+            });
+            $("#item_tooltip_window").stop().fadeTo("fast", 1);
+        },
+        'mousemove .item_tooltip': function(e, t) {
+            $("#item_tooltip_window").css({
+                left: e.clientX,
+                top: e.clientY
+            });
+        },
+        'mouseout .item_tooltip': function(e, t) {
+            //Session.set("changes", "onMouseOut");
+            $(e.target).attr("title", $("#item_tooltip_window").html());
+            $("#item_tooltip_window").stop().fadeTo("fast", 0, function() {
+                $("#item_tooltip_window").css({
+                    display: "none"
+                });
+            });
         },
         'mouseover .slider': function(e, t) {
             slide($(e.target).attr('id'));
@@ -1026,7 +1047,7 @@ if (Meteor.isClient) {
 
     Template.worldMap.events({
 
-      'click .worldMapNavigators': function(e, t) {
+        'click .worldMapNavigators': function(e, t) {
             navigateWorldMap($(e.currentTarget).attr('id'));
         },
 
@@ -1043,6 +1064,10 @@ if (Meteor.isClient) {
     var handle_check = false;
     var hover_check = false;
 
+    $(function() {
+
+    });
+
     if ($(window).width() <= 1024) {
         // console.log("1024");
         ready_check = 1;
@@ -1056,6 +1081,63 @@ if (Meteor.isClient) {
         ready_check = 3;
     }
 
+
+    function init_draggable() {
+        $(".draggable").draggable({
+            addClasses: false,
+            helper: 'clone',
+            revert: 'invalid',
+            appendTo: 'body',
+            containment: "window",
+            start: function(event, ui) {
+                $(this).hide();
+                $("#scrounge_item_slot_" + $(this).attr("class").substr(49)).addClass("proper_droppable_slot");
+            },
+            stop: function() {
+                $(this).show();
+                $("#scrounge_item_slot_" + $(this).attr("class").substr(49)).removeClass("proper_droppable_slot");
+            }
+        });
+    }
+
+    function init_droppable() {
+        $(".droppable").droppable({
+            addClasses: false,
+            hoverClass: "droppable_slot_hover",
+            drop: function(event, ui) {
+                if ($(this).html().trim().length == 0) {
+                    $(ui.draggable).detach().appendTo($(this));
+                } else if ($(this).html().trim().length > 0) {
+                    var buffer_parent = $(ui.draggable).parent();
+                    $(ui.draggable).detach();
+                    $(this).children().detach().appendTo(buffer_parent);
+                    $(ui.draggable).appendTo($(this));
+                }
+            },
+        });
+        Session.set("init_bool", false);
+    }
+
+    function character_view_droppable() {
+        for (var x = 1; x <= 6; x++) {
+            item_type = "#item_type_" + x;
+            $("#scrounge_item_slot_" + x).droppable({
+                accept: ".item_type_" + x,
+                addClasses: false,
+                hoverClass: "proper_droppable_slot_hover",
+                drop: function(event, ui) {
+                    if ($(this).html().trim().length == 0) {
+                        $(ui.draggable).detach().appendTo($(this));
+                    } else if ($(this).html().trim().length > 0) {
+                        var buffer_parent = $(ui.draggable).parent();
+                        $(ui.draggable).detach();
+                        $(this).children().detach().appendTo(buffer_parent);
+                        $(ui.draggable).appendTo($(this));
+                    }
+                }
+            });
+        }
+    }
     // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
 
     function fade_In_and_Out(element, slot, state) {
@@ -1338,7 +1420,7 @@ if (Meteor.isClient) {
         if (!element2) {
             element2 = 0;
         }
-        console.log(direction + " " + endless + " " + element1 + " " + element2);
+        //console.log(direction + " " + endless + " " + element1 + " " + element2);
     }
 
     function slide_left() {
@@ -1586,148 +1668,169 @@ if (Meteor.isClient) {
     var sizePlayerPlace = 300;
 
     //WORLD MAP FRONTEND//
+
     function createWorldMap() {
 
-      var WorldMapSize = worldMapFields.find({},{ fields:{ 'x': 1 }}).fetch().length;
-      var EdgeLengthFields = Math.sqrt(WorldMapSize);
-      var EdgeLengthPixel = EdgeLengthFields*sizePlayerPlace;
+        var WorldMapSize = worldMapFields.find({}, {
+            fields: {
+                'x': 1
+            }
+        }).fetch().length;
+        var EdgeLengthFields = Math.sqrt(WorldMapSize);
+        var EdgeLengthPixel = EdgeLengthFields * sizePlayerPlace;
 
-      $('#world').css({
-          "width": EdgeLengthPixel,
-          "height": EdgeLengthPixel,
-          "margin-top": -EdgeLengthPixel/2,
-          "margin-left": -EdgeLengthPixel/2,
+        $('#world').css({
+            "width": EdgeLengthPixel,
+            "height": EdgeLengthPixel,
+            "margin-top": -EdgeLengthPixel / 2,
+            "margin-left": -EdgeLengthPixel / 2,
         })
 
-/*      $('#world').css({
+        /*      $('#world').css({
           "width": 8*sizePlayerPlace,
           "height": 8*sizePlayerPlace,
           "margin-top": -4*sizePlayerPlace,
           "margin-left": -4*sizePlayerPlace,
         })*/
-      
-      //Stellt per Definition ein, wie weit die Map von Beginn an mit Daten gefüllt sein soll
-      fillWorldMap(0, 3, 0, 3);
+
+        //Stellt per Definition ein, wie weit die Map von Beginn an mit Daten gefüllt sein soll
+        fillWorldMap(0, 3, 0, 3);
     }
 
     function fillWorldMap(xLeft, xRight, yBot, yTop) {
 
-      //Mehrdimensionales Array, welches die Positions-Daten (x, y, user) aus der Datenbank enthält
-      var worldPositions = worldMapFields.find({}, { fields: { 'x': 1, 'y': 1, 'user': 1 }, }).fetch();
+        //Mehrdimensionales Array, welches die Positions-Daten (x, y, user) aus der Datenbank enthält
+        var worldPositions = worldMapFields.find({}, {
+            fields: {
+                'x': 1,
+                'y': 1,
+                'user': 1
+            },
+        }).fetch();
 
-/*      for(i=0; i < worldPositions.length; i++) {
+        /*      for(i=0; i < worldPositions.length; i++) {
 
         console.log(worldPositions[i].user+"  "+worldPositions[i].x+"  "+worldPositions[i].y);
 
       }*/
 
-      //sizePlayerPlace: Größe eines Feldes auf der WorldMap
-      //Breite der gesamten Welt: Math.sqrt(worldPositions.length)*sizePlayerPlace
-      //Breite des zu zeichnenden WorldMap-Abschnitts: Math.abs(xRight-xLeft)*sizePlayerPlace
+        //sizePlayerPlace: Größe eines Feldes auf der WorldMap
+        //Breite der gesamten Welt: Math.sqrt(worldPositions.length)*sizePlayerPlace
+        //Breite des zu zeichnenden WorldMap-Abschnitts: Math.abs(xRight-xLeft)*sizePlayerPlace
 
-      //Beispiel mit Zahlen, WorldSize 64:
-      // left = (sqrt(64) * 300) /2 - ((abs(3-0))+1) * 300/2 = 600
-      // top = -300 + (sqrt(64)*300) /2 + ((3 + 1) * 300) /2 = 1500
+        //Beispiel mit Zahlen, WorldSize 64:
+        // left = (sqrt(64) * 300) /2 - ((abs(3-0))+1) * 300/2 = 600
+        // top = -300 + (sqrt(64)*300) /2 + ((3 + 1) * 300) /2 = 1500
 
-      // Beispiel bei WorldSize von 64
-      // var left = 8*sizePlayerPlace/2-((Math.abs(xRight-xLeft))+1)*sizePlayerPlace/2;
-      // var top = -300+(8*sizePlayerPlace/2+((yHeight+1)*sizePlayerPlace/2));
+        // Beispiel bei WorldSize von 64
+        // var left = 8*sizePlayerPlace/2-((Math.abs(xRight-xLeft))+1)*sizePlayerPlace/2;
+        // var top = -300+(8*sizePlayerPlace/2+((yHeight+1)*sizePlayerPlace/2));
 
-      //Nur beim ersten Aufruf ist wegen der leidigen "Bei 0 Anfangen"-Geschichte die "+1-Korrektur" notwendig
+        //Nur beim ersten Aufruf ist wegen der leidigen "Bei 0 Anfangen"-Geschichte die "+1-Korrektur" notwendig
 
-      var left = Math.sqrt(worldPositions.length)*sizePlayerPlace/2-((Math.abs(xRight-xLeft))+1)*sizePlayerPlace/2;
-      var top = -300+(Math.sqrt(worldPositions.length)*sizePlayerPlace/2+((Math.abs(yTop-yBot))+1)*sizePlayerPlace/2);
+        var left = Math.sqrt(worldPositions.length) * sizePlayerPlace / 2 - ((Math.abs(xRight - xLeft)) + 1) * sizePlayerPlace / 2;
+        var top = -300 + (Math.sqrt(worldPositions.length) * sizePlayerPlace / 2 + ((Math.abs(yTop - yBot)) + 1) * sizePlayerPlace / 2);
 
-      for(i=0; i < worldPositions.length; i++) {
+        for (i = 0; i < worldPositions.length; i++) {
 
             var x;
             var y;
             var user = "";
 
-            if((worldPositions[i].x >= xLeft && worldPositions[i].x <= xRight) && (worldPositions[i].y >= yBot) && (worldPositions[i].y <= yTop)){
+            if ((worldPositions[i].x >= xLeft && worldPositions[i].x <= xRight) && (worldPositions[i].y >= yBot) && (worldPositions[i].y <= yTop)) {
 
-              x = worldPositions[i].x;
-              y = worldPositions[i].y;
-              user = worldPositions[i].user;
+                x = worldPositions[i].x;
+                y = worldPositions[i].y;
+                user = worldPositions[i].user;
 
-              drawPlayerPlace(x, y, user, left, top);
-/*              console.log(i+"  "+x+"  "+y);*/
+                drawPlayerPlace(x, y, user, left, top);
+                /*              console.log(i+"  "+x+"  "+y);*/
             }
-/*          console.log(x+"  "+y);
+            /*          console.log(x+"  "+y);
             console.log("Left  "+(left+x*sizePlayerPlace)+"px");
-            console.log("Top  "+(top-y*sizePlayerPlace)+"px");*/         
-      }
-/*      setViewPosition(1, 1);*/
+            console.log("Top  "+(top-y*sizePlayerPlace)+"px");*/
+        }
+        /*      setViewPosition(1, 1);*/
     }
 
     function extendWorld(direction) {
 
-      var worldPositions = worldMapFields.find({}, { fields: { 'x': 1, 'y': 1, 'user': 1 }, }).fetch();
+        var worldPositions = worldMapFields.find({}, {
+            fields: {
+                'x': 1,
+                'y': 1,
+                'user': 1
+            },
+        }).fetch();
 
-        switch(direction) {
+        switch (direction) {
 
-        case 'up':
+            case 'up':
 
-          extendUpCount = extendUpCount+2;
+                extendUpCount = extendUpCount + 2;
 
-          var xLeft = 0; //per Definition, je nachdem wie groß der Anfang ist
-          var xRight = 1; //per Definition, je nachdem wie groß der Anfang ist
-          var yBot = 0+extendUpCount;
-          var yTop = yBot+1;
+                var xLeft = 0; //per Definition, je nachdem wie groß der Anfang ist
+                var xRight = 1; //per Definition, je nachdem wie groß der Anfang ist
+                var yBot = 0 + extendUpCount;
+                var yTop = yBot + 1;
 
-          fillWorldMap(xLeft, xRight, yBot, yTop);
-          
+                fillWorldMap(xLeft, xRight, yBot, yTop);
 
-        case 'down':
 
-        break;
+            case 'down':
 
-        case 'right':
+                break;
 
-          extendRightCount = extendRightCount+2;
+            case 'right':
 
-          var xLeft = 0+extendRightCount; //per Definition, je nachdem wie groß der Anfang ist
-          var xRight = xLeft+1; //per Definition, je nachdem wie groß der Anfang ist
-          var yBot = 0+extendDownCount;
-          var yTop = 1+extendUpCount;
+                extendRightCount = extendRightCount + 2;
 
-          fillWorldMap(xLeft, xRight, yBot, yTop);
+                var xLeft = 0 + extendRightCount; //per Definition, je nachdem wie groß der Anfang ist
+                var xRight = xLeft + 1; //per Definition, je nachdem wie groß der Anfang ist
+                var yBot = 0 + extendDownCount;
+                var yTop = 1 + extendUpCount;
 
-        break;
+                fillWorldMap(xLeft, xRight, yBot, yTop);
 
-        case 'left':
+                break;
 
-        break;
+            case 'left':
 
-        default:
+                break;
 
-            console.log("verdammter Scheiß...");
+            default:
 
-        break;
-      }
+                console.log("verdammter Scheiß...");
+
+                break;
+        }
     }
 
     function setViewPosition(xView, yView) {
         var top = parseInt($('#world').css("margin-top"));
         var left = parseInt($('#world').css("margin-left"));
-        $('#world').css({ "margin-left": left+(xView*300)+"px" });
-        $('#world').css({ "margin-top": top-(yView*300)+"px" });
+        $('#world').css({
+            "margin-left": left + (xView * 300) + "px"
+        });
+        $('#world').css({
+            "margin-top": top - (yView * 300) + "px"
+        });
     }
 
     function drawPlayerPlace(x, y, user, left, top) {
         var playerPlace = document.createElement("div");
         playerPlace.className = "playerPlace";
-        playerPlace.id = x+" "+y;
+        playerPlace.id = x + " " + y;
         document.getElementById("world").appendChild(playerPlace);
-        document.getElementById(playerPlace.id).style.top=(top-y*300)+"px";
-        document.getElementById(playerPlace.id).style.left=(left+x*300)+"px";
-        document.getElementById(playerPlace.id).style.width="300px";
-        document.getElementById(playerPlace.id).style.height="300px";
-        document.getElementById(playerPlace.id).style.backgroundImage="url(/Aufloesung1920x1080/Interface/BackgroundWorldMap3.png)";
+        document.getElementById(playerPlace.id).style.top = (top - y * 300) + "px";
+        document.getElementById(playerPlace.id).style.left = (left + x * 300) + "px";
+        document.getElementById(playerPlace.id).style.width = "300px";
+        document.getElementById(playerPlace.id).style.height = "300px";
+        document.getElementById(playerPlace.id).style.backgroundImage = "url(/Aufloesung1920x1080/Interface/BackgroundWorldMap3.png)";
 
 
-        var text = document.createTextNode(x+"  "+y+"  "+user);
-        document.getElementById(playerPlace.id).style.fontSize="50pt";
+        var text = document.createTextNode(x + "  " + y + "  " + user);
+        document.getElementById(playerPlace.id).style.fontSize = "50pt";
         document.getElementById(playerPlace.id).appendChild(text);
     }
 
@@ -1752,29 +1855,37 @@ if (Meteor.isClient) {
         var left = parseInt($('#world').css("margin-left"));
         var mapSize = parseInt($('#world').css("width"));
 
-        if(top == 0) {
+        if (top == 0) {
             upDisabled = true;
-            $('#worldMapGoUp').css({"opacity": "0.3"});
+            $('#worldMapGoUp').css({
+                "opacity": "0.3"
+            });
         }
-        if(top == -mapSize) {
+        if (top == -mapSize) {
             downDisabled = true;
-            $('#worldMapGoDown').css({"opacity": "0.3"});
+            $('#worldMapGoDown').css({
+                "opacity": "0.3"
+            });
         }
-        if(left == 0) {
+        if (left == 0) {
             leftDisabled = true;
-            $('#worldMapGoLeft').css({"opacity": "0.3"});
+            $('#worldMapGoLeft').css({
+                "opacity": "0.3"
+            });
         }
-        if(left == -mapSize) {
+        if (left == -mapSize) {
             rightDisabled = true;
-            $('#worldMapGoRight').css({"opacity": "0.3"});
-            
+            $('#worldMapGoRight').css({
+                "opacity": "0.3"
+            });
+
         }
 
-        switch(direction) {
+        switch (direction) {
 
             case 'worldMapGoUp':
-                
-/*                var margin = Math.abs(parseInt($('#world').css("margin-top")))+300;
+
+                /*                var margin = Math.abs(parseInt($('#world').css("margin-top")))+300;
                 var verschiebung = höhe/2 - Math.abs(margin);
                 console.log("HÖHE "+höhe/2+"  "+"MARGIN "+Math.abs(margin)+"  "+"VERSCHIEBUNG "+verschiebung);
                 console.log(navUpCount%2 == 0 && extendUpCount <= navUpCount/2);*/
@@ -1783,74 +1894,90 @@ if (Meteor.isClient) {
                 //X = 2 eignet sich bei Beginn mit 4 Feldern
                 //X =
 
-                if(navUpCount != 0 && navUpCount%4 == 0 && extendUpCount <= navUpCount/4 && navUpCount < (mapSize/4)/300 ) {
-                  extendWorld("up");
+                if (navUpCount != 0 && navUpCount % 4 == 0 && extendUpCount <= navUpCount / 4 && navUpCount < (mapSize / 4) / 300) {
+                    extendWorld("up");
                 }
 
                 if (upDisabled == false) {
-                $('#world').filter(':not(:animated)').animate({ "margin-top": (top+300)+"px" }, 250);
-                downDisabled = false;
-                $('#worldMapGoDown').css({"opacity": "1"});
+                    $('#world').filter(':not(:animated)').animate({
+                        "margin-top": (top + 300) + "px"
+                    }, 250);
+                    downDisabled = false;
+                    $('#worldMapGoDown').css({
+                        "opacity": "1"
+                    });
 
-                navUpCount++;
-                navDownCount--;
-                console.log(navUpCount+"  "+extendUpCount);
-                console.log(navDownCount+"  "+extendDownCount);
-              }
+                    navUpCount++;
+                    navDownCount--;
+                    console.log(navUpCount + "  " + extendUpCount);
+                    console.log(navDownCount + "  " + extendDownCount);
+                }
 
                 break;
             case 'worldMapGoDown':
-                
-                if(navDownCount != 0 && navDownCount%4 == 0 && extendDownCount <= navDownCount/4 && navDownCount < (mapSize/4)/300 ) {
-                  extendWorld("down");
+
+                if (navDownCount != 0 && navDownCount % 4 == 0 && extendDownCount <= navDownCount / 4 && navDownCount < (mapSize / 4) / 300) {
+                    extendWorld("down");
                 }
 
-                if(downDisabled == false) {
-                 $('#world').filter(':not(:animated)').animate({ "margin-top": (top-300)+"px" }, 250);
-                 upDisabled = false;
-                 $('#worldMapGoUp').css({"opacity": "1"});
+                if (downDisabled == false) {
+                    $('#world').filter(':not(:animated)').animate({
+                        "margin-top": (top - 300) + "px"
+                    }, 250);
+                    upDisabled = false;
+                    $('#worldMapGoUp').css({
+                        "opacity": "1"
+                    });
 
-                 navDownCount++;
-                 navUpCount--;
-                 console.log(navUpCount+"  "+extendUpCount);
-                 console.log(navDownCount+"  "+extendDownCount);
+                    navDownCount++;
+                    navUpCount--;
+                    console.log(navUpCount + "  " + extendUpCount);
+                    console.log(navDownCount + "  " + extendDownCount);
                 }
 
                 break;
             case 'worldMapGoRight':
-                
-                if(navRightCount != 0 && navRightCount%4 == 0 && extendRightCount <= navRightCount/4 && navRightCount < (mapSize/4)/300 ) {
-                  extendWorld("right");
+
+                if (navRightCount != 0 && navRightCount % 4 == 0 && extendRightCount <= navRightCount / 4 && navRightCount < (mapSize / 4) / 300) {
+                    extendWorld("right");
                 }
 
-                if(rightDisabled == false) {
-                $('#world').filter(':not(:animated)').animate({"margin-left": (left-300)+"px"}, 250);
-                leftDisabled = false;
-                $('#worldMapGoLeft').css({"opacity": "1"});
+                if (rightDisabled == false) {
+                    $('#world').filter(':not(:animated)').animate({
+                        "margin-left": (left - 300) + "px"
+                    }, 250);
+                    leftDisabled = false;
+                    $('#worldMapGoLeft').css({
+                        "opacity": "1"
+                    });
 
-                navRightCount++;
-                navLeftCount--;
-                console.log(navRightCount+"  "+extendRightCount);
-                console.log(navLeftCount+"  "+extendLeftCount);
+                    navRightCount++;
+                    navLeftCount--;
+                    console.log(navRightCount + "  " + extendRightCount);
+                    console.log(navLeftCount + "  " + extendLeftCount);
 
                 }
 
                 break;
             case 'worldMapGoLeft':
-                
-                if(navLeftCount != 0 && navLeftCount%4 == 0 && extendLeftCount <= navLeftCount/4 && navLeftCount < (mapSize/4)/300 ) {
-                  extendWorld("left");
+
+                if (navLeftCount != 0 && navLeftCount % 4 == 0 && extendLeftCount <= navLeftCount / 4 && navLeftCount < (mapSize / 4) / 300) {
+                    extendWorld("left");
                 }
 
-                if(leftDisabled == false) {
-                $('#world').filter(':not(:animated)').animate({"margin-left": (left+300)+"px"}, 250);
-                rightDisabled = false;
-                $('#worldMapGoRight').css({"opacity": "1"});
+                if (leftDisabled == false) {
+                    $('#world').filter(':not(:animated)').animate({
+                        "margin-left": (left + 300) + "px"
+                    }, 250);
+                    rightDisabled = false;
+                    $('#worldMapGoRight').css({
+                        "opacity": "1"
+                    });
 
-                navLeftCount++;
-                navRightCount--;
-                console.log(navRightCount+"  "+extendRightCount);
-                console.log(navLeftCount+"  "+extendLeftCount);
+                    navLeftCount++;
+                    navRightCount--;
+                    console.log(navRightCount + "  " + extendRightCount);
+                    console.log(navLeftCount + "  " + extendLeftCount);
 
                 }
 
@@ -1863,10 +1990,52 @@ if (Meteor.isClient) {
 
     }
 
+    // function get_deps_count() {
+    //     return Session.get("deps_count");
+    // }
 
+    // function set_deps_count() {
+    //     var set = Session.get("deps_count");
+    //     set++;
+    //     Session.set("deps_count", set);
+    // }
 
+    var deps_count = 0;
 
+    Deps.autorun(function() {
+        var init = Session.get("init");
+        // console.log("count: " + deps_count);
+        if (deps_count == 1) {
+            init_draggable();
+            init_droppable();
+        }
 
+        var middle = Session.get("middle");
+        if (middle == "mineBase") {
+            var name = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).username;
+            var cursorPlayerData = playerData.findOne({
+                user: name
+            });
+            var cursorMine = mine.findOne({
+                user: name
+            });
+            for (var i = 0; i < cursorPlayerData.mine.ownSlots; i++) {
+                var matterId = cursorMine['owns' + i].input;
+                if (matterId > 0) {
+                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
+                }
+            }
+            Session.set("middle", "");
+
+        } else if (middle == "characterView") {
+            character_view_droppable();
+			Session.set("middle", "");            
+        }
+
+        deps_count++;
+    });
 
     //Deps.Autorun
     Deps.autorun(function() {
