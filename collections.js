@@ -5,6 +5,7 @@
 //Collection init
 Menus = new Meteor.Collection("Menus");
 MatterBlocks = new Meteor.Collection("MatterBlocks");
+FightArenas = new Meteor.Collection("FightArenas");
 
 playerData = new Meteor.Collection("playerData");
 resources = new Meteor.Collection("resources");

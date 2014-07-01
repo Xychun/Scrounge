@@ -38,20 +38,14 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     timers = new Array();
+    mapRows = 4;
+    mapColumns = 6;
 
     ////////////////////////////
     ////// FUNCTION CALLS //////
     ////////////////////////////
 
-    timeClient = new Date();
-    Meteor.call("getServerTime", function(err, result) {
-        timeServer = result;
-        timeDifference = timeClient.getTime() - timeServer.getTime();
-        // console.log('timeServer' + timeServer.getTime());
-    });
-
     setInterval(function() {
-        updateTimers();
         updateTimers();
     }, 1 * 1000);
 
@@ -86,17 +80,6 @@ if (Meteor.isClient) {
     ////////////////////////////
     ///// TEMPLATE RETURNS /////
     ////////////////////////////
-
-    //TO-DO nur für Testzwecke
-    Template.mapSimulation.users = function() {
-        var test = Meteor.users.find({}, {
-            fields: {
-                username: 1
-            }
-        }).fetch();
-        return test;
-    };
-
     Template.mineScrounge.current = function() {
         return Meteor.users.findOne({
             _id: Meteor.userId()
@@ -107,6 +90,19 @@ if (Meteor.isClient) {
         });
     }
 
+    Template.battlefieldScrounge.current = function() {
+        return Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1
+            }
+        });
+    }
+
+    //////////////////
+    ////// MINE //////
+    //////////////////
     Template.mineBase.mineUnusedSlots = function() {
         //Mine
         var name = Meteor.users.findOne({
@@ -251,7 +247,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
-    Template.rightBaseUnusedSlots.mineUnusedScroungeSlots = function() {
+    Template.mineRightBaseUnusedSlots.mineUnusedScroungeSlots = function() {
         //Mine Scrounging
         var name = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -279,7 +275,7 @@ if (Meteor.isClient) {
         return objects;
     };
 
-    Template.rightBaseUsedSlots.mineUsedScroungeSlots = function() {
+    Template.mineRightBaseUsedSlots.mineUsedScroungeSlots = function() {
         //Mine Scrounging
         var name = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -566,7 +562,6 @@ if (Meteor.isClient) {
     };
 
     Template.mineBase.matterBlocks = function() {
-
         return MatterBlocks.find({}, {
             sort: {
                 matter: 1
@@ -575,13 +570,473 @@ if (Meteor.isClient) {
 
     };
 
-    Template.mineBuyMenu.playerData = function() {
+    /////////////////////////
+    ////// BATTLEFIELD //////
+    /////////////////////////
+    Template.battlefieldBase.battlefieldUnusedSlots = function() {
+        //Battlefield
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        for (var i = 0; i < amountOwnSlots; i++) {
+            if (cursorBattlefield['owns' + i].input == "0000")
+                objects[i] = {};
+        }
+        return objects;
+    };
+
+    Template.battlefieldBase.battlefieldUsedSlots = function() {
+        //Battlefield
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = new Date().getTime() - timeDifference;
+        //Iterate OwnSlots
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var fightId = cursorBattlefield['owns' + i].input;
+            if (fightId > 0) {
+                var cursorFightArena = FightArenas.findOne({
+                    fight: fightId
+                });
+                var amountMaxSupSlots = cursorPlayerData.battlefield.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorBattlefield['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+                var supEpics = 0;
+
+                var supSlotsMemory = new Array();
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.battlefield.supSlots; k++) {
+                    var currentSup = cursorBattlefield['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
+                        var supBattlefield = battlefield.findOne({
+                            user: currentSup
+                        });
+                        var cursorCurrentSup = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                battlefield: 1,
+                                level: 1
+                            }
+                        });
+                        var currentSupScrSlots = cursorCurrentSup.battlefield.scrSlots;
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (supBattlefield['scrs' + m].victim == name) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        var result = indexScr;
+                        //calculate timeSpent of currentSup
+                        var supTime = supBattlefield['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        obj01['notFound'] = 0;
+                        obj01['prefix'] = 1;
+                        timers.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                        var supEpic = supBattlefield['scrs' + result].benefit;
+                        supEpics = supEpics + supEpic;
+                        obj00['epicness'] = supEpic + '%';
+                        obj00['level'] = cursorCurrentSup.level;
+                        supSlotsMemory[k] = obj00;
+                    }
+                }
+
+                obj0['color'] = cursorFightArena.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['xp'] = Math.floor((cursorFightArena.value * (100 + supEpics)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield';
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorBattlefield['owns' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorBattlefield['owns' + i].stamp));
+
+                obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+
+                if (amountUsedSupSlots == 0) {
+                    obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
+                } else {
+                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                }
+                obj0['epicness'] = supEpics + '%';
+
+                obj0['supporter'] = supSlotsMemory;
+
+                //für den range slider
+                obj0['slot'] = i;
+
+                objects[i] = obj0;
+            }
+        }
+        // für den Range Slider
+        Meteor.call("slider_init", function(err, result) {
+            for (var i = 0; i < amountOwnSlots; i++) {
+                var fightId = cursorBattlefield['owns' + i].input;
+                if (fightId > 0) {
+                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
+                }
+            }
+        });
+        return objects;
+    };
+
+    Template.battlefieldRightBaseUnusedSlots.battlefieldUnusedScroungeSlots = function() {
+        //Battlefield Scrounging
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        }).battlefield;
+        var amountScrSlots = cursorPlayerData.scrSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+        for (var i = 0; i < amountScrSlots; i++) {
+            if (cursorBattlefield['scrs' + i].victim == "")
+                objects[i] = {};
+        }
+        return objects;
+    };
+
+    Template.battlefieldRightBaseUsedSlots.battlefieldUsedScroungeSlots = function() {
+        //Battlefield Scrounging
+        var name = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        }).battlefield;
+        var cursorMyBattlefield = battlefield.findOne({
+            user: name
+        });
+        var calculatedServerTime = new Date().getTime() - timeDifference;
+        var amountScrSlots = cursorPlayerData.scrSlots;
+        var objects = new Array();
+
+        //Iterate all Scrounging Slots
+        for (var i = 0; i < amountScrSlots; i++) {
+            //Is used?
+            if (cursorMyBattlefield['scrs' + i].victim != "") {
+                var victimName = cursorMyBattlefield['scrs' + i].victim;
+                var cursorVictimBattlefield = battlefield.findOne({
+                    user: victimName
+                });
+                var cursorPlayerDataVictim = playerData.findOne({
+                    user: victimName
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                });
+                var amountVictimOwnSlots = cursorPlayerDataVictim.battlefield.ownSlots;
+                var amountVictimSupSlots = cursorPlayerDataVictim.battlefield.supSlots;
+                //get index of the right own slot
+                var indexOwn = -1;
+                for (var j = 0; j < amountVictimOwnSlots; j++) {
+                    for (var k = 0; k < amountVictimSupSlots; k++) {
+                        if (cursorVictimBattlefield['owns' + j]['sup' + k] == name) indexOwn = j
+                    }
+                }
+                if (indexOwn == -1) {
+                    console.log('Template.rightBaseUsedSlots slot calculation problem - index own Slot');
+                    break;
+                }
+                //Calculate input values
+                var fightId = cursorVictimBattlefield['owns' + indexOwn].input;
+                var cursorFightArena = FightArenas.findOne({
+                    fight: fightId
+                });
+                var supEpics = 0;
+                var amountUsedSupSlots = 0;
+                //Iterate Supporter
+                for (var l = 0; l < cursorPlayerDataVictim.battlefield.supSlots; l++) {
+                    var currentSup = cursorVictimBattlefield['owns' + indexOwn]['sup' + l];
+                    //SupSlot used?
+                    if (currentSup.length != "") {
+                        amountUsedSupSlots++;
+                        var currentSupScrSlots = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                battlefield: 1
+                            }
+                        }).battlefield.scrSlots;
+                        var cursorSupBattlefield = battlefield.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (cursorSupBattlefield['scrs' + m].victim == victimName) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.rightBaseUsedSlots slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        //calculate timeSpent and epicness of cSup
+                        var supTime = cursorSupBattlefield['scrs' + indexScr].stamp.getTime();
+                        var supEpic = cursorSupBattlefield['scrs' + indexScr].benefit;
+                        supEpics = supEpics + supEpic;
+                    }
+                }
+                var obj0 = {};
+                obj0['color'] = cursorFightArena.color;
+                obj0['victim'] = victimName;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountVictimSupSlots;
+                obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield_scr';
+                obj0['remainingId'] = 'timerDec_' + i + '_battlefield_scr';
+
+                var obj1 = {};
+                obj1['id'] = obj0['remainingId'];
+                obj1['miliseconds'] = (cursorFightArena.time) - (calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp)
+                obj1['notFound'] = 0;
+                obj1['prefix'] = -1;
+                timers.push(obj1);
+                obj0['remaining'] = msToTime(obj1['miliseconds']);
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp));
+
+                obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['epicness'] = supEpics + '%';
+                objects[i] = obj0;
+            }
+        }
+        return objects;
+    };
+
+    Template.battlefieldScrounge.battlefieldSupporterSlots = function() {
+        //Battlefield
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        });
+        var name = self.cu;
+        var cursorPlayerData = playerData.findOne({
+            user: name
+        });
+        var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+        var cursorBattlefield = battlefield.findOne({
+            user: name
+        });
+        var objects = new Array();
+
+        var calculatedServerTime = (new Date()).getTime() - timeDifference;
+        //Iterate OwnSlots
+        for (var i = 0; i < amountOwnSlots; i++) {
+            var fightId = cursorBattlefield['owns' + i].input;
+            if (fightId > 0) {
+                var cursorFightArena = FightArenas.findOne({
+                    fight: fightId
+                });
+                var amountMaxSupSlots = cursorPlayerData.battlefield.supSlots;
+                var amountUsedSupSlots = 0;
+                for (var j = 0; j < amountMaxSupSlots; j++) {
+                    if (cursorBattlefield['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
+                }
+                var obj0 = {};
+                var supEpics = 0;
+
+                var supSlotsMemory = new Array();
+                //Iterate Supporter
+                for (var k = 0; k < cursorPlayerData.battlefield.supSlots; k++) {
+                    var currentSup = cursorBattlefield['owns' + i]['sup' + k];
+                    //SupSlot used?
+                    if (currentSup != undefined && currentSup.length != 0) {
+                        var obj00 = {};
+                        var cursorCurrentSup = playerData.findOne({
+                            user: currentSup
+                        }, {
+                            fields: {
+                                battlefield: 1,
+                                level: 1
+                            }
+                        });
+                        var currentSupScrSlots = cursorCurrentSup.battlefield.scrSlots;
+
+                        var supBattlefield = battlefield.findOne({
+                            user: currentSup
+                        });
+                        //get index of scr slot
+                        var indexScr = -1;
+                        for (var m = 0; m < currentSupScrSlots; m++) {
+                            if (supBattlefield['scrs' + m].victim == name) indexScr = m;
+                        }
+                        if (indexScr == -1) {
+                            console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
+                            break;
+                        }
+                        var result = indexScr;
+                        //calculate timespent by cSup
+                        var supTime = supBattlefield['scrs' + result].stamp.getTime();
+
+                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        var obj01 = {};
+                        obj01['id'] = obj00['timeSpentId'];
+                        obj01['miliseconds'] = (calculatedServerTime - supTime);
+                        obj01['notFound'] = 0;
+                        obj01['prefix'] = 1;
+                        timers.push(obj01);
+                        obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                        var supEpic = supBattlefield['scrs' + result].benefit;
+                        supEpics = supEpics + supEpic;
+
+                        obj00['epicness'] = supEpic + '%';
+                        obj00['level'] = cursorCurrentSup.level;
+                        supSlotsMemory[k] = obj00;
+                    }
+                }
+
+
+                obj0['color'] = cursorFightArena.color;
+                obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountMaxSupSlots;
+                obj0['xp'] = Math.floor((cursorFightArena.value * (100 + supEpics)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                var myEpic = playerData.findOne({
+                    user: self.username
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                }).battlefield.scrItem.benefit;
+                obj0['xpChange'] = Math.floor((cursorFightArena.value * (100 + supEpics + myEpic)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield';
+
+                var obj2 = {};
+                obj2['id'] = obj0['timeSpentId'];
+                obj2['miliseconds'] = (calculatedServerTime - cursorBattlefield['owns' + i].stamp);
+                obj2['notFound'] = 0;
+                obj2['prefix'] = 1;
+                timers.push(obj2);
+                obj0['timeSpent'] = msToTime((calculatedServerTime - cursorBattlefield['owns' + i].stamp));
+
+                obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+
+                if (amountUsedSupSlots == 0) {
+                    obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
+                } else {
+                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                }
+                obj0['epicness'] = supEpics + '%';
+                obj0['epicnessChange'] = (supEpics + myEpic) + '%';
+
+                obj0['supporter'] = supSlotsMemory;
+
+                //für den range slider
+                obj0['slot'] = i;
+
+                //Make Slot scroungeable
+                obj0['goScrounging'] = 'goScroungingBattlefield_' + i;
+
+                obj0['index'] = i;
+                obj0['supporter'] = supSlotsMemory;
+                objects[i] = obj0;
+            }
+        }
+        return objects;
+    };
+
+    Template.battlefieldBase.arenaColors = function() {
+        var cursorArenaColors = FightArenas.find({}, {
+            fields: {
+                'color': 1
+            }
+        }).fetch();
+        var colorArray = new Array();
+        for (var i = 0; i < cursorArenaColors.length; i++) {
+            colorArray[i] = cursorArenaColors[i].color;
+        }
+        var result = distinct(colorArray);
+        var objects = new Array();
+        for (var j = 0; j < result.length; j++) {
+            objects[j] = {
+                'color': result[j]
+            };
+        }
+        return objects;
+    };
+
+    Template.battlefieldBase.fightArenas = function() {
+
+        return FightArenas.find({}, {
+            sort: {
+                fight: 1
+            }
+        });
+
+    };
+
+    Template.worldMap.worldMapArray = function() {
+        return Session.get("worldMapArray");
+    };
+
+    Template.buyMenu.playerData = function() {
 
         return playerData.find({});
 
     };
 
-    Template.mineBuyMenu.mineSlots = function() {
+    Template.buyMenu.mineSlots = function() {
 
         return mineSlots.find({});
 
@@ -605,10 +1060,6 @@ if (Meteor.isClient) {
 
     }
 
-    Template.worldMap.rendered = function() {
-        createWorldMap();
-    }
-
     Template.masterLayout.rendered = function() {
         $("body").append("<div id='item_tooltip_window' title=''></div>");
     }
@@ -616,32 +1067,6 @@ if (Meteor.isClient) {
     //////////////////
     ///// EVENTS /////
     //////////////////
-
-    //TO-DO: Testzwecke Map Simulation
-    Template.mapSimulation.events({
-        'click .testUserChange': function(e, t) {
-            var current = e.currentTarget.id;
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            });
-            Meteor.users.update({
-                _id: Meteor.userId()
-            }, {
-                $set: {
-                    cu: current
-                }
-            });
-            Router.go('game', {
-                name: current,
-                menu: 'mine'
-            });
-        }
-    });
-
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
@@ -654,17 +1079,89 @@ if (Meteor.isClient) {
 
         },
 
+        'click #testButton3': function(e, t) {
+
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    cu: 1
+                }
+            });
+            var current = self.cu;
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    menu: 'mine'
+                }
+            });
+            Router.go('game', {
+                name: current,
+                menu: 'mine'
+            });
+
+        },
+
+        'click #testButton4': function(e, t) {
+
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    cu: 1
+                }
+            });
+            var current = self.cu;
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    menu: 'battlefield'
+                }
+            });
+            Router.go('game', {
+                name: current,
+                menu: 'battlefield'
+            });
+
+        },
+
         'click #switchToWorldMap': function(e, t) {
 
             if (!$("#world").length) {
-
                 Router.current().render('worldMap', {
                     to: 'middle'
                 });
+                //if worldMapArray not initilazed: do it - otherwise use last active orientation
+                if (worldMapArray.length == 0) {
+                    var currentUser = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }, {
+                        fields: {
+                            cu: 1
+                        }
+                    }).cu;
+                    var cursorUser = Meteor.users.findOne({
+                        username: currentUser
+                    }, {
+                        fields: {
+                            x: 1,
+                            y: 1
+                        }
+                    });
+                    initWorldMapArray(cursorUser.x, cursorUser.y);
+                }
 
             } else {
-
-                Router.current().render('mineBase', {
+            	var currentMenu = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }, {
+                        fields: {
+                            menu: 1
+                        }
+                    }).menu;
+                Router.current().render(currentMenu + 'Base', {
                     to: 'middle'
                 });
 
@@ -913,39 +1410,115 @@ if (Meteor.isClient) {
         'mouseleave .tooltip_hover': function(e, t) {
             fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "out");
         },
+
         'click .item': function(e, t) {
+            //Variante B
+            var currentUser = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1,
+                }
+            }).username;
+            var cursorPlayerData = playerData.findOne({
+                user: currentUser
+            });
+            $('#buyMenu').fadeIn();
             Session.set("clickedMatter", e.currentTarget.id);
+            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
+            $('#item').text("Matter: " + this.value);
+            var amountSupSlots = cursorPlayerData.mine.supSlots;
+            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            $('#price').text("Price: " + this.cost);
+
+            $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
+
+            if ($('#AmountScroungerSlots').children()) {
+                $('#AmountScroungerSlots').children().remove();
+            }
+
+            for (var i = 0; i < 6; i++) {
+
+                if (amountSupSlots > i) {
+
+                    $('#AmountScroungerSlots').append("<div class='sslots_available'> </div>");
+
+                } else {
+
+                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable'> </div>");
+
+                }
+            }
 
             //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
-
             //Variante A
-
             /*        var cursor = MatterBlocks.findOne({matter: e.currentTarget.id});
 
           console.log(cursor);
 
-          $('#mineBuyMenu').fadeIn();
-          $("#mineBuyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
+          $('#buyMenu').fadeIn();
+          $("#buyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
           $('#price').text("Price: "+cursor.cost);
           $('#matter').text("Matter: "+cursor.value);*/
+        }
+    });
 
+    Template.battlefieldBase.events({
+    	'click .used_slot': function(e, t) {
+
+            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "100%"
+                }, 0);
+                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 13 + "px";
+                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                    "height": "0px"
+                }, 0, function() {
+
+                    $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                        "margin-top": "-13px"
+                    }, 150, function() {
+
+                        $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                    });
+                });
+
+            } else {
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+                $(e.currentTarget).next(".used_slot_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
+            }
+        },
+
+        'click .item': function(e, t) {
             //Variante B
-            $('#mineBuyMenu').fadeIn();
-            $("#mineBuyMenuMatterBlock").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
-            $('#price').text("Price: " + this.cost);
-            $('#matter').text("Matter: " + this.value);
-
             var currentUser = Meteor.users.findOne({
                 _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1,
+                }
             }).username;
-
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
+            $('#buyMenu').fadeIn();
+            Session.set("clickedFight", e.currentTarget.id);
+            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Colosseum_" + this.color + ".png");
+            $('#item').text("XP: " + this.value);
+            var amountSupSlots = cursorPlayerData.battlefield.supSlots;
+            range_slider("Buy_Menu", cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl);
+            $('#time').text("Time: " + msToTime(this.time));
+            $('#price').text("Price: " + this.cost);
 
-            var amountSupSlots = cursorPlayerData.mine.supSlots;
-
-            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
             if ($('#AmountScroungerSlots').children()) {
@@ -965,7 +1538,6 @@ if (Meteor.isClient) {
                 }
             }
         }
-
     });
 
     Template.mineScrounge.events({
@@ -1003,53 +1575,165 @@ if (Meteor.isClient) {
             }
         },
 
-        'click .goScrounging': function(e, t) {
+        'click .goScroungingMine': function(e, t) {
             var slotId = e.currentTarget.id.split("_").pop();
-            Meteor.call('goScrounging', slotId, function(err) {
+            Meteor.call('goScroungingMine', slotId, function(err) {
                 if (err) {
-                    console.log('goScrounging: ' + err);
+                    console.log('goScroungingMine: ' + err);
                 }
             });
         }
     });
 
-    //TODO: noch nicht fertig !
-    Template.mineBuyMenu.events({
+	Template.battlefieldScrounge.events({
+		'click .scroungable': function(e, t) {
 
+            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
+
+            if ($(e.currentTarget).next(".scroungable_advanced").height() == 0) {
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "height": "100%"
+                }, 0);
+                var height = $(e.currentTarget).next(".scroungable_advanced").height() + 13 + "px";
+                $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                    "height": "0px"
+                }, 0, function() {
+
+                    $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                        "margin-top": "-13px"
+                    }, 150, function() {
+
+                        $(e.currentTarget).next(".scroungable_advanced").filter(':not(:animated)').animate({
+                            "height": height
+                        }, 1000);
+
+                    });
+                });
+
+            } else {
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "height": "0px",
+                }, 1000);
+                $(e.currentTarget).next(".scroungable_advanced").animate({
+                    "margin-top": "0px"
+                }, 150);
+            }
+        },
+
+        'click .goScroungingBattlefield': function(e, t) {
+            var slotId = e.currentTarget.id.split("_").pop();
+            Meteor.call('goScroungingBattlefield', slotId, function(err) {
+                if (err) {
+                    console.log('goScroungingBattlefield: ' + err);
+                }
+            });
+        }
+	});
+
+    //TODO: noch nicht fertig !
+    Template.buyMenu.events({
         'click #buyMenuYes': function(e, t) {
 
-            var currentUser = Meteor.users.findOne({
+            var menu = Meteor.users.findOne({
                 _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: currentUser
-            });
+            }, {
+                fields: {
+                    menu: 1,
+                }
+            }).menu;
 
             // Werte des Range Sliders
             var slider_range = $('#range_slider_Buy_Menu').slider("option", "values");
 
             //updating the database
-            Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
-                if (err) {
-                    console.log(err);
-                }
-            });
-
-            $('#mineBuyMenu').fadeOut();
+            if (menu == 'mine') {
+                Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+            if (menu == 'battlefield'){
+            	Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+            $('#buyMenu').fadeOut();
 
         },
 
         'click #buyMenuNo': function(e, t) {
-            $('#mineBuyMenu').fadeOut();
+            $('#buyMenu').fadeOut();
 
         },
     });
 
     Template.worldMap.events({
-
         'click .worldMapNavigators': function(e, t) {
-            navigateWorldMap($(e.currentTarget).attr('id'));
+            switch (e.currentTarget.id) {
+                case "worldMapGoUp":
+                    var yValue = worldMapArray[0].columns[0].y + 1;
+                    if (yValue > mapRows - 1) yValue = 0
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue);
+                    break;
+                case "worldMapGoDown":
+                    var yValue = worldMapArray[0].columns[0].y - 1;
+                    if (yValue < 0) yValue = mapRows - 1
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue);
+                    break;
+                case "worldMapGoRight":
+                    var xValue = worldMapArray[0].columns[0].x + 1;
+                    if (xValue > mapColumns - 1) xValue = 0
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y);
+                    break;
+                case "worldMapGoLeft":
+                    var xValue = worldMapArray[0].columns[0].x - 1;
+                    if (xValue < 0) xValue = mapColumns - 1
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y);
+                    break;
+                default:
+                    console.log('default case: worldMapNavigators');
+                    break;
+            }
+            Session.set("worldMapArray", worldMapArray);
         },
+
+        'click .worldMapPlayerPlace': function(e, t){
+        	var current = e.currentTarget.id;
+            var currentMenu = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    menu: 1
+                }
+            }).menu;
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    cu: current
+                }
+            });
+            var myName = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1
+                }
+            }).username;
+            //in your own menu? base:scrounge
+            if (current == myName) {
+                Router.current().render(currentMenu + 'Base', {
+                    to: 'middle'
+                });
+            } else {
+                Router.current().render(currentMenu + 'Scrounge', {
+                    to: 'middle'
+                });
+            }
+        }
 
     });
 
@@ -1665,323 +2349,45 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
-    var sizePlayerPlace = 300;
-
-    //WORLD MAP FRONTEND//
-
-    function createWorldMap() {
-
-        var WorldMapSize = worldMapFields.find({}, {
-            fields: {
-                'x': 1
-            }
-        }).fetch().length;
-        var EdgeLengthFields = Math.sqrt(WorldMapSize);
-        var EdgeLengthPixel = EdgeLengthFields * sizePlayerPlace;
-
-        $('#world').css({
-            "width": EdgeLengthPixel,
-            "height": EdgeLengthPixel,
-            "margin-top": -EdgeLengthPixel / 2,
-            "margin-left": -EdgeLengthPixel / 2,
-        })
-
-        /*      $('#world').css({
-          "width": 8*sizePlayerPlace,
-          "height": 8*sizePlayerPlace,
-          "margin-top": -4*sizePlayerPlace,
-          "margin-left": -4*sizePlayerPlace,
-        })*/
-
-        //Stellt per Definition ein, wie weit die Map von Beginn an mit Daten gefüllt sein soll
-        fillWorldMap(0, 3, 0, 3);
-    }
-
-    function fillWorldMap(xLeft, xRight, yBot, yTop) {
-
-        //Mehrdimensionales Array, welches die Positions-Daten (x, y, user) aus der Datenbank enthält
-        var worldPositions = worldMapFields.find({}, {
-            fields: {
-                'x': 1,
-                'y': 1,
-                'user': 1
-            },
-        }).fetch();
-
-        /*      for(i=0; i < worldPositions.length; i++) {
-
-        console.log(worldPositions[i].user+"  "+worldPositions[i].x+"  "+worldPositions[i].y);
-
-      }*/
-
-        //sizePlayerPlace: Größe eines Feldes auf der WorldMap
-        //Breite der gesamten Welt: Math.sqrt(worldPositions.length)*sizePlayerPlace
-        //Breite des zu zeichnenden WorldMap-Abschnitts: Math.abs(xRight-xLeft)*sizePlayerPlace
-
-        //Beispiel mit Zahlen, WorldSize 64:
-        // left = (sqrt(64) * 300) /2 - ((abs(3-0))+1) * 300/2 = 600
-        // top = -300 + (sqrt(64)*300) /2 + ((3 + 1) * 300) /2 = 1500
-
-        // Beispiel bei WorldSize von 64
-        // var left = 8*sizePlayerPlace/2-((Math.abs(xRight-xLeft))+1)*sizePlayerPlace/2;
-        // var top = -300+(8*sizePlayerPlace/2+((yHeight+1)*sizePlayerPlace/2));
-
-        //Nur beim ersten Aufruf ist wegen der leidigen "Bei 0 Anfangen"-Geschichte die "+1-Korrektur" notwendig
-
-        var left = Math.sqrt(worldPositions.length) * sizePlayerPlace / 2 - ((Math.abs(xRight - xLeft)) + 1) * sizePlayerPlace / 2;
-        var top = -300 + (Math.sqrt(worldPositions.length) * sizePlayerPlace / 2 + ((Math.abs(yTop - yBot)) + 1) * sizePlayerPlace / 2);
-
-        for (i = 0; i < worldPositions.length; i++) {
-
-            var x;
-            var y;
-            var user = "";
-
-            if ((worldPositions[i].x >= xLeft && worldPositions[i].x <= xRight) && (worldPositions[i].y >= yBot) && (worldPositions[i].y <= yTop)) {
-
-                x = worldPositions[i].x;
-                y = worldPositions[i].y;
-                user = worldPositions[i].user;
-
-                drawPlayerPlace(x, y, user, left, top);
-                /*              console.log(i+"  "+x+"  "+y);*/
-            }
-            /*          console.log(x+"  "+y);
-            console.log("Left  "+(left+x*sizePlayerPlace)+"px");
-            console.log("Top  "+(top-y*sizePlayerPlace)+"px");*/
-        }
-        /*      setViewPosition(1, 1);*/
-    }
-
-    function extendWorld(direction) {
-
-        var worldPositions = worldMapFields.find({}, {
-            fields: {
-                'x': 1,
-                'y': 1,
-                'user': 1
-            },
-        }).fetch();
-
-        switch (direction) {
-
-            case 'up':
-
-                extendUpCount = extendUpCount + 2;
-
-                var xLeft = 0; //per Definition, je nachdem wie groß der Anfang ist
-                var xRight = 1; //per Definition, je nachdem wie groß der Anfang ist
-                var yBot = 0 + extendUpCount;
-                var yTop = yBot + 1;
-
-                fillWorldMap(xLeft, xRight, yBot, yTop);
-
-
-            case 'down':
-
-                break;
-
-            case 'right':
-
-                extendRightCount = extendRightCount + 2;
-
-                var xLeft = 0 + extendRightCount; //per Definition, je nachdem wie groß der Anfang ist
-                var xRight = xLeft + 1; //per Definition, je nachdem wie groß der Anfang ist
-                var yBot = 0 + extendDownCount;
-                var yTop = 1 + extendUpCount;
-
-                fillWorldMap(xLeft, xRight, yBot, yTop);
-
-                break;
-
-            case 'left':
-
-                break;
-
-            default:
-
-                console.log("verdammter Scheiß...");
-
-                break;
-        }
-    }
-
-    function setViewPosition(xView, yView) {
-        var top = parseInt($('#world').css("margin-top"));
-        var left = parseInt($('#world').css("margin-left"));
-        $('#world').css({
-            "margin-left": left + (xView * 300) + "px"
-        });
-        $('#world').css({
-            "margin-top": top - (yView * 300) + "px"
-        });
-    }
-
-    function drawPlayerPlace(x, y, user, left, top) {
-        var playerPlace = document.createElement("div");
-        playerPlace.className = "playerPlace";
-        playerPlace.id = x + " " + y;
-        document.getElementById("world").appendChild(playerPlace);
-        document.getElementById(playerPlace.id).style.top = (top - y * 300) + "px";
-        document.getElementById(playerPlace.id).style.left = (left + x * 300) + "px";
-        document.getElementById(playerPlace.id).style.width = "300px";
-        document.getElementById(playerPlace.id).style.height = "300px";
-        document.getElementById(playerPlace.id).style.backgroundImage = "url(/Aufloesung1920x1080/Interface/BackgroundWorldMap3.png)";
-
-
-        var text = document.createTextNode(x + "  " + y + "  " + user);
-        document.getElementById(playerPlace.id).style.fontSize = "50pt";
-        document.getElementById(playerPlace.id).appendChild(text);
-    }
-
-    var upDisabled = false;
-    var downDisabled = false;
-    var leftDisabled = false;
-    var rightDisabled = false;
-
-    var extendUpCount = 0;
-    var extendDownCount = 0;
-    var extendRightCount = 0;
-    var extendLeftCount = 0;
-
-    var navUpCount = 0;
-    var navDownCount = 0;
-    var navRightCount = 0;
-    var navLeftCount = 0;
-
     function navigateWorldMap(direction) {
 
-        var top = parseInt($('#world').css("margin-top"));
-        var left = parseInt($('#world').css("margin-left"));
-        var mapSize = parseInt($('#world').css("width"));
-
-        if (top == 0) {
-            upDisabled = true;
-            $('#worldMapGoUp').css({
-                "opacity": "0.3"
-            });
-        }
-        if (top == -mapSize) {
-            downDisabled = true;
-            $('#worldMapGoDown').css({
-                "opacity": "0.3"
-            });
-        }
-        if (left == 0) {
-            leftDisabled = true;
-            $('#worldMapGoLeft').css({
-                "opacity": "0.3"
-            });
-        }
-        if (left == -mapSize) {
-            rightDisabled = true;
-            $('#worldMapGoRight').css({
-                "opacity": "0.3"
-            });
-
-        }
+        var top = parseInt($('#currentMapView').css("margin-top"));
+        var right = parseInt($('#currentMapView').css("margin-right"));
 
         switch (direction) {
 
             case 'worldMapGoUp':
 
-                /*                var margin = Math.abs(parseInt($('#world').css("margin-top")))+300;
-                var verschiebung = höhe/2 - Math.abs(margin);
-                console.log("HÖHE "+höhe/2+"  "+"MARGIN "+Math.abs(margin)+"  "+"VERSCHIEBUNG "+verschiebung);
-                console.log(navUpCount%2 == 0 && extendUpCount <= navUpCount/2);*/
-
-                //navUpCount%X: X entsprechend definieren je nachdem wie groß die refill-Schritte sein sollen
-                //X = 2 eignet sich bei Beginn mit 4 Feldern
-                //X =
-
-                if (navUpCount != 0 && navUpCount % 4 == 0 && extendUpCount <= navUpCount / 4 && navUpCount < (mapSize / 4) / 300) {
-                    extendWorld("up");
-                }
-
-                if (upDisabled == false) {
-                    $('#world').filter(':not(:animated)').animate({
-                        "margin-top": (top + 300) + "px"
-                    }, 250);
-                    downDisabled = false;
-                    $('#worldMapGoDown').css({
-                        "opacity": "1"
-                    });
-
-                    navUpCount++;
-                    navDownCount--;
-                    console.log(navUpCount + "  " + extendUpCount);
-                    console.log(navDownCount + "  " + extendDownCount);
-                }
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-top": (top + 300) + "px"
+                }, 250);
 
                 break;
+
             case 'worldMapGoDown':
 
-                if (navDownCount != 0 && navDownCount % 4 == 0 && extendDownCount <= navDownCount / 4 && navDownCount < (mapSize / 4) / 300) {
-                    extendWorld("down");
-                }
-
-                if (downDisabled == false) {
-                    $('#world').filter(':not(:animated)').animate({
-                        "margin-top": (top - 300) + "px"
-                    }, 250);
-                    upDisabled = false;
-                    $('#worldMapGoUp').css({
-                        "opacity": "1"
-                    });
-
-                    navDownCount++;
-                    navUpCount--;
-                    console.log(navUpCount + "  " + extendUpCount);
-                    console.log(navDownCount + "  " + extendDownCount);
-                }
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-top": (top - 300) + "px"
+                }, 250);
 
                 break;
+
             case 'worldMapGoRight':
 
-                if (navRightCount != 0 && navRightCount % 4 == 0 && extendRightCount <= navRightCount / 4 && navRightCount < (mapSize / 4) / 300) {
-                    extendWorld("right");
-                }
-
-                if (rightDisabled == false) {
-                    $('#world').filter(':not(:animated)').animate({
-                        "margin-left": (left - 300) + "px"
-                    }, 250);
-                    leftDisabled = false;
-                    $('#worldMapGoLeft').css({
-                        "opacity": "1"
-                    });
-
-                    navRightCount++;
-                    navLeftCount--;
-                    console.log(navRightCount + "  " + extendRightCount);
-                    console.log(navLeftCount + "  " + extendLeftCount);
-
-                }
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-right": (right + 300) + "px"
+                }, 250);
 
                 break;
+
             case 'worldMapGoLeft':
 
-                if (navLeftCount != 0 && navLeftCount % 4 == 0 && extendLeftCount <= navLeftCount / 4 && navLeftCount < (mapSize / 4) / 300) {
-                    extendWorld("left");
-                }
-
-                if (leftDisabled == false) {
-                    $('#world').filter(':not(:animated)').animate({
-                        "margin-left": (left + 300) + "px"
-                    }, 250);
-                    rightDisabled = false;
-                    $('#worldMapGoRight').css({
-                        "opacity": "1"
-                    });
-
-                    navLeftCount++;
-                    navRightCount--;
-                    console.log(navRightCount + "  " + extendRightCount);
-                    console.log(navLeftCount + "  " + extendLeftCount);
-
-                }
+                $('#currentMapView').filter(':not(:animated)').animate({
+                    "margin-right": (right - 300) + "px"
+                }, 250);
 
                 break;
+
             default:
                 //console.log("Slide für diesen Hover nicht definiert !");
                 break;
@@ -1989,16 +2395,6 @@ if (Meteor.isClient) {
         }
 
     }
-
-    // function get_deps_count() {
-    //     return Session.get("deps_count");
-    // }
-
-    // function set_deps_count() {
-    //     var set = Session.get("deps_count");
-    //     set++;
-    //     Session.set("deps_count", set);
-    // }
 
     var deps_count = 0;
 
@@ -2037,6 +2433,124 @@ if (Meteor.isClient) {
         deps_count++;
     });
 
+    var worldMapArray = new Array();
+
+    function initWorldMapArray(orientationX, orientationY) {
+        //get max map size
+        var maxX = worldMapFields.find({}, {
+            fields: {
+                x: 1
+            },
+            sort: {
+                x: -1
+            }
+        }).fetch()[0].x;
+        var maxY = worldMapFields.find({}, {
+            fields: {
+                y: 1
+            },
+            sort: {
+                y: -1
+            }
+        }).fetch()[0].y;
+        //reset array
+        worldMapArray.length = 0;
+        //go all rows
+        for (var i = 0; i < mapRows; i++) {
+            worldMapArray.push(createRowObject(orientationX, orientationY, maxX, maxY, i));
+        }
+        Session.set("worldMapArray", worldMapArray);
+    }
+
+    function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
+        var row = {};
+        var column = new Array();
+        //go all columns
+        for (var j = 0; j < mapColumns; j++) {
+            //if coordinates are bigger than map max: get new data with modulo for infinite map size
+            var user = worldMapFields.findOne({
+                x: (orientationX + j) % (maxX + 1),
+                y: (orientationY + rowNo) % (maxY + 1)
+            }, {
+                fields: {
+                    user: 1
+                }
+            }).user;
+            var infoMemory = {};
+            //without user push empty object
+            if (user != '') {
+                var playerLevel = playerData.findOne({
+                    user: user
+                }, {
+                    fields: {
+                        level: 1
+                    }
+                }).level;
+                infoMemory['playerLevel'] = playerLevel;
+                infoMemory['playerImage'] = "worldMapPlayerImage";
+                infoMemory['playerName'] = user;
+            }
+            infoMemory['x'] = (orientationX + j) % (maxX + 1);
+            infoMemory['y'] = (orientationY + rowNo) % (maxY + 1);
+            infoMemory['left'] = j * 300;
+            infoMemory['bottom'] = rowNo * 250;
+            column.push(infoMemory);
+        }
+        row['columns'] = column;
+        return row;
+    }
+
+    //TO-DO: Datenbankanfrage optimieren + debuggen
+    // function updateWorldMapArray(direction) {
+    //     //get max map size
+    //     var maxX = worldMapFields.find({}, {
+    //         fields: {
+    //             x: 1
+    //         },
+    //         sort: {
+    //             x: -1
+    //         }
+    //     }).fetch()[0].x;
+    //     var maxY = worldMapFields.find({}, {
+    //         fields: {
+    //             y: 1
+    //         },
+    //         sort: {
+    //             y: -1
+    //         }
+    //     }).fetch()[0].y;
+    //     if (direction == "worldMapGoUp" || direction == "worldMapGoDown") {
+    //         var result = getNewRow(direction, maxX, maxY);
+    //     } else {
+    //     	//To-DO: getNewColumn implementieren
+    //     }
+    //     return result;
+    // }
+
+    // function getNewRow(direction, maxX, maxY) {
+    //     var newArray = new Array();
+    //     if (direction == "worldMapGoUp") {
+    //         //slide useable data
+    //         for (var i = 0; i < worldMapArray.length - 1; i++) {
+    //             newArray[i] = worldMapArray[i + 1];
+    //         }
+    //         //create the NEW row
+    //         newArray[mapRows - 1] = createRowObject(worldMapArray[0].columns[0].x, worldMapArray[0].columns[0].y + 1, maxX, maxY, mapRows - 1, mapColumns);
+    //     } else {
+    //         //slide useable data
+    //         for (var i = worldMapArray.length - 1; i > 0; i--) {
+    //             newArray[i] = worldMapArray[i - 1];
+    //         }
+    //         //create the NEW row
+    //         newArray[0] = createRowObject(worldMapArray[0].columns[0].x, worldMapArray[0].columns[0].y - 1, maxX, maxY, mapRows - 1, mapColumns);
+    //     }
+    //     return newArray;
+    // }
+
+    // function getNewColumn(direction, maxX, maxY) {
+    //     too complex
+    // }
+
     //Deps.Autorun
     Deps.autorun(function() {
         if (!Meteor.user()) {
@@ -2056,15 +2570,6 @@ if (Meteor.isClient) {
             var cu = self.cu;
             if (cu && menu) {
                 Meteor.subscribe(menu, cu, function(rdy) {
-                    // if (cu == self.username) {
-                    //     Router.current().render('mineBase', {
-                    //         to: 'middle'
-                    //     });
-                    // } else {
-                    //     Router.current().render('mineScrounge', {
-                    //         to: 'middle'
-                    //     });
-                    // }
                     // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
                 });
             } else {

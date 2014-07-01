@@ -229,7 +229,7 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
 /*///////////////////////////////////////////////////////////////////////////   MINE BUY MENU   ///////////////////////////////////////////////////////////////////////////*/
- #mineBuyMenu {
+ #buyMenu {
     margin: 0px auto;
     top:162px;
     bottom:162px;
@@ -237,7 +237,7 @@ img.i7 {
     z-index: 5;
     display: none;
 }
-#mineBuyMenuFrame {
+#buyMenuFrame {
     top: 0px;
     display: block;
     bottom: 15px;
@@ -245,7 +245,7 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackground.png);
     background-repeat: no-repeat;
 }
-#mineBuyMenuBottomEnd {
+#buyMenuBottomEnd {
     margin: 0px auto;
     bottom: 0px;
     width: 778px;
@@ -269,7 +269,7 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/NOButton.png);
     background-repeat: no-repeat;
 }
-#mineBuyMenuText {
+#buyMenuText {
     left:150px;
     top: 70px;
     font-family:"OCR A Std";
@@ -277,7 +277,7 @@ img.i7 {
     color: white;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
-#mineBuyMenuMatterBlock {
+#buyMenuItem {
     width: 85px;
     height: 85px;
     left: 33px;
@@ -512,21 +512,95 @@ img.i7 {
     background-image: url(/Aufloesung1920x1080/Interface/NavWorldLeft1.png);
     background-repeat: no-repeat;
 }
-#world {
-    position: absolute;
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    /*  background-image: url(/Aufloesung1920x1080/Interface/BackgroundWorldMap8.png);*/
+#currentMapView {
+ width: 1800px; 
+ height: 1000px; 
+ position: absolute; 
+ z-index: -1; 
+ right: 50%; 
+ top: 50%; 
+ margin-right: -900px; 
+ margin-top: -500px;
 }
 #worldViewPort {
-    top: 152px;
-    bottom: 152px;
-    right: 152px;
-    left: 152px;
-    position: absolute;
-    overflow: hidden;
+	top: 160px; 
+	bottom: 160px; 
+	right: 160px; 
+	left: 160px; 
+	position: absolute; 
+	overflow: hidden;
+	z-index: -2;
+	background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
+ 	background-repeat: repeat;
 }
+.worldMapPlayerPlace {
+	width: 300px; 
+	height: 250px; 
+	position: absolute; 
+	z-index: -1; 
+}
+.worldMapSlotsPreview{ 
+	width: 100px; 
+	height: 100px; 
+	position: absolute;
+}
+.worldMapSlotsPreviewText{
+	display: inline;
+    width: 100px;
+    bottom: 5px;
+    margin: 0px;
+    color: black;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+}
+#worldMapSlotsPreview{
+	background-color: yellow;
+	width: 300px; 
+	height: 250px; 
+	position: absolute; 
+	z-index: -1;
+}
+.worldMapPlayerStats{ 
+	top: 55px; 
+	bottom: 55px; 
+	right: 60px; 
+	left: 60px; 
+}
+.worldMapPlayerImage{
+	 width: 80px; 
+	 height: 80px; 
+	 top: 50%; 
+	 left: 50%; 
+	 margin-top: -40px; 
+	 margin-left: -40px;
+	 background-image: url(/Aufloesung1920x1080/Interface/PlayerImage01.png);
+	 background-repeat: no-repeat;
+}
+.worldMapPlayerLevel{
+	display: inline;
+    width: 100%;
+    height: 20px;
+    color: black;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+}
+.worldMapPlayerName{
+	display: inline;
+    height: 20px;
+    bottom: 0px;
+    width: 100%;
+    color: black;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+}
+
+
 /*///////////////////////////////////////////////////////////////////////////   CHARACTER VIEW   ///////////////////////////////////////////////////////////////////////////*/
  #characterView {
     top:162px;
@@ -731,8 +805,8 @@ img.i7 {
 }
 .slot_items_content {
     height:90px;
-    width:700px;
     overflow: hidden;
+    display:inline-flex;
 }
 .item {
     float:left;
