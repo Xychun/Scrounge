@@ -1356,15 +1356,18 @@ if (Meteor.isClient) {
 
             /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
 
+            var height2 = $(e.currentTarget).parent().height();
+            console.log();
+
             if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "height": "100%"
                 }, 0);
-                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 13 + "px";
+                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 63 + "px";
+                console.log(height);
                 $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                     "height": "0px"
                 }, 0, function() {
-
                     $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                         "margin-top": "-13px"
                     }, 150, function() {
@@ -1372,13 +1375,19 @@ if (Meteor.isClient) {
                         $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                             "height": height
                         }, 1000);
-
+                        $(e.currentTarget).parent().filter(':not(:animated)').animate({
+                            "height": parseInt(height2)+parseInt(height)
+                        }, 1000);
                     });
                 });
 
             } else {
+              var height3 = $(e.currentTarget).next(".used_slot_advanced").height()+ "px";
                 $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "0px",
+                    "height": "0px"
+                }, 1000);
+                $(e.currentTarget).parent().animate({
+                    "height": (parseInt(height2)-parseInt(height3))
                 }, 1000);
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "margin-top": "0px"
@@ -1468,15 +1477,18 @@ if (Meteor.isClient) {
 
             /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
 
+            var height2 = $(e.currentTarget).parent().height();
+            console.log();
+
             if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "height": "100%"
                 }, 0);
-                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 13 + "px";
+                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 63 + "px";
+                console.log(height);
                 $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                     "height": "0px"
                 }, 0, function() {
-
                     $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                         "margin-top": "-13px"
                     }, 150, function() {
@@ -1484,13 +1496,19 @@ if (Meteor.isClient) {
                         $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
                             "height": height
                         }, 1000);
-
+                        $(e.currentTarget).parent().filter(':not(:animated)').animate({
+                            "height": parseInt(height2)+parseInt(height)
+                        }, 1000);
                     });
                 });
 
             } else {
+              var height3 = $(e.currentTarget).next(".used_slot_advanced").height()+ "px";
                 $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "0px",
+                    "height": "0px"
+                }, 1000);
+                $(e.currentTarget).parent().animate({
+                    "height": (parseInt(height2)-parseInt(height3))
                 }, 1000);
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "margin-top": "0px"
@@ -1865,7 +1883,7 @@ if (Meteor.isClient) {
             var current_handle;
             var disable_boolean = true;
 
-            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());
+/*            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());*/
 
             tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, "left");
             $('.tooltip').hide();

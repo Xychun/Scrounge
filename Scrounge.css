@@ -178,6 +178,7 @@ img.i7 {
     bottom:86px;
     left:86px;
     right:86px;
+    min-width: 1000px;
 }
 #unten {
     left:86px;
@@ -237,13 +238,21 @@ img.i7 {
     z-index: 5;
     display: none;
 }
-#buyMenuFrame {
+#buyMenuTopEnd {
+	margin: 0px auto;
     top: 0px;
+    width: 778px;
+    height: 140px;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackgroundTopEnd.png);
+    background-repeat: no-repeat;
+}
+#buyMenuFrame {
+    top: 140px;
     display: block;
     bottom: 15px;
     width: 778px;
-    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackground.png);
-    background-repeat: no-repeat;
+    background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/BuyMenuBackgroundMid.png);
+    background-repeat: repeat-y;
 }
 #buyMenuBottomEnd {
     margin: 0px auto;
@@ -270,8 +279,8 @@ img.i7 {
     background-repeat: no-repeat;
 }
 #buyMenuText {
-    left:150px;
-    top: 70px;
+    left:160px;
+    top: -10px;
     font-family:"OCR A Std";
     font-size: 1.5em;
     color: white;
@@ -304,6 +313,18 @@ img.i7 {
 #yesButton {
     background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
 }
+#screenDarkener {
+	height: 100%;
+	width: 100%;
+	position: relative;
+	background-color: black;
+	opacity: 0.8;
+	z-index: 4;
+	overflow: hidden;
+	display: none;
+	background-image: url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
+ 	background-repeat: repeat;
+}
 .rangeSliderMarksStroke {
     right: 0px;
     left: 0px;
@@ -318,7 +339,7 @@ img.i7 {
     width: 92px;
     height: 134px;
     left: 33px;
-    top: 160px;
+    top: 10px;
 }
 .sslots_available {
     position: relative;
@@ -345,6 +366,8 @@ img.i7 {
     width: auto;
     position: absolute;
     height: 25px;
+    right: 0px;
+    left: 0px;
     background-color: #8e8d8d;
     background: url(/images/bg-track.png) repeat top left;
     box-shadow: inset 0 1px 5px 0px rgba(0, 0, 0, .5), 0 1px 0 0px rgba(250, 250, 250, .5);
@@ -420,11 +443,11 @@ img.i7 {
     right: 10px;
     top: 20px;
     margin: 0px;
-    color: black;
+    color: white;
     font-family:"OCR A Std";
     font-size: 1.5em;
     text-align: right;
-    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .text_specialResources {
     display: inline;
@@ -432,11 +455,11 @@ img.i7 {
     right: 5px;
     top: 12px;
     margin: 0px;
-    color: black;
+    color: white;
     font-family:"OCR A Std";
     font-size: 0.9em;
     text-align: right;
-    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .img_matter {
     position: relative;
@@ -674,14 +697,43 @@ img.i7 {
 /*///////////////////////////////////////////////////////////////////////////   SLOTS BASE LEFT   ///////////////////////////////////////////////////////////////////////////*/
  .unused_slot {
     height:143px;
+    left: 139px;
+    position: absolute;
+    right: 25px;
+}
+.slotWrapper {
+	height: 143px;
+	width: 100%;
+	position: relative;
+}
+.slot_edge_left_BaseLeft {
+	width: 139px;
+	height: 143px;
+	left: 0px;
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotEdgeLeft.png);
+    background-repeat: no-repeat;
+}
+.slot_edge_right_BaseLeft {
+	width: 25px;
+	height: 143px;
+	right: 0px;
+	top: 0px;
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotEdgeRight.png);
+    background-repeat: no-repeat;
 }
 .used_slot {
     z-index:2;
     height:143px;
+    left: 139px;
+    position: absolute;
+    right: 25px;
 }
 .used_slot_advanced {
     z-index:1;
     height:0px;
+    /*Angabe ist zwingend notwendig, da position auf "absolute" gesetzt werden musste*/
+    /*Das Div würde andernfalls immer über dem used_slot selbst angezeigt*/
+    top: 142px;
     overflow:hidden;
     background-image: url(/Aufloesung1920x1080/Interface/ActionsFirstScrounger.png);
     background-repeat: no-repeat;
@@ -697,6 +749,35 @@ img.i7 {
     font-family:"OCR A Std";
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
+.slotBackgroundBaseLeft {
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotRepeat.png);
+    background-repeat: repeat-x;
+}
+
+
+/*///////////////////////////////////////////////////////////////////////////   SLOTS BASE RIGHT   ///////////////////////////////////////////////////////////////////////////*/
+
+.slotBackgroundBaseRight {
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotRepeat.png);
+    background-repeat: repeat-x;
+}
+.slot_edge_left_BaseRight {
+	width: 139px;
+	height: 143px;
+	left: 0px;
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotEdgeLeft.png);
+    background-repeat: no-repeat;
+}
+.slot_edge_right_BaseRight {
+	width: 25px;
+	height: 143px;
+	right: 0px;
+	background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotEdgeRight.png);
+    background-repeat: no-repeat;
+}
+
+
+
 .h1 {
     margin-top: 35px;
     font-size: 1.5em;
@@ -734,13 +815,13 @@ img.i7 {
 }
 .slot_upper_bar {
     top:13px;
-    left:151px;
+    left:10px;
     right:10px;
     height:27px;
 }
 .slot_stats {
     top:53px;
-    left:151px;
+    left:10px;
     right:5px;
 }
 .slot_advanced_stats {
@@ -774,9 +855,11 @@ img.i7 {
 }
 .slot_colors_content {
     left:4px;
-    width:700px;
     height:27px;
+    right: 0px;
+    left: 0px;
     background-image: url(/Aufloesung1920x1080/Interface/AktionsKastenSortierBalken/AktionsBalkenSortingBar.png);
+    background-repeat: repeat-x;
 }
 .color {
     float:left;
@@ -787,7 +870,7 @@ img.i7 {
 }
 .slot_items {
     top:53px;
-    left:151px;
+    left:10px;
     right:5px;
     width:auto;
     height:90px;
@@ -1092,6 +1175,7 @@ img.i7 {
         bottom:109px;
         left:109px;
         right:109px;
+        min-width: 1000px;
     }
     #unten {
         left:109px;
@@ -1303,10 +1387,10 @@ img.i7 {
         border-radius: 5px;
         margin-top:18px;
     }*/
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /*//////////////////////////////////////////////////// INVENTORY  /////////////////////////////////////////////////////////////*/
     .inventory_left_background {
         background-image: url(/Aufloesung1920x1080/Interface/InventoryLeft.png);
-        background-repeat: no-repeat;
+        background-repeat: repeat-y;
     }
     .inventory_left_background_top {
         background-image: url(/Aufloesung1920x1080/Interface/InventoryLeftTop.png);
@@ -1318,7 +1402,7 @@ img.i7 {
     }
     .inventory_right_background {
         background-image: url(/Aufloesung1920x1080/Interface/InventoryRight.png);
-        background-repeat: no-repeat;
+        background-repeat: repeat-y;
     }
     .inventory_right_background_top {
         background-image: url(/Aufloesung1920x1080/Interface/InventoryRightTop.png);
@@ -1341,7 +1425,7 @@ img.i7 {
     .matter_background {
         /*      height: 152px;*/
         background-image: url(/Aufloesung1920x1080/Interface/InventoryMatter.png);
-        background-repeat: no-repeat;
+        background-repeat: repeat-x;
     }
     .matter_background_left {
         height: 152px;
@@ -1401,6 +1485,7 @@ img.i7 {
         bottom:162px;
         left:162px;
         right:162px;
+        min-width: 1000px;
     }
     #unten {
         left:162px;
@@ -1552,12 +1637,12 @@ img.i7 {
     }
     .left_slider_slot_items_background {
         background-position: center;
-        background-image:url(/Aufloesung1920x1080/Interface/LeftSliderSlotItemsNormal.png);
+        background-image:url(/Aufloesung1920x1080/Interface/LeftSliderSlotItemsNormalGrey.png);
         background-repeat: no-repeat;
     }
     .right_slider_slot_items_background {
         background-position: center;
-        background-image:url(/Aufloesung1920x1080/Interface/RightSliderSlotItemsNormal.png);
+        background-image:url(/Aufloesung1920x1080/Interface/RightSliderSlotItemsNormalGrey.png);
         background-repeat: no-repeat;
     }
 }
