@@ -187,9 +187,39 @@ img.i7 {
     width:auto;
 }
 #improvements {
-    background-color:grey;
-    width:auto;
+	left: 10px;
+	right: 10px;
+	height: 31px;
+    background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarBackground4.png);
+    background-repeat:repeat-x;
+}
+#improvementsLeftEdge {
+	left: 0px;
+	width: 10px;
+	height: 31px;
+	background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarLeftEdge.png);
+    background-repeat: no-repeat;
+}
+#improvementsRightEdge {
+	right: 0px;
+	width: 10px;
+	height: 31px;
+	background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarRightEdge2.png);
+    background-repeat: no-repeat;
+}
+#improvementsWrapper {
+	width:auto;
     height:31px;
+}
+#improvementsText {
+	top: 5px;
+	left: 100px;
+	color: white;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    vertical-align: middle;
+    text-align: left;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .areas {
     top:37px;

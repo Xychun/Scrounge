@@ -249,7 +249,14 @@
 
 <template name="mineBase">
     <div id="mitte">
-        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own mine menu!</div>
+       <!--  <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own mine menu!</div> -->
+       <div id="improvementsWrapper" class="top left right">
+       		<div id="improvementsLeftEdge"> </div>
+	        <div id="improvements">
+	       		<div id="improvementsText" style="display:table-cell">LEVEL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SCIENCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ITEM: </div>
+	       	</div>
+	       	<div id="improvementsRightEdge"> </div>
+       </div>
         <div class="areas left bot">
             <div id="up_slider_base" class="hover_slide_height top slider_base_height">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
@@ -527,7 +534,13 @@
 
 <template name="battlefieldBase">
     <div id="mitte">
-        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own battlefield menu!</div>
+   		<div id="improvementsWrapper" class="top left right">
+       		<div id="improvementsLeftEdge"> </div>
+	        <div id="improvements">
+	       		<div id="improvementsText" style="display:table-cell">LEVEL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SCIENCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ITEM: </div>
+	       	</div>
+	       	<div id="improvementsRightEdge"> </div>
+        </div>
         <div class="areas left bot">
             <div id="up_slider_base" class="hover_slide_height top slider_base_height">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
@@ -539,7 +552,7 @@
                     <div class="slotWrapper">
                     	<div class="slot_edge_left_BaseLeft">
 	    					<div class="slot_icon">
-	                            <img src="/Aufloesung1920x1080/Battlefield/ColosseumEmptySlot.png">
+	                            <img src="/Aufloesung1920x1080/Battlefield/BattlesEmptySlot.png">
 	                        </div>
 	    				</div>
 	                    <div class="unused_slot relative slotBackgroundBaseLeft">
@@ -561,7 +574,7 @@
 	                                <div class="slot_items_content relative">
 	                                    {{#each fightArenas}}
 	                                    <div id={{fight}} class="item relative">
-	                                        <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Colosseum_{{color}}.png">
+	                                        <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
 	                                        <div class="itemTextValue">{{value}}XP</div>
 	                                        <div class="itemTextCost">{{cost}}</div>
 	                                    </div>
@@ -577,7 +590,7 @@
                     <div class="slotWrapper">
                     	<div class="slot_edge_left_BaseLeft">
 	    					 <div class="slot_icon">
-	                            <img src="/Aufloesung1920x1080/Battlefield/Colosseum_{{color}}.png">
+	                            <img src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
 	                        </div>
 	    				</div>
 	                    <div class="used_slot relative slotBackgroundBaseLeft">
@@ -648,7 +661,7 @@
     <div class="slotWrapper">
     	<div class="slot_edge_left_BaseRight">
 			<div class="slot_icon">
-	            <img src="/Aufloesung1920x1080/Battlefield/ColosseumEmptySlot.png">
+	            <img src="/Aufloesung1920x1080/Battlefield/BattlesEmptySlot.png">
 	        </div>
 	    </div>
 	    <div class="unused_slot relative slotBackgroundBaseRight"> </div>
@@ -662,7 +675,7 @@
     <div class="slotWrapper">
     	<div class="slot_edge_left_BaseRight">
 			<div class="slot_icon">
-            	<img src="/Aufloesung1920x1080/Battlefield/Colosseum_{{color}}.png">
+            	<img src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
        		</div>
 	    </div>
 	    <div class="used_slot relative slotBackgroundBaseRight">	        
@@ -717,7 +730,7 @@
                         <div class="scroungable relative">
                             <img src="/Aufloesung1920x1080/Interface/ActionsRedSlot.png">
                             <div class="slot_icon">
-                                <img src="/Aufloesung1920x1080/Battlefield/Colosseum_green.png">
+                                <img src="/Aufloesung1920x1080/Battlefield/Battles_green.png">
                             </div>
                             <div class="slot_upper_bar">
                                 <div class="slot_range"></div>

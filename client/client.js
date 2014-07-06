@@ -1530,7 +1530,7 @@ if (Meteor.isClient) {
             });
             $('#buyMenu').fadeIn();
             Session.set("clickedFight", e.currentTarget.id);
-            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Colosseum_" + this.color + ".png");
+            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
             $('#item').text("XP: " + this.value);
             var amountSupSlots = cursorPlayerData.battlefield.supSlots;
             range_slider("Buy_Menu", cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl);
