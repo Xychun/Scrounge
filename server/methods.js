@@ -695,8 +695,7 @@ if (Meteor.isServer) {
                 _id: this.userId
             });
             var name = self.username;
-            if (!self) return;
-            Meteor.call('createMapPosition', name);
+            if (!self) return;            
 
             // USERS //
             Meteor.users.update({
@@ -1127,6 +1126,7 @@ if (Meteor.isServer) {
                         //insert successful
                     }
                 });
+            Meteor.call('createMapPosition', name);
             return "account init OK!";
         }
     });
