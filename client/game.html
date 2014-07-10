@@ -242,18 +242,23 @@
     </script>
 </template>
 
+<template name="improvements">
+    <div id="improvementsWrapper" class="top left right">
+            <div id="improvementsLeftEdge"></div>
+            <div id="improvements">
+                {{#with improvement}}
+                <div id="improvementsText" style="display:table-cell"><a style="color: {{color}}">{{name}}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
+                {{/with}}
+            </div>
+            <div id="improvementsRightEdge"></div>
+        </div>
+</template>
+
 <!-- MINEBASE -->
 
 <template name="mineBase">
     <div id="mitte">
-        <!--  <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own mine menu!</div> -->
-        <div id="improvementsWrapper" class="top left right">
-            <div id="improvementsLeftEdge"></div>
-            <div id="improvements">
-                <div id="improvementsText" style="display:table-cell">LEVEL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SCIENCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ITEM:</div>
-            </div>
-            <div id="improvementsRightEdge"></div>
-        </div>
+        {{> improvements}}
         <div class="areas left bot">
             <div id="up_slider_base" class="hover_slide_height top slider_base_height">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
@@ -439,9 +444,7 @@
 
 <template name="mineScrounge">
     <div id="mitte">
-
-        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; Current user menu is {{#with current}} {{cu}} {{/with}}</div>
-
+        {{> improvements}}
         <div id="scroungeArea" class="bot">
 
             <div id="up_slider_scrounge" class="hover_slide_height top">
@@ -576,14 +579,7 @@
 
 <template name="battlefieldBase">
     <div id="mitte">
-        <!--  <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; You are in your own mine menu!</div> -->
-        <div id="improvementsWrapper" class="top left right">
-            <div id="improvementsLeftEdge"></div>
-            <div id="improvements">
-                <div id="improvementsText" style="display:table-cell">LEVEL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SCIENCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ITEM:</div>
-            </div>
-            <div id="improvementsRightEdge"></div>
-        </div>
+        {{> improvements}}
         <div class="areas left bot">
             <div id="up_slider_base" class="hover_slide_height top">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
@@ -766,9 +762,7 @@
 
 <template name="battlefieldScrounge">
     <div id="mitte">
-
-        <div id="improvements" class="top left right" style="font-size: 14pt; color: white">You are logged in as: {{currentUser.username}}; Current user menu is {{#with current}} {{cu}} {{/with}}</div>
-
+        {{> improvements}}
         <div id="scroungeArea" class="bot">
 
             <div id="up_slider_scrounge" class="hover_slide_height top">
@@ -1082,7 +1076,7 @@
     <div id="mitteCharacterScreen">
         <div id="mitteCharacterScreenWrapper">
         
-        <div id="improvements" class="top left right"></div>
+        <div id="improvementsASD" class="top left right"></div>
 
         <div id="characterScrounge"> 
 

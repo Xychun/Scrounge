@@ -80,24 +80,32 @@ if (Meteor.isClient) {
     ////////////////////////////
     ///// TEMPLATE RETURNS /////
     ////////////////////////////
-    Template.mineScrounge.current = function() {
-        return Meteor.users.findOne({
+    Template.improvements.improvement = function() {
+        var self = Meteor.users.findOne({
             _id: Meteor.userId()
         }, {
             fields: {
-                cu: 1
+                menu: 1,
+                cu: 1,
+                username: 1
             }
         });
-    }
-
-    Template.battlefieldScrounge.current = function() {
-        return Meteor.users.findOne({
-            _id: Meteor.userId()
-        }, {
-            fields: {
-                cu: 1
-            }
-        });
+        var cu = self.cu;
+        var menu = self.menu;
+        var color = "red";
+        if(cu == self.username){
+            cu = 'YOU ARE HOME! :-)';
+            color = "green";
+        }
+        var cursorPlayerData = playerData.findOne({user: self.username});
+        obj0 = {};
+        obj0['color'] = color;
+        obj0['name'] = cu;
+        obj0['xp'] = cursorPlayerData.XP + '/' + cursorPlayerData.requiredXP;
+        obj0['level'] = cursorPlayerData.level;
+        obj0['science'] = cursorPlayerData[menu].science;
+        obj0['item'] = cursorPlayerData[menu].scrItem.benefit;
+        return obj0;
     }
 
     //////////////////
@@ -1070,7 +1078,8 @@ if (Meteor.isClient) {
 
         },
 
-        'click .mineMenu': function(e, t) {
+        'click .i4': function(e, t) {
+            console.log('i4');
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1088,7 +1097,7 @@ if (Meteor.isClient) {
             });
         },
 
-        'click .battlefieldMenu': function(e, t) {
+        'click .i6': function(e, t) {
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
