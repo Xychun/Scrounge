@@ -29,6 +29,11 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+.div_center_vertical {
+    display:flex;
+    align-items:center;
+    height:100%;
+}
 div {
     position:absolute;
 }
@@ -187,34 +192,34 @@ img.i7 {
     width:auto;
 }
 #improvements {
-	left: 10px;
-	right: 10px;
-	height: 31px;
+    left: 10px;
+    right: 10px;
+    height: 31px;
     background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarBackground4.png);
     background-repeat:repeat-x;
 }
 #improvementsLeftEdge {
-	left: 0px;
-	width: 10px;
-	height: 31px;
-	background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarLeftEdge.png);
+    left: 0px;
+    width: 10px;
+    height: 31px;
+    background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarLeftEdge.png);
     background-repeat: no-repeat;
 }
 #improvementsRightEdge {
-	right: 0px;
-	width: 10px;
-	height: 31px;
-	background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarRightEdge2.png);
+    right: 0px;
+    width: 10px;
+    height: 31px;
+    background-image:url(/Aufloesung1920x1080/Interface/ImprovementBarRightEdge2.png);
     background-repeat: no-repeat;
 }
 #improvementsWrapper {
-	width:auto;
+    width:auto;
     height:31px;
 }
 #improvementsText {
-	top: 5px;
-	left: 100px;
-	color: white;
+    top: 5px;
+    left: 100px;
+    color: white;
     font-family:"OCR A Std";
     font-size: 1.1em;
     vertical-align: middle;
@@ -269,7 +274,7 @@ img.i7 {
     display: none;
 }
 #buyMenuTopEnd {
-	margin: 0px auto;
+    margin: 0px auto;
     top: 0px;
     width: 778px;
     height: 140px;
@@ -344,16 +349,16 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Mine/BuyMenu/RangeSlider.png);
 }
 #screenDarkener {
-	height: 100%;
-	width: 100%;
-	position: relative;
-	background-color: black;
-	opacity: 0.8;
-	z-index: 4;
-	overflow: hidden;
-	display: none;
-	background-image: url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
- 	background-repeat: repeat;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-color: black;
+    opacity: 0.8;
+    z-index: 4;
+    overflow: hidden;
+    display: none;
+    background-image: url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
+    background-repeat: repeat;
 }
 .rangeSliderMarksStroke {
     right: 0px;
@@ -399,7 +404,7 @@ img.i7 {
     right: 0px;
     left: 0px;
     background-color: #8e8d8d;
-    background: url(/images/bg-track.png) repeat top left;
+    background: url(/Aufloesung1920x1080/Interface/RangeSlider/bg-track.png) repeat top left;
     box-shadow: inset 0 1px 5px 0px rgba(0, 0, 0, .5), 0 1px 0 0px rgba(250, 250, 250, .5);
 }
 .tooltip {
@@ -436,7 +441,7 @@ img.i7 {
     width: 40px;
     height: 40px;
     cursor: pointer;
-    background: url(/images/handle.png) no-repeat 50% 50%/100% 100%;
+    background: url(/Aufloesung1920x1080/Interface/RangeSlider/handle.png) no-repeat 50% 50%/100% 100%;
     font-weight: bold;
     color: #1C94C4;
     outline: none;
@@ -566,39 +571,39 @@ img.i7 {
     background-repeat: no-repeat;
 }
 #currentMapView {
- width: 1800px; 
- height: 1000px; 
- position: absolute; 
- z-index: -1; 
- right: 50%; 
- top: 50%; 
- margin-right: -900px; 
- margin-top: -500px;
+    width: 1800px;
+    height: 1000px;
+    position: absolute;
+    z-index: -1;
+    right: 50%;
+    top: 50%;
+    margin-right: -900px;
+    margin-top: -500px;
 }
 #worldViewPort {
-	top: 160px; 
-	bottom: 160px; 
-	right: 160px; 
-	left: 160px; 
-	position: absolute; 
-	overflow: hidden;
-	z-index: -2;
-	background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
- 	background-repeat: repeat;
+    top: 160px;
+    bottom: 160px;
+    right: 160px;
+    left: 160px;
+    position: absolute;
+    overflow: hidden;
+    z-index: -2;
+    background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
+    background-repeat: repeat;
 }
 .worldMapPlayerPlace {
-	width: 300px; 
-	height: 250px; 
-	position: absolute; 
-	z-index: -1; 
+    width: 300px;
+    height: 250px;
+    position: absolute;
+    z-index: -1;
 }
-.worldMapSlotsPreview{ 
-	width: 100px; 
-	height: 100px; 
-	position: absolute;
+.worldMapSlotsPreview {
+    width: 100px;
+    height: 100px;
+    position: absolute;
 }
-.worldMapSlotsPreviewText{
-	display: inline;
+.worldMapSlotsPreviewText {
+    display: inline;
     width: 100px;
     bottom: 5px;
     margin: 0px;
@@ -608,31 +613,31 @@ img.i7 {
     text-align: center;
     text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
-#worldMapSlotsPreview{
-	background-color: yellow;
-	width: 300px; 
-	height: 250px; 
-	position: absolute; 
-	z-index: -1;
+#worldMapSlotsPreview {
+    background-color: yellow;
+    width: 300px;
+    height: 250px;
+    position: absolute;
+    z-index: -1;
 }
-.worldMapPlayerStats{ 
-	top: 55px; 
-	bottom: 55px; 
-	right: 60px; 
-	left: 60px; 
+.worldMapPlayerStats {
+    top: 55px;
+    bottom: 55px;
+    right: 60px;
+    left: 60px;
 }
-.worldMapPlayerImage{
-	 width: 80px; 
-	 height: 80px; 
-	 top: 50%; 
-	 left: 50%; 
-	 margin-top: -40px; 
-	 margin-left: -40px;
-	 background-image: url(/Aufloesung1920x1080/Interface/PlayerImage01.png);
-	 background-repeat: no-repeat;
+.worldMapPlayerImage {
+    width: 80px;
+    height: 80px;
+    top: 50%;
+    left: 50%;
+    margin-top: -40px;
+    margin-left: -40px;
+    background-image: url(/Aufloesung1920x1080/Interface/PlayerImage01.png);
+    background-repeat: no-repeat;
 }
-.worldMapPlayerLevel{
-	display: inline;
+.worldMapPlayerLevel {
+    display: inline;
     width: 100%;
     height: 20px;
     color: black;
@@ -641,8 +646,8 @@ img.i7 {
     text-align: center;
     text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
-.worldMapPlayerName{
-	display: inline;
+.worldMapPlayerName {
+    display: inline;
     height: 20px;
     bottom: 0px;
     width: 100%;
@@ -652,8 +657,6 @@ img.i7 {
     text-align: center;
     text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
-
-
 /*///////////////////////////////////////////////////////////////////////////   CHARACTER VIEW   ///////////////////////////////////////////////////////////////////////////*/
  #characterView {
     top:162px;
@@ -724,6 +727,70 @@ img.i7 {
     bottom: 0px;
     background-color: red;
 }
+/*////////////////////////////////////////////////////////////////////////////   SLOTS SCROUNGE   ///////////////////////////////////////////////////////////////////////////*/
+ .slotBackgroundScrounge {
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsRedSlotRepeat.png);
+    background-repeat: repeat-x;
+}
+.slot_edge_left_Scrounge {
+    width: 139px;
+    height: 143px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsRedSlotEdgeLeft.png);
+    background-repeat: no-repeat;
+}
+.slot_edge_right_Scrounge {
+    width: 25px;
+    height: 143px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsRedSlotEdgeRight.png);
+    background-repeat: no-repeat;
+}
+.slotBackgroundScroungeAdvanced {
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedScroungeStatsBackground.png);
+    background-repeat: repeat-x;
+}
+.slot_edge_left_ScroungeAdvanced {
+    width: 20px;
+    height: 100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedScroungeStatsLeft.png);
+    background-repeat: no-repeat;
+}
+.slot_edge_right_ScroungeAdvanced {
+    width: 20px;
+    height: 100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedScroungeStatsRight.png);
+    background-repeat: no-repeat;
+}
+.slotBackgroundScroungeSupporter {
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsBackground.png);
+    background-repeat: repeat-x;
+}
+.slot_edge_left_ScroungeSupporter {
+    width: 139px;
+    height: 116px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsLeft.png);
+    background-repeat: no-repeat;
+}
+.slot_edge_right_ScroungeSupporter {
+    width: 20px;
+    height: 116px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsRight.png);
+    background-repeat: no-repeat;
+}
+.scroungable_slot {
+    height:143px;
+    left: 139px;
+    right: 25px;
+}
+.scroungable_slot_advanced {
+    height:100px;
+    left: 20px;
+    right: 20px;
+}
+.scroungable_slot_supporter {
+    height:116px;
+    left: 139px;
+    right: 20px;
+}
 /*///////////////////////////////////////////////////////////////////////////   SLOTS BASE LEFT   ///////////////////////////////////////////////////////////////////////////*/
  .unused_slot {
     height:143px;
@@ -732,45 +799,49 @@ img.i7 {
     right: 25px;
 }
 .slotWrapper {
-	height: 143px;
-	width: 100%;
-	position: relative;
+    height: 143px;
+    position: relative;
+}
+.used_slot_Wrapper {
+    overflow:hidden;
+    height:143px;
+    z-index: 3;
 }
 .slot_edge_left_BaseLeft {
-	width: 139px;
-	height: 143px;
-	left: 0px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotEdgeLeft.png);
+    width: 139px;
+    height: 143px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotEdgeLeft.png);
     background-repeat: no-repeat;
 }
 .slot_edge_right_BaseLeft {
-	width: 25px;
-	height: 143px;
-	right: 0px;
-	top: 0px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotEdgeRight.png);
+    width: 25px;
+    height: 143px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotEdgeRight.png);
     background-repeat: no-repeat;
 }
 .used_slot {
-    z-index:2;
+    z-index:3;
     height:143px;
     left: 139px;
     position: absolute;
     right: 25px;
 }
 .used_slot_advanced {
-    z-index:1;
+    z-index:2;
     height:0px;
     /*Angabe ist zwingend notwendig, da position auf "absolute" gesetzt werden musste*/
     /*Das Div würde andernfalls immer über dem used_slot selbst angezeigt*/
-    top: 142px;
+    top: 143px;
+    width:100%;
+    margin-top:-13px;
     overflow:hidden;
-    background-image: url(/Aufloesung1920x1080/Interface/ActionsFirstScrounger.png);
-    background-repeat: no-repeat;
 }
 .scrounger_slot {
-    vertical-align: middle;
-    height:103px;
+    z-index: 1;
+    display:flex;
+    height: 116px;
+    margin-top: -13px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsScrounger.png);
 }
 .text {
     margin-top:5px;
@@ -780,34 +851,26 @@ img.i7 {
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .slotBackgroundBaseLeft {
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotRepeat.png);
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsGreenSlotRepeat.png);
     background-repeat: repeat-x;
 }
-
-
 /*///////////////////////////////////////////////////////////////////////////   SLOTS BASE RIGHT   ///////////////////////////////////////////////////////////////////////////*/
-
-.slotBackgroundBaseRight {
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotRepeat.png);
+ .slotBackgroundBaseRight {
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotRepeat.png);
     background-repeat: repeat-x;
 }
 .slot_edge_left_BaseRight {
-	width: 139px;
-	height: 143px;
-	left: 0px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotEdgeLeft.png);
+    width: 139px;
+    height: 143px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotEdgeLeft.png);
     background-repeat: no-repeat;
 }
 .slot_edge_right_BaseRight {
-	width: 25px;
-	height: 143px;
-	right: 0px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotEdgeRight.png);
+    width: 25px;
+    height: 143px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsYellowSlotEdgeRight.png);
     background-repeat: no-repeat;
 }
-
-
-
 .h1 {
     margin-top: 35px;
     font-size: 1.5em;
@@ -822,16 +885,17 @@ img.i7 {
     height:85px;
 }
 .scrounger_icon {
-    left:48px;
-    top:44px;
+    left:46px;
+    top:35px;
     width:55px;
     height:55px;
 }
 .scrounger_stats_wrapper {
-    display:table;
+    display: flex;
+    align-items: center;
+    position: relative;
     left:151px;
-    right:5px;
-    height:143px;
+    margin-top: 13px;
 }
 .scrounger_stats {
     display:table-cell;
@@ -854,10 +918,16 @@ img.i7 {
     left:10px;
     right:5px;
 }
+.slot_advanced_stats_wrapper {
+    display:flex;
+    align-items:center;
+    height:100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedStats.png);
+}
 .slot_advanced_stats {
-    margin-top:20px;
-    margin-left:151px;
-    margin-right:5px;
+    margin-top:13px;
+    left:151px;
+    position: relative;
 }
 .slot_colors_slider {
     width:21px;
@@ -1529,11 +1599,11 @@ img.i7 {
         min-width:600px;
         overflow:hidden;
     }
-    #goScrounging {
+    .goScroungingIcon {
+        z-index: 3;
         width: 200px;
         height: 100px;
-        left: 20px;
-        top: 22px;
+        top: 20px;
     }
     #scroungeAreaWrapper {
         top: 40px;
@@ -1541,34 +1611,72 @@ img.i7 {
         width: 100%;
         overflow: hidden;
     }
-    #scroungeAreaContentLeft {
-        width: 48.8%;
+    .scroungeAreaContentLeft {
+        left: 0px;
+        right: 50%;
+        margin-right: 20px;
     }
-    #scroungeAreaContentRight {
-        width: 48.8%;
+    .scroungeAreaContentRight {
+        right: 0px;
+        left: 50%;
+        margin-left: 20px;
     }
-    .scroungable {
+    .scrounge_slot {
+        z-index: 3;
         height: 143px;
     }
-    .scroungable_advanced {
+    .scrounge_slot_advanced {
+        z-index: 2;
+        margin-top:-13px;
+        height: 100px;
+    }
+    .scrounge_slot_advanced_wrapper {
+        z-index:1;
         height: 0px;
+        width: 100%;
+        margin-top: -13px;
         overflow: hidden;
-        background-image: url(/Aufloesung1920x1080/Interface/ActionsFirstScrounger2.png);
-        background-repeat: no-repeat;
+    }
+    .scrounge_slot_supporter {
+        z-index: 1;
+        height:116px;
+        margin-top:-13px;
     }
     .scroungableText {
-        top:10px;
-        left:250px;
+        position: relative;
+        left:220px;
     }
-    #seperationBarScrounge {
+    .scrounge_slot_advanced_text {
+        position: relative;
+        left:129px;
+        margin-top:13px;
+    }
+    .scrounge_slot_supporter_text {
+        position: relative;
+        left:10px;
+    }
+    .scrounge_left {
+        right:50%;
+        margin-right: 119px
+    }
+    .scrounge_right {
+        left:50%;
+        margin-left:25px;
+    }
+    .scrounge_slot_upper_bar {
+        top:13px;
+        left:10px;
+        height:27px;
+    }
+    /*    #seperationBarScrounge {
         margin-left: auto;
         margin-right: auto;
-        top:20px;
+        top:0px;
         width:20px;
         height:100%;
         background-image:url(/Aufloesung1920x1080/Interface/TrennbalkenScrounge.png);
         background-size:cover;
-    }
+    }*/
     /*///////////////////////////////////////////////////////////////////////////   HOVER BUTTONS   ///////////////////////////////////////////////////////////////////////////*/
     /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
     .SSscroungeBaseButton {

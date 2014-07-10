@@ -703,15 +703,6 @@ if (Meteor.isClient) {
                 objects[i] = obj0;
             }
         }
-        // für den Range Slider
-        Meteor.call("slider_init", function(err, result) {
-            for (var i = 0; i < amountOwnSlots; i++) {
-                var fightId = cursorBattlefield['owns' + i].input;
-                if (fightId > 0) {
-                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
-                }
-            }
-        });
         return objects;
     };
 
@@ -1127,6 +1118,17 @@ if (Meteor.isClient) {
 
         },
 
+        'click #testButton5': function(e, t) {
+
+            var blub = $(".slotWrapper").children(".used_slot_advanced").height();
+            $(".slotWrapper").children(".used_slot_advanced").css({
+                "height": "auto"
+            });
+            var blub2 = $(".slotWrapper").children(".used_slot_advanced").height();
+            console.log('test: ' + blub + ' test2: ' + blub2);
+
+        },
+
         'click #switchToWorldMap': function(e, t) {
 
             if (!$("#world").length) {
@@ -1154,13 +1156,13 @@ if (Meteor.isClient) {
                 }
 
             } else {
-            	var currentMenu = Meteor.users.findOne({
-                        _id: Meteor.userId()
-                    }, {
-                        fields: {
-                            menu: 1
-                        }
-                    }).menu;
+                var currentMenu = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }, {
+                    fields: {
+                        menu: 1
+                    }
+                }).menu;
                 Router.current().render(currentMenu + 'Base', {
                     to: 'middle'
                 });
@@ -1326,6 +1328,12 @@ if (Meteor.isClient) {
         'mouseout .slider': function(e, t) {
             slide_stop();
         },
+        'mouseenter .tooltip_hover': function(e, t) {
+            fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "in");
+        },
+        'mouseleave .tooltip_hover': function(e, t) {
+            fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "out");
+        },
 
         //To-DO Media Queries in 3 CSS files aufteilen und je nach Query nutzen
         //      Evtl. SpriteSheets anlegen im 4er Block und abhängig von der Größe benutzen
@@ -1348,78 +1356,63 @@ if (Meteor.isClient) {
             $(e.target).css({
                 "background-image": bImage
             });
+        },
+        'click .dropdown': function(e, t) {
+            console.log($(e.target).parent().attr("class").search("goScroungingIcon"));
+            // if ($(e.target).src().length() == 1) {
+            //     console.log('blub');
+            // }
+
+            if ($(e.target).parent().attr("class").search("goScroungingIcon") == -1) {
+
+                if ($(e.currentTarget).children().eq(1).filter(':not(:animated)').length == 1) { //das 2te child element (der advanced div) wird auf laufende animationen geprüft
+
+                    var height2 = $(e.currentTarget).height();
+
+                    if ($(e.currentTarget).children().eq(1).filter(':not(:animated)').height() == 0) {
+                        $(e.currentTarget).children().eq(1).css({
+                            "height": "auto"
+                        });
+                        var height = $(e.currentTarget).children().eq(1).height();
+                        $(e.currentTarget).children().eq(1).animate({
+                            "height": "0px"
+                        }, 0, function() {
+                            $(e.currentTarget).children().eq(1).animate({
+                                "height": "13px"
+                            }, 50, function() {
+                                $(e.currentTarget).children().eq(1).animate({
+                                    "height": height
+                                }, 1000);
+                                $(e.currentTarget).animate({
+                                    "height": parseInt(height2) + parseInt(height) - 13
+                                }, 1000);
+                            });
+
+                        });
+
+
+                    } else if ($(e.currentTarget).children().eq(1).filter(':not(:animated)').height() != 0) {
+
+                        var height3 = $(e.currentTarget).children().eq(1).height();
+
+                        $(e.currentTarget).animate({
+                            "height": parseInt(height2) - parseInt(height3) + 13
+                        }, 1000);
+                        $(e.currentTarget).children().eq(1).animate({
+                            "height": "13px"
+                        }, 1000, function() {
+                            $(e.currentTarget).children().eq(1).animate({
+                                "height": "0px"
+                            }, 50);
+                        });
+                    }
+                }
+            }
+
         }
     });
 
     Template.mineBase.events({
-        'click .used_slot': function(e, t) {
-
-            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
-
-            var height2 = $(e.currentTarget).parent().height();
-            console.log();
-
-            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "100%"
-                }, 0);
-                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 63 + "px";
-                console.log(height);
-                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                    "height": "0px"
-                }, 0, function() {
-                    $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                        "margin-top": "-13px"
-                    }, 150, function() {
-
-                        $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                            "height": height
-                        }, 1000);
-                        $(e.currentTarget).parent().filter(':not(:animated)').animate({
-                            "height": parseInt(height2)+parseInt(height)
-                        }, 1000);
-                    });
-                });
-
-            } else {
-              var height3 = $(e.currentTarget).next(".used_slot_advanced").height()+ "px";
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "0px"
-                }, 1000);
-                $(e.currentTarget).parent().animate({
-                    "height": (parseInt(height2)-parseInt(height3))
-                }, 1000);
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "margin-top": "0px"
-                }, 150);
-            }
-
-            /*MICHA'S URSPRÜNGLICHE VERSION*/
-
-            /*            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "100%"
-                }, 0);
-                var height = $(e.currentTarget).next(".used_slot_advanced").height()+13 + "px";
-                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                    "height": "0px"
-                }, 0);
-                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                    "height": height
-                }, 1000);
-            } else {
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "0px",
-                }, 1000);
-            }*/
-        },
-        'mouseenter .tooltip_hover': function(e, t) {
-            fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "in");
-        },
-        'mouseleave .tooltip_hover': function(e, t) {
-            fade_In_and_Out("tooltip", $(e.currentTarget).children().attr('id').substr(20), "out");
-        },
-
         'click .item': function(e, t) {
             //Variante B
             var currentUser = Meteor.users.findOne({
@@ -1473,49 +1466,6 @@ if (Meteor.isClient) {
     });
 
     Template.battlefieldBase.events({
-    	'click .used_slot': function(e, t) {
-
-            /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
-
-            var height2 = $(e.currentTarget).parent().height();
-            console.log();
-
-            if ($(e.currentTarget).next(".used_slot_advanced").height() == 0) {
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "100%"
-                }, 0);
-                var height = $(e.currentTarget).next(".used_slot_advanced").height() + 63 + "px";
-                console.log(height);
-                $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                    "height": "0px"
-                }, 0, function() {
-                    $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                        "margin-top": "-13px"
-                    }, 150, function() {
-
-                        $(e.currentTarget).next(".used_slot_advanced").filter(':not(:animated)').animate({
-                            "height": height
-                        }, 1000);
-                        $(e.currentTarget).parent().filter(':not(:animated)').animate({
-                            "height": parseInt(height2)+parseInt(height)
-                        }, 1000);
-                    });
-                });
-
-            } else {
-              var height3 = $(e.currentTarget).next(".used_slot_advanced").height()+ "px";
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "height": "0px"
-                }, 1000);
-                $(e.currentTarget).parent().animate({
-                    "height": (parseInt(height2)-parseInt(height3))
-                }, 1000);
-                $(e.currentTarget).next(".used_slot_advanced").animate({
-                    "margin-top": "0px"
-                }, 150);
-            }
-        },
-
         'click .item': function(e, t) {
             //Variante B
             var currentUser = Meteor.users.findOne({
@@ -1603,8 +1553,8 @@ if (Meteor.isClient) {
         }
     });
 
-	Template.battlefieldScrounge.events({
-		'click .scroungable': function(e, t) {
+    Template.battlefieldScrounge.events({
+        'click .scroungable': function(e, t) {
 
             /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
 
@@ -1646,7 +1596,7 @@ if (Meteor.isClient) {
                 }
             });
         }
-	});
+    });
 
     //TODO: noch nicht fertig !
     Template.buyMenu.events({
@@ -1671,8 +1621,8 @@ if (Meteor.isClient) {
                     }
                 });
             }
-            if (menu == 'battlefield'){
-            	Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
+            if (menu == 'battlefield') {
+                Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
                     if (err) {
                         console.log(err);
                     }
@@ -1718,8 +1668,8 @@ if (Meteor.isClient) {
             Session.set("worldMapArray", worldMapArray);
         },
 
-        'click .worldMapPlayerPlace': function(e, t){
-        	var current = e.currentTarget.id;
+        'click .worldMapPlayerPlace': function(e, t) {
+            var current = e.currentTarget.id;
             var currentMenu = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1765,10 +1715,8 @@ if (Meteor.isClient) {
     var slots_count = 10;
     var handle_check = false;
     var hover_check = false;
+    var range_slider_width;
 
-    $(function() {
-
-    });
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -1782,7 +1730,6 @@ if (Meteor.isClient) {
         // console.log("1920");
         ready_check = 3;
     }
-
 
     function init_draggable() {
         $(".draggable").draggable({
@@ -1877,13 +1824,13 @@ if (Meteor.isClient) {
 
     function range_slider(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl) {
         //console.log('slot: ' + slot + ' min_ctrl: ' + min_ctrl + ' max_ctrl: ' + max_ctrl + ' lower_ctrl: ' + lower_ctrl + ' higher_ctrl: ' + higher_ctrl);
-        if (!$("#range_slider_" + slot).data('uiSlider')) { // Wenn der Slider noch nicht Initialisiert ist -> True
+        if (!$("#range_slider_" + slot).data('uiSlider') || slot === "Buy_Menu") { // Wenn der Slider noch nicht Initialisiert ist oder das BuyMenu aufgerufen wird -> True
             var left_handle;
             var right_handle;
             var current_handle;
             var disable_boolean = true;
 
-/*            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());*/
+            /*            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());*/
 
             tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, "left");
             $('.tooltip').hide();
@@ -2356,6 +2303,20 @@ if (Meteor.isClient) {
             ready_check = 3;
             repositioning(ready_check);
         }
+        if ($("#range_slider_0").length > 0) { // Damit der Tooltip des Range Sliders beim verändern der Größe mitgeht.
+            for (var x = 0; x < 6; x++) {
+                if ($("#range_slider_" + x).length > 0) {
+                    // Syntax Parameter : tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, handle)
+                    tooltip_adjustment(
+                        x,
+                        $("#range_slider_" + x).slider("option", "min"),
+                        $("#range_slider_" + x).slider("option", "max"),
+                        $("#range_slider_" + x).slider("option", "values")[0],
+                        $("#range_slider_" + x).slider("option", "values")[1],
+                        "left");
+                }
+            }
+        }
     });
 
     //Changes array to unique array with distinct values
@@ -2443,9 +2404,63 @@ if (Meteor.isClient) {
             }
             Session.set("middle", "");
 
+        } else if (middle == "mineScrounge") {
+            var name = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).cu;
+            var cursorPlayerData = playerData.findOne({
+                user: name
+            });
+            var cursorMine = mine.findOne({
+                user: name
+            });
+            for (var i = 0; i < cursorPlayerData.mine.ownSlots; i++) {
+                var matterId = cursorMine['owns' + i].input;
+                if (matterId > 0) {
+                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
+                }
+            }
+            Session.set("middle", "");
+
+        } else if (middle == "battlefieldBase") {
+            var name = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).username;
+            var cursorPlayerData = playerData.findOne({
+                user: name
+            });
+            var cursorBattlefield = battlefield.findOne({
+                user: name
+            });
+            for (var i = 0; i < cursorPlayerData.battlefield.ownSlots; i++) {
+                var matterId = cursorBattlefield['owns' + i].input;
+                if (matterId > 0) {
+                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
+                }
+            }
+            Session.set("middle", "");
+
+        } else if (middle == "battlefieldScrounge") {
+            var name = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).cu;
+            var cursorPlayerData = playerData.findOne({
+                user: name
+            });
+            var cursorBattlefield = battlefield.findOne({
+                user: name
+            });
+            for (var i = 0; i < cursorPlayerData.battlefield.ownSlots; i++) {
+                var matterId = cursorBattlefield['owns' + i].input;
+                if (matterId > 0) {
+                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
+                }
+            }
+            Session.set("middle", "");
+
         } else if (middle == "characterView") {
             character_view_droppable();
-			Session.set("middle", "");            
+            Session.set("middle", "");
         }
 
         deps_count++;
@@ -2540,7 +2555,7 @@ if (Meteor.isClient) {
     //     if (direction == "worldMapGoUp" || direction == "worldMapGoDown") {
     //         var result = getNewRow(direction, maxX, maxY);
     //     } else {
-    //     	//To-DO: getNewColumn implementieren
+    //      //To-DO: getNewColumn implementieren
     //     }
     //     return result;
     // }
