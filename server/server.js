@@ -22,7 +22,7 @@ if (Meteor.isServer) {
         update();
         Meteor.setInterval(function() {
             update();
-        }, 20 * 1000);
+        }, 25 * 1000);
     });
 
     function update() {

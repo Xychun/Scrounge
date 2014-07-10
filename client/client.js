@@ -1079,8 +1079,7 @@ if (Meteor.isClient) {
 
         },
 
-        'click #testButton3': function(e, t) {
-
+        'click .mineMenu': function(e, t) {
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1096,15 +1095,9 @@ if (Meteor.isClient) {
                     menu: 'mine'
                 }
             });
-            Router.go('game', {
-                name: current,
-                menu: 'mine'
-            });
-
         },
 
-        'click #testButton4': function(e, t) {
-
+        'click .battlefieldMenu': function(e, t) {
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1120,15 +1113,9 @@ if (Meteor.isClient) {
                     menu: 'battlefield'
                 }
             });
-            Router.go('game', {
-                name: current,
-                menu: 'battlefield'
-            });
-
         },
 
         'click #switchToWorldMap': function(e, t) {
-
             if (!$("#world").length) {
                 Router.current().render('worldMap', {
                     to: 'middle'
@@ -1150,21 +1137,28 @@ if (Meteor.isClient) {
                             y: 1
                         }
                     });
-                    initWorldMapArray(cursorUser.x, cursorUser.y);
+                    //get max map size
+                    var maxX = worldMapFields.find({}, {
+                        fields: {
+                            x: 1
+                        },
+                        sort: {
+                            x: -1
+                        }
+                    }).fetch()[0].x;
+                    var maxY = worldMapFields.find({}, {
+                        fields: {
+                            y: 1
+                        },
+                        sort: {
+                            y: -1
+                        }
+                    }).fetch()[0].y;
+                    initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
                 }
 
             } else {
-            	var currentMenu = Meteor.users.findOne({
-                        _id: Meteor.userId()
-                    }, {
-                        fields: {
-                            menu: 1
-                        }
-                    }).menu;
-                Router.current().render(currentMenu + 'Base', {
-                    to: 'middle'
-                });
-
+                renderActiveMiddle();
             }
         },
 
@@ -1184,31 +1178,35 @@ if (Meteor.isClient) {
         },
 
         'click #scrounge': function(e, t) {
-
-            if ($('#scrounge').css("background-position") == "0px 0px" || $('#scrounge').css("background-position") == "0% 0%") {
-
-                Router.current().render('mineScrounge', {
-                    to: 'middle'
-                });
-
-                $('#scrounge').css({
-                    backgroundPosition: "0 -306px"
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    cu: 1,
+                    username: 1
+                }
+            });
+            if (self.cu != self.username) {
+                Session.set("lastPlayer", self.cu);
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        cu: self.username
+                    }
                 });
             } else {
-
-                Router.current().render('mineBase', {
-                    to: 'middle'
-                });
-
-                $('#scrounge').css({
-                    backgroundPosition: "0px 0px"
-                });
+                if (Session.get("lastPlayer") != undefined) {
+                    Meteor.users.update({
+                        _id: Meteor.userId()
+                    }, {
+                        $set: {
+                            cu: Session.get("lastPlayer")
+                        }
+                    });
+                }
             }
-
-
-
-        },
-
+        }
     });
 
     // Template.characterView.rendered = function() {
@@ -1376,18 +1374,18 @@ if (Meteor.isClient) {
                             "height": height
                         }, 1000);
                         $(e.currentTarget).parent().filter(':not(:animated)').animate({
-                            "height": parseInt(height2)+parseInt(height)
+                            "height": parseInt(height2) + parseInt(height)
                         }, 1000);
                     });
                 });
 
             } else {
-              var height3 = $(e.currentTarget).next(".used_slot_advanced").height()+ "px";
+                var height3 = $(e.currentTarget).next(".used_slot_advanced").height() + "px";
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "height": "0px"
                 }, 1000);
                 $(e.currentTarget).parent().animate({
-                    "height": (parseInt(height2)-parseInt(height3))
+                    "height": (parseInt(height2) - parseInt(height3))
                 }, 1000);
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "margin-top": "0px"
@@ -1473,7 +1471,7 @@ if (Meteor.isClient) {
     });
 
     Template.battlefieldBase.events({
-    	'click .used_slot': function(e, t) {
+        'click .used_slot': function(e, t) {
 
             /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
 
@@ -1497,18 +1495,18 @@ if (Meteor.isClient) {
                             "height": height
                         }, 1000);
                         $(e.currentTarget).parent().filter(':not(:animated)').animate({
-                            "height": parseInt(height2)+parseInt(height)
+                            "height": parseInt(height2) + parseInt(height)
                         }, 1000);
                     });
                 });
 
             } else {
-              var height3 = $(e.currentTarget).next(".used_slot_advanced").height()+ "px";
+                var height3 = $(e.currentTarget).next(".used_slot_advanced").height() + "px";
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "height": "0px"
                 }, 1000);
                 $(e.currentTarget).parent().animate({
-                    "height": (parseInt(height2)-parseInt(height3))
+                    "height": (parseInt(height2) - parseInt(height3))
                 }, 1000);
                 $(e.currentTarget).next(".used_slot_advanced").animate({
                     "margin-top": "0px"
@@ -1603,8 +1601,8 @@ if (Meteor.isClient) {
         }
     });
 
-	Template.battlefieldScrounge.events({
-		'click .scroungable': function(e, t) {
+    Template.battlefieldScrounge.events({
+        'click .scroungable': function(e, t) {
 
             /*AN GRAFIK ANGEPASSTE VERSION VON J.P.*/
 
@@ -1646,7 +1644,7 @@ if (Meteor.isClient) {
                 }
             });
         }
-	});
+    });
 
     //TODO: noch nicht fertig !
     Template.buyMenu.events({
@@ -1671,8 +1669,8 @@ if (Meteor.isClient) {
                     }
                 });
             }
-            if (menu == 'battlefield'){
-            	Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
+            if (menu == 'battlefield') {
+                Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
                     if (err) {
                         console.log(err);
                     }
@@ -1690,26 +1688,43 @@ if (Meteor.isClient) {
 
     Template.worldMap.events({
         'click .worldMapNavigators': function(e, t) {
+            //get max map size
+            var maxX = worldMapFields.find({}, {
+                fields: {
+                    x: 1
+                },
+                sort: {
+                    x: -1
+                }
+            }).fetch()[0].x;
+            var maxY = worldMapFields.find({}, {
+                fields: {
+                    y: 1
+                },
+                sort: {
+                    y: -1
+                }
+            }).fetch()[0].y;
             switch (e.currentTarget.id) {
                 case "worldMapGoUp":
                     var yValue = worldMapArray[0].columns[0].y + 1;
-                    if (yValue > mapRows - 1) yValue = 0
-                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue);
+                    if (yValue > maxY) yValue = 0
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
                     break;
                 case "worldMapGoDown":
                     var yValue = worldMapArray[0].columns[0].y - 1;
-                    if (yValue < 0) yValue = mapRows - 1
-                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue);
+                    if (yValue < 0) yValue = maxY
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue.maxX, maxY);
                     break;
                 case "worldMapGoRight":
                     var xValue = worldMapArray[0].columns[0].x + 1;
-                    if (xValue > mapColumns - 1) xValue = 0
-                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y);
+                    if (xValue > maxX) xValue = 0
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
                     break;
                 case "worldMapGoLeft":
                     var xValue = worldMapArray[0].columns[0].x - 1;
-                    if (xValue < 0) xValue = mapColumns - 1
-                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y);
+                    if (xValue < 0) xValue = maxX
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
                     break;
                 default:
                     console.log('default case: worldMapNavigators');
@@ -1718,38 +1733,17 @@ if (Meteor.isClient) {
             Session.set("worldMapArray", worldMapArray);
         },
 
-        'click .worldMapPlayerPlace': function(e, t){
-        	var current = e.currentTarget.id;
-            var currentMenu = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    menu: 1
-                }
-            }).menu;
-            Meteor.users.update({
-                _id: Meteor.userId()
-            }, {
-                $set: {
-                    cu: current
-                }
-            });
-            var myName = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            }).username;
-            //in your own menu? base:scrounge
-            if (current == myName) {
-                Router.current().render(currentMenu + 'Base', {
-                    to: 'middle'
+        'click .worldMapPlayerPlace': function(e, t) {
+            if (e.currentTarget.id != '') {
+                var current = e.currentTarget.id;
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        cu: current
+                    }
                 });
-            } else {
-                Router.current().render(currentMenu + 'Scrounge', {
-                    to: 'middle'
-                });
+                renderActiveMiddle();
             }
         }
 
@@ -1883,7 +1877,7 @@ if (Meteor.isClient) {
             var current_handle;
             var disable_boolean = true;
 
-/*            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());*/
+            /*            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());*/
 
             tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, "left");
             $('.tooltip').hide();
@@ -2367,6 +2361,36 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
+    function renderActiveMiddle() {
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                menu: 1,
+                cu: 1,
+                username: 1
+            }
+        });
+        var cu = self.cu;
+        var menu = self.menu;
+        //in your own menu? base:scrounge
+        if (cu == self.username) {
+            Router.current().render(menu + 'Base', {
+                to: 'middle'
+            });
+            $('#scrounge').css({
+                backgroundPosition: "0px 0px"
+            });
+        } else {
+            Router.current().render(menu + 'Scrounge', {
+                to: 'middle'
+            });
+            $('#scrounge').css({
+                backgroundPosition: "0 -306px"
+            });
+        }
+    }
+
     function navigateWorldMap(direction) {
 
         var top = parseInt($('#currentMapView').css("margin-top"));
@@ -2445,7 +2469,7 @@ if (Meteor.isClient) {
 
         } else if (middle == "characterView") {
             character_view_droppable();
-			Session.set("middle", "");            
+            Session.set("middle", "");
         }
 
         deps_count++;
@@ -2453,24 +2477,7 @@ if (Meteor.isClient) {
 
     var worldMapArray = new Array();
 
-    function initWorldMapArray(orientationX, orientationY) {
-        //get max map size
-        var maxX = worldMapFields.find({}, {
-            fields: {
-                x: 1
-            },
-            sort: {
-                x: -1
-            }
-        }).fetch()[0].x;
-        var maxY = worldMapFields.find({}, {
-            fields: {
-                y: 1
-            },
-            sort: {
-                y: -1
-            }
-        }).fetch()[0].y;
+    function initWorldMapArray(orientationX, orientationY, maxX, maxY) {
         //reset array
         worldMapArray.length = 0;
         //go all rows
@@ -2540,7 +2547,7 @@ if (Meteor.isClient) {
     //     if (direction == "worldMapGoUp" || direction == "worldMapGoDown") {
     //         var result = getNewRow(direction, maxX, maxY);
     //     } else {
-    //     	//To-DO: getNewColumn implementieren
+    //      //To-DO: getNewColumn implementieren
     //     }
     //     return result;
     // }
