@@ -39,10 +39,8 @@ if (Meteor.isClient) {
                 }
             });
             return false;
-        }
-    });
+        },
 
-    Template.register.events({
         'submit #register-form': function(e, t) {
             var name = t.find('#account-name').value;
             var password = t.find('#account-password').value;
@@ -102,6 +100,7 @@ if (Meteor.isClient) {
             }
         }
     });
+
 
     function switchToGame() {
         var self = Meteor.users.findOne({

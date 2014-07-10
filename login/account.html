@@ -2,35 +2,32 @@
 </body>
 
 <template name = "login">
-	<br>
-	LOGIN:
-	<br>
-	<form id="login-form" action="game">
-		<div>
-			<input type="text" id="login-name" placeholder="user name"/>
-			<input type="password" id="login-password" placeholder="password"/>
-			<input type="submit" id="login-button" value="Sign in"/>
-		</div>
-		<div id="login-error" style="display: none; font-size: small; top: 60px">
+	<div id="loginWrapper">
 		
-		</div>
-	</form> 
-</template>
+		<div id="login-form_wrapper">
+			<form id="login-form" action="game">
 
-<template name="register">
-	<br>
-	REGISTER:
-	<br>
-	<form id="register-form" action="game">
-		<div>
-			<input type="text" id="account-name" placeholder="user name"/>
-			<input type="password" id="account-password" placeholder="password"/>
-			<input type="submit" id="create-account" value="Create Account" />
+					<div id="textLogin"> LOGIN </div>
+					<input type="text" id="login-name" placeholder="user name"/>
+					<input type="password" id="login-password" placeholder="password"/>
+					<input type="submit" id="login-button" value="Sign in"/>
+					<div id="login-error" style="display: none; font-size: small; top: 60px"> </div>
+				
+			</form> 
 		</div>
-		<div id="register-error" style="display: none; font-size: small; top: 60px">
 
+		<div id="register-form_wrapper">
+			<form id="register-form" action="game">
+				
+					<div id="textRegister"> REGISTER </div>
+					<input type="text" id="account-name" placeholder="user name"/>
+					<input type="password" id="account-password" placeholder="password"/>
+					<input type="submit" id="create-account" value="Create Account" />
+					<div id="register-error" style="display: none; font-size: small; top: 60px"> </div>
+				
+			</form>
 		</div>
-	</form>
+	</div>
 </template>
 
 

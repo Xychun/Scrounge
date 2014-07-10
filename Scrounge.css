@@ -5,7 +5,15 @@
     user-select: none;
     cursor:default;
 }
+html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
     background-image:url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
     background-repeat: repeat;
 }
@@ -263,6 +271,76 @@ img.i7 {
     height:0px;
     overflow:hidden;
     background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
+}
+/*///////////////////////////////////////////////////////////////////////////   LOGIN + REGISTER   ///////////////////////////////////////////////////////////////////////////*/
+#loginWrapper {
+	top: 50%;
+	left: 50%;
+	margin-top: -200px;
+	margin-left: -200px;
+	width: 400px;
+	height: 300px;
+}
+#login-form_wrapper {
+	top: 20px;
+	left: 50%;
+	margin-left: -150px;
+	width: 250px;
+	height: 50px;
+	position: relative;
+}
+#textLogin {
+    font-family:"OCR A Std";
+    font-size: 1.5em;
+    color: black;
+}
+#login-name {
+	top: 40px;
+	height: 20px;
+	position: absolute;
+}
+#login-password{
+	top: 70px;
+	height: 20px;
+	position: absolute;
+}
+#login-button {
+	top: 40px;
+	left: 180px;
+	width: 120px;
+	height: 55px;
+	position: absolute;
+}
+#register-form_wrapper {
+	top: 160px;
+	left: 50%;
+	margin-left: -150px;
+	width: 250px;
+	height: 50px;
+	position: absolute;
+}
+#textRegister {
+    font-family:"OCR A Std";
+    font-size: 1.5em;
+    color: black;
+}
+#account-name {
+	top: 40px;
+	height: 20px;
+	position: absolute;
+}
+#account-password{
+	top: 70px;
+	height: 20px;
+	position: absolute;
+}
+#create-account {
+	top: 40px;
+	left: 180px;
+	width: 120px;
+	height: 55px;
+	position: absolute;
+
 }
 /*///////////////////////////////////////////////////////////////////////////   MINE BUY MENU   ///////////////////////////////////////////////////////////////////////////*/
  #buyMenu {

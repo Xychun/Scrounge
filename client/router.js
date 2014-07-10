@@ -10,15 +10,13 @@ Router.map(function() {
         layoutTemplate: 'masterLayout',
         yieldTemplates: {
             'login': {
-                to: 'center'
+                to: 'middle'
             },
-            'register': {
-                to: 'center2'
-            },
+/*            'register': {
+                to: 'middle'
+            },*/
         },
-        // action: function() {
-        //     if (gameRenderer) gameRenderer.stop();
-        // }
+
     });
 
     this.route('game', {
