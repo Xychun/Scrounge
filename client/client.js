@@ -404,6 +404,7 @@ if (Meteor.isClient) {
                 obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorMatterBlock.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
                 obj0['miningrate'] = cursorMyMine['scrs' + i].benefit + '/hr';
                 obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (cursorMyMine['scrs' + i].benefit / 3600000));
+                obj0['slider_id'] = i + 6;
                 objects[i] = obj0;
             }
         }
@@ -1175,7 +1176,7 @@ if (Meteor.isClient) {
         },
 
         'click #character': function(e, t) {
-            if ($('#characterView').length == 0) {
+            if ($('.characterView').length == 0) {
                 Router.current().render('characterView', {
                     to: 'middle'
                 });
@@ -1370,6 +1371,9 @@ if (Meteor.isClient) {
             $(e.target).css({
                 "background-image": bImage
             });
+        },
+        'click .scrounge_now': function(e, t) {
+            // switchToWorldMap();
         },
         'click .dropdown': function(e, t) {
             //console.log($(e.target).parent().attr("class").search("goScroungingIcon"));
@@ -2041,115 +2045,6 @@ if (Meteor.isClient) {
         }
     }
 
-    // function slide_left_simple(element) {
-    //     //console.log(element);
-    //     //console.log($("." + element).position().left);
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "-=" + size.pp + "px";
-
-    //     //console.log("s1: "+$("#s1").position().top);
-    //     if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("." + element).position().left >= 60) {
-    //             // Vorab Animation da Intervall erst nach [Time] anfängt
-    //             $("." + element).filter(':not(:animated)').animate({
-    //                 "left": "-=60px"
-    //             }, 300, "linear");
-    //             //Rekursiver Intervall (unendlich)
-    //             var action = function() {
-    //                 //Animation im laufenden Intervall  
-    //                 $("." + element).animate({
-    //                     "left": "-=60px"
-    //                 }, 300, "linear");
-    //             };
-    //             //Start des Intervalls
-    //             interval = setInterval(action, 300);
-    //         }
-    //     }
-    // }
-
-    // function slide_right_simple(element) {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "+=" + size.pp + "px";
-
-    //     //console.log("s1: "+$("#s1").position().top);
-    //     if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("." + element).position().left >= 0) {
-    //             // Vorab Animation da Intervall erst nach [Time] anfängt
-    //             $("." + element).filter(':not(:animated)').animate({
-    //                 "left": "+=60px"
-    //             }, 300, "linear");
-    //             //Rekursiver Intervall (unendlich)
-    //             var action = function() {
-    //                 //Animation im laufenden Intervall  
-    //                 $("." + element).animate({
-    //                     "left": "+=60px"
-    //                 }, 300, "linear");
-    //             };
-    //             //Start des Intervalls
-    //             interval = setInterval(action, 300);
-    //         }
-    //     }
-    // }
-
-    // function slide_down_simple(element) {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "-=" + size.pp + "px";
-    //     //console.log("s1: "+$("#s1").position().top);
-    //     if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#" + element).position().top <= 0) {
-    //             // Vorab Animation da Intervall erst nach [Time] anfängt
-    //             $("#" + element).filter(':not(:animated)').animate({
-    //                 "top": "-=80px"
-    //             }, 300, "linear");
-    //             //Rekursiver Intervall (unendlich)
-    //             var action = function() {
-    //                 //Animation im laufenden Intervall  
-    //                 $("#" + element).animate({
-    //                     "top": "-=80px"
-    //                 }, 300, "linear");
-    //             };
-    //             //Start des Intervalls
-    //             interval = setInterval(action, 300);
-    //         }
-    //     }
-    // }
-
-    // function slide_up_simple(element) {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "+=" + size.pp + "px";
-    //     //console.log("s1: "+$("#s1").position().top);
-    //     if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#" + element).position().top <= -80) {
-    //             // Vorab Animation da Intervall erst nach [Time] anfängt
-    //             $("#" + element).filter(':not(:animated)').animate({
-    //                 "top": "+=80px"
-    //             }, 300, "linear");
-    //             //Rekursiver Intervall (unendlich)
-    //             var action = function() {
-    //                 //Animation im laufenden Intervall  
-    //                 if ($("#" + element).position().top <= -80)
-    //                     $("#" + element).animate({
-    //                         "top": "+=80px"
-    //                     }, 300, "linear");
-    //             };
-    //             //Start des Intervalls
-    //             interval = setInterval(action, 300);
-    //         }
-    //     }
-    // }
-
     // function slide_left() {
     //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
     //     var pos = size.p;
@@ -2247,59 +2142,6 @@ if (Meteor.isClient) {
     //         //Start des Intervalls
     //         interval = setInterval(action, time);
     //         update_category("right");
-    //     }
-    // }
-
-    // function slide_down() {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "-=" + size.pp + "px";
-    //     //console.log("s1: "+$("#s1").position().top);
-    //     if ($("#base_area_content").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#base_area_content").position().top <= 0) {
-    //             // Vorab Animation da Intervall erst nach [Time] anfängt
-    //             // $("#base_area_content").filter(':not(:animated)').animate({
-    //             //     "top": "-=80px"
-    //             // }, 300, "linear");
-    //             //Rekursiver Intervall (unendlich)
-    //             var action = function() {
-    //                 //Animation im laufenden Intervall  
-    //                 $("#base_area_content").animate({
-    //                     "top": "-=80px"
-    //                 }, 300, "linear");
-    //             };
-    //             //Start des Intervalls
-    //             interval = setInterval(action, 300);
-    //         }
-    //     }
-    // }
-
-    // function slide_up() {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "+=" + size.pp + "px";
-    //     //console.log("s1: "+$("#s1").position().top);
-    //     if ($("#base_area_content").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#base_area_content").position().top <= -80) {
-    //             // Vorab Animation da Intervall erst nach [Time] anfängt
-    //             // $("#base_area_content").filter(':not(:animated)').animate({
-    //             //     "top": "+=80px"
-    //             // }, 300, "linear");
-    //             //Rekursiver Intervall (unendlich)
-    //             var action = function() {
-    //                 //Animation im laufenden Intervall  
-    //                 if ($("#base_area_content").position().top <= -80)
-    //                     $("#base_area_content").animate({
-    //                         "top": "+=80px"
-    //                     }, 300, "linear");
-    //             };
-    //             //Start des Intervalls
-    //             interval = setInterval(action, 300);
-    //         }
     //     }
     // }
 
@@ -2494,79 +2336,92 @@ if (Meteor.isClient) {
         }
 
         var middle = Session.get("middle");
-        if (middle == "mineBase") {
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var cursorMine = mine.findOne({
-                user: name
-            });
-            for (var i = 0; i < cursorPlayerData.mine.ownSlots; i++) {
-                var matterId = cursorMine['owns' + i].input;
-                if (matterId > 0) {
-                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
+        if (!middle) {
+            middle = "";
+        } else if (middle.length > 2 && middle !== "characterView") {
+
+            var amountSlots;
+            var amountScroungeSlots;
+            var input;
+            var minControl;
+            var maxControl;
+            var lowerControl;
+            var higherControl;
+
+            switch (middle) {
+                case "mineBase": var name = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }).username;
+                var cursorPlayerData = playerData.findOne({
+                    user: name
+                });
+                var input = mine.findOne({
+                    user: name
+                });
+                amountSlots = cursorPlayerData.mine.ownSlots;
+                amountScroungeSlots = cursorPlayerData.mine.srcSlots;
+                minControl = cursorPlayerData.mine.minControl;
+                maxControl = cursorPlayerData.mine.maxControl;
+                break;
+                case "mineScrounge": var name = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }).cu;
+                var cursorPlayerData = playerData.findOne({
+                    user: name
+                });
+                var input = mine.findOne({
+                    user: name
+                });
+                amountSlots = cursorPlayerData.mine.ownSlots;
+                amountScroungeSlots = 0;
+                minControl = cursorPlayerData.mine.minControl;
+                maxControl = cursorPlayerData.mine.maxControl;
+                break;
+                case "battlefieldBase": var name = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }).username;
+                var cursorPlayerData = playerData.findOne({
+                    user: name
+                });
+                var input = battlefield.findOne({
+                    user: name
+                });
+                amountSlots = cursorPlayerData.battlefield.ownSlots;
+                amountScroungeSlots = cursorPlayerData.battlefield.srcSlots;
+                minControl = cursorPlayerData.battlefield.minControl;
+                maxControl = cursorPlayerData.battlefield.maxControl;
+                break;
+                case "battlefieldScrounge": var name = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }).cu;
+                var cursorPlayerData = playerData.findOne({
+                    user: name
+                });
+                var input = battlefield.findOne({
+                    user: name
+                });
+                amountSlots = cursorPlayerData.battlefield.ownSlots;
+                amountScroungeSlots = 0;
+                minControl = cursorPlayerData.battlefield.minControl;
+                maxControl = cursorPlayerData.battlefield.maxControl;
+                break;
+                default: console.log('default');
+                break;
+            }
+
+            for (var i = 0; i < amountSlots; i++) {
+                if (input['owns' + i].input > 0) {
+                    range_slider(i, minControl, maxControl, input['owns' + i].control.min, input['owns' + i].control.max);
                 }
             }
+            // for (var y = 0; y < amountScroungeSlots; y++) {
+            //     if (input['owns' + y].input > 0) {
+            //         range_slider(y, minControl, maxControl, input['owns' + y].control.min, input['owns' + y].control.max);
+            //     }
+            // }
             Session.set("middle", "");
 
-        } else if (middle == "mineScrounge") {
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).cu;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var cursorMine = mine.findOne({
-                user: name
-            });
-            for (var i = 0; i < cursorPlayerData.mine.ownSlots; i++) {
-                var matterId = cursorMine['owns' + i].input;
-                if (matterId > 0) {
-                    range_slider(i, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorMine['owns' + i].control.min, cursorMine['owns' + i].control.max);
-                }
-            }
-            Session.set("middle", "");
-
-        } else if (middle == "battlefieldBase") {
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var cursorBattlefield = battlefield.findOne({
-                user: name
-            });
-            for (var i = 0; i < cursorPlayerData.battlefield.ownSlots; i++) {
-                var matterId = cursorBattlefield['owns' + i].input;
-                if (matterId > 0) {
-                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
-                }
-            }
-            Session.set("middle", "");
-
-        } else if (middle == "battlefieldScrounge") {
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).cu;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var cursorBattlefield = battlefield.findOne({
-                user: name
-            });
-            for (var i = 0; i < cursorPlayerData.battlefield.ownSlots; i++) {
-                var matterId = cursorBattlefield['owns' + i].input;
-                if (matterId > 0) {
-                    range_slider(i, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorBattlefield['owns' + i].control.min, cursorBattlefield['owns' + i].control.max);
-                }
-            }
-            Session.set("middle", "");
-
-        } else if (middle == "characterView") {
+        } else if (middle === "characterView") {
             character_view_droppable();
             Session.set("middle", "");
         }

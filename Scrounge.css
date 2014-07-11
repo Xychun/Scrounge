@@ -6,7 +6,7 @@
     cursor:default;
 }
 html {
-	overflow: hidden;
+    overflow: hidden;
 }
 body {
     background-image:url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
@@ -232,9 +232,19 @@ img.i7 {
     text-align: left;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
-.areas {
+.area_left {
     top:37px;
-    width:48.8%;
+    right:50%;
+    left:0px;
+    margin-right:20px;
+    min-width:300px;
+    overflow:hidden;
+}
+.area_right {
+    top:37px;
+    left:50%;
+    right:0px;
+    margin-left:20px;
     min-width:300px;
     overflow:hidden;
 }
@@ -271,21 +281,21 @@ img.i7 {
     background-image:url(/Aufloesung1920x1080/Interface/AktionsKastenYellowSlot.png);
 }
 /*///////////////////////////////////////////////////////////////////////////   LOGIN + REGISTER   ///////////////////////////////////////////////////////////////////////////*/
-#loginWrapper {
-	top: 50%;
-	left: 50%;
-	margin-top: -200px;
-	margin-left: -400px;
-	width: 800px;
-	height: 300px;
+ #loginWrapper {
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -400px;
+    width: 800px;
+    height: 300px;
 }
 #login-form_wrapper {
-	top: 20px;
-	left: 50%;
-	margin-left: -150px;
-	width: 250px;
-	height: 50px;
-	position: relative;
+    top: 20px;
+    left: 50%;
+    margin-left: -150px;
+    width: 250px;
+    height: 50px;
+    position: relative;
 }
 .textLogin {
     font-family:"OCR A Std";
@@ -293,52 +303,52 @@ img.i7 {
     color: black;
 }
 #login-name {
-	top: 40px;
-	height: 20px;
-	position: absolute;
+    top: 40px;
+    height: 20px;
+    position: absolute;
 }
-#login-password{
-	top: 70px;
-	height: 20px;
-	position: absolute;
+#login-password {
+    top: 70px;
+    height: 20px;
+    position: absolute;
 }
 #login-button {
-	top: 40px;
-	left: 180px;
-	width: 120px;
-	height: 55px;
-	position: absolute;
+    top: 40px;
+    left: 180px;
+    width: 120px;
+    height: 55px;
+    position: absolute;
 }
 .error {
-	top: 100px;
-	width: 500px;
-	font-family:"OCR A Std";
+    top: 100px;
+    width: 500px;
+    font-family:"OCR A Std";
     font-size: 1em;
 }
 #register-form_wrapper {
-	top: 160px;
-	left: 50%;
-	margin-left: -150px;
-	width: 250px;
-	height: 50px;
-	position: absolute;
+    top: 160px;
+    left: 50%;
+    margin-left: -150px;
+    width: 250px;
+    height: 50px;
+    position: absolute;
 }
 #account-name {
-	top: 40px;
-	height: 20px;
-	position: absolute;
+    top: 40px;
+    height: 20px;
+    position: absolute;
 }
-#account-password{
-	top: 70px;
-	height: 20px;
-	position: absolute;
+#account-password {
+    top: 70px;
+    height: 20px;
+    position: absolute;
 }
 #create-account {
-	top: 40px;
-	left: 180px;
-	width: 120px;
-	height: 55px;
-	position: absolute;
+    top: 40px;
+    left: 180px;
+    width: 120px;
+    height: 55px;
+    position: absolute;
 }
 /*///////////////////////////////////////////////////////////////////////////   MINE BUY MENU   ///////////////////////////////////////////////////////////////////////////*/
  #buyMenu {
@@ -690,8 +700,8 @@ img.i7 {
     text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 #worldMapSlotsPreview {
-	background-color: grey;
-	opacity: 0.2;
+    background-color: grey;
+    opacity: 0.2;
     width: 300px;
     height: 250px;
     position: absolute;
@@ -735,29 +745,32 @@ img.i7 {
     text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 /*///////////////////////////////////////////////////////////////////////////   CHARACTER VIEW   ///////////////////////////////////////////////////////////////////////////*/
- #characterView {
-    top:162px;
-    bottom:162px;
-    left:162px;
-    right:162px;
-}
-#scroungeItems {
+ #scroungeItems {
+    overflow:hidden;
     left: 0px;
     right: 50%;
     height: 100%;
-    background-color: blue;
+    /*background-color: blue;*/
 }
 #scroungeItemsWrapper {
-    position: relative;
     width:400px;
     height:500px;
     left:50%;
     top:50%;
     margin-left:-200px;
     margin-top:-250px;
-    background-color: grey;
+    /*background-color: grey;*/
 }
-.scroungeItemSlots {
+#baseItemsWrapper {
+    width:500px;
+    height:400px;
+    left:50%;
+    top:50%;
+    margin-left:-250px;
+    margin-top:-200px;
+    /*background-color: grey;*/
+}
+.itemSlotBackground {
     width: 120px;
     height: 120px;
     background-image: url(/Aufloesung1920x1080/Interface/inventory_slot.png);
@@ -786,23 +799,58 @@ img.i7 {
     left:0px;
     top:125px;
 }
+#base_item_slot_1 {
+    top:140px;
+    left:0px;
+}
+#base_item_slot_2 {
+    top:280px;
+    left:125px;
+}
+#base_item_slot_3 {
+    top:280px;
+    left:255px;
+}
+#base_item_slot_4 {
+    top:140px;
+    left:380px;
+}
+#base_item_slot_5 {
+    top:0px;
+    left:255px;
+}
+#base_item_slot_6 {
+    top:0px;
+    left:125px;
+}
 #characterViewRightSide {
     right: 0px;
     left: 50%;
     height: 100%;
-    background-color: brown;
+    /*background-color: brown;*/
 }
 #playerStats {
     top: 0px;
     width: 100%;
     height: 200px;
-    background-color: green;
+    /*background-color: green;*/
+}
+#category_badges {
+    height: 80px;
+}
+.category_badge_icon {
+    height: 80px;
+    width: 80px;
+    float: left;
+    display: inline-flex;
+    position: relative;
 }
 #baseItems {
+    overflow:hidden;
     width: 100%;
     top: 200px;
     bottom: 0px;
-    background-color: red;
+    /*background-color: red;*/
 }
 /*////////////////////////////////////////////////////////////////////////////   SLOTS SCROUNGE   ///////////////////////////////////////////////////////////////////////////*/
  .slotBackgroundScrounge {
@@ -897,15 +945,15 @@ img.i7 {
     background-repeat: no-repeat;
 }
 .slot_edge_left_BaseLeft_advanced {
-	width: 25px;
-	height: 100px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedStatsEdgeLeft.png);
+    width: 25px;
+    height: 100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedStatsEdgeLeft.png);
     background-repeat: no-repeat;
 }
 .slot_edge_right_BaseLeft_advanced {
-	width: 25px;
-	height: 100px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedStatsEdgeRight.png);
+    width: 25px;
+    height: 100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedStatsEdgeRight.png);
     background-repeat: no-repeat;
 }
 .slotBackgroundBaseLeftAdvanced {
@@ -913,7 +961,7 @@ img.i7 {
     background-repeat: repeat-x;
 }
 .used_slot_advanced_wrapper {
-	z-index:1;
+    z-index:1;
     height: 0px;
     width: 100%;
     margin-top: -13px;
@@ -932,14 +980,7 @@ img.i7 {
     height:100px;
     position: relative;
 }
-/*.scrounger_slot_supporter {
-    z-index: 1;
-    display:flex;
-    height: 125px;
-    margin-top: -13px;
-    background-image: url(/Aufloesung1920x1080/Interface/ActionsScrounger.png);
-}*/
-.text {
+ .text {
     margin-top:5px;
     margin-bottom:5px;
     color: white;
@@ -968,18 +1009,18 @@ img.i7 {
     background-repeat: no-repeat;
 }
 .slot_edge_left_BaseLeft_supporter {
-	width: 139px;
-	height: 125px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsEdgeLeft.png);
+    width: 139px;
+    height: 125px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsEdgeLeft.png);
     background-repeat: no-repeat;
 }
 .slot_edge_right_BaseLeft_supporter {
-	width: 25px;
-	height: 125px;
-	background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsEdgeRight.png);
+    width: 25px;
+    height: 125px;
+    background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsEdgeRight.png);
     background-repeat: no-repeat;
 }
- .slotBackgroundBaseLeftSupporter {
+.slotBackgroundBaseLeftSupporter {
     background-image: url(/Aufloesung1920x1080/Interface/ActionsScroungeSupporterStatsRepeat.png);
     background-repeat: repeat-x;
 }
@@ -1027,6 +1068,11 @@ img.i7 {
     top:53px;
     left:10px;
     right:5px;
+}
+.scrounge_slot_stats {
+    left:10px;
+    right:5px;
+    position: relative;
 }
 .slot_advanced_stats_wrapper {
     height:100px;
