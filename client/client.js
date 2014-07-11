@@ -1338,7 +1338,7 @@ if (Meteor.isClient) {
             });
         },
         'click .scrounge_now': function(e, t) {
-            // switchToWorldMap();
+            switchToWorldMap();
         },
         'click .dropdown': function(e, t) {
             //console.log($(e.target).parent().attr("class").search("goScroungingIcon"));
