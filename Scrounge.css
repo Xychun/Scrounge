@@ -86,7 +86,6 @@ div {
 }
 .inventory_wrapper {
     width:80px;
-    height:auto;
     top:19px;
     bottom:19px;
     /*    background-image:url(Inventory_Vertikal.png);
@@ -114,14 +113,18 @@ div {
     background-repeat:no-repeat;
     transform:rotate(90deg);*/
 }
-#matter_content {
-    width:auto;
+#matter_wrapper {
     height:80px;
     left:19px;
     right:19px;
+    overflow:hidden;
     /*    background-image:url(Inventory_Horizontal.png);*/
     /*    background-size:cover;
     background-repeat:repeat-x;*/
+}
+#matter_content {
+    height: 80px;
+    display: inline-flex;
 }
 #matter_right {
     /*    background-image:url(Inventory_Abschluss_Rechts.gif);
@@ -1073,6 +1076,9 @@ img.i7 {
     width:60px;
     height:90px;
 }
+.item:first-child {
+    margin-left:0px;
+}
 .itemImg {
     width: 60px;
     height: 60px;
@@ -1232,28 +1238,28 @@ img.i7 {
     background-position: 0px -102px;
     background-repeat: no-repeat;
 }
-#left_slider_category {
+#category_left {
     background-position: -58px 0px;
 }
-#right_slider_category {
+#category_right {
     background-position: -58px 0px;
 }
-#up_slider_stolen {
+#stolen_up {
     background-position: 0px 0px;
     left: 38px;
     top: 50px;
 }
-#down_slider_stolen {
+#stolen_down {
     background-position: 0px 0px;
     left: 50px;
     top: -30px;
 }
-#up_slider_own {
+#own_up {
     background-position: 0px 0px;
     left: 38px;
     top: 50px;
 }
-#down_slider_own {
+#own_down {
     background-position: 0px 0px;
     left: 50px;
     top: -30px;
@@ -1301,10 +1307,15 @@ img.i7 {
         width:25px;
         height:102px;
     }
-    #matter_content {
+    #matter_wrapper {
         height:102px;
         left:25px;
         right:25px;
+        overflow:hidden;
+    }
+    #matter_content {
+        height: 102px;
+        display: inline-flex;
     }
     .kimage {
         width:170px;
@@ -1404,28 +1415,28 @@ img.i7 {
         background-image:url(/Aufloesung1280xXXX/Interface/HoverButton.png);
         background-repeat: no-repeat;
     }
-    #left_slider_category {
+    #category_left {
         background-position: -74px 0px;
     }
-    #right_slider_category {
+    #category_right {
         background-position: -74px 0px;
     }
-    #up_slider_stolen {
+    #stolen_up {
         background-position: 0px 0px;
         left: 38px;
         top: 50px;
     }
-    #down_slider_stolen {
+    #stolen_down {
         background-position: 0px 0px;
         left: 50px;
         top: -30px;
     }
-    #up_slider_own {
+    #own_up {
         background-position: 0px 0px;
         left: 38px;
         top: 50px;
     }
-    #down_slider_own {
+    #own_down {
         background-position: 0px 0px;
         left: 50px;
         top: -30px;
@@ -1593,10 +1604,15 @@ img.i7 {
         width:25px;
         height:152px;
     }
-    #matter_content {
+    #matter_wrapper {
         height:152px;
         left:25px;
         right:25px;
+        overflow:hidden;
+    }
+    #matter_content {
+        height: 152px;
+        display: inline-flex;
     }
     .matter_background {
         /*      height: 152px;*/
@@ -1807,34 +1823,34 @@ img.i7 {
         border-style: none;
     }
     /*///////////////////////////////////////////////////////////////////////////   SLIDER   ///////////////////////////////////////////////////////////////////////////*/
-    #left_slider_matter {
+    #matter_left {
         background-position: 0px 0px;
     }
-    #right_slider_matter {
+    #matter_right {
         background-position: 0px 0px;
     }
-    #left_slider_category {
+    #category_left {
         background-position: -109px 0px;
     }
-    #right_slider_category {
+    #category_right {
         background-position: -109px 0px;
     }
-    #up_slider_stolen {
+    #stolen_up {
         background-position: 0px 0px;
         left: 50px;
         top: 70px;
     }
-    #down_slider_stolen {
+    #stolen_down {
         background-position: 0px 0px;
         left: 50px;
         top: -30px;
     }
-    #up_slider_own {
+    #own_up {
         background-position: 0px 0px;
         left: 50px;
         top: 70px;
     }
-    #down_slider_own {
+    #own_down {
         background-position: 0px 0px;
         left: 50px;
         top: -30px;

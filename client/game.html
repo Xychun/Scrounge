@@ -4,13 +4,13 @@
         <div class="corner top left">
             <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
             <img id="scrounge" class="corner top left inherit SSscroungeBaseButton">
-            <img id="left_slider_category" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
-            <img id="up_slider_stolen" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+            <img id="category_left" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
+            <img id="stolen_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
         </div>
         <div class="inventory left">
             <div class="inv_edge top inventory_left_background_top"></div>
             <div class="inventory_wrapper inventory_left_background">
-                <div class="inventory_content">
+                <div id="inventory_stolen" class="inventory_content">
                     <div class="inventory_slots droppable">
                         <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}green_pick.png)" title="
                                 <div class='item_tooltip_window_name'>
@@ -106,8 +106,8 @@
         </div>
         <div class="corner bot left">
             <img id="social" class="corner bot left inherit SSsocialButton">
-            <img id="left_slider_matter" class="slider left_slider right inherit sliderRotate180 SShoverButton">
-            <img id="down_slider_stolen" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+            <img id="matter_left" class="slider left_slider right inherit sliderRotate180 SShoverButton">
+            <img id="stolen_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
         </div>
     </div>
     <div id="oben" class="top">
@@ -137,98 +137,190 @@
     <div id="unten" class="bot">
 
         <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
-        <div id="matter_content" class="bot matter_background">
+        <div id="matter_wrapper" class="bot matter_background">
+            <div id="matter_content">
+                {{#each resources}}
 
-            {{#each resources}}
-
-            <div class="matter_colorBlocks">
-                <img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png">
-                <div class="text_matter">{{values.green.matter}}</div>
-                <div class="wrapper_specialResource">
-                    <div class="sr_left">
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_green.png">
-                            <div class="text_specialResources">{{values.green.sr1}}</div>
+                <div class="matter_colorBlocks">
+                    <img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png">
+                    <div class="text_matter">{{values.green.matter}}</div>
+                    <div class="wrapper_specialResource">
+                        <div class="sr_left">
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_green.png">
+                                <div class="text_specialResources">{{values.green.sr1}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_green.png">
+                                <div class="text_specialResources">{{values.green.sr2}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_green.png">
+                                <div class="text_specialResources">{{values.green.sr3}}</div>
+                            </div>
                         </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_green.png">
-                            <div class="text_specialResources">{{values.green.sr2}}</div>
-                        </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_green.png">
-                            <div class="text_specialResources">{{values.green.sr3}}</div>
-                        </div>
-                    </div>
-                    <div class="sr_right">
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_green.png">
-                            <div class="text_specialResources">{{values.green.sr4}}</div>
-                        </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_green.png">
-                            <div class="text_specialResources">{{values.green.sr5}}</div>
-                        </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_green.png">
-                            <div class="text_specialResources">{{values.green.sr6}}</div>
+                        <div class="sr_right">
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_green.png">
+                                <div class="text_specialResources">{{values.green.sr4}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_green.png">
+                                <div class="text_specialResources">{{values.green.sr5}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_green.png">
+                                <div class="text_specialResources">{{values.green.sr6}}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="matter_colorBlocks">
-                <img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png">
-                <div class="text_matter">{{values.red.matter}}</div>
-                <div class="wrapper_specialResource">
-                    <div class="sr_left">
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_red.png">
-                            <div class="text_specialResources">{{values.red.sr1}}</div>
+                <div class="matter_colorBlocks">
+                    <img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png">
+                    <div class="text_matter">{{values.red.matter}}</div>
+                    <div class="wrapper_specialResource">
+                        <div class="sr_left">
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_red.png">
+                                <div class="text_specialResources">{{values.red.sr1}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_red.png">
+                                <div class="text_specialResources">{{values.red.sr2}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_red.png">
+                                <div class="text_specialResources">{{values.red.sr3}}</div>
+                            </div>
                         </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_red.png">
-                            <div class="text_specialResources">{{values.red.sr2}}</div>
-                        </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_red.png">
-                            <div class="text_specialResources">{{values.red.sr3}}</div>
-                        </div>
-                    </div>
-                    <div class="sr_right">
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_red.png">
-                            <div class="text_specialResources">{{values.red.sr4}}</div>
-                        </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_red.png">
-                            <div class="text_specialResources">{{values.red.sr5}}</div>
-                        </div>
-                        <div class="sr_slot">
-                            <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_red.png">
-                            <div class="text_specialResources">{{values.red.sr6}}</div>
+                        <div class="sr_right">
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_red.png">
+                                <div class="text_specialResources">{{values.red.sr4}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_red.png">
+                                <div class="text_specialResources">{{values.red.sr5}}</div>
+                            </div>
+                            <div class="sr_slot">
+                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_red.png">
+                                <div class="text_specialResources">{{values.red.sr6}}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {{/each}}
             </div>
-            {{/each}}
-
         </div>
         <div id="matter_right" class="matter_edge bot right matter_background_right"></div>
     </div>
     <div id="rechts" class="top right">
         <div class="corner top right">
             <img id="character" class="corner top right inherit SScharacterButton hover">
-            <img id="right_slider_category" class="slider right_slider left inherit SShoverButton">
-            <img id="up_slider_own" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+            <img id="category_right" class="slider right_slider left inherit SShoverButton">
+            <img id="own_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
         </div>
         <div class="inventory right">
             <div class="inv_edge inv_top top inventory_right_background_top"></div>
-            <div class="inventory_wrapper inventory_right_background"></div>
+            <div class="inventory_wrapper inventory_right_background">
+                <div id="inventory_own" class="inventory_content">
+                    <div class="inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}green_pick.png)" title="
+                                <div class='item_tooltip_window_name'>
+                                    <p class='text headline'>{{item_name}} Green Pick</p>
+                                </div>
+                                <div class='item_tooltip_window_wrapper'>
+                                    <div class='item_tooltip_window_icon inventory_slots'>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}green_pick.png)'></div>
+                                    </div>
+                                    <div class='item_tooltip_window_content'>
+                                        <p class='text'>
+                                            <nobr>
+                                                {{item_type}} Type: Pick
+                                            </nobr>
+                                        </p>
+                                        <p class='text h1'>
+                                            <nobr>
+                                                {{item_value}} Miningrate: 5 / hr.
+                                            </nobr>
+                                        </p>
+                                    </div>
+                                </div>
+                                ">
+                            <!-- Informationen für den Tooltip stecken im Titel drin und werden beim drüber hovern in ein Extra Tooltip Fenster (item_tooltip_window) gepackt -->
+                            <!-- Beim mouseout wird alles aus dem Tooltip Fenster wieder zurück in den title gespeichert -->
+                        </div>
+                    </div>
+                    <div class="inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}red_pick.png)" title="
+                                <div class='item_tooltip_window_name'>
+                                    <p class='text headline'>{{item_name}} Red Pick</p>
+                                </div>
+                                <div class='item_tooltip_window_wrapper'>
+                                    <div class='item_tooltip_window_icon inventory_slots'>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Picks/{{pick_name}}red_pick.png)'></div>
+                                    </div>
+                                    <div class='item_tooltip_window_content'>
+                                        <p class='text'>
+                                            <nobr>
+                                                {{item_type}} Type: Pick
+                                            </nobr> 
+                                        </p>
+                                        <p class='text h1'>
+                                            <nobr>
+                                                {{item_value}} Miningrate: 10 / hr.
+                                            </nobr>
+                                        </p>
+                                    </div>
+                                </div>
+                                ">
+                        </div>
+                    </div>
+                    <div class="inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)" title="
+                                <div class='item_tooltip_window_name'>
+                                    <p class='text headline'>{{item_name}} Green Gloves</p>
+                                </div>
+                                <div class='item_tooltip_window_wrapper'>
+                                    <div class='item_tooltip_window_icon inventory_slots'>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)'></div>
+                                    </div>
+                                    <div class='item_tooltip_window_content'>
+                                        <p class='text'>
+                                            <nobr>
+                                                {{item_type}} Type: Gloves
+                                            </nobr> 
+                                        </p>
+                                        <p class='text h1'>
+                                            <nobr>
+                                                {{item_value}} Blubablub slfnsdflsnflk
+                                            </nobr>
+                                        </p>
+                                    </div>
+                                </div>
+                                ">
+                        </div>
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                    <div class="inventory_slots droppable">
+                    </div>
+                </div>
+            </div>
             <div class="inv_edge inv_bot bot inventory_right_background_bot"></div>
         </div>
         <div class="corner bot right">
             <img id="message" class="corner bot right inherit SSmessageButton">
-            <img id="right_slider_matter" class="slider right_slider left inherit SShoverButton">
-            <img id="down_slider_own" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+            <img id="matter_right" class="slider right_slider left inherit SShoverButton">
+            <img id="own_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
         </div>
     </div>
 
@@ -287,7 +379,7 @@
                                 <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
                             </div>
                             <div class="slot_items">
-                                <div id="left_slider_slot_items" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
                                 <div class="slot_items_wrapper">
                                     <div class="slot_items_content relative">
                                         {{#each matterBlocks}}
@@ -299,7 +391,7 @@
                                         {{/each}}
                                     </div>
                                 </div>
-                                <div id="right_slider_slot_items" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background"></div>
                             </div>
                         </div>
                         <div class="slot_edge_right_BaseLeft right"></div>
@@ -376,7 +468,7 @@
                 <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpYellowNormal.png">
             </div>
             <div id="scrounge_area">
-                <div id="scrounge_area_content" class="relative">
+                <div id="scroungeAreaContent" class="relative">
                     {{> mineRightBaseUnusedSlots}} {{> mineRightBaseUsedSlots}}
                 </div>
             </div>
@@ -448,7 +540,7 @@
         <div id="scroungeArea" class="bot">
 
             <div id="up_slider_scrounge" class="hover_slide_height top">
-                <img id="scroungeUp" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
             </div>
 
             <div id="scroungeAreaWrapper">
@@ -569,7 +661,7 @@
             </div>
 
             <div id="down_slider_base" class="hover_slide_height bot">
-                <img id="scroungeDown" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
             </div>
         </div>
     </div>
@@ -608,7 +700,7 @@
                                 <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
                             </div>
                             <div class="slot_items">
-                                <div id="left_slider_slot_items" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
                                 <div class="slot_items_wrapper">
                                     <div class="slot_items_content relative">
                                         {{#each fightArenas}}
@@ -620,7 +712,7 @@
                                         {{/each}}
                                     </div>
                                 </div>
-                                <div id="right_slider_slot_items" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background"></div>
                             </div>
                         </div>
                         <div class="slot_edge_right_BaseLeft right"></div>
@@ -694,7 +786,7 @@
                 <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpYellowNormal.png">
             </div>
             <div id="scrounge_area">
-                <div id="scrounge_area_content" class="relative">
+                <div id="scroungeAreaContent" class="relative">
                     {{> battlefieldRightBaseUnusedSlots}} {{> battlefieldRightBaseUsedSlots}}
                 </div>
             </div>
@@ -766,7 +858,7 @@
         <div id="scroungeArea" class="bot">
 
             <div id="up_slider_scrounge" class="hover_slide_height top">
-                <img id="scroungeUp" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
             </div>
 
             <div id="scroungeAreaWrapper">
@@ -874,7 +966,7 @@
             </div>
 
             <div id="down_slider_base" class="hover_slide_height bot">
-                <img id="scroungeDown" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
             </div>
         </div>
     </div>

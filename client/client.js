@@ -1330,7 +1330,7 @@ if (Meteor.isClient) {
             });
         },
         'mouseover .slider': function(e, t) {
-            slide($(e.target).attr('id'));
+            slide($(e.target));
         },
         'mouseout .slider': function(e, t) {
             slide_stop();
@@ -1365,7 +1365,7 @@ if (Meteor.isClient) {
             });
         },
         'click .dropdown': function(e, t) {
-            console.log($(e.target).parent().attr("class").search("goScroungingIcon"));
+            //console.log($(e.target).parent().attr("class").search("goScroungingIcon"));
             // if ($(e.target).src().length() == 1) {
             //     console.log('blub');
             // }
@@ -1734,6 +1734,122 @@ if (Meteor.isClient) {
         ready_check = 3;
     }
 
+    function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
+    {
+        switch (element.attr("id")) {
+            case 'category_left':
+                //console.log(element);
+                //slide_start("left", 143, 400, "");
+                break;
+            case 'category_right':
+                //console.log(element);
+                //slide_start("right", 143, 400, "");
+                break;
+            case 'base_up':
+                slide_start("back", "vertical", 100, 400, "#base_area_content");
+                break;
+            case 'base_down':
+                slide_start("forth", "vertical", 100, 400, "#base_area_content");
+                break;
+            case 'scrounge_up':
+                slide_start("back", "vertical", 100, 400, "#scroungeAreaContent");
+                break;
+            case 'scrounge_down':
+                slide_start("forth", "vertical", 100, 400, "#scroungeAreaContent");
+                break;
+            case 'slot_items_left':
+                slide_start("back", "horizontal", 100, 400, element.next().children());
+                break;
+            case 'slot_items_right':
+                slide_start("forth", "horizontal", 100, 400, element.prev().children());
+                break;
+            case 'slot_colors_left':
+                break;
+            case 'slot_colors_right':
+                break;
+            case 'matter_left':
+                slide_start("back", "horizontal", 100, 400, "#matter_content");
+                break;
+            case 'matter_right':
+                slide_start("forth", "horizontal", 100, 400, "#matter_content");
+                break;
+            case 'own_up':
+                slide_start("back", "vertical", 100, 400, "#inventory_own");
+                break;
+            case 'own_down':
+                slide_start("forth", "vertical", 100, 400, "#inventory_own");
+                break;
+            case 'stolen_up':
+                slide_start("back", "vertical", 100, 400, "#inventory_stolen");
+                break;
+            case 'stolen_down':
+                slide_start("forth", "vertical", 100, 400, "#inventory_stolen");
+                break;
+            default:
+                console.log("Slide für diesen Hover nicht definiert !");
+                break;
+        }
+    }
+
+    function slide_start(direction, orientation, pixel, speed, element1, element2) {
+        //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " element1: " + element1 + " element2: " + element2);
+        var px;
+        var animation_obj = {};
+        var css_direction;
+        var current_position;
+        var content_end;
+        var pos_neg;
+        var parent_end;
+
+        if (direction === "back") {
+            transition = "+=" + pixel + "px";
+            pos_neg = +1;
+        } else if (direction === "forth") {
+            transition = "-=" + pixel + "px";
+            pos_neg = -1;
+        }
+
+        if (orientation === "horizontal") {
+            css_direction = "left";
+            current_position = $(element1).position().left;
+            content_end = $(element1).width();
+            parent_end = $(element1).parent().width();
+        } else if (orientation === "vertical") {
+            css_direction = "top";
+            current_position = $(element1).position().top;
+            content_end = $(element1).height();
+            parent_end = $(element1).parent().height();
+
+        }
+
+
+
+        eval("animation_obj = {" + css_direction + ": '" + transition + "'}");
+
+        if ($(element1).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        {
+            //Rekursiver Intervall (unendlich)
+            var action = function() {
+                //Animation im laufenden Intervall
+                if (current_position < 0 && direction === "back" || current_position + content_end > parent_end && direction === "forth") {
+
+                    if (parent_end - content_end > current_position + (pos_neg * pixel) && direction === "forth") {
+                        eval("animation_obj = {" + css_direction + ": '" + (parent_end - content_end) + "px'}");
+                        $(element1).animate(animation_obj, speed, "swing");
+                    } else if (current_position + (pos_neg * pixel) > 0 && direction === "back") {
+                        eval("animation_obj = {" + css_direction + ": '0px'}");
+                        $(element1).animate(animation_obj, speed, "swing");
+                    } else{
+                        $(element1).animate(animation_obj, speed, "linear");
+                    }
+                    current_position = current_position + (pos_neg * pixel);
+                }
+            };
+            //Start des Intervalls
+            interval = setInterval(action, speed);
+        }
+    }
+
     function init_draggable() {
         $(".draggable").draggable({
             addClasses: false,
@@ -1914,319 +2030,267 @@ if (Meteor.isClient) {
         }
     }
 
-    function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
-    {
-        switch (element) {
-            case 'left_slider_category':
-                slide_left();
-                //slide_start("left", 1, "#k1","#k2");
-                break;
-            case 'right_slider_category':
-                slide_right();
-                //slide_start("right", 1, "#k2", "#k1");
-                break;
-            case 'base_up':
-                slide_up();
-                break;
-            case 'base_down':
-                slide_down();
-                break;
-            case 'left_slider_slot_items':
-                slide_left_simple('slot_items_content');
-                break;
-            case 'right_slider_slot_items':
-                slide_right_simple('slot_items_content');
-                break;
-            case 'scroungeUp':
-                slide_up_simple('scroungeAreaContent');
-                break;
-            case 'scroungeDown':
-                slide_down_simple('scroungeAreaContent');
-                break;
-            default:
-                //console.log("Slide für diesen Hover nicht definiert !");
-                break;
-        }
-    }
+    // function slide_left_simple(element) {
+    //     //console.log(element);
+    //     //console.log($("." + element).position().left);
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "-=" + size.pp + "px";
 
+    //     //console.log("s1: "+$("#s1").position().top);
+    //     if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("." + element).position().left >= 60) {
+    //             // Vorab Animation da Intervall erst nach [Time] anfängt
+    //             $("." + element).filter(':not(:animated)').animate({
+    //                 "left": "-=60px"
+    //             }, 300, "linear");
+    //             //Rekursiver Intervall (unendlich)
+    //             var action = function() {
+    //                 //Animation im laufenden Intervall  
+    //                 $("." + element).animate({
+    //                     "left": "-=60px"
+    //                 }, 300, "linear");
+    //             };
+    //             //Start des Intervalls
+    //             interval = setInterval(action, 300);
+    //         }
+    //     }
+    // }
 
-    function slide_left_simple(element) {
-        //console.log(element);
-        //console.log($("." + element).position().left);
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "-=" + size.pp + "px";
+    // function slide_right_simple(element) {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "+=" + size.pp + "px";
 
-        //console.log("s1: "+$("#s1").position().top);
-        if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("." + element).position().left >= 60) {
-                // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("." + element).filter(':not(:animated)').animate({
-                    "left": "-=60px"
-                }, 300, "linear");
-                //Rekursiver Intervall (unendlich)
-                var action = function() {
-                    //Animation im laufenden Intervall  
-                    $("." + element).animate({
-                        "left": "-=60px"
-                    }, 300, "linear");
-                };
-                //Start des Intervalls
-                interval = setInterval(action, 300);
-            }
-        }
-    }
+    //     //console.log("s1: "+$("#s1").position().top);
+    //     if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("." + element).position().left >= 0) {
+    //             // Vorab Animation da Intervall erst nach [Time] anfängt
+    //             $("." + element).filter(':not(:animated)').animate({
+    //                 "left": "+=60px"
+    //             }, 300, "linear");
+    //             //Rekursiver Intervall (unendlich)
+    //             var action = function() {
+    //                 //Animation im laufenden Intervall  
+    //                 $("." + element).animate({
+    //                     "left": "+=60px"
+    //                 }, 300, "linear");
+    //             };
+    //             //Start des Intervalls
+    //             interval = setInterval(action, 300);
+    //         }
+    //     }
+    // }
 
-    function slide_right_simple(element) {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "+=" + size.pp + "px";
+    // function slide_down_simple(element) {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "-=" + size.pp + "px";
+    //     //console.log("s1: "+$("#s1").position().top);
+    //     if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("#" + element).position().top <= 0) {
+    //             // Vorab Animation da Intervall erst nach [Time] anfängt
+    //             $("#" + element).filter(':not(:animated)').animate({
+    //                 "top": "-=80px"
+    //             }, 300, "linear");
+    //             //Rekursiver Intervall (unendlich)
+    //             var action = function() {
+    //                 //Animation im laufenden Intervall  
+    //                 $("#" + element).animate({
+    //                     "top": "-=80px"
+    //                 }, 300, "linear");
+    //             };
+    //             //Start des Intervalls
+    //             interval = setInterval(action, 300);
+    //         }
+    //     }
+    // }
 
-        //console.log("s1: "+$("#s1").position().top);
-        if ($("." + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("." + element).position().left >= 0) {
-                // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("." + element).filter(':not(:animated)').animate({
-                    "left": "+=60px"
-                }, 300, "linear");
-                //Rekursiver Intervall (unendlich)
-                var action = function() {
-                    //Animation im laufenden Intervall  
-                    $("." + element).animate({
-                        "left": "+=60px"
-                    }, 300, "linear");
-                };
-                //Start des Intervalls
-                interval = setInterval(action, 300);
-            }
-        }
-    }
+    // function slide_up_simple(element) {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "+=" + size.pp + "px";
+    //     //console.log("s1: "+$("#s1").position().top);
+    //     if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("#" + element).position().top <= -80) {
+    //             // Vorab Animation da Intervall erst nach [Time] anfängt
+    //             $("#" + element).filter(':not(:animated)').animate({
+    //                 "top": "+=80px"
+    //             }, 300, "linear");
+    //             //Rekursiver Intervall (unendlich)
+    //             var action = function() {
+    //                 //Animation im laufenden Intervall  
+    //                 if ($("#" + element).position().top <= -80)
+    //                     $("#" + element).animate({
+    //                         "top": "+=80px"
+    //                     }, 300, "linear");
+    //             };
+    //             //Start des Intervalls
+    //             interval = setInterval(action, 300);
+    //         }
+    //     }
+    // }
 
-    function slide_down_simple(element) {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "-=" + size.pp + "px";
-        //console.log("s1: "+$("#s1").position().top);
-        if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("#" + element).position().top <= 0) {
-                // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("#" + element).filter(':not(:animated)').animate({
-                    "top": "-=80px"
-                }, 300, "linear");
-                //Rekursiver Intervall (unendlich)
-                var action = function() {
-                    //Animation im laufenden Intervall  
-                    $("#" + element).animate({
-                        "top": "-=80px"
-                    }, 300, "linear");
-                };
-                //Start des Intervalls
-                interval = setInterval(action, 300);
-            }
-        }
-    }
+    // function slide_left() {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "-=" + size.pp + "px";
 
-    function slide_up_simple(element) {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "+=" + size.pp + "px";
-        //console.log("s1: "+$("#s1").position().top);
-        if ($("#" + element).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("#" + element).position().top <= -80) {
-                // Vorab Animation da Intervall erst nach [Time] anfängt
-                $("#" + element).filter(':not(:animated)').animate({
-                    "top": "+=80px"
-                }, 300, "linear");
-                //Rekursiver Intervall (unendlich)
-                var action = function() {
-                    //Animation im laufenden Intervall  
-                    if ($("#" + element).position().top <= -80)
-                        $("#" + element).animate({
-                            "top": "+=80px"
-                        }, 300, "linear");
-                };
-                //Start des Intervalls
-                interval = setInterval(action, 300);
-            }
-        }
-    }
+    //     if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
+    //         {
+    //             $("#k2").css({
+    //                 left: pos_r
+    //             });
+    //             $("#k1").css({
+    //                 left: "0px"
+    //             });
+    //         }
+    //         // Vorab Animation da Intervall erst nach [Time] anfängt
+    //         // $("#k1").filter(':not(:animated)').animate({
+    //         //     left: pos_p
+    //         // }, time, "linear");
+    //         // $("#k2").filter(':not(:animated)').animate({
+    //         //     left: pos_p
+    //         // }, time, "linear");
+    //         //Rekursiver Intervall (unendlich)
+    //         var action = function() {
+    //             if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
+    //             {
+    //                 $("#k2").animate({
+    //                     left: pos_r
+    //                 }, 0, "linear");
+    //                 $("#k1").animate({
+    //                     left: "0px"
+    //                 }, 0, "linear");
+    //             }
+    //             //Animation im laufenden Intervall  
+    //             $("#k1").animate({
+    //                 left: pos_p
+    //             }, time, "linear");
+    //             $("#k2").animate({
+    //                 left: pos_p
+    //             }, time, "linear");
+    //             update_category("left");
+    //         };
+    //         //Start des Intervalls
+    //         interval = setInterval(action, time);
+    //         update_category("left");
+    //     }
+    // }
 
+    // function slide_right() {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = "-" + size.pr + "px";
+    //     var pos_p = "+=" + size.pp + "px";
 
+    //     if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
+    //         {
+    //             $("#k1").css({
+    //                 left: pos_r
+    //             });
+    //             $("#k2").css({
+    //                 left: "0px"
+    //             });
+    //         }
+    //         // Vorab Animation da Intervall erst nach [Time] anfängt
+    //         // $("#k1").filter(':not(:animated)').animate({
+    //         //     left: pos_p
+    //         // }, time, "linear");
+    //         // $("#k2").filter(':not(:animated)').animate({
+    //         //     left: pos_p
+    //         // }, time, "linear");
+    //         //Rekursiver Intervall (unendlich)
+    //         var action = function() {
+    //             if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
+    //             {
+    //                 $("#k1").animate({
+    //                     left: pos_r
+    //                 }, 0, "linear");
+    //                 $("#k2").animate({
+    //                     left: "0px"
+    //                 }, 0, "linear");
+    //             }
+    //             //Animation im laufenden Intervall  
+    //             $("#k1").animate({
+    //                 left: pos_p
+    //             }, time, "linear");
+    //             $("#k2").animate({
+    //                 left: pos_p
+    //             }, time, "linear");
+    //             update_category("right");
+    //         };
+    //         //Start des Intervalls
+    //         interval = setInterval(action, time);
+    //         update_category("right");
+    //     }
+    // }
 
+    // function slide_down() {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "-=" + size.pp + "px";
+    //     //console.log("s1: "+$("#s1").position().top);
+    //     if ($("#base_area_content").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("#base_area_content").position().top <= 0) {
+    //             // Vorab Animation da Intervall erst nach [Time] anfängt
+    //             // $("#base_area_content").filter(':not(:animated)').animate({
+    //             //     "top": "-=80px"
+    //             // }, 300, "linear");
+    //             //Rekursiver Intervall (unendlich)
+    //             var action = function() {
+    //                 //Animation im laufenden Intervall  
+    //                 $("#base_area_content").animate({
+    //                     "top": "-=80px"
+    //                 }, 300, "linear");
+    //             };
+    //             //Start des Intervalls
+    //             interval = setInterval(action, 300);
+    //         }
+    //     }
+    // }
 
-
-
-
-
-
-    function slide_start(direction, endless, element1, element2) {
-
-        if (!element2) {
-            element2 = 0;
-        }
-        //console.log(direction + " " + endless + " " + element1 + " " + element2);
-    }
-
-    function slide_left() {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "-=" + size.pp + "px";
-
-        if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
-            {
-                $("#k2").css({
-                    left: pos_r
-                });
-                $("#k1").css({
-                    left: "0px"
-                });
-            }
-            // Vorab Animation da Intervall erst nach [Time] anfängt
-            // $("#k1").filter(':not(:animated)').animate({
-            //     left: pos_p
-            // }, time, "linear");
-            // $("#k2").filter(':not(:animated)').animate({
-            //     left: pos_p
-            // }, time, "linear");
-            //Rekursiver Intervall (unendlich)
-            var action = function() {
-                if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
-                {
-                    $("#k2").animate({
-                        left: pos_r
-                    }, 0, "linear");
-                    $("#k1").animate({
-                        left: "0px"
-                    }, 0, "linear");
-                }
-                //Animation im laufenden Intervall  
-                $("#k1").animate({
-                    left: pos_p
-                }, time, "linear");
-                $("#k2").animate({
-                    left: pos_p
-                }, time, "linear");
-                update_category("left");
-            };
-            //Start des Intervalls
-            interval = setInterval(action, time);
-            update_category("left");
-        }
-    }
-
-    function slide_right() {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = "-" + size.pr + "px";
-        var pos_p = "+=" + size.pp + "px";
-
-        if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
-            {
-                $("#k1").css({
-                    left: pos_r
-                });
-                $("#k2").css({
-                    left: "0px"
-                });
-            }
-            // Vorab Animation da Intervall erst nach [Time] anfängt
-            // $("#k1").filter(':not(:animated)').animate({
-            //     left: pos_p
-            // }, time, "linear");
-            // $("#k2").filter(':not(:animated)').animate({
-            //     left: pos_p
-            // }, time, "linear");
-            //Rekursiver Intervall (unendlich)
-            var action = function() {
-                if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
-                {
-                    $("#k1").animate({
-                        left: pos_r
-                    }, 0, "linear");
-                    $("#k2").animate({
-                        left: "0px"
-                    }, 0, "linear");
-                }
-                //Animation im laufenden Intervall  
-                $("#k1").animate({
-                    left: pos_p
-                }, time, "linear");
-                $("#k2").animate({
-                    left: pos_p
-                }, time, "linear");
-                update_category("right");
-            };
-            //Start des Intervalls
-            interval = setInterval(action, time);
-            update_category("right");
-        }
-    }
-
-    function slide_down() {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "-=" + size.pp + "px";
-        //console.log("s1: "+$("#s1").position().top);
-        if ($("#base_area_content").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("#base_area_content").position().top <= 0) {
-                // Vorab Animation da Intervall erst nach [Time] anfängt
-                // $("#base_area_content").filter(':not(:animated)').animate({
-                //     "top": "-=80px"
-                // }, 300, "linear");
-                //Rekursiver Intervall (unendlich)
-                var action = function() {
-                    //Animation im laufenden Intervall  
-                    $("#base_area_content").animate({
-                        "top": "-=80px"
-                    }, 300, "linear");
-                };
-                //Start des Intervalls
-                interval = setInterval(action, 300);
-            }
-        }
-    }
-
-    function slide_up() {
-        size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-        var pos = size.p;
-        var pos_r = size.pr + "px";
-        var pos_p = "+=" + size.pp + "px";
-        //console.log("s1: "+$("#s1").position().top);
-        if ($("#base_area_content").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-        {
-            if ($("#base_area_content").position().top <= -80) {
-                // Vorab Animation da Intervall erst nach [Time] anfängt
-                // $("#base_area_content").filter(':not(:animated)').animate({
-                //     "top": "+=80px"
-                // }, 300, "linear");
-                //Rekursiver Intervall (unendlich)
-                var action = function() {
-                    //Animation im laufenden Intervall  
-                    if ($("#base_area_content").position().top <= -80)
-                        $("#base_area_content").animate({
-                            "top": "+=80px"
-                        }, 300, "linear");
-                };
-                //Start des Intervalls
-                interval = setInterval(action, 300);
-            }
-        }
-    }
+    // function slide_up() {
+    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
+    //     var pos = size.p;
+    //     var pos_r = size.pr + "px";
+    //     var pos_p = "+=" + size.pp + "px";
+    //     //console.log("s1: "+$("#s1").position().top);
+    //     if ($("#base_area_content").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+    //     {
+    //         if ($("#base_area_content").position().top <= -80) {
+    //             // Vorab Animation da Intervall erst nach [Time] anfängt
+    //             // $("#base_area_content").filter(':not(:animated)').animate({
+    //             //     "top": "+=80px"
+    //             // }, 300, "linear");
+    //             //Rekursiver Intervall (unendlich)
+    //             var action = function() {
+    //                 //Animation im laufenden Intervall  
+    //                 if ($("#base_area_content").position().top <= -80)
+    //                     $("#base_area_content").animate({
+    //                         "top": "+=80px"
+    //                     }, 300, "linear");
+    //             };
+    //             //Start des Intervalls
+    //             interval = setInterval(action, 300);
+    //         }
+    //     }
+    // }
 
     function slide_stop() {
         clearInterval(interval);
