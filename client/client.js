@@ -93,11 +93,13 @@ if (Meteor.isClient) {
         var cu = self.cu;
         var menu = self.menu;
         var color = "red";
-        if(cu == self.username){
+        if (cu == self.username) {
             cu = 'YOU ARE HOME! :-)';
             color = "green";
         }
-        var cursorPlayerData = playerData.findOne({user: self.username});
+        var cursorPlayerData = playerData.findOne({
+            user: self.username
+        });
         obj0 = {};
         obj0['color'] = color;
         obj0['name'] = cu;
@@ -1079,7 +1081,6 @@ if (Meteor.isClient) {
         },
 
         'click .i4': function(e, t) {
-            console.log('i4');
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1174,17 +1175,12 @@ if (Meteor.isClient) {
         },
 
         'click #character': function(e, t) {
-
-            if (!$("#characterView").length) {
-
+            if ($('#characterView').length == 0) {
                 Router.current().render('characterView', {
                     to: 'middle'
                 });
-
             } else {
-
-                $('#characterView').show();
-
+                renderActiveMiddle();
             }
         },
 
@@ -2417,14 +2413,14 @@ if (Meteor.isClient) {
                 to: 'middle'
             });
             $('#scrounge').css({
-                backgroundPosition: "0px 0px"
+                backgroundPosition: "0px -306px"
             });
         } else {
             Router.current().render(menu + 'Scrounge', {
                 to: 'middle'
             });
             $('#scrounge').css({
-                backgroundPosition: "0 -306px"
+                backgroundPosition: "0px 0px"
             });
         }
     }
