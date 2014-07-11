@@ -960,6 +960,22 @@ img.i7 {
     background-image: url(/Aufloesung1920x1080/Interface/ActionsAdvancedStatsRepeat.png);
     background-repeat: repeat-x;
 }
+.slot_edge_left_BaseRight_advanced {
+    width: 25px;
+    height: 100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ScroungerAdvancedStatsEdgeLeft.png);
+    background-repeat: no-repeat;
+}
+.slot_edge_right_BaseRight_advanced {
+    width: 25px;
+    height: 100px;
+    background-image: url(/Aufloesung1920x1080/Interface/ScroungerAdvancedStatsEdgeRight.png);
+    background-repeat: no-repeat;
+}
+.slotBackgroundBaseRightAdvanced {
+    background-image: url(/Aufloesung1920x1080/Interface/ScroungeAdvancedStatsRepeat.png);
+    background-repeat: repeat-x;
+}
 .used_slot_advanced_wrapper {
     z-index:1;
     height: 0px;
