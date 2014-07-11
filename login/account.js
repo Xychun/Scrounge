@@ -12,7 +12,7 @@ function checkUsername(string) {
 }
 
 function validLength(val) {
-    return val.length >= 6 ? true : false;
+    return val.length >= 5 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
