@@ -932,13 +932,6 @@ img.i7 {
     height:100px;
     position: relative;
 }
-/*.scrounger_slot_supporter {
-    z-index: 1;
-    display:flex;
-    height: 125px;
-    margin-top: -13px;
-    background-image: url(/Aufloesung1920x1080/Interface/ActionsScrounger.png);
-}*/
 .text {
     margin-top:5px;
     margin-bottom:5px;
@@ -1047,7 +1040,7 @@ img.i7 {
 }
 .slot_advanced_stats {
     margin-top:13px;
-    left:151px;
+    left:124px;
     position: relative;
 }
 .slot_colors_slider {

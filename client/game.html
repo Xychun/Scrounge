@@ -64,13 +64,13 @@
                         </div>
                     </div>
                     <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)" title="
+                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Gloves</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)'></div>
+                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -80,7 +80,7 @@
                                         </p>
                                         <p class='text h1'>
                                             <nobr>
-                                                {{item_value}} Blubablub slfnsdflsnflk
+                                                {{item_value}} Possession: 500
                                             </nobr>
                                         </p>
                                     </div>
@@ -105,7 +105,7 @@
                                         </p>
                                         <p class='text h1'>
                                             <nobr>
-                                                {{item_value}} Epicness: 50.
+                                                {{item_value}} Epicness: 50
                                             </nobr>
                                         </p>
                                     </div>
@@ -132,7 +132,7 @@
                                         </p>
                                         <p class='text h1'>
                                             <nobr>
-                                                {{item_value}} Possesion: 0.5.
+                                                {{item_value}} Possesion: 0.5
                                             </nobr>
                                         </p>
                                     </div>
@@ -508,7 +508,7 @@
 
 			                            		<div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Mine/Items/green_pick_scrounger.png)">  </div>
 
-			                            		<div class="scrounger_icon_userName"> Ficken </div>
+			                            		<div class="scrounger_icon_userName"> {{supName}} </div>
 
 			                            	</div>
 
@@ -699,7 +699,8 @@
                             <div class="scrounge_slot_supporter relative">
 
                                 <div class="slot_edge_left_ScroungeSupporter left">
-                                    <div class="slot_icon"></div>
+                                    <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Mine/Items/green_pick_scrounger.png)"> </div>
+			                    	<div class="scrounger_icon_userName"> {{supName}} </div>
                                 </div>
 
                                 <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter">
@@ -826,27 +827,60 @@
 
                         </div>
 
-                        <div class="used_slot_advanced">
-                            <div class="slot_advanced_stats_wrapper relative">
-                                <div class="slot_advanced_stats">
-                                    <p class='text relative'>Profit: {{profit}}</p>
-                                    <p class='text relative'>Epicness: {{epicness}}</p>
-                                </div>
+
+
+
+                        <div class="used_slot_advanced_wrapper">
+
+                        	<div class="used_slot_advanced">
+
+	                        	<div class="slot_edge_left_BaseLeft_advanced left"> </div>
+
+	                        	<div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced">
+
+		                        	<div class="div_center_vertical">
+
+		                                <div class="slot_advanced_stats">
+		                                    <p class='text relative'>Profit: {{profit}}</p>
+		                                    <p class='text relative'>Epicness: {{epicness}}</p>
+		                                </div>
+
+		                            </div>
+	                            </div>
+
+	                            <div class="slot_edge_right_BaseLeft_advanced right"> </div>
+
                             </div>
+
                             {{#each supporter}}
-                            <div class="scrounger_slot relative">
-                                <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Mine/Items/green_sword_scrounger.png)"> </div>
-                                <div class="scrounger_stats_wrapper">
-                                    <div class="scrounger_stats relative">
-                                        <p class='text relative'>Epicness: {{epicness}}</p>
-                                        <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
-                                            <p class='text relative'>Level: {{level}}</p>
-                                        </p>
-                                    </div>
-                                </div>
+                            <div class="scrounge_slot_supporter relative">
+
+                            	<div class="slot_edge_left_BaseLeft_supporter left"> 
+
+	                                <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Battlefield/Items/green_sword_scrounger.png)"> </div>
+
+				                    <div class="scrounger_icon_userName"> {{supName}} </div>
+
+			                    </div>
+
+                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter">
+
+                                	<div class="div_center_vertical">
+
+	                                    <div class="scrounger_stats relative">
+	                                        <p class='text relative'>Epicness: {{epicness}}</p>
+	                                        <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+	                                            <p class='text relative'>Level: {{level}}</p>
+	                                        </p>
+	                                    </div>
+                               		</div>
+                            	</div>
+
+                            	<div class="slot_edge_right_BaseLeft_supporter right"> </div>
                             </div>
                             {{/each}}
                         </div>
+                        
                     </div>
 
                     <script>
@@ -1013,8 +1047,10 @@
                             <div class="scrounge_slot_supporter relative">
 
                                 <div class="slot_edge_left_ScroungeSupporter left">
-                                    <div class="slot_icon"></div>
+                                    <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Battlefield/Items/green_sword_scrounger.png)">  </div>
+			                        <div class="scrounger_icon_userName"> {{supName}} </div>
                                 </div>
+
 
                                 <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter">
 
