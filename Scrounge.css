@@ -1053,6 +1053,21 @@ img.i7 {
     width:85px;
     height:85px;
 }
+.slot_icon_userName {
+	width: 151px;
+	height: 45px;
+	bottom: 0px;
+	z-index: 1;
+	background-image: url(/Aufloesung1920x1080/Interface/AktionenKasten_BaseRechts_SlotRahmen_Name.png);
+    background-repeat: no-repeat;
+}
+.slot_icon_userName_text {
+    font-family:"OCR A Std";
+    font-size: 1em;
+    text-align: center;
+    color: white;
+    text-shadow: 4px 4px 4px black, 4px -4px 4px black, -4px 4px 4px black, -4px -4px 4px black;
+}
 .scrounger_icon {
     left:39px;
     top:22px;

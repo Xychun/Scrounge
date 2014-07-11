@@ -586,8 +586,8 @@
 <template name="mineRightBaseUsedSlots">
     {{#each mineUsedScroungeSlots}}
     <div class="slotWrapper dropdown">
-
         <div class="used_slot_Wrapper relative">
+        	<div class="slot_icon_userName"> <p class="slot_icon_userName_text"> {{victim}} </p> </div>
             <div class="slot_edge_left_BaseRight left">
                 <div class="slot_icon">
                     <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
@@ -959,6 +959,9 @@
     <div class="slotWrapper dropdown">
 
         <div class="used_slot_Wrapper relative">
+
+        	<div class="slot_icon_userName"> <p class="slot_icon_userName_text"> {{victim}} </p> </div>
+        
             <div class="slot_edge_left_BaseRight left">
                 <div class="slot_icon">
                     <img src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
