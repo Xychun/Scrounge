@@ -1381,6 +1381,7 @@ if (Meteor.isClient) {
                             "height": "auto"
                         });
                         var height = $(e.currentTarget).children().eq(1).height();
+                        console.log(height);
                         $(e.currentTarget).children().eq(1).animate({
                             "height": "0px"
                         }, 0, function() {
@@ -1401,6 +1402,9 @@ if (Meteor.isClient) {
                     } else if ($(e.currentTarget).children().eq(1).filter(':not(:animated)').height() != 0) {
 
                         var height3 = $(e.currentTarget).children().eq(1).height();
+
+                        console.log(height3);
+                        console.log(height2);
 
                         $(e.currentTarget).animate({
                             "height": parseInt(height2) - parseInt(height3) + 13

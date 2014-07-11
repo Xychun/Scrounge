@@ -396,6 +396,8 @@
                         </div>
                         <div class="slot_edge_right_BaseLeft right"></div>
                     </div>
+
+
                     {{/each}} {{#each mineUsedSlots}}
                     <div class="slotWrapper dropdown">
 
@@ -420,32 +422,61 @@
                                 </div>
                             </div>
                             <div class="slot_edge_right_BaseLeft right"></div>
-
                         </div>
 
-                        <div class="used_slot_advanced">
-                            <div class="slot_advanced_stats_wrapper relative">
-                                <div class="slot_advanced_stats">
-                                    <p class='text relative'>Profit: {{profit}}</p>
-                                    <p class='text relative'>Miningrate: {{miningrate}}</p>
-                                    <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
-                                    </p>
-                                </div>
-                            </div>
-                            {{#each supporter}}
-                            <div class="scrounger_slot relative">
-                                <div class="scrounger_icon"></div>
-                                <div class="scrounger_stats_wrapper">
-                                    <div class="scrounger_stats relative">
-                                        <p class='text relative'>Miningrate: {{miningrate}}</p>
-                                        <p class='text relative'>Mined: {{mined}}</p>
-                                        <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            {{/each}}
-                        </div>
+
+
+                        <div class="used_slot_advanced_wrapper">
+
+			                        <div class="used_slot_advanced">
+
+			                        	<div class="slot_edge_left_BaseLeft_advanced left"> </div>
+
+			                            <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced">
+
+			                            	<div class="div_center_vertical">
+
+				                                <div class="slot_advanced_stats">
+				                                    <p class='text relative'>Profit: {{profit}}</p>
+				                                    <p class='text relative'>Miningrate: {{miningrate}}</p>
+				                                    <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+				                                    </p>
+				                                </div>
+
+			                                </div>
+
+			                            </div>
+
+			                            <div class="slot_edge_right_BaseLeft_advanced right"> </div>
+
+			                        </div>
+
+			                            {{#each supporter}}
+			                        <div class="scrounge_slot_supporter relative">
+
+			                            	<div class="slot_edge_left_BaseLeft_supporter left"> 
+
+			                            		<div class="scrounger_icon">  </div>
+
+			                            	</div>
+
+			                                
+			                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter">
+			                                	<div class="div_center_vertical">
+				                                    <div class="scrounger_stats relative">
+				                                        <p class='text relative'>Miningrate: {{miningrate}}</p>
+				                                        <p class='text relative'>Mined: {{mined}}</p>
+				                                        <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+				                                        </p>
+				                                    </div>
+			                                	</div>
+			                                </div>
+
+			                                <div class="slot_edge_right_BaseLeft_supporter right"> </div>
+
+			                        </div>
+			                        {{/each}}
+			            </div>
                     </div>
 
                     <script>
@@ -1076,7 +1107,7 @@
             <!-- Hierbei handelt es sich um die slot-preview, die um jeden PlayerPlace herum angezeigt werden soll. Mit der Info, ob man hier scroungen kann und wie viele slots noch frei sind -->
 
             <!-- worldMapSlotsPreview enthält die sechs Divs mit der Slotpreview. Positionierung müsste dann via javascript variabel erfolgen. Bisher hardcoded auf DIV links (GELB) -->
-            <div id="worldMapSlotsPreview" style="right: 1200px; top: 250px;">
+<!--             <div id="worldMapSlotsPreview" style="right: 1200px; top: 250px;">
 
                 <div class="worldMapSlotsPreview" style="right: -50px; top: -50px;">
 
@@ -1109,11 +1140,11 @@
 
                 </div>
 
-            </div>
+            </div> -->
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
-            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; opacity: 0.5">
+            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px;">
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>
