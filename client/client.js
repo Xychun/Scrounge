@@ -1308,6 +1308,17 @@ if (Meteor.isClient) {
             $("#item_tooltip_window").css({
                 display: "table"
             });
+            if ($("#item_tooltip_window").width() + e.clientX > $(window).width()) {
+                var offset = -1 * $("#item_tooltip_window").width();
+                $("#item_tooltip_window").css({
+                    "margin-left": offset
+                });
+            } else {
+                $("#item_tooltip_window").css({
+                    "margin-left": "0px"
+                });
+            }
+
             $("#item_tooltip_window").stop().fadeTo("fast", 1);
         },
         'mousemove .item_tooltip': function(e, t) {
@@ -1839,7 +1850,7 @@ if (Meteor.isClient) {
                     } else if (current_position + (pos_neg * pixel) > 0 && direction === "back") {
                         eval("animation_obj = {" + css_direction + ": '0px'}");
                         $(element1).animate(animation_obj, speed, "swing");
-                    } else{
+                    } else {
                         $(element1).animate(animation_obj, speed, "linear");
                     }
                     current_position = current_position + (pos_neg * pixel);
