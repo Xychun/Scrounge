@@ -103,7 +103,7 @@ if (Meteor.isClient) {
         obj0 = {};
         obj0['color'] = color;
         obj0['name'] = cu;
-        obj0['xp'] = cursorPlayerData.XP + '/' + cursorPlayerData.requiredXP;
+        obj0['xp'] = Math.floor(cursorPlayerData.XP) + '/' + cursorPlayerData.requiredXP;
         obj0['level'] = cursorPlayerData.level;
         obj0['science'] = cursorPlayerData[menu].science;
         obj0['item'] = cursorPlayerData[menu].scrItem.benefit;
@@ -1134,46 +1134,7 @@ if (Meteor.isClient) {
 
         'click #switchToWorldMap': function(e, t) {
             if (!$("#world").length) {
-                Router.current().render('worldMap', {
-                    to: 'middle'
-                });
-                //if worldMapArray not initilazed: do it - otherwise use last active orientation
-                if (worldMapArray.length == 0) {
-                    var currentUser = Meteor.users.findOne({
-                        _id: Meteor.userId()
-                    }, {
-                        fields: {
-                            cu: 1
-                        }
-                    }).cu;
-                    var cursorUser = Meteor.users.findOne({
-                        username: currentUser
-                    }, {
-                        fields: {
-                            x: 1,
-                            y: 1
-                        }
-                    });
-                    //get max map size
-                    var maxX = worldMapFields.find({}, {
-                        fields: {
-                            x: 1
-                        },
-                        sort: {
-                            x: -1
-                        }
-                    }).fetch()[0].x;
-                    var maxY = worldMapFields.find({}, {
-                        fields: {
-                            y: 1
-                        },
-                        sort: {
-                            y: -1
-                        }
-                    }).fetch()[0].y;
-                    initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
-                }
-
+                switchToWorldMap();
             } else {
                 renderActiveMiddle();
             }
@@ -2279,6 +2240,48 @@ if (Meteor.isClient) {
             $('#scrounge').css({
                 backgroundPosition: "0px 0px"
             });
+        }
+    }
+
+    function switchToWorldMap() {
+        Router.current().render('worldMap', {
+            to: 'middle'
+        });
+        //if worldMapArray not initilazed: do it - otherwise use last active orientation
+        if (worldMapArray.length == 0) {
+            var currentUser = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    cu: 1
+                }
+            }).cu;
+            var cursorUser = Meteor.users.findOne({
+                username: currentUser
+            }, {
+                fields: {
+                    x: 1,
+                    y: 1
+                }
+            });
+            //get max map size
+            var maxX = worldMapFields.find({}, {
+                fields: {
+                    x: 1
+                },
+                sort: {
+                    x: -1
+                }
+            }).fetch()[0].x;
+            var maxY = worldMapFields.find({}, {
+                fields: {
+                    y: 1
+                },
+                sort: {
+                    y: -1
+                }
+            }).fetch()[0].y;
+            initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
         }
     }
 

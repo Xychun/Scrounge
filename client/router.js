@@ -6,7 +6,7 @@ Router.configure({
 
 Router.map(function() {
     this.route('login', {
-        path: '/login',
+        path: '/',
         layoutTemplate: 'masterLayout',
         yieldTemplates: {
             'login': {
