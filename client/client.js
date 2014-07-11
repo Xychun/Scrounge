@@ -211,6 +211,7 @@ if (Meteor.isClient) {
                         progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
                         obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
                         obj00['miningrate'] = supRate + '/hr';
+                        obj00['supName'] = currentSup;
                         supSlotsMemory[k] = obj00;
                     }
                 }
@@ -490,6 +491,7 @@ if (Meteor.isClient) {
 
                         obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
                         obj00['miningrate'] = supRate + '/hr';
+                        obj00['supName'] = currentSup;
                         supSlotsMemory[k] = obj00;
                     }
                 }
@@ -680,6 +682,7 @@ if (Meteor.isClient) {
                         supEpics = supEpics + supEpic;
                         obj00['epicness'] = supEpic + '%';
                         obj00['level'] = cursorCurrentSup.level;
+                        obj00['supName'] = currentSup;
                         supSlotsMemory[k] = obj00;
                     }
                 }
@@ -945,6 +948,7 @@ if (Meteor.isClient) {
 
                         obj00['epicness'] = supEpic + '%';
                         obj00['level'] = cursorCurrentSup.level;
+                        obj00['supName'] = currentSup;
                         supSlotsMemory[k] = obj00;
                     }
                 }

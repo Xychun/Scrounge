@@ -431,7 +431,7 @@ if (Meteor.isServer) {
                 }
             }
             //LAST CHECK: RANGE SLIDER
-            if (!(cursorMineOwner['owns' + slotId].control.min < cursorMyPlayerData.mine.scrItem.benefit < cursorMineOwner['owns' + slotId].control.max)) {
+            if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
                 console.log('You cant scrounge here: You do not have the right miningrate!');
                 return;
             }
@@ -535,7 +535,7 @@ if (Meteor.isServer) {
                 }
             }
             //LAST CHECK: RANGE SLIDER
-            if (!(cursorBattlefieldOwner['owns' + slotId].control.min < cursorMyPlayerData.battlefield.scrItem.benefit < cursorBattlefieldOwner['owns' + slotId].control.max)) {
+            if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
                 console.log('You cant scrounge here: You do not have the right epicness!');
                 return;
             }

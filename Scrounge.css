@@ -980,7 +980,7 @@ img.i7 {
     height:100px;
     position: relative;
 }
- .text {
+.text {
     margin-top:5px;
     margin-bottom:5px;
     color: white;
@@ -1038,10 +1038,21 @@ img.i7 {
     height:85px;
 }
 .scrounger_icon {
-    left:46px;
-    top:35px;
+    left:39px;
+    top:22px;
     width:55px;
     height:55px;
+    background-image: url(/Aufloesung1920x1080/Mine/Items/green_pick_scrounger.png);
+    background-repeat: no-repeat;
+}
+.scrounger_icon_userName {
+	top: 92px;
+	width: 100%;
+    font-family:"OCR A Std";
+    font-size: 1em;
+    text-align: center;
+    color: white;
+    text-shadow: 4px 4px 4px black, 4px -4px 4px black, -4px 4px 4px black, -4px -4px 4px black;
 }
 .scrounger_stats_wrapper {
     position: absolute;
@@ -1082,7 +1093,7 @@ img.i7 {
 }
 .slot_advanced_stats {
     margin-top:13px;
-    left:151px;
+    left:124px;
     position: relative;
 }
 .slot_colors_slider {
