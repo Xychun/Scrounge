@@ -735,12 +735,16 @@ if (Meteor.isServer) {
                 }
             });
 
+            //Values randomNumber are [1-5]
+            var randomNumber = Math.floor((Math.random() * 5))+1;
+
             // PLAYERDATA //
             playerData.insert({
                 user: name,
                 level: 0,
                 XP: 0,
                 requiredXP: 2014,
+                backgroundId: randomNumber;
                 mine: {
                     ownItem: {
                         blank: "",

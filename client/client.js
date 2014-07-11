@@ -2460,16 +2460,22 @@ if (Meteor.isClient) {
             var infoMemory = {};
             //without user push empty object
             if (user != '') {
-                var playerLevel = playerData.findOne({
+                var cursorPlayerData = playerData.findOne({
                     user: user
                 }, {
                     fields: {
-                        level: 1
+                        level: 1,
+                        backgroundId: 1
                     }
-                }).level;
+                });
+                var playerLevel = cursorPlayerData.level;
+                var backgroundNumber = cursorPlayerData.backgroundId;
                 infoMemory['playerLevel'] = playerLevel;
                 infoMemory['playerImage'] = "worldMapPlayerImage";
                 infoMemory['playerName'] = user;
+                infoMemory['backgroundNumber'] = backgroundNumber;
+            } else {
+                infoMemory['backgroundNumber'] = 0;
             }
             infoMemory['x'] = (orientationX + j) % (maxX + 1);
             infoMemory['y'] = (orientationY + rowNo) % (maxY + 1);
