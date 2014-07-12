@@ -188,9 +188,6 @@
 
         <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
         <div id="matter_wrapper" class="bot matter_background">
-
-        <div id="infoLog"> </div>
-
             <div id="matter_content">
                 {{#each resources}}
 
@@ -378,8 +375,8 @@
     </div>
 
     <!-- Zu Testzwecken -->
-        <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div>
-        <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div>
+    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div>
 
     <script>
     // console.log(Session.get("init_bool"));
@@ -743,36 +740,18 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="slot_edge_right_ScroungeSupporter right"></div>
-
                             </div>
-
                             {{/each}}
-
                         </div>
-
-                        <!-- TO-DO: Muss noch umgebaut werden: nach rechts (ein großes Div?)-->
-
-
                     </div>
-
                     <script>
                     Session.set("middle", "mineScrounge");
                     </script>
-
                     {{/each}}
-
-                    <!-- <div class="scroungable_right relative">
-                        <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
-                    </div> -->
-
                 </div>
-
                 <!-- <div id="seperationBarScrounge" class="left right"></div> -->
-
             </div>
-
             <div id="down_slider_base" class="hover_slide_height bot">
                 <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
             </div>
@@ -1317,7 +1296,7 @@
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
-            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; background-image: url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace{{backgroundNumber}}.png); background-repeat: no-repeat;">
+            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px;" style="background-image: url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace0.png); background-repeat: no-repeat;">
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>
@@ -1327,41 +1306,6 @@
                 </div>
             </div>
             {{/each}} {{/each}}
-
-            <!-- Beispiel Möglichkeit zur Variabilität 2: Diese sechs slots bei allen inneren divs im HTML-Gerüst vorhalten und entsprechen auf "hide" oder "visible" setzen -->
-            <!-- Alternativ siehe oben: diese sechs slots aus den "worldMapPlayerPlace"-div ganz raushalten und als gesondertes div je nach Bedarf drüberschieben -->
-
-            <!--             <div id="worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="right: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewLaboratory" class="worldMapSlotsPreview" style="right: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewLaboratory.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewWorkshop" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewWorkshop.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewThievery" class="worldMapSlotsPreview" style="left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewThievery.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewSmelter" class="worldMapSlotsPreview" style="left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewSmelter.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div> -->
-
         </div>
     </div>
 

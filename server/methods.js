@@ -359,6 +359,7 @@ if (Meteor.isServer) {
         },
 
         goScroungingMine: function(slotId) {
+            Meteor.call("infoLog", 'You cant scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O', "red");
             var currentUser = Meteor.users.findOne({
                 _id: this.userId
             }, {
@@ -376,6 +377,7 @@ if (Meteor.isServer) {
             //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
             if (currentUser == myName) {
                 console.log('You cant scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O');
+                Meteor.call("infoLog", 'You cant scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O', "red");
                 return;
             }
             var cursorMyPlayerData = playerData.findOne({
