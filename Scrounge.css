@@ -672,14 +672,14 @@ img.i7 {
     background-repeat: no-repeat;
 }
 #currentMapView {
-    width: 1800px;
-    height: 1000px;
+    width: 2400px;
+    height: 1500px;
     position: absolute;
     z-index: -1;
     right: 50%;
     top: 50%;
-    margin-right: -900px;
-    margin-top: -500px;
+    margin-right: -1200px;
+    margin-top: -750px;
 }
 #worldViewPort {
     top: 160px;

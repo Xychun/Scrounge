@@ -20,7 +20,7 @@ Router.map(function() {
     });
 
     this.route('game', {
-        path: '/game/:name/:menu',
+        path: '/game',
         layoutTemplate: 'masterLayout',
 
         yieldTemplates: {

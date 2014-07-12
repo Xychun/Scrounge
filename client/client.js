@@ -38,8 +38,8 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     timers = new Array();
-    mapRows = 4;
-    mapColumns = 6;
+    mapRows = 6;
+    mapColumns = 8;
 
     ////////////////////////////
     ////// FUNCTION CALLS //////
@@ -1647,6 +1647,8 @@ if (Meteor.isClient) {
 
     Template.worldMap.events({
         'mouseenter .worldMapPlayerPlace': function(e, t) {
+            // var element = $(e.currentTarget).attr("id");
+            // $('#preview' + element).css({"visibility" : "visible"});
             // get orientation
             var player = $(e.currentTarget).attr("id");
             if(!player)return
@@ -1669,7 +1671,7 @@ if (Meteor.isClient) {
                 user: player
             });
             var cursorBattlefield = battlefield.findOne({user: player});            
-            //CheckMine
+            //Check mine
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             var trueCount = 0;
             var falseCount = 0;
@@ -1693,7 +1695,7 @@ if (Meteor.isClient) {
                 obj0['mineResult'] = true;
             }
             
-            //CheckBattlefield
+            //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
             var trueCount = 0;
             var falseCount = 0;
@@ -1719,6 +1721,11 @@ if (Meteor.isClient) {
             // update session variab
             Session.set("worldMapPreview", obj0);
         },
+
+        // 'mouseout .worldMapScroungePreview': function(e, t) {
+        //     var element = $(e.currentTarget).attr("id");
+        //     $('#' + element).css({"visibility" : "hidden"});
+        // },
 
         'click .worldMapNavigators': function(e, t) {
             //get max map size

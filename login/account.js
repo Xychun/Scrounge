@@ -113,10 +113,7 @@ if (Meteor.isClient) {
             }
         });
         if (self) {
-            Router.go('game', {
-                name: self.cu,
-                menu: self.menu
-            });
+            Router.go('game');
         } else {
             console.log("User not yet defined problem switchToGame");
         }
