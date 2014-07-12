@@ -199,6 +199,7 @@ img.i7 {
     bottom:86px;
     left:86px;
     right:86px;
+    min-height: 700px;
     min-width: 1000px;
 }
 #unten {
@@ -233,6 +234,16 @@ img.i7 {
     height:31px;
 }
 #improvementsText {
+    top: 5px;
+    right: 10px;
+    color: white;
+    font-family:"OCR A Std";
+    font-size: 1.1em;
+    vertical-align: middle;
+    text-align: left;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+.improvementsText {
     top: 5px;
     right: 10px;
     color: white;
@@ -1533,6 +1544,7 @@ img.i7 {
         bottom:109px;
         left:109px;
         right:109px;
+        min-height: 700px;
         min-width: 1000px;
     }
     #unten {
@@ -1848,6 +1860,7 @@ img.i7 {
         bottom:162px;
         left:162px;
         right:162px;
+        min-height: 700px;
         min-width: 1000px;
     }
     #unten {
