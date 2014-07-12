@@ -12,6 +12,16 @@ body {
     background-image:url(/Aufloesung1920x1080/Interface/BackgroundGame2.png);
     background-repeat: repeat;
 }
+#background_fade {
+    background-color: black;
+    z-index: 3;
+    display:none;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
 #bg {
     min-height:500px;
     min-width:500px;
@@ -1062,8 +1072,8 @@ img.i7 {
     background-repeat: no-repeat;
 }
 .scrounger_icon_userName {
-	top: 92px;
-	width: 100%;
+    top: 92px;
+    width: 100%;
     font-family:"OCR A Std";
     font-size: 1em;
     text-align: center;

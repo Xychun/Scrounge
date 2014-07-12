@@ -1413,6 +1413,7 @@ if (Meteor.isClient) {
                 user: currentUser
             });
             $('#buyMenu').fadeIn();
+            $('#background_fade').fadeIn();
             Session.set("clickedMatter", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#item').text("Matter: " + this.value);
@@ -1466,6 +1467,7 @@ if (Meteor.isClient) {
                 user: currentUser
             });
             $('#buyMenu').fadeIn();
+            $('#background_fade').fadeIn();
             Session.set("clickedFight", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
             $('#item').text("XP: " + this.value);
@@ -1616,11 +1618,13 @@ if (Meteor.isClient) {
                 });
             }
             $('#buyMenu').fadeOut();
+            $('#background_fade').fadeOut();
 
         },
 
         'click #buyMenuNo': function(e, t) {
             $('#buyMenu').fadeOut();
+            $('#background_fade').fadeOut();
 
         },
     });
@@ -1690,7 +1694,7 @@ if (Meteor.isClient) {
 
 
     var time = 1200; //Animationszeit in ms
-    var c = 1; //Start Kategorie
+    var current_category = 1; //Start Kategorie
     var max_cat = 6; //Anzahl Kategorien
     var interval;
     var ready_check;
@@ -2048,14 +2052,14 @@ if (Meteor.isClient) {
     //             //Animation im laufenden Intervall  
     //             $("#k1").animate({
     //                 left: pos_p
-    //             }, time, "linear");
+    //             }, 400, "linear");
     //             $("#k2").animate({
     //                 left: pos_p
-    //             }, time, "linear");
+    //             }, 400, "linear");
     //             update_category("left");
     //         };
     //         //Start des Intervalls
-    //         interval = setInterval(action, time);
+    //         interval = setInterval(action, 400);
     //         update_category("left");
     //     }
     // }
@@ -2116,15 +2120,15 @@ if (Meteor.isClient) {
 
     function update_category(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
         if (direction == "left") {
-            c--;
+            current_category--;
         } else if (direction == "right") {
-            c++;
+            current_category++;
         }
 
-        if (c == 0 && direction == "left") {
-            c = max_cat;
-        } else if (c == (max_cat + 1) && direction == "right") {
-            c = 1;
+        if (current_category == 0 && direction == "left") {
+            current_category = max_cat;
+        } else if (current_category == (max_cat + 1) && direction == "right") {
+            current_category = 1;
         }
     }
 
@@ -2356,64 +2360,69 @@ if (Meteor.isClient) {
             var higherControl;
 
             switch (middle) {
-                case "mineBase": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).username;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = mine.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.mine.ownSlots;
-                amountScroungeSlots = cursorPlayerData.mine.srcSlots;
-                minControl = cursorPlayerData.mine.minControl;
-                maxControl = cursorPlayerData.mine.maxControl;
-                break;
-                case "mineScrounge": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).cu;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = mine.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.mine.ownSlots;
-                amountScroungeSlots = 0;
-                minControl = cursorPlayerData.mine.minControl;
-                maxControl = cursorPlayerData.mine.maxControl;
-                break;
-                case "battlefieldBase": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).username;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = battlefield.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.battlefield.ownSlots;
-                amountScroungeSlots = cursorPlayerData.battlefield.srcSlots;
-                minControl = cursorPlayerData.battlefield.minControl;
-                maxControl = cursorPlayerData.battlefield.maxControl;
-                break;
-                case "battlefieldScrounge": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).cu;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = battlefield.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.battlefield.ownSlots;
-                amountScroungeSlots = 0;
-                minControl = cursorPlayerData.battlefield.minControl;
-                maxControl = cursorPlayerData.battlefield.maxControl;
-                break;
-                default: console.log('default');
-                break;
+                case "mineBase":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).username;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = mine.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.mine.ownSlots;
+                    amountScroungeSlots = cursorPlayerData.mine.srcSlots;
+                    minControl = cursorPlayerData.mine.minControl;
+                    maxControl = cursorPlayerData.mine.maxControl;
+                    break;
+                case "mineScrounge":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).cu;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = mine.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.mine.ownSlots;
+                    amountScroungeSlots = 0;
+                    minControl = cursorPlayerData.mine.minControl;
+                    maxControl = cursorPlayerData.mine.maxControl;
+                    break;
+                case "battlefieldBase":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).username;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = battlefield.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.battlefield.ownSlots;
+                    amountScroungeSlots = cursorPlayerData.battlefield.srcSlots;
+                    minControl = cursorPlayerData.battlefield.minControl;
+                    maxControl = cursorPlayerData.battlefield.maxControl;
+                    break;
+                case "battlefieldScrounge":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).cu;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = battlefield.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.battlefield.ownSlots;
+                    amountScroungeSlots = 0;
+                    minControl = cursorPlayerData.battlefield.minControl;
+                    maxControl = cursorPlayerData.battlefield.maxControl;
+                    break;
+                default:
+                    console.log('default');
+                    break;
             }
 
             for (var i = 0; i < amountSlots; i++) {
