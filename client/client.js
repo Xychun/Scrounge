@@ -1265,11 +1265,6 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
-
-        'keydown': function(e) {
-            console.log('key');
-        },
-
         'keypress input': function(event) {
             console.log('asdasdas');
         },
@@ -1537,12 +1532,16 @@ if (Meteor.isClient) {
 
         'click .goScroungingMine': function(e, t) {
             var slotId = e.currentTarget.id.split("_").pop();
-            Meteor.call('goScroungingMine', slotId, function(err) {
+            Meteor.call('goScroungingMine', slotId, function(err, result) {
                 if (err) {
-                    console.log('goScroungingMine: ' + err);
+                    console.log('goScroungingMine: ' + slotId + ' : ' + err);
+                }
+                if (result) {
+                    infoLog(result, "red");
+                    showInfoTextAnimation(result, "green");
                 }
             });
-        }
+        },
     });
 
     Template.battlefieldScrounge.events({
@@ -1582,9 +1581,13 @@ if (Meteor.isClient) {
 
         'click .goScroungingBattlefield': function(e, t) {
             var slotId = e.currentTarget.id.split("_").pop();
-            Meteor.call('goScroungingBattlefield', slotId, function(err) {
+            Meteor.call('goScroungingBattlefield', slotId, function(err, result) {
                 if (err) {
                     console.log('goScroungingBattlefield: ' + err);
+                }
+                if (result) {
+                    infoLog(result, "red");
+                    showInfoTextAnimation(result, "green");
                 }
             });
         }
@@ -1607,16 +1610,24 @@ if (Meteor.isClient) {
 
             //updating the database
             if (menu == 'mine') {
-                Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
+                Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err, result) {
                     if (err) {
                         console.log(err);
+                    }
+                    if (result) {
+                        infoLog(result, "red");
+                        showInfoTextAnimation(result, "green");
                     }
                 });
             }
             if (menu == 'battlefield') {
-                Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
+                Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err, result) {
                     if (err) {
                         console.log(err);
+                    }
+                    if (result) {
+                        infoLog(result, "red");
+                        showInfoTextAnimation(result, "green");
                     }
                 });
             }
@@ -2216,6 +2227,30 @@ if (Meteor.isClient) {
             return array.indexOf(elem) == pos;
         })
         return uniqueArray
+    }
+
+    function showInfoTextAnimation(text, color) {
+
+        var textAnimation = document.createElement("div");
+        textAnimation.innerHTML = text;
+        textAnimation.id = "textAnimation";
+        document.getElementById("mitte").appendChild(textAnimation);
+        textAnimation.style.color = color;
+        setTimeout(function() {
+            document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+        }, 2000);
+
+    }
+
+    function infoLog(text, color) {
+
+        var log = document.createElement("div");
+        var previousLogID;
+        log.innerHTML = text;
+        log.className = "logs";
+        log.style.color = color;
+        $("#infoLog").prepend(log);
+
     }
 
     function checkScroungeMine(slotId, myName, currentUser) {
