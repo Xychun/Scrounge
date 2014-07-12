@@ -1077,11 +1077,15 @@ if (Meteor.isClient) {
 
         'click #testButton': function(e, t) {
 
+          Meteor.call("showInfoTextAnimation", "successfull scrounge", "green");
+
         },
 
         'click #testButton2': function(e, t) {
 
-            logRenders();
+          Meteor.call("infoLog", "this is a problem", "red");
+
+/*            logRenders();*/
 
         },
 
