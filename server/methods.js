@@ -744,7 +744,7 @@ if (Meteor.isServer) {
                 level: 0,
                 XP: 0,
                 requiredXP: 2014,
-                backgroundId: randomNumber,
+                backgroundId: randomNumber;
                 mine: {
                     ownItem: {
                         blank: "",
