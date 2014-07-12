@@ -547,8 +547,8 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
+                obj0['locked'] = checkScroungeMine(i, self.username, self.cu);
                 objects[i] = obj0;
-
             }
         }
         return objects;
@@ -996,6 +996,7 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
+                obj0['locked'] = checkScroungeBattlefield(i, self.username, self.cu);
                 objects[i] = obj0;
             }
         }
@@ -1264,6 +1265,10 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
+        'keypress input': function(event) {
+            console.log('asdasdas');
+        },
+
         'mousedown img': function(e, t) {
             return false;
         },
@@ -1357,7 +1362,6 @@ if (Meteor.isClient) {
                             "height": "auto"
                         });
                         var height = $(e.currentTarget).children().eq(1).height();
-                        console.log(height);
                         $(e.currentTarget).children().eq(1).animate({
                             "height": "0px"
                         }, 0, function() {
@@ -1378,10 +1382,6 @@ if (Meteor.isClient) {
                     } else if ($(e.currentTarget).children().eq(1).filter(':not(:animated)').height() != 0) {
 
                         var height3 = $(e.currentTarget).children().eq(1).height();
-
-                        console.log(height3);
-                        console.log(height2);
-
                         $(e.currentTarget).animate({
                             "height": parseInt(height2) - parseInt(height3) + 13
                         }, 1000);
@@ -1534,12 +1534,16 @@ if (Meteor.isClient) {
 
         'click .goScroungingMine': function(e, t) {
             var slotId = e.currentTarget.id.split("_").pop();
-            Meteor.call('goScroungingMine', slotId, function(err) {
+            Meteor.call('goScroungingMine', slotId, function(err, result) {
                 if (err) {
-                    console.log('goScroungingMine: ' + err);
+                    console.log('goScroungingMine: ' + slotId + ' : ' + err);
+                }
+                if (result) {
+                    infoLog(result, "red");
+                    showInfoTextAnimation(result, "green");
                 }
             });
-        }
+        },
     });
 
     Template.battlefieldScrounge.events({
@@ -1579,9 +1583,13 @@ if (Meteor.isClient) {
 
         'click .goScroungingBattlefield': function(e, t) {
             var slotId = e.currentTarget.id.split("_").pop();
-            Meteor.call('goScroungingBattlefield', slotId, function(err) {
+            Meteor.call('goScroungingBattlefield', slotId, function(err, result) {
                 if (err) {
                     console.log('goScroungingBattlefield: ' + err);
+                }
+                if (result) {
+                    infoLog(result, "red");
+                    showInfoTextAnimation(result, "green");
                 }
             });
         }
@@ -1604,16 +1612,24 @@ if (Meteor.isClient) {
 
             //updating the database
             if (menu == 'mine') {
-                Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err) {
+                Meteor.call('buyMatter', Session.get("clickedMatter"), slider_range, function(err, result) {
                     if (err) {
                         console.log(err);
+                    }
+                    if (result) {
+                        infoLog(result, "red");
+                        showInfoTextAnimation(result, "green");
                     }
                 });
             }
             if (menu == 'battlefield') {
-                Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err) {
+                Meteor.call('buyFight', Session.get("clickedFight"), slider_range, function(err, result) {
                     if (err) {
                         console.log(err);
+                    }
+                    if (result) {
+                        infoLog(result, "red");
+                        showInfoTextAnimation(result, "green");
                     }
                 });
             }
@@ -2217,6 +2233,158 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
+    function showInfoTextAnimation(text, color) {
+
+        var textAnimation = document.createElement("div");
+        textAnimation.innerHTML = text;
+        textAnimation.id = "textAnimation";
+        document.getElementById("mitte").appendChild(textAnimation);
+        textAnimation.style.color = color;
+        setTimeout(function() {
+            document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+        }, 2000);
+
+    }
+
+    function infoLog(text, color) {
+
+        var log = document.createElement("div");
+        var previousLogID;
+        log.innerHTML = text;
+        log.className = "logs";
+        log.style.color = color;
+        $("#infoLog").prepend(log);
+
+    }
+
+    function checkScroungeMine(slotId, myName, currentUser) {
+        //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
+        if (currentUser == myName) {
+            return true;
+        }
+        var cursorMyPlayerData = playerData.findOne({
+            user: myName
+        }, {
+            fields: {
+                mine: 1
+            }
+        });
+        var amountScrSlots = cursorMyPlayerData.mine.scrSlots;
+        var cursorMineScrounger = mine.findOne({
+            user: myName
+        });
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorMineScrounger['scrs' + i].victim == currentUser) {
+                return true;
+            }
+        }
+        //CHECK FREE SCRSLOTS OF SCROUNGER DATA
+        var resultScrounger = -1;
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorMineScrounger['scrs' + i].victim == "") {
+                resultScrounger = i;
+                break;
+            }
+        }
+        if (resultScrounger == -1) {
+            return true;
+        }
+        //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
+        var obj0 = {};
+        obj0['owns' + slotId] = 1;
+        var cursorMineOwner = mine.findOne({
+            user: currentUser
+        }, {
+            fields: obj0
+        });
+        //Get free SupSlots index
+        var amountSupSlots = playerData.findOne({
+            user: currentUser
+        }, {
+            fields: {
+                mine: 1
+            }
+        }).mine.supSlots;
+        var resultOwner = -1;
+        for (i = 0; i < amountSupSlots; i++) {
+            if (cursorMineOwner['owns' + slotId]['sup' + i] == "") {
+                resultOwner = i;
+                break;
+            }
+        }
+        //LAST CHECK: RANGE SLIDER
+        if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
+            return true;
+        }
+        //SupSlot with id result is free and correct: update it ?
+        if (resultOwner == -1) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkScroungeBattlefield(slotId, myName, currentUser) {
+        //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
+        if (currentUser == myName) {
+            return true;
+        }
+        var cursorMyPlayerData = playerData.findOne({
+            user: myName
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        });
+        var amountScrSlots = cursorMyPlayerData.battlefield.scrSlots;
+        var cursorBattlefieldScrounger = battlefield.findOne({
+            user: myName
+        });
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
+                return true;
+            }
+        }
+        //CHECK FREE SCRSLOTS OF SCROUNGER DATA
+        var resultScrounger = -1;
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorBattlefieldScrounger['scrs' + i].victim == "") {
+                resultScrounger = i;
+                break;
+            }
+        }
+        if (resultScrounger == -1) {
+            return true;
+        }
+        //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
+        var obj0 = {};
+        obj0['owns' + slotId] = 1;
+        var cursorBattlefieldOwner = battlefield.findOne({
+            user: currentUser
+        }, {
+            fields: obj0
+        });
+        //Get free SupSlots index
+        var amountSupSlots = playerData.findOne({
+            user: currentUser
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        }).battlefield.supSlots;
+        var resultOwner = -1;
+        for (i = 0; i < amountSupSlots; i++) {
+            if (cursorBattlefieldOwner['owns' + slotId]['sup' + i] == "") {
+                resultOwner = i;
+                break;
+            }
+        }
+        //LAST CHECK: RANGE SLIDER
+        if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
+            return true;
+        }
+        return false;
+    }
+
     function renderActiveMiddle() {
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -2474,16 +2642,22 @@ if (Meteor.isClient) {
             var infoMemory = {};
             //without user push empty object
             if (user != '') {
-                var playerLevel = playerData.findOne({
+                var cursorPlayerData = playerData.findOne({
                     user: user
                 }, {
                     fields: {
-                        level: 1
+                        level: 1,
+                        backgroundId: 1
                     }
-                }).level;
+                });
+                var playerLevel = cursorPlayerData.level;
+                var backgroundNumber = cursorPlayerData.backgroundId;
                 infoMemory['playerLevel'] = playerLevel;
                 infoMemory['playerImage'] = "worldMapPlayerImage";
                 infoMemory['playerName'] = user;
+                infoMemory['backgroundNumber'] = backgroundNumber;
+            } else  {
+                infoMemory['backgroundNumber'] = 0;
             }
             infoMemory['x'] = (orientationX + j) % (maxX + 1);
             infoMemory['y'] = (orientationY + rowNo) % (maxY + 1);

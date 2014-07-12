@@ -188,6 +188,7 @@
 
         <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
         <div id="matter_wrapper" class="bot matter_background">
+            <div id="infoLog"> </div>
             <div id="matter_content">
                 {{#each resources}}
 
@@ -327,7 +328,7 @@
                         </div>
                     </div>
                     <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Gloves/{{pick_name}}green_gloves.png)" title="
+                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Gloves</p>
                                 </div>
@@ -375,8 +376,8 @@
     </div>
 
     <!-- Zu Testzwecken -->
-    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
-    <!-- <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div> -->
+<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div>
 
 </template>
 
@@ -582,8 +583,10 @@
 <template name="mineRightBaseUsedSlots">
     {{#each mineUsedScroungeSlots}}
     <div class="slotWrapper dropdown">
-
         <div class="used_slot_Wrapper relative">
+            <div class="slot_icon_userName">
+                <p class="slot_icon_userName_text">{{victim}}</p>
+            </div>
             <div class="slot_edge_left_BaseRight left">
                 <div class="slot_icon">
                     <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
@@ -672,7 +675,11 @@
                                     <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
                                     </p>
                                 </div>
-
+                                {{#if locked}}
+                                <div class="scrounge_right">
+                                    <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
+                                </div>
+                                {{else}}
                                 <div id="{{goScrounging}}" class="goScroungingMine goScroungingIcon scrounge_right">
                                     <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
                                 </div>
@@ -684,6 +691,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                {{/if}}
                             </div>
 
                             <div class="slot_edge_right_Scrounge right"></div>
@@ -729,36 +737,18 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="slot_edge_right_ScroungeSupporter right"></div>
-
                             </div>
-
                             {{/each}}
-
                         </div>
-
-                        <!-- TO-DO: Muss noch umgebaut werden: nach rechts (ein großes Div?)-->
-
-
                     </div>
-
                     <script>
                     Session.set("middle", "mineScrounge");
                     </script>
-
                     {{/each}}
-
-                    <!-- <div class="scroungable_right relative">
-                        <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
-                    </div> -->
-
                 </div>
-
                 <!-- <div id="seperationBarScrounge" class="left right"></div> -->
-
             </div>
-
             <div id="down_slider_base" class="hover_slide_height bot">
                 <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
             </div>
@@ -955,6 +945,11 @@
     <div class="slotWrapper dropdown">
 
         <div class="used_slot_Wrapper relative">
+
+            <div class="slot_icon_userName">
+                <p class="slot_icon_userName_text">{{victim}}</p>
+            </div>
+
             <div class="slot_edge_left_BaseRight left">
                 <div class="slot_icon">
                     <img src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
@@ -1042,7 +1037,11 @@
                                     <p class='text relative'>Slots: {{slots}}</p>
                                     <p class='text relative'>XP: {{xp}}</p>
                                 </div>
-
+                                {{#if locked}}
+                                <div class="scrounge_right">
+                                    <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
+                                </div>
+                                {{else}}
                                 <div id="{{goScrounging}}" class="goScroungingBattlefield goScroungingIcon scrounge_right">
                                     <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
                                 </div>
@@ -1053,6 +1052,7 @@
                                         <p class='text relative'>XP: {{xpChange}}</p>
                                     </div>
                                 </div>
+                                {{/if}}
                             </div>
 
                             <div class="slot_edge_right_Scrounge right"></div>
@@ -1294,7 +1294,7 @@
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
-            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px;">
+            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; background-image: url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace{{backgroundNumber}}.png); background-repeat: no-repeat;">
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>
@@ -1304,41 +1304,6 @@
                 </div>
             </div>
             {{/each}} {{/each}}
-
-            <!-- Beispiel Möglichkeit zur Variabilität 2: Diese sechs slots bei allen inneren divs im HTML-Gerüst vorhalten und entsprechen auf "hide" oder "visible" setzen -->
-            <!-- Alternativ siehe oben: diese sechs slots aus den "worldMapPlayerPlace"-div ganz raushalten und als gesondertes div je nach Bedarf drüberschieben -->
-
-            <!--             <div id="worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="right: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewLaboratory" class="worldMapSlotsPreview" style="right: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewLaboratory.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewWorkshop" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewWorkshop.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewThievery" class="worldMapSlotsPreview" style="left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewThievery.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewSmelter" class="worldMapSlotsPreview" style="left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewSmelter.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div id="worldMapSlotsPreviewBattlefield" class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png)">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div> -->
-
         </div>
     </div>
 
