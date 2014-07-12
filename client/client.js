@@ -547,8 +547,8 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
+                obj0['locked'] = checkScroungeMine(i, self.username, self.cu);
                 objects[i] = obj0;
-
             }
         }
         return objects;
@@ -996,6 +996,7 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
+                obj0['locked'] = checkScroungeBattlefield(i, self.username, self.cu);
                 objects[i] = obj0;
             }
         }
@@ -1268,6 +1269,15 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
+
+        'keydown': function(e) {
+            console.log('key');
+        },
+
+        'keypress input': function(event) {
+            console.log('asdasdas');
+        },
+
         'mousedown img': function(e, t) {
             return false;
         },
@@ -2212,6 +2222,134 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
+    function checkScroungeMine(slotId, myName, currentUser) {
+        //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
+        if (currentUser == myName) {
+            return true;
+        }
+        var cursorMyPlayerData = playerData.findOne({
+            user: myName
+        }, {
+            fields: {
+                mine: 1
+            }
+        });
+        var amountScrSlots = cursorMyPlayerData.mine.scrSlots;
+        var cursorMineScrounger = mine.findOne({
+            user: myName
+        });
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorMineScrounger['scrs' + i].victim == currentUser) {
+                return true;
+            }
+        }
+        //CHECK FREE SCRSLOTS OF SCROUNGER DATA
+        var resultScrounger = -1;
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorMineScrounger['scrs' + i].victim == "") {
+                resultScrounger = i;
+                break;
+            }
+        }
+        if (resultScrounger == -1) {
+            return true;
+        }
+        //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
+        var obj0 = {};
+        obj0['owns' + slotId] = 1;
+        var cursorMineOwner = mine.findOne({
+            user: currentUser
+        }, {
+            fields: obj0
+        });
+        //Get free SupSlots index
+        var amountSupSlots = playerData.findOne({
+            user: currentUser
+        }, {
+            fields: {
+                mine: 1
+            }
+        }).mine.supSlots;
+        var resultOwner = -1;
+        for (i = 0; i < amountSupSlots; i++) {
+            if (cursorMineOwner['owns' + slotId]['sup' + i] == "") {
+                resultOwner = i;
+                break;
+            }
+        }
+        //LAST CHECK: RANGE SLIDER
+        if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
+            return true;
+        }
+        //SupSlot with id result is free and correct: update it ?
+        if (resultOwner == -1) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkScroungeBattlefield(slotId, myName, currentUser) {
+        //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
+        if (currentUser == myName) {
+            return true;
+        }
+        var cursorMyPlayerData = playerData.findOne({
+            user: myName
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        });
+        var amountScrSlots = cursorMyPlayerData.battlefield.scrSlots;
+        var cursorBattlefieldScrounger = battlefield.findOne({
+            user: myName
+        });
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
+                return true;
+            }
+        }
+        //CHECK FREE SCRSLOTS OF SCROUNGER DATA
+        var resultScrounger = -1;
+        for (i = 0; i < amountScrSlots; i++) {
+            if (cursorBattlefieldScrounger['scrs' + i].victim == "") {
+                resultScrounger = i;
+                break;
+            }
+        }
+        if (resultScrounger == -1) {
+            return true;
+        }
+        //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
+        var obj0 = {};
+        obj0['owns' + slotId] = 1;
+        var cursorBattlefieldOwner = battlefield.findOne({
+            user: currentUser
+        }, {
+            fields: obj0
+        });
+        //Get free SupSlots index
+        var amountSupSlots = playerData.findOne({
+            user: currentUser
+        }, {
+            fields: {
+                battlefield: 1
+            }
+        }).battlefield.supSlots;
+        var resultOwner = -1;
+        for (i = 0; i < amountSupSlots; i++) {
+            if (cursorBattlefieldOwner['owns' + slotId]['sup' + i] == "") {
+                resultOwner = i;
+                break;
+            }
+        }
+        //LAST CHECK: RANGE SLIDER
+        if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
+            return true;
+        }
+        return false;
+    }
+
     function renderActiveMiddle() {
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
@@ -2355,64 +2493,69 @@ if (Meteor.isClient) {
             var higherControl;
 
             switch (middle) {
-                case "mineBase": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).username;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = mine.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.mine.ownSlots;
-                amountScroungeSlots = cursorPlayerData.mine.srcSlots;
-                minControl = cursorPlayerData.mine.minControl;
-                maxControl = cursorPlayerData.mine.maxControl;
-                break;
-                case "mineScrounge": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).cu;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = mine.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.mine.ownSlots;
-                amountScroungeSlots = 0;
-                minControl = cursorPlayerData.mine.minControl;
-                maxControl = cursorPlayerData.mine.maxControl;
-                break;
-                case "battlefieldBase": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).username;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = battlefield.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.battlefield.ownSlots;
-                amountScroungeSlots = cursorPlayerData.battlefield.srcSlots;
-                minControl = cursorPlayerData.battlefield.minControl;
-                maxControl = cursorPlayerData.battlefield.maxControl;
-                break;
-                case "battlefieldScrounge": var name = Meteor.users.findOne({
-                    _id: Meteor.userId()
-                }).cu;
-                var cursorPlayerData = playerData.findOne({
-                    user: name
-                });
-                var input = battlefield.findOne({
-                    user: name
-                });
-                amountSlots = cursorPlayerData.battlefield.ownSlots;
-                amountScroungeSlots = 0;
-                minControl = cursorPlayerData.battlefield.minControl;
-                maxControl = cursorPlayerData.battlefield.maxControl;
-                break;
-                default: console.log('default');
-                break;
+                case "mineBase":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).username;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = mine.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.mine.ownSlots;
+                    amountScroungeSlots = cursorPlayerData.mine.srcSlots;
+                    minControl = cursorPlayerData.mine.minControl;
+                    maxControl = cursorPlayerData.mine.maxControl;
+                    break;
+                case "mineScrounge":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).cu;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = mine.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.mine.ownSlots;
+                    amountScroungeSlots = 0;
+                    minControl = cursorPlayerData.mine.minControl;
+                    maxControl = cursorPlayerData.mine.maxControl;
+                    break;
+                case "battlefieldBase":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).username;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = battlefield.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.battlefield.ownSlots;
+                    amountScroungeSlots = cursorPlayerData.battlefield.srcSlots;
+                    minControl = cursorPlayerData.battlefield.minControl;
+                    maxControl = cursorPlayerData.battlefield.maxControl;
+                    break;
+                case "battlefieldScrounge":
+                    var name = Meteor.users.findOne({
+                        _id: Meteor.userId()
+                    }).cu;
+                    var cursorPlayerData = playerData.findOne({
+                        user: name
+                    });
+                    var input = battlefield.findOne({
+                        user: name
+                    });
+                    amountSlots = cursorPlayerData.battlefield.ownSlots;
+                    amountScroungeSlots = 0;
+                    minControl = cursorPlayerData.battlefield.minControl;
+                    maxControl = cursorPlayerData.battlefield.maxControl;
+                    break;
+                default:
+                    console.log('default');
+                    break;
             }
 
             for (var i = 0; i < amountSlots; i++) {
@@ -2478,7 +2621,7 @@ if (Meteor.isClient) {
                 infoMemory['playerImage'] = "worldMapPlayerImage";
                 infoMemory['playerName'] = user;
                 infoMemory['backgroundNumber'] = backgroundNumber;
-            } else {
+            } else  {
                 infoMemory['backgroundNumber'] = 0;
             }
             infoMemory['x'] = (orientationX + j) % (maxX + 1);
