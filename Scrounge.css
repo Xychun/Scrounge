@@ -852,6 +852,54 @@ img.i7 {
     bottom: 0px;
     /*background-color: red;*/
 }
+
+/*///////////////////////////////////////////////////////////////////////////   Text Infos   ///////////////////////////////////////////////////////////////////////////*/
+#infoLog {
+	width: 700px;
+	height: 140px;
+	right: 0px;
+	top: 50%;
+	margin-top: -70px;
+	overflow: hidden;
+	font-family:"Arial";
+    font-size: 2em;
+}
+
+.logs {
+	position: relative;
+}
+
+#textAnimation {
+
+	width: 1000px;
+	height: 40px;
+	left: 50%;
+	margin-left: -500px;
+	top: 50%;
+	text-align: center;
+	margin-top: -20px;
+	font-family:"OCR A Std";
+    font-size: 4em;
+    z-index: 20;
+
+	-webkit-animation-name: textAnimation; 
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: 1;
+/*    animation-delay: 2s; */
+    -webkit-animation-play-state: running;
+    -webkit-animation-animation-timing-function: ease-in-out;
+
+}
+
+@-webkit-keyframes textAnimation {
+    0%  { left: 500px; opacity: 0.1; }
+    50%  { left: 750px; opacity: 1; }
+    100% { left: 1000px; opacity: 0.1; }
+}
+
+
+
+
 /*////////////////////////////////////////////////////////////////////////////   SLOTS SCROUNGE   ///////////////////////////////////////////////////////////////////////////*/
  .slotBackgroundScrounge {
     background-image: url(/Aufloesung1920x1080/Interface/ActionsRedSlotRepeat.png);
