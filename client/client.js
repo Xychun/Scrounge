@@ -1037,6 +1037,10 @@ if (Meteor.isClient) {
         return Session.get("worldMapArray");
     };
 
+    Template.scroungePreview.previewInfos = function() {
+        return Session.get("worldMapPreview");
+    }
+
     Template.buyMenu.playerData = function() {
 
         return playerData.find({});
@@ -1134,7 +1138,7 @@ if (Meteor.isClient) {
         },
 
         'click #switchToWorldMap': function(e, t) {
-            if (!$("#world").length) {
+            if (!$("#worldViewPort").length) {
                 switchToWorldMap();
             } else {
                 renderActiveMiddle();
@@ -1265,10 +1269,6 @@ if (Meteor.isClient) {
     // });
 
     Template.masterLayout.events({
-        'keypress input': function(event) {
-            console.log('asdasdas');
-        },
-
         'mousedown img': function(e, t) {
             return false;
         },
@@ -1646,6 +1646,80 @@ if (Meteor.isClient) {
     });
 
     Template.worldMap.events({
+        'mouseenter .worldMapPlayerPlace': function(e, t) {
+            // get orientation
+            var player = $(e.currentTarget).attr("id");
+            if(!player)return
+            var obj0 = {};
+            obj0['id'] = 'preview' + player;
+            obj0['left'] = $(e.currentTarget).css("left");
+            obj0['bottom'] = $(e.currentTarget).css("bottom");            
+            // get db data
+            var myName = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1
+                }
+            }).username;
+            var cursorPlayerData = playerData.findOne({
+                user: player
+            });
+            var cursorMine = mine.findOne({
+                user: player
+            });
+            var cursorBattlefield = battlefield.findOne({user: player});            
+            //CheckMine
+            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+            var trueCount = 0;
+            var falseCount = 0;
+            var maxCount = 0;
+            //Iterate OwnSlots
+            for (var i = 0; i < amountOwnSlots; i++) {
+                var matterId = cursorMine['owns' + i].input;
+                if (matterId > 0) {
+                    maxCount++;
+                    trueCount++;
+                    //check all circumstances
+                    var checkResult = checkScroungeMine(i, myName, player);
+                    if (checkResult == true) falseCount++;
+                }
+            }
+            obj0['minePossible'] = trueCount;
+            obj0['mineMax'] = maxCount;
+            if (trueCount - falseCount > 0 || maxCount == 0){
+                obj0['mineResult'] = false;
+            } else {
+                obj0['mineResult'] = true;
+            }
+            
+            //CheckBattlefield
+            var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+            var trueCount = 0;
+            var falseCount = 0;
+            var maxCount = 0;
+            //Iterate OwnSlots
+            for (var i = 0; i < amountOwnSlots; i++) {
+                var fightId = cursorBattlefield['owns' + i].input;
+                if (fightId > 0) {
+                    maxCount++;
+                    trueCount++;
+                    //check all circumstances
+                    var checkResult = checkScroungeBattlefield(i, myName, player);
+                    if (checkResult == true) falseCount++;
+                }
+            }
+            obj0['battlefieldPossible'] = trueCount;
+            obj0['battlefieldMax'] = maxCount;
+            if (trueCount - falseCount > 0 || maxCount == 0){
+                obj0['battlefieldResult'] = false;
+            } else {
+                obj0['battlefieldResult'] = true;
+            }
+            // update session variab
+            Session.set("worldMapPreview", obj0);
+        },
+
         'click .worldMapNavigators': function(e, t) {
             //get max map size
             var maxX = worldMapFields.find({}, {
@@ -1692,9 +1766,9 @@ if (Meteor.isClient) {
             Session.set("worldMapArray", worldMapArray);
         },
 
-        'click .worldMapPlayerPlace': function(e, t) {
+        'click .worldMapScroungePreview': function(e, t) {
             if (e.currentTarget.id != '') {
-                var current = e.currentTarget.id;
+                var current = (e.currentTarget.id).substring(7);;
                 Meteor.users.update({
                     _id: Meteor.userId()
                 }, {
@@ -2257,6 +2331,8 @@ if (Meteor.isClient) {
 
     }
 
+
+    //returns true if locked
     function checkScroungeMine(slotId, myName, currentUser) {
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
         if (currentUser == myName) {

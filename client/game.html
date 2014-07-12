@@ -188,7 +188,7 @@
 
         <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
         <div id="matter_wrapper" class="bot matter_background">
-            <div id="infoLog"> </div>
+            <div id="infoLog"></div>
             <div id="matter_content">
                 {{#each resources}}
 
@@ -376,7 +376,7 @@
     </div>
 
     <!-- Zu Testzwecken -->
-<!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div>
 
 </template>
@@ -1257,40 +1257,8 @@
             <!-- Hierbei handelt es sich um die slot-preview, die um jeden PlayerPlace herum angezeigt werden soll. Mit der Info, ob man hier scroungen kann und wie viele slots noch frei sind -->
 
             <!-- worldMapSlotsPreview enthält die sechs Divs mit der Slotpreview. Positionierung müsste dann via javascript variabel erfolgen. Bisher hardcoded auf DIV links (GELB) -->
-            <!--             <div id="worldMapSlotsPreview" style="right: 1200px; top: 250px;">
 
-                <div class="worldMapSlotsPreview" style="right: -50px; top: -50px;">
-
-                    <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-                </div>
-                <div class="worldMapSlotsPreview" style="right: -50px; bottom: -50px;">
-
-                    <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-                </div>
-                <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px;">
-
-                    <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-                </div>
-                <div class="worldMapSlotsPreview" style="left: -50px; top: -50px;">
-
-                    <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-                </div>
-                <div class="worldMapSlotsPreview" style="left: -50px; bottom: -50px;">
-
-                    <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-                </div>
-                <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px;">
-
-                    <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-                </div>
-
-            </div> -->
+            {{>scroungePreview}}
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
@@ -1306,41 +1274,47 @@
             {{/each}} {{/each}}
         </div>
     </div>
-
-    <div id="world"></div>
 </template>
 
-<!-- <template name="characterScreen">
-    <div id="mitteCharacterScreen">
-        <div id="mitteCharacterScreenWrapper">
-        
-        <div id="improvementsASD" class="top left right"></div>
+<template name="scroungePreview">
+    {{#with previewInfos}}
+    <div id={{id}} class="worldMapScroungePreview" style="left: {{left}}; bottom: {{bottom}}; width: 300px; height: 250px;">
+        <!-- <div class="worldMapSlotsPreview" style="right: -50px; top: -50px;">
 
-        <div id="characterScrounge"> 
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
-            <div class="inventoryCharacter sliderRotate90"> </div>
+            </div>
+            <div class="worldMapSlotsPreview" style="right: -50px; bottom: -50px;">
 
-            <div id="scroungeItem1" class="scroungeItem"> </div>
-            <div id="scroungeItem2" class="scroungeItem"> </div>
-            <div id="scroungeItem3" class="scroungeItem"> </div>
-            <div id="scroungeItem4" class="scroungeItem"> </div>
-            <div id="scroungeItem5" class="scroungeItem"> </div>
-            <div id="scroungeItem6" class="scroungeItem"> </div>
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
 
+            </div> -->
+        <!-- mine preview -->
+        {{#if mineResult}}
+        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMineLocked.png);">
         </div>
-        <div id="characterBase"> 
-
-            <div id="baseItem1" class="baseItem"> </div>
-            <div id="baseItem2" class="baseItem"> </div>
-            <div id="baseItem3" class="baseItem"> </div>
-            <div id="baseItem4" class="baseItem"> </div>
-            <div id="baseItem5" class="baseItem"> </div>
-            <div id="baseItem6" class="baseItem"> </div>
-
+        {{else}}
+        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png);">
+            <div class="worldMapSlotsPreviewText">{{minePossible}} / {{mineMax}}</div>
         </div>
-        <div id="characterStats"> </div>
+        {{/if}}
+        <!-- <div class="worldMapSlotsPreview" style="left: -50px; top: -50px;">
 
+                <div class="worldMapSlotsPreviewText">0 / 4</div>
+
+            </div>
+            <div class="worldMapSlotsPreview" style="left: -50px; bottom: -50px;">
+
+                <div class="worldMapSlotsPreviewText">0 / 4</div> -->
+        <!-- battlefield preview -->
+        {{#if battlefieldResult}}
+        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefieldLocked.png);">
         </div>
-
+        {{else}}
+        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png);">
+            <div class="worldMapSlotsPreviewText">{{battlefieldPossible}} / {{battlefieldMax}}</div>
+        </div>
+        {{/if}}
     </div>
-</template> -->
+    {{/with}}
+</template>
