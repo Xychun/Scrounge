@@ -674,8 +674,8 @@ img.i7 {
     position: absolute;
     overflow: hidden;
     z-index: -2;
-    background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
-    background-repeat: repeat;
+/*    background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
+    background-repeat: repeat;*/
 }
 .worldMapPlayerPlace {
     width: 300px;
