@@ -13,7 +13,7 @@ if (Meteor.isClient) {
     Meteor.call("getServerTime", function(err, result) {
         timeClient = new Date();
         timeServer = result;
-        timeDifference = timeClient - timeServer;
+        timeDifference = (Math.round(timeClient - timeServer)/10000)*10000;
         // console.log(timeDifference);
         // console.log('timeServer' + timeServer.getTime());
     });

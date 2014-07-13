@@ -38,8 +38,8 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     timers = new Array();
-    mapRows = 4;
-    mapColumns = 6;
+    mapRows = 6;
+    mapColumns = 8;
 
     ////////////////////////////
     ////// FUNCTION CALLS //////
@@ -54,7 +54,9 @@ if (Meteor.isClient) {
     function updateTimers() {
         for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
-                timers[i].miliseconds = timers[i].miliseconds + (timers[i].prefix * 1000);
+                var value = timers[i].miliseconds + (timers[i].prefix * 1000);
+                if (value < 0) value = 0;
+                timers[i].miliseconds = value;
                 $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
             } else {
                 //Element not found and deleted after 3rd time
@@ -547,7 +549,10 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
-                obj0['locked'] = checkScroungeMine(i, self.username, self.cu);
+                var lockCheck = checkScroungeMine(i, self.username, self.cu);
+                obj0['lockedMsg'] = lockCheck;
+                if (lockCheck != false) lockCheck = true
+                obj0['locked'] = lockCheck;
                 objects[i] = obj0;
             }
         }
@@ -705,7 +710,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
 
@@ -772,6 +777,7 @@ if (Meteor.isClient) {
         var objects = new Array();
 
         //Iterate all Scrounging Slots
+        console.log('amountScrSlots: ' + amountScrSlots);
         for (var i = 0; i < amountScrSlots; i++) {
             //Is used?
             if (cursorMyBattlefield['scrs' + i].victim != "") {
@@ -862,7 +868,7 @@ if (Meteor.isClient) {
 
                 obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
 
-                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value * supEpics) / 100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
                 obj0['epicness'] = supEpics + '%';
                 objects[i] = obj0;
             }
@@ -981,7 +987,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
                 obj0['epicnessChange'] = (supEpics + myEpic) + '%';
@@ -996,7 +1002,10 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
-                obj0['locked'] = checkScroungeBattlefield(i, self.username, self.cu);
+                var lockCheck = checkScroungeBattlefield(i, self.username, self.cu);
+                obj0['lockedMsg'] = lockCheck;
+                if (lockCheck != false) lockCheck = true
+                obj0['locked'] = lockCheck;
                 objects[i] = obj0;
             }
         }
@@ -1060,8 +1069,9 @@ if (Meteor.isClient) {
     };
 
     Template.standardBorder.resources = function() {
-
-        return resources.find({});
+        var arrayHelper = resources.find({}).fetch();
+        arrayHelper[0].values.green.matter = Math.floor(arrayHelper[0].values.green.matter);
+        return arrayHelper;
 
     };
 
@@ -1090,15 +1100,7 @@ if (Meteor.isClient) {
 
         },
 
-        'click .i4': function(e, t) {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    cu: 1
-                }
-            });
-            var current = self.cu;
+        'click .category_1': function(e, t) {
             Meteor.users.update({
                 _id: Meteor.userId()
             }, {
@@ -1106,17 +1108,12 @@ if (Meteor.isClient) {
                     menu: 'mine'
                 }
             });
+            Meteor.call('asyncJob', function(err, data) {
+                switch_category($(e.currentTarget), 200);
+            });
         },
 
-        'click .i6': function(e, t) {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    cu: 1
-                }
-            });
-            var current = self.cu;
+        'click .category_3': function(e, t) {
             Meteor.users.update({
                 _id: Meteor.userId()
             }, {
@@ -1124,19 +1121,10 @@ if (Meteor.isClient) {
                     menu: 'battlefield'
                 }
             });
-        },
-
-        'click #testButton5': function(e, t) {
-
-            var blub = $(".slotWrapper").children(".used_slot_advanced").height();
-            $(".slotWrapper").children(".used_slot_advanced").css({
-                "height": "auto"
+            Meteor.call('asyncJob', function(err, data) {
+                switch_category($(e.currentTarget), 200);
             });
-            var blub2 = $(".slotWrapper").children(".used_slot_advanced").height();
-            console.log('test: ' + blub + ' test2: ' + blub2);
-
         },
-
         'click #switchToWorldMap': function(e, t) {
             if (!$("#worldViewPort").length) {
                 switchToWorldMap();
@@ -1647,13 +1635,15 @@ if (Meteor.isClient) {
 
     Template.worldMap.events({
         'mouseenter .worldMapPlayerPlace': function(e, t) {
+            // var element = $(e.currentTarget).attr("id");
+            // $('#preview' + element).css({"visibility" : "visible"});
             // get orientation
             var player = $(e.currentTarget).attr("id");
-            if(!player)return
+            if (!player) return
             var obj0 = {};
             obj0['id'] = 'preview' + player;
             obj0['left'] = $(e.currentTarget).css("left");
-            obj0['bottom'] = $(e.currentTarget).css("bottom");            
+            obj0['bottom'] = $(e.currentTarget).css("bottom");
             // get db data
             var myName = Meteor.users.findOne({
                 _id: Meteor.userId()
@@ -1668,8 +1658,10 @@ if (Meteor.isClient) {
             var cursorMine = mine.findOne({
                 user: player
             });
-            var cursorBattlefield = battlefield.findOne({user: player});            
-            //CheckMine
+            var cursorBattlefield = battlefield.findOne({
+                user: player
+            });
+            //Check mine
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             var trueCount = 0;
             var falseCount = 0;
@@ -1682,18 +1674,19 @@ if (Meteor.isClient) {
                     trueCount++;
                     //check all circumstances
                     var checkResult = checkScroungeMine(i, myName, player);
-                    if (checkResult == true) falseCount++;
+                    //cannot be "==true": has to be !=false
+                    if (checkResult != false) falseCount++;
                 }
             }
-            obj0['minePossible'] = trueCount;
+            obj0['mineImpossible'] = falseCount;
             obj0['mineMax'] = maxCount;
-            if (trueCount - falseCount > 0 || maxCount == 0){
+            if (trueCount - falseCount > 0 || maxCount == 0) {
                 obj0['mineResult'] = false;
             } else {
                 obj0['mineResult'] = true;
             }
-            
-            //CheckBattlefield
+
+            //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
             var trueCount = 0;
             var falseCount = 0;
@@ -1706,12 +1699,13 @@ if (Meteor.isClient) {
                     trueCount++;
                     //check all circumstances
                     var checkResult = checkScroungeBattlefield(i, myName, player);
-                    if (checkResult == true) falseCount++;
+                    //cannot be "==true": has to be !=false
+                    if (checkResult != false) falseCount++;
                 }
             }
-            obj0['battlefieldPossible'] = trueCount;
+            obj0['battlefieldImpossible'] = falseCount;
             obj0['battlefieldMax'] = maxCount;
-            if (trueCount - falseCount > 0 || maxCount == 0){
+            if (trueCount - falseCount > 0 || maxCount == 0) {
                 obj0['battlefieldResult'] = false;
             } else {
                 obj0['battlefieldResult'] = true;
@@ -1719,6 +1713,11 @@ if (Meteor.isClient) {
             // update session variab
             Session.set("worldMapPreview", obj0);
         },
+
+        // 'mouseout .worldMapScroungePreview': function(e, t) {
+        //     var element = $(e.currentTarget).attr("id");
+        //     $('#' + element).css({"visibility" : "hidden"});
+        // },
 
         'click .worldMapNavigators': function(e, t) {
             //get max map size
@@ -1793,7 +1792,7 @@ if (Meteor.isClient) {
     var handle_check = false;
     var hover_check = false;
     var range_slider_width;
-
+    var stop_bool = false;
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -1812,12 +1811,10 @@ if (Meteor.isClient) {
     {
         switch (element.attr("id")) {
             case 'category_left':
-                //console.log(element);
-                //slide_start("left", 143, 400, "");
+                // slide_category("left", 800, 4);
                 break;
             case 'category_right':
-                //console.log(element);
-                //slide_start("right", 143, 400, "");
+                // slide_category("right", 800, 4);
                 break;
             case 'base_up':
                 slide_start("back", "vertical", 100, 400, "#base_area_content");
@@ -1863,6 +1860,156 @@ if (Meteor.isClient) {
                 console.log("Slide für diesen Hover nicht definiert !");
                 break;
         }
+    }
+
+    function hidden_menu_icon_check(direction) {
+        var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+        var margin_left_middle = -1 * (parseFloat($("#categories_wrapper").width()) - width_child) / 2;
+        var current_margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+
+        eval("animation_obj_middle = { 'margin-left' : '" + margin_left_middle + "px'}");
+        eval("animation_obj_back = { 'margin-left' : '" + (margin_left_middle - width_child) + "px'}");
+        eval("animation_obj_forth = { 'margin-left' : '" + (margin_left_middle + width_child) + "px'}");
+
+        if (current_margin_left < margin_left_middle && direction === "right") {
+            $("#categories_wrapper").children().eq(0).remove();
+            var buffer = $("#categories_wrapper").children().eq(1).clone();
+            $("#categories_wrapper").append(buffer);
+            $("#categories_wrapper").css(
+                animation_obj_middle
+            );
+        }
+        if (current_margin_left >= margin_left_middle && direction === "left") {
+            $("#categories_wrapper").children().eq(-1).remove();
+            var buffer = $("#categories_wrapper").children().eq(-2).clone();
+            $("#categories_wrapper").prepend(buffer);
+            $("#categories_wrapper").css(
+                animation_obj_back
+            );
+        }
+
+    }
+
+    function switch_category(clicked_obj, speed) {
+        var clicked_category = parseInt($(clicked_obj).attr("class").substr((9 + $(clicked_obj).attr("class").search("category_")), 1));
+        var category_offset_left = (Math.abs(clicked_category - 6) + current_category) % 6;
+        var category_offset_right = (clicked_category + Math.abs(current_category - 6)) % 6;
+        var direction;
+        var category_offset = 0;
+        var animation_type = "linear";
+
+        if (!(category_offset_left == 0 && category_offset_right == 0)) {
+
+            if (category_offset_left > category_offset_right) {
+                direction = "right";
+                category_offset = category_offset_right;
+            } else if (category_offset_left < category_offset_right) {
+                direction = "left";
+                category_offset = category_offset_left;
+            } else if (category_offset_left == category_offset_right) {
+                if ($(".category_" + clicked_category)[0] == $(clicked_obj)[0]) {
+                    direction = "left";
+                    category_offset = category_offset_left;
+                } else if ($(".category_" + clicked_category)[1] == $(clicked_obj)[0]) {
+                    direction = "left";
+                    category_offset = category_offset_left;
+                }
+            }
+
+            if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
+                hidden_menu_icon_check(direction);
+
+                var margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+                var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+
+                if (direction === "left") {
+                    var animation_obj_start = ({
+                        'margin-left': (margin_left + width_child)
+                    });
+                } else if (direction === "right") {
+                    var animation_obj_start = ({
+                        'margin-left': (margin_left - width_child)
+                    });
+                }
+                var animation_obj_stop = ({
+                    'margin-left': margin_left
+                });
+
+                update_current_category(direction, category_offset);
+
+                for (var x = 0; x < category_offset; x++) {
+                    if (x == category_offset - 1) {
+                        animation_type = "easeOutCubic";
+                        speed = speed * 4;
+                    }
+                    $("#categories_wrapper").animate(animation_obj_start, speed, animation_type, function() {
+                        if (direction === "left") {
+                            $("#categories_wrapper").children().eq(-1).remove();
+                            $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
+                            $("#categories_wrapper").css(
+                                animation_obj_stop
+                            );
+                        } else if (direction === "right") {
+                            $("#categories_wrapper").children().eq(0).remove();
+                            $("#categories_wrapper").append($("#categories_wrapper").children().eq(1).clone());
+                            $("#categories_wrapper").css(
+                                animation_obj_stop
+                            );
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    function slide_category(direction, speed, delay_factor) {
+
+        if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
+            stop_bool = false;
+            hidden_menu_icon_check(direction);
+
+            var margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+            var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+
+            if (direction === "left") {
+                var animation_obj_start = ({
+                    'margin-left': (margin_left + width_child)
+                });
+            } else if (direction === "right") {
+                var animation_obj_start = ({
+                    'margin-left': (margin_left - width_child)
+                });
+            }
+            var animation_obj_stop = ({
+                'margin-left': margin_left
+            });
+
+            var action = function() {
+                $("#categories_wrapper").animate(animation_obj_start, speed, "linear", function() {
+                    if (direction === "left") {
+                        $("#categories_wrapper").children().eq(-1).remove();
+                        $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
+                        $("#categories_wrapper").css(
+                            animation_obj_stop
+                        );
+                    } else if (direction === "right") {
+                        $("#categories_wrapper").children().eq(0).remove();
+                        $("#categories_wrapper").append($("#categories_wrapper").children().eq(1).clone());
+                        $("#categories_wrapper").css(
+                            animation_obj_stop
+                        );
+                    }
+                    if (stop_bool == true) {
+                        $("#categories_wrapper").stop(true);
+                        stop_bool = false;
+                    }
+                    update_current_category(direction, 1);
+                });
+            }
+            //Start des Intervalls
+            interval = setInterval(action, speed / delay_factor);
+        }
+
     }
 
     function slide_start(direction, orientation, pixel, speed, element1, element2) {
@@ -2104,167 +2251,83 @@ if (Meteor.isClient) {
         }
     }
 
-    // function slide_left() {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "-=" + size.pp + "px";
-
-    //     if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
-    //         {
-    //             $("#k2").css({
-    //                 left: pos_r
-    //             });
-    //             $("#k1").css({
-    //                 left: "0px"
-    //             });
-    //         }
-    //         // Vorab Animation da Intervall erst nach [Time] anfängt
-    //         // $("#k1").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         // $("#k2").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         //Rekursiver Intervall (unendlich)
-    //         var action = function() {
-    //             if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
-    //             {
-    //                 $("#k2").animate({
-    //                     left: pos_r
-    //                 }, 0, "linear");
-    //                 $("#k1").animate({
-    //                     left: "0px"
-    //                 }, 0, "linear");
-    //             }
-    //             //Animation im laufenden Intervall  
-    //             $("#k1").animate({
-    //                 left: pos_p
-    //             }, 400, "linear");
-    //             $("#k2").animate({
-    //                 left: pos_p
-    //             }, 400, "linear");
-    //             update_category("left");
-    //         };
-    //         //Start des Intervalls
-    //         interval = setInterval(action, 400);
-    //         update_category("left");
-    //     }
-    // }
-
-    // function slide_right() {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = "-" + size.pr + "px";
-    //     var pos_p = "+=" + size.pp + "px";
-
-    //     if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
-    //         {
-    //             $("#k1").css({
-    //                 left: pos_r
-    //             });
-    //             $("#k2").css({
-    //                 left: "0px"
-    //             });
-    //         }
-    //         // Vorab Animation da Intervall erst nach [Time] anfängt
-    //         // $("#k1").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         // $("#k2").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         //Rekursiver Intervall (unendlich)
-    //         var action = function() {
-    //             if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
-    //             {
-    //                 $("#k1").animate({
-    //                     left: pos_r
-    //                 }, 0, "linear");
-    //                 $("#k2").animate({
-    //                     left: "0px"
-    //                 }, 0, "linear");
-    //             }
-    //             //Animation im laufenden Intervall  
-    //             $("#k1").animate({
-    //                 left: pos_p
-    //             }, time, "linear");
-    //             $("#k2").animate({
-    //                 left: pos_p
-    //             }, time, "linear");
-    //             update_category("right");
-    //         };
-    //         //Start des Intervalls
-    //         interval = setInterval(action, time);
-    //         update_category("right");
-    //     }
-    // }
-
     function slide_stop() {
+        stop_bool = true;
         clearInterval(interval);
     }
 
-    function update_category(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
-        if (direction == "left") {
-            current_category--;
-        } else if (direction == "right") {
-            current_category++;
+    var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"]
+
+        function update_current_category(direction, category_offset) {
+            for (var x = 0; x < category_offset; x++) {
+                if (direction == "left") {
+                    current_category--;
+                } else if (direction == "right") {
+                    current_category++;
+                }
+
+                if (current_category == 0 && direction == "left") {
+                    current_category = max_cat;
+                } else if (current_category == (max_cat + 1) && direction == "right") {
+                    current_category = 1;
+                }
+            }
+
+            if (current_category == 1 || current_category == 3) {
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        menu: category_names[current_category - 1]
+                    }
+                });
+            }
+            //console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
         }
 
-        if (current_category == 0 && direction == "left") {
-            current_category = max_cat;
-        } else if (current_category == (max_cat + 1) && direction == "right") {
-            current_category = 1;
+        function size_check() {
+            switch (ready_check) {
+                case 3:
+                    var pos = 256;
+                    var pos_plus = pos + 10;
+                    break;
+                case 2:
+                    var pos = 170;
+                    var pos_plus = pos + 7;
+                    break;
+                case 1:
+                    var pos = 136;
+                    var pos_plus = pos + 6;
+                    break;
+                default:
+                    console.log("failed to check size !(default)");
+                    break;
+            }
+            var pos_reset = pos_plus * max_cat;
+
+            return {
+                p: pos,
+                pp: pos_plus,
+                pr: pos_reset
+            };
         }
-    }
 
-    function size_check() {
-        switch (ready_check) {
-            case 3:
-                var pos = 256;
-                var pos_plus = pos + 10;
-                break;
-            case 2:
-                var pos = 170;
-                var pos_plus = pos + 7;
-                break;
-            case 1:
-                var pos = 136;
-                var pos_plus = pos + 6;
-                break;
-            default:
-                console.log("failed to check size !(default)");
-                break;
+        function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
+        {
+            // size = size_check();
+            // var pos = size.p;
+            // var pos_r = size.pr;
+            // var pos_p = size.pp;
+
+            // var cur_pos_right = (c * pos_p) - pos_p;
+            // var cur_pos_left = cur_pos_right - (pos_r);
+            // $("#k1").css({
+            //     left: cur_pos_left
+            // });
+            // $("#k2").css({
+            //     left: cur_pos_right
+            // });
         }
-        var pos_reset = pos_plus * max_cat;
-
-        return {
-            p: pos,
-            pp: pos_plus,
-            pr: pos_reset
-        };
-    }
-
-    function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
-    {
-        size = size_check();
-        var pos = size.p;
-        var pos_r = size.pr;
-        var pos_p = size.pp;
-
-        var cur_pos_right = (c * pos_p) - pos_p;
-        var cur_pos_left = cur_pos_right - (pos_r);
-        $("#k1").css({
-            left: cur_pos_left
-        });
-        $("#k2").css({
-            left: cur_pos_right
-        });
-    }
 
     $(window).resize(function() {
         if ($(window).width() <= 1024 && ready_check !== 1) {
@@ -2312,10 +2375,10 @@ if (Meteor.isClient) {
         var textAnimation = document.createElement("div");
         textAnimation.innerHTML = text;
         textAnimation.id = "textAnimation";
-        document.getElementById("mitte").appendChild(textAnimation);
+        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimation);
         textAnimation.style.color = color;
         setTimeout(function() {
-            document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+            if (document.getElementById("textAnimation")) document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
         }, 2000);
 
     }
@@ -2333,10 +2396,11 @@ if (Meteor.isClient) {
 
 
     //returns true if locked
+
     function checkScroungeMine(slotId, myName, currentUser) {
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
         if (currentUser == myName) {
-            return true;
+            return 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
         }
         var cursorMyPlayerData = playerData.findOne({
             user: myName
@@ -2351,7 +2415,7 @@ if (Meteor.isClient) {
         });
         for (i = 0; i < amountScrSlots; i++) {
             if (cursorMineScrounger['scrs' + i].victim == currentUser) {
-                return true;
+                return 'You cannot scrounge here: You already scrounge this user!';
             }
         }
         //CHECK FREE SCRSLOTS OF SCROUNGER DATA
@@ -2363,7 +2427,7 @@ if (Meteor.isClient) {
             }
         }
         if (resultScrounger == -1) {
-            return true;
+            return 'You cannot scrounge here: Your Scrounge slots are all in use!';
         }
         //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
         var obj0 = {};
@@ -2390,11 +2454,11 @@ if (Meteor.isClient) {
         }
         //LAST CHECK: RANGE SLIDER
         if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
-            return true;
+            return 'You cannot scrounge here: You do not have the right miningrate!';
         }
         //SupSlot with id result is free and correct: update it ?
         if (resultOwner == -1) {
-            return true;
+            return 'You cannot scrounge here: The owners support slots are all full!';
         }
         return false;
     }
@@ -2402,7 +2466,7 @@ if (Meteor.isClient) {
     function checkScroungeBattlefield(slotId, myName, currentUser) {
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
         if (currentUser == myName) {
-            return true;
+            return 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
         }
         var cursorMyPlayerData = playerData.findOne({
             user: myName
@@ -2417,7 +2481,7 @@ if (Meteor.isClient) {
         });
         for (i = 0; i < amountScrSlots; i++) {
             if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
-                return true;
+                return 'You cannot scrounge here: You already scrounge this user!';
             }
         }
         //CHECK FREE SCRSLOTS OF SCROUNGER DATA
@@ -2429,7 +2493,7 @@ if (Meteor.isClient) {
             }
         }
         if (resultScrounger == -1) {
-            return true;
+            return 'You cannot scrounge here: Your Scrounge slots are all in use!';
         }
         //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
         var obj0 = {};
@@ -2456,7 +2520,7 @@ if (Meteor.isClient) {
         }
         //LAST CHECK: RANGE SLIDER
         if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
-            return true;
+            return 'You cannot scrounge here: You do not have the right epicness!';
         }
         return false;
     }
@@ -2704,6 +2768,13 @@ if (Meteor.isClient) {
     function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
         var row = {};
         var column = new Array();
+        var myName = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
         //go all columns
         for (var j = 0; j < mapColumns; j++) {
             //if coordinates are bigger than map max: get new data with modulo for infinite map size
@@ -2730,6 +2801,8 @@ if (Meteor.isClient) {
                 var backgroundNumber = cursorPlayerData.backgroundId;
                 infoMemory['playerLevel'] = playerLevel;
                 infoMemory['playerImage'] = "worldMapPlayerImage";
+                infoMemory['playerImageId'] = "01";
+                if (myName == user) infoMemory['playerImageId'] = "00";
                 infoMemory['playerName'] = user;
                 infoMemory['backgroundNumber'] = backgroundNumber;
             } else  {

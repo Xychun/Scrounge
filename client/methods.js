@@ -9,8 +9,6 @@ if (Meteor.isClient) {
     /////////////////////////
 
 
-    Meteor.methods({
-
-	});
+    Meteor.methods({});
 
 }

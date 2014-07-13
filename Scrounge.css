@@ -137,41 +137,23 @@ div {
     /*    background-image:url(Inventory_Abschluss_Rechts.gif);
     background-size:cover;*/
 }
-.kimage {
-    position:absolute;
+.categories_icon_size {
+    height:80px;
     width:136px;
-    height:80px;
+    margin-left:5px;
+    margin-right:5px;
 }
-img.i1 {
-    left: -68px;
-}
-img.i2 {
-    left: +74px;
-}
-img.i3 {
-    left: +216px;
-}
-img.i4 {
-    left: +358px;
-}
-img.i5 {
-    left: +500px;
-}
-img.i6 {
-    left: +642px;
-}
-img.i7 {
-    left: +784px;
-}
-#k {
+#categories_wrapper {
     left:50%;
-    height:80px;
-    margin-left:-426px;
+    margin-left:-657px;
+    position: relative;
+    height: 80px;
+    display: inline-flex;
 }
 #MenuFrame {
     z-index:2;
     left:50%;
-    margin-left:660px;
+    margin-left:-138px;
     height:152px;
     width:276px;
     background-image: url(/Aufloesung1920x1080/Interface/MenuFrame8.png);
@@ -671,14 +653,14 @@ img.i7 {
     background-repeat: no-repeat;
 }
 #currentMapView {
-    width: 1800px;
-    height: 1000px;
+    width: 2400px;
+    height: 1500px;
     position: absolute;
     z-index: -1;
     right: 50%;
     top: 50%;
-    margin-right: -900px;
-    margin-top: -500px;
+    margin-right: -1200px;
+    margin-top: -750px;
 }
 #worldViewPort {
     top: 160px;
@@ -688,7 +670,7 @@ img.i7 {
     position: absolute;
     overflow: hidden;
     z-index: -2;
-/*    background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
+    /*    background-image: url(/Aufloesung1920x1080/Interface/MapBackground.png);
     background-repeat: repeat;*/
 }
 .worldMapPlayerPlace {
@@ -734,7 +716,6 @@ img.i7 {
     left: 50%;
     margin-top: -40px;
     margin-left: -40px;
-    background-image: url(/Aufloesung1920x1080/Interface/PlayerImage01.png);
     background-repeat: no-repeat;
 }
 .worldMapPlayerLevel {
@@ -765,7 +746,6 @@ img.i7 {
     left: 0px;
     right: 50%;
     height: 100%;
-    /*background-color: blue;*/
 }
 #scroungeItemsWrapper {
     width:400px;
@@ -774,7 +754,6 @@ img.i7 {
     top:50%;
     margin-left:-200px;
     margin-top:-250px;
-    /*background-color: grey;*/
 }
 #baseItemsWrapper {
     width:500px;
@@ -783,7 +762,6 @@ img.i7 {
     top:50%;
     margin-left:-250px;
     margin-top:-200px;
-    /*background-color: grey;*/
 }
 .itemSlotBackground {
     width: 120px;
@@ -842,13 +820,11 @@ img.i7 {
     right: 0px;
     left: 50%;
     height: 100%;
-    /*background-color: brown;*/
 }
 #playerStats {
     top: 0px;
     width: 100%;
     height: 200px;
-    /*background-color: green;*/
 }
 #category_badges {
     height: 80px;
@@ -865,56 +841,53 @@ img.i7 {
     width: 100%;
     top: 200px;
     bottom: 0px;
-    /*background-color: red;*/
 }
-
 /*///////////////////////////////////////////////////////////////////////////   Text Infos   ///////////////////////////////////////////////////////////////////////////*/
-#infoLog {
-	height: 140px;
-	left: 550px;
+ #infoLog {
+    height: 140px;
+    left: 550px;
     right: 0px;
-	top: 50%;
-	margin-top: -70px;
-	overflow: hidden;
-	font-family:"Arial";
+    top: 50%;
+    margin-top: -70px;
+    overflow: hidden;
+    font-family:"Arial";
     font-size: 2em;
 }
-
 .logs {
-	position: relative;
+    position: relative;
 }
-
 #textAnimation {
-
-	width: 1000px;
-	height: 40px;
-	left: 50%;
-	margin-left: -500px;
-	top: 50%;
-	text-align: center;
-	margin-top: -20px;
-	font-family:"OCR A Std";
+    width: 1000px;
+    height: 40px;
+    left: 50%;
+    margin-left: -500px;
+    top: 50%;
+    text-align: center;
+    margin-top: -20px;
+    font-family:"OCR A Std";
     font-size: 4em;
     z-index: 20;
-
-	-webkit-animation-name: textAnimation; 
+    -webkit-animation-name: textAnimation;
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: 1;
-/*    animation-delay: 2s; */
+    /*    animation-delay: 2s; */
     -webkit-animation-play-state: running;
     -webkit-animation-animation-timing-function: ease-in-out;
-
 }
-
 @-webkit-keyframes textAnimation {
-    0%  { left: 500px; opacity: 0.1; }
-    50%  { left: 750px; opacity: 1; }
-    100% { left: 1000px; opacity: 0.1; }
+    0% {
+        left: 500px;
+        opacity: 0.1;
+    }
+    50% {
+        left: 750px;
+        opacity: 1;
+    }
+    100% {
+        left: 1000px;
+        opacity: 0.1;
+    }
 }
-
-
-
-
 /*////////////////////////////////////////////////////////////////////////////   SLOTS SCROUNGE   ///////////////////////////////////////////////////////////////////////////*/
  .slotBackgroundScrounge {
     background-image: url(/Aufloesung1920x1080/Interface/ActionsRedSlotRepeat.png);
@@ -1117,11 +1090,11 @@ img.i7 {
     height:85px;
 }
 .slot_icon_userName {
-	width: 151px;
-	height: 45px;
-	bottom: 0px;
-	z-index: 1;
-	background-image: url(/Aufloesung1920x1080/Interface/AktionenKasten_BaseRechts_SlotRahmen_Name.png);
+    width: 151px;
+    height: 45px;
+    bottom: 0px;
+    z-index: 1;
+    background-image: url(/Aufloesung1920x1080/Interface/AktionenKasten_BaseRechts_SlotRahmen_Name.png);
     background-repeat: no-repeat;
 }
 .slot_icon_userName_text {
@@ -1512,34 +1485,18 @@ img.i7 {
         height: 102px;
         display: inline-flex;
     }
-    .kimage {
+    .categories_icon_size {
+        height:102px;
         width:170px;
-        height:102px;
+        margin-left:5px;
+        margin-right:5px;
     }
-    img.i1 {
-        left: -85px;
-    }
-    img.i2 {
-        left: +92px;
-    }
-    img.i3 {
-        left: +269px;
-    }
-    img.i4 {
-        left: +446px;
-    }
-    img.i5 {
-        left: +623px;
-    }
-    img.i6 {
-        left: +800px;
-    }
-    img.i7 {
-        left: +977px;
-    }
-    #k {
-        height:102px;
-        margin-left:-531px;
+    #categories_wrapper {
+        left:50%;
+        margin-left:-810px;
+        position: relative;
+        height: 102px;
+        display: inline-flex;
     }
     #links {
         width:102px;
@@ -1757,18 +1714,6 @@ img.i7 {
         margin-right: 10px;
         margin-bottom: 10px;
     }
-    /*    .item_tooltip_window_value {
-        position: relative;
-        display:none;
-        width:100px;
-        height:100px;
-        background-color: red;
-        border-width: 1px;
-        border-style: solid;
-        border-color: #333 #333 #777 #333;
-        border-radius: 5px;
-        margin-top:18px;
-    }*/
     /*//////////////////////////////////////////////////// INVENTORY  /////////////////////////////////////////////////////////////*/
     .inventory_left_background {
         background-image: url(/Aufloesung1920x1080/Interface/InventoryLeft.png);
@@ -1827,34 +1772,18 @@ img.i7 {
         background-repeat: no-repeat;
     }
     /*///////////////////////////////////////////////////////////////////////////   MENU   ///////////////////////////////////////////////////////////////////////////*/
-    .kimage {
+    .categories_icon_size {
+        height:152px;
         width:256px;
-        height:152px;
+        margin-left:5px;
+        margin-right:5px;
     }
-    img.i1 {
-        left: -128px;
-    }
-    img.i2 {
-        left: +138px;
-    }
-    img.i3 {
-        left: +404px;
-    }
-    img.i4 {
-        left: +670px;
-    }
-    img.i5 {
-        left: +936px;
-    }
-    img.i6 {
-        left: +1202px;
-    }
-    img.i7 {
-        left: +1468px;
-    }
-    #k {
-        height:152px;
-        margin-left:-798px;
+    #categories_wrapper {
+        left:50%;
+        height: 152px;
+        margin-left:-1197px;
+        position: relative;
+        display: inline-flex;
     }
     #links {
         width:152px;
