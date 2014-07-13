@@ -7,6 +7,10 @@ if (Meteor.isServer) {
 
     //Methods
     Meteor.methods({
+        asyncJob: function() {
+            this.unblock();
+        },
+
         getServerTime: function() {
             return new Date();
         },
@@ -664,7 +668,7 @@ if (Meteor.isServer) {
             //check costs
             if (!(matter >= cost)) {
                 Meteor.call("infoLog", 'You cant buy this fight: You do not have anough matter!', name);
-                    return 'You cant buy this fight: You do not have anough matter!';
+                return 'You cant buy this fight: You do not have anough matter!';
             }
             var amountSlots = playerData.findOne({
                 user: name

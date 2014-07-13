@@ -1090,15 +1090,7 @@ if (Meteor.isClient) {
 
         },
 
-        'click .i4': function(e, t) {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    cu: 1
-                }
-            });
-            var current = self.cu;
+        'click .category_1': function(e, t) {
             Meteor.users.update({
                 _id: Meteor.userId()
             }, {
@@ -1106,17 +1098,12 @@ if (Meteor.isClient) {
                     menu: 'mine'
                 }
             });
+            Meteor.call('asyncJob', function(err, data) {
+                switch_category($(e.currentTarget), 200);
+            });
         },
 
-        'click .i6': function(e, t) {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    cu: 1
-                }
-            });
-            var current = self.cu;
+        'click .category_3': function(e, t) {
             Meteor.users.update({
                 _id: Meteor.userId()
             }, {
@@ -1124,19 +1111,10 @@ if (Meteor.isClient) {
                     menu: 'battlefield'
                 }
             });
-        },
-
-        'click #testButton5': function(e, t) {
-
-            var blub = $(".slotWrapper").children(".used_slot_advanced").height();
-            $(".slotWrapper").children(".used_slot_advanced").css({
-                "height": "auto"
+            Meteor.call('asyncJob', function(err, data) {
+                switch_category($(e.currentTarget), 200);
             });
-            var blub2 = $(".slotWrapper").children(".used_slot_advanced").height();
-            console.log('test: ' + blub + ' test2: ' + blub2);
-
         },
-
         'click #switchToWorldMap': function(e, t) {
             if (!$("#worldViewPort").length) {
                 switchToWorldMap();
@@ -1649,11 +1627,11 @@ if (Meteor.isClient) {
         'mouseenter .worldMapPlayerPlace': function(e, t) {
             // get orientation
             var player = $(e.currentTarget).attr("id");
-            if(!player)return
+            if (!player) return
             var obj0 = {};
             obj0['id'] = 'preview' + player;
             obj0['left'] = $(e.currentTarget).css("left");
-            obj0['bottom'] = $(e.currentTarget).css("bottom");            
+            obj0['bottom'] = $(e.currentTarget).css("bottom");
             // get db data
             var myName = Meteor.users.findOne({
                 _id: Meteor.userId()
@@ -1668,7 +1646,9 @@ if (Meteor.isClient) {
             var cursorMine = mine.findOne({
                 user: player
             });
-            var cursorBattlefield = battlefield.findOne({user: player});            
+            var cursorBattlefield = battlefield.findOne({
+                user: player
+            });
             //CheckMine
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             var trueCount = 0;
@@ -1687,12 +1667,12 @@ if (Meteor.isClient) {
             }
             obj0['minePossible'] = trueCount;
             obj0['mineMax'] = maxCount;
-            if (trueCount - falseCount > 0 || maxCount == 0){
+            if (trueCount - falseCount > 0 || maxCount == 0) {
                 obj0['mineResult'] = false;
             } else {
                 obj0['mineResult'] = true;
             }
-            
+
             //CheckBattlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
             var trueCount = 0;
@@ -1711,7 +1691,7 @@ if (Meteor.isClient) {
             }
             obj0['battlefieldPossible'] = trueCount;
             obj0['battlefieldMax'] = maxCount;
-            if (trueCount - falseCount > 0 || maxCount == 0){
+            if (trueCount - falseCount > 0 || maxCount == 0) {
                 obj0['battlefieldResult'] = false;
             } else {
                 obj0['battlefieldResult'] = true;
@@ -1793,7 +1773,7 @@ if (Meteor.isClient) {
     var handle_check = false;
     var hover_check = false;
     var range_slider_width;
-
+    var stop_bool = false;
 
     if ($(window).width() <= 1024) {
         // console.log("1024");
@@ -1812,12 +1792,10 @@ if (Meteor.isClient) {
     {
         switch (element.attr("id")) {
             case 'category_left':
-                //console.log(element);
-                //slide_start("left", 143, 400, "");
+                // slide_category("left", 800, 4);
                 break;
             case 'category_right':
-                //console.log(element);
-                //slide_start("right", 143, 400, "");
+                // slide_category("right", 800, 4);
                 break;
             case 'base_up':
                 slide_start("back", "vertical", 100, 400, "#base_area_content");
@@ -1863,6 +1841,156 @@ if (Meteor.isClient) {
                 console.log("Slide für diesen Hover nicht definiert !");
                 break;
         }
+    }
+
+    function hidden_menu_icon_check(direction) {
+        var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+        var margin_left_middle = -1 * (parseFloat($("#categories_wrapper").width()) - width_child) / 2;
+        var current_margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+
+        eval("animation_obj_middle = { 'margin-left' : '" + margin_left_middle + "px'}");
+        eval("animation_obj_back = { 'margin-left' : '" + (margin_left_middle - width_child) + "px'}");
+        eval("animation_obj_forth = { 'margin-left' : '" + (margin_left_middle + width_child) + "px'}");
+
+        if (current_margin_left < margin_left_middle && direction === "right") {
+            $("#categories_wrapper").children().eq(0).remove();
+            var buffer = $("#categories_wrapper").children().eq(1).clone();
+            $("#categories_wrapper").append(buffer);
+            $("#categories_wrapper").css(
+                animation_obj_middle
+            );
+        }
+        if (current_margin_left >= margin_left_middle && direction === "left") {
+            $("#categories_wrapper").children().eq(-1).remove();
+            var buffer = $("#categories_wrapper").children().eq(-2).clone();
+            $("#categories_wrapper").prepend(buffer);
+            $("#categories_wrapper").css(
+                animation_obj_back
+            );
+        }
+
+    }
+
+    function switch_category(clicked_obj, speed) {
+        var clicked_category = parseInt($(clicked_obj).attr("class").substr((9 + $(clicked_obj).attr("class").search("category_")), 1));
+        var category_offset_left = (Math.abs(clicked_category - 6) + current_category) % 6;
+        var category_offset_right = (clicked_category + Math.abs(current_category - 6)) % 6;
+        var direction;
+        var category_offset = 0;
+        var animation_type = "linear";
+
+        if (!(category_offset_left == 0 && category_offset_right == 0)) {
+
+            if (category_offset_left > category_offset_right) {
+                direction = "right";
+                category_offset = category_offset_right;
+            } else if (category_offset_left < category_offset_right) {
+                direction = "left";
+                category_offset = category_offset_left;
+            } else if (category_offset_left == category_offset_right) {
+                if ($(".category_" + clicked_category)[0] == $(clicked_obj)[0]) {
+                    direction = "left";
+                    category_offset = category_offset_left;
+                } else if ($(".category_" + clicked_category)[1] == $(clicked_obj)[0]) {
+                    direction = "left";
+                    category_offset = category_offset_left;
+                }
+            }
+
+            if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
+                hidden_menu_icon_check(direction);
+
+                var margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+                var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+
+                if (direction === "left") {
+                    var animation_obj_start = ({
+                        'margin-left': (margin_left + width_child)
+                    });
+                } else if (direction === "right") {
+                    var animation_obj_start = ({
+                        'margin-left': (margin_left - width_child)
+                    });
+                }
+                var animation_obj_stop = ({
+                    'margin-left': margin_left
+                });
+
+                update_current_category(direction, category_offset);
+
+                for (var x = 0; x < category_offset; x++) {
+                    if (x == category_offset - 1) {
+                        animation_type = "easeOutCubic";
+                        speed = speed * 4;
+                    }
+                    $("#categories_wrapper").animate(animation_obj_start, speed, animation_type, function() {
+                        if (direction === "left") {
+                            $("#categories_wrapper").children().eq(-1).remove();
+                            $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
+                            $("#categories_wrapper").css(
+                                animation_obj_stop
+                            );
+                        } else if (direction === "right") {
+                            $("#categories_wrapper").children().eq(0).remove();
+                            $("#categories_wrapper").append($("#categories_wrapper").children().eq(1).clone());
+                            $("#categories_wrapper").css(
+                                animation_obj_stop
+                            );
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    function slide_category(direction, speed, delay_factor) {
+
+        if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
+            stop_bool = false;
+            hidden_menu_icon_check(direction);
+
+            var margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+            var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+
+            if (direction === "left") {
+                var animation_obj_start = ({
+                    'margin-left': (margin_left + width_child)
+                });
+            } else if (direction === "right") {
+                var animation_obj_start = ({
+                    'margin-left': (margin_left - width_child)
+                });
+            }
+            var animation_obj_stop = ({
+                'margin-left': margin_left
+            });
+
+            var action = function() {
+                $("#categories_wrapper").animate(animation_obj_start, speed, "linear", function() {
+                    if (direction === "left") {
+                        $("#categories_wrapper").children().eq(-1).remove();
+                        $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
+                        $("#categories_wrapper").css(
+                            animation_obj_stop
+                        );
+                    } else if (direction === "right") {
+                        $("#categories_wrapper").children().eq(0).remove();
+                        $("#categories_wrapper").append($("#categories_wrapper").children().eq(1).clone());
+                        $("#categories_wrapper").css(
+                            animation_obj_stop
+                        );
+                    }
+                    if (stop_bool == true) {
+                        $("#categories_wrapper").stop(true);
+                        stop_bool = false;
+                    }
+                    update_current_category(direction, 1);
+                });
+            }
+            //Start des Intervalls
+            interval = setInterval(action, speed / delay_factor);
+        }
+
     }
 
     function slide_start(direction, orientation, pixel, speed, element1, element2) {
@@ -2104,167 +2232,83 @@ if (Meteor.isClient) {
         }
     }
 
-    // function slide_left() {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = size.pr + "px";
-    //     var pos_p = "-=" + size.pp + "px";
-
-    //     if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
-    //         {
-    //             $("#k2").css({
-    //                 left: pos_r
-    //             });
-    //             $("#k1").css({
-    //                 left: "0px"
-    //             });
-    //         }
-    //         // Vorab Animation da Intervall erst nach [Time] anfängt
-    //         // $("#k1").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         // $("#k2").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         //Rekursiver Intervall (unendlich)
-    //         var action = function() {
-    //             if ($("#k2").position().left < pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
-    //             {
-    //                 $("#k2").animate({
-    //                     left: pos_r
-    //                 }, 0, "linear");
-    //                 $("#k1").animate({
-    //                     left: "0px"
-    //                 }, 0, "linear");
-    //             }
-    //             //Animation im laufenden Intervall  
-    //             $("#k1").animate({
-    //                 left: pos_p
-    //             }, 400, "linear");
-    //             $("#k2").animate({
-    //                 left: pos_p
-    //             }, 400, "linear");
-    //             update_category("left");
-    //         };
-    //         //Start des Intervalls
-    //         interval = setInterval(action, 400);
-    //         update_category("left");
-    //     }
-    // }
-
-    // function slide_right() {
-    //     size = size_check(); //Checkt welche Auflösung gerade vorhanden ist und passt die Animations-Daten an
-    //     var pos = size.p;
-    //     var pos_r = "-" + size.pr + "px";
-    //     var pos_p = "+=" + size.pp + "px";
-
-    //     if ($("#k1").filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
-    //     {
-    //         if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide am anfang auf Startpunkt
-    //         {
-    //             $("#k1").css({
-    //                 left: pos_r
-    //             });
-    //             $("#k2").css({
-    //                 left: "0px"
-    //             });
-    //         }
-    //         // Vorab Animation da Intervall erst nach [Time] anfängt
-    //         // $("#k1").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         // $("#k2").filter(':not(:animated)').animate({
-    //         //     left: pos_p
-    //         // }, time, "linear");
-    //         //Rekursiver Intervall (unendlich)
-    //         var action = function() {
-    //             if ($("#k1").position().left > -pos) //Positionierung der Div's wenn Slide wieder am Startpunkt
-    //             {
-    //                 $("#k1").animate({
-    //                     left: pos_r
-    //                 }, 0, "linear");
-    //                 $("#k2").animate({
-    //                     left: "0px"
-    //                 }, 0, "linear");
-    //             }
-    //             //Animation im laufenden Intervall  
-    //             $("#k1").animate({
-    //                 left: pos_p
-    //             }, time, "linear");
-    //             $("#k2").animate({
-    //                 left: pos_p
-    //             }, time, "linear");
-    //             update_category("right");
-    //         };
-    //         //Start des Intervalls
-    //         interval = setInterval(action, time);
-    //         update_category("right");
-    //     }
-    // }
-
     function slide_stop() {
+        stop_bool = true;
         clearInterval(interval);
     }
 
-    function update_category(direction) { // in der Variable C ist die aktuelle Kategorie gespeichert und wird beim Sliden nach links und rechts hoch oder runter gezählt
-        if (direction == "left") {
-            current_category--;
-        } else if (direction == "right") {
-            current_category++;
+    var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"]
+
+        function update_current_category(direction, category_offset) {
+            for (var x = 0; x < category_offset; x++) {
+                if (direction == "left") {
+                    current_category--;
+                } else if (direction == "right") {
+                    current_category++;
+                }
+
+                if (current_category == 0 && direction == "left") {
+                    current_category = max_cat;
+                } else if (current_category == (max_cat + 1) && direction == "right") {
+                    current_category = 1;
+                }
+            }
+
+            if (current_category == 1 || current_category == 3) {
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        menu: category_names[current_category - 1]
+                    }
+                });
+            }
+            //console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
         }
 
-        if (current_category == 0 && direction == "left") {
-            current_category = max_cat;
-        } else if (current_category == (max_cat + 1) && direction == "right") {
-            current_category = 1;
+        function size_check() {
+            switch (ready_check) {
+                case 3:
+                    var pos = 256;
+                    var pos_plus = pos + 10;
+                    break;
+                case 2:
+                    var pos = 170;
+                    var pos_plus = pos + 7;
+                    break;
+                case 1:
+                    var pos = 136;
+                    var pos_plus = pos + 6;
+                    break;
+                default:
+                    console.log("failed to check size !(default)");
+                    break;
+            }
+            var pos_reset = pos_plus * max_cat;
+
+            return {
+                p: pos,
+                pp: pos_plus,
+                pr: pos_reset
+            };
         }
-    }
 
-    function size_check() {
-        switch (ready_check) {
-            case 3:
-                var pos = 256;
-                var pos_plus = pos + 10;
-                break;
-            case 2:
-                var pos = 170;
-                var pos_plus = pos + 7;
-                break;
-            case 1:
-                var pos = 136;
-                var pos_plus = pos + 6;
-                break;
-            default:
-                console.log("failed to check size !(default)");
-                break;
+        function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
+        {
+            // size = size_check();
+            // var pos = size.p;
+            // var pos_r = size.pr;
+            // var pos_p = size.pp;
+
+            // var cur_pos_right = (c * pos_p) - pos_p;
+            // var cur_pos_left = cur_pos_right - (pos_r);
+            // $("#k1").css({
+            //     left: cur_pos_left
+            // });
+            // $("#k2").css({
+            //     left: cur_pos_right
+            // });
         }
-        var pos_reset = pos_plus * max_cat;
-
-        return {
-            p: pos,
-            pp: pos_plus,
-            pr: pos_reset
-        };
-    }
-
-    function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
-    {
-        size = size_check();
-        var pos = size.p;
-        var pos_r = size.pr;
-        var pos_p = size.pp;
-
-        var cur_pos_right = (c * pos_p) - pos_p;
-        var cur_pos_left = cur_pos_right - (pos_r);
-        $("#k1").css({
-            left: cur_pos_left
-        });
-        $("#k2").css({
-            left: cur_pos_right
-        });
-    }
 
     $(window).resize(function() {
         if ($(window).width() <= 1024 && ready_check !== 1) {
@@ -2333,6 +2377,7 @@ if (Meteor.isClient) {
 
 
     //returns true if locked
+
     function checkScroungeMine(slotId, myName, currentUser) {
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
         if (currentUser == myName) {
