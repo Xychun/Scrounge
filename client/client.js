@@ -55,8 +55,8 @@ if (Meteor.isClient) {
         for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
                 var value = timers[i].miliseconds + (timers[i].prefix * 1000);
-                if(value<0)value=0;
-                timers[i].miliseconds = value; 
+                if (value < 0) value = 0;
+                timers[i].miliseconds = value;
                 $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
             } else {
                 //Element not found and deleted after 3rd time
@@ -551,8 +551,8 @@ if (Meteor.isClient) {
                 obj0['supporter'] = supSlotsMemory;
                 var lockCheck = checkScroungeMine(i, self.username, self.cu);
                 obj0['lockedMsg'] = lockCheck;
-                if(lockCheck != false)lockCheck=true
-                obj0['locked'] = lockCheck;                
+                if (lockCheck != false) lockCheck = true
+                obj0['locked'] = lockCheck;
                 objects[i] = obj0;
             }
         }
@@ -710,7 +710,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value*supEpics)/100))) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
 
@@ -868,7 +868,7 @@ if (Meteor.isClient) {
 
                 obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
 
-                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value*supEpics)/100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value * supEpics) / 100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
                 obj0['epicness'] = supEpics + '%';
                 objects[i] = obj0;
             }
@@ -987,7 +987,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value*supEpics)/100))) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
                 obj0['epicnessChange'] = (supEpics + myEpic) + '%';
@@ -1004,8 +1004,8 @@ if (Meteor.isClient) {
                 obj0['supporter'] = supSlotsMemory;
                 var lockCheck = checkScroungeBattlefield(i, self.username, self.cu);
                 obj0['lockedMsg'] = lockCheck;
-                if(lockCheck != false)lockCheck=true
-                obj0['locked'] = lockCheck;  
+                if (lockCheck != false) lockCheck = true
+                obj0['locked'] = lockCheck;
                 objects[i] = obj0;
             }
         }
@@ -1658,7 +1658,9 @@ if (Meteor.isClient) {
             var cursorMine = mine.findOne({
                 user: player
             });
-            var cursorBattlefield = battlefield.findOne({user: player});            
+            var cursorBattlefield = battlefield.findOne({
+                user: player
+            });
             //Check mine
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             var trueCount = 0;
@@ -1683,7 +1685,7 @@ if (Meteor.isClient) {
             } else {
                 obj0['mineResult'] = true;
             }
-            
+
             //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
             var trueCount = 0;
@@ -2373,10 +2375,10 @@ if (Meteor.isClient) {
         var textAnimation = document.createElement("div");
         textAnimation.innerHTML = text;
         textAnimation.id = "textAnimation";
-        if(document.getElementById("mitte"))document.getElementById("mitte").appendChild(textAnimation);
+        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimation);
         textAnimation.style.color = color;
         setTimeout(function() {
-            if(document.getElementById("textAnimation"))document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+            if (document.getElementById("textAnimation")) document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
         }, 2000);
 
     }
@@ -2766,6 +2768,13 @@ if (Meteor.isClient) {
     function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
         var row = {};
         var column = new Array();
+        var myName = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
         //go all columns
         for (var j = 0; j < mapColumns; j++) {
             //if coordinates are bigger than map max: get new data with modulo for infinite map size
@@ -2792,6 +2801,8 @@ if (Meteor.isClient) {
                 var backgroundNumber = cursorPlayerData.backgroundId;
                 infoMemory['playerLevel'] = playerLevel;
                 infoMemory['playerImage'] = "worldMapPlayerImage";
+                infoMemory['playerImageId'] = "01";
+                if (myName == user) infoMemory['playerImageId'] = "00";
                 infoMemory['playerName'] = user;
                 infoMemory['backgroundNumber'] = backgroundNumber;
             } else  {

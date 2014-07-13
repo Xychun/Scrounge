@@ -377,7 +377,7 @@
         <div id="improvements">
             {{#with improvement}}
             <div class="improvementsText" style="color: {{color}}; left: 100px; font-family:OCR A Std; ">{{name}}</div>
-            <div id="improvementsText" style="display:table-cell"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
+            <div id="improvementsText" style="display:table-cell">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
             {{/with}}
         </div>
         <div id="improvementsRightEdge"></div>
@@ -669,7 +669,9 @@
                                 {{#if locked}}
                                 <div class="scrounge_right right">
                                     <img style="float: left" src="/Aufloesung1920x1080/Interface/Lock.png">
-                                    <div class="div_center_vertical" style="height: 100%; left: 140px;"> <p class="text"> {{lockedMsg}} </p> </div>
+                                    <div class="div_center_vertical" style="height: 100%; left: 140px;">
+                                        <p class="text">{{lockedMsg}}</p>
+                                    </div>
                                 </div>
                                 {{else}}
                                 <div id="{{goScrounging}}" class="goScroungingMine goScroungingIcon scrounge_right">
@@ -1032,7 +1034,9 @@
                                 {{#if locked}}
                                 <div class="scrounge_right right">
                                     <img style="float: left" src="/Aufloesung1920x1080/Interface/Lock.png">
-                                    <div class="div_center_vertical" style="height: 100%; left: 140px;"> <p class="text"> {{lockedMsg}} </p> </div>
+                                    <div class="div_center_vertical" style="height: 100%; left: 140px;">
+                                        <p class="text">{{lockedMsg}}</p>
+                                    </div>
                                 </div>
                                 {{else}}
                                 <div id="{{goScrounging}}" class="goScroungingBattlefield goScroungingIcon scrounge_right">
@@ -1259,7 +1263,7 @@
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>
-                    <div class="{{playerImage}}"></div>
+                    <div class="{{playerImage}}" style="background-image: url(/Aufloesung1920x1080/Interface/PlayerImage{{playerImageId}}.png);"></div>
                     <div class="worldMapPlayerName">{{playerName}}</div>
 
                 </div>
