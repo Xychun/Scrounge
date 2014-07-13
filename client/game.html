@@ -386,7 +386,7 @@
         <div id="improvementsLeftEdge"></div>
         <div id="improvements">
             {{#with improvement}}
-            <div class="improvementsText" style="color: {{color}}; left: 100px; font-family:OCR A Std; ">{{name}}</div>
+            <div class="improvementsText" style="color: {{color}};">{{name}}</div>
             <div id="improvementsText" style="display:table-cell"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
             {{/with}}
         </div>
@@ -434,7 +434,13 @@
                                         <div id={{matter}} class="item relative">
                                             <img class="itemImg" src="/Aufloesung1920x1080/Mine/MatterBlockBuyable_{{color}}.png">
                                             <div class="itemTextValue">{{value}}</div>
-                                            <div class="itemTextCost">{{cost}}</div>
+
+                                            <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
+
+                                            <div class="itemTextCostPre relative"> pay </div> <div class="itemTextCost relative">{{cost}}</div> <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"> </div>
+
+                                            </div>
+
                                         </div>
                                         {{/each}}
                                     </div>
@@ -798,7 +804,13 @@
                                         <div id={{fight}} class="item relative">
                                             <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
                                             <div class="itemTextValue">{{value}}XP</div>
-                                            <div class="itemTextCost">{{cost}}</div>
+
+                                            <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
+
+                                            <div class="itemTextCostPre relative"> pay </div> <div class="itemTextCost relative">{{cost}}</div> <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"> </div>
+
+                                            </div>
+
                                         </div>
                                         {{/each}}
                                     </div>
@@ -1251,7 +1263,7 @@
 
 
         <!-- currentMapView umfasst alle slots, die ein Spieler sehen kann. Beim Navigieren via der Richtungspfeile, werden entsprechend der Bewegungsrichtung die divs neu mit Daten befüllt -->
-        <div id="currentMapView">
+        <div id="currentMapView" style="background-image:url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace0.png);">
 
 
 
