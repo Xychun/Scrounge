@@ -227,7 +227,7 @@ if (Meteor.isServer) {
                                 }
                             }).battlefield.scrSlots;
                             //get index of scr slot
-                            var indexScr = -1;
+                            var indexScr = -1;                            
                             for (var m = 0; m < currentSupScrSlots; m++) {
                                 if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
                             }
@@ -261,7 +261,7 @@ if (Meteor.isServer) {
                         var lvl = cPData.level;
                         var obj0 = {};
                         obj0['requiredXP'] = cUserRequXP + (225 * ((lvl + 10) / 2))
-                        obj0['XP'] = (cUserXP + ownProfit) % cUserRequXP;
+                        obj0['XP'] = (cUserXP + ownProfit) - cUserRequXP;
                         obj0['level'] = lvl+1;
                         playerData.update({
                             user: cUser
@@ -297,7 +297,7 @@ if (Meteor.isServer) {
                             var lvl = cSupPData.level;
                             var obj0 = {};
                             obj0['requiredXP'] = cSupRequXP + (225 * ((lvl + 10) / 2))
-                            obj0['XP'] = (cSupXP + supProfit) % cSupRequXP;
+                            obj0['XP'] = (cSupXP + supProfit) - cSupRequXP;
                             obj0['level'] = lvl+1;
                             playerData.update({
                                 user: allSups[l]

@@ -679,7 +679,7 @@
                                 {{#if locked}}
                                 <div class="scrounge_right right">
                                     <img style="float: left" src="/Aufloesung1920x1080/Interface/Lock.png">
-                                    <div class="div_center_vertical" style="height: 100%; left: 140px;"> <p class="text"> Hier soll etwas schönes stehen :) :) :) {{value}} </p> </div>
+                                    <div class="div_center_vertical" style="height: 100%; left: 140px;"> <p class="text"> {{lockedMsg}} </p> </div>
                                 </div>
                                 {{else}}
                                 <div id="{{goScrounging}}" class="goScroungingMine goScroungingIcon scrounge_right">
@@ -1040,8 +1040,9 @@
                                     <p class='text relative'>XP: {{xp}}</p>
                                 </div>
                                 {{#if locked}}
-                                <div class="scrounge_right">
-                                    <img src="/Aufloesung1920x1080/Interface/ActionsScroungingUnavailable.png">
+                                <div class="scrounge_right right">
+                                    <img style="float: left" src="/Aufloesung1920x1080/Interface/Lock.png">
+                                    <div class="div_center_vertical" style="height: 100%; left: 140px;"> <p class="text"> {{lockedMsg}} </p> </div>
                                 </div>
                                 {{else}}
                                 <div id="{{goScrounging}}" class="goScroungingBattlefield goScroungingIcon scrounge_right">
@@ -1297,7 +1298,7 @@
         </div>
         {{else}}
         <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png);">
-            <div class="worldMapSlotsPreviewText">{{minePossible}} / {{mineMax}}</div>
+            <div class="worldMapSlotsPreviewText">{{mineImpossible}} / {{mineMax}}</div>
         </div>
         {{/if}}
         <!-- <div class="worldMapSlotsPreview" style="left: -50px; top: -50px;">
@@ -1314,7 +1315,7 @@
         </div>
         {{else}}
         <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png);">
-            <div class="worldMapSlotsPreviewText">{{battlefieldPossible}} / {{battlefieldMax}}</div>
+            <div class="worldMapSlotsPreviewText">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
         </div>
         {{/if}}
     </div>
