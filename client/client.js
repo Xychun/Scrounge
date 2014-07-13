@@ -54,7 +54,9 @@ if (Meteor.isClient) {
     function updateTimers() {
         for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
-                timers[i].miliseconds = timers[i].miliseconds + (timers[i].prefix * 1000);
+                var value = timers[i].miliseconds + (timers[i].prefix * 1000);
+                if(value<0)value=0;
+                timers[i].miliseconds = value; 
                 $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
             } else {
                 //Element not found and deleted after 3rd time
@@ -2328,10 +2330,10 @@ if (Meteor.isClient) {
         var textAnimation = document.createElement("div");
         textAnimation.innerHTML = text;
         textAnimation.id = "textAnimation";
-        document.getElementById("mitte").appendChild(textAnimation);
+        if(document.getElementById("mitte"))document.getElementById("mitte").appendChild(textAnimation);
         textAnimation.style.color = color;
         setTimeout(function() {
-            if(document.getElementById("mitte"))document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+            if(document.getElementById("textAnimation"))document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
         }, 2000);
 
     }
