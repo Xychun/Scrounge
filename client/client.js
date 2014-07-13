@@ -1069,8 +1069,9 @@ if (Meteor.isClient) {
     };
 
     Template.standardBorder.resources = function() {
-
-        return resources.find({});
+        var arrayHelper = resources.find({}).fetch();
+        arrayHelper[0].values.green.matter = Math.floor(arrayHelper[0].values.green.matter);
+        return arrayHelper;
 
     };
 
