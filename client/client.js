@@ -38,8 +38,8 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     timers = new Array();
-    mapRows = 4;
-    mapColumns = 6;
+    mapRows = 6;
+    mapColumns = 8;
 
     ////////////////////////////
     ////// FUNCTION CALLS //////
@@ -54,7 +54,9 @@ if (Meteor.isClient) {
     function updateTimers() {
         for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
-                timers[i].miliseconds = timers[i].miliseconds + (timers[i].prefix * 1000);
+                var value = timers[i].miliseconds + (timers[i].prefix * 1000);
+                if(value<0)value=0;
+                timers[i].miliseconds = value; 
                 $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
             } else {
                 //Element not found and deleted after 3rd time
@@ -547,7 +549,10 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
-                obj0['locked'] = checkScroungeMine(i, self.username, self.cu);
+                var lockCheck = checkScroungeMine(i, self.username, self.cu);
+                obj0['lockedMsg'] = lockCheck;
+                if(lockCheck != false)lockCheck=true
+                obj0['locked'] = lockCheck;                
                 objects[i] = obj0;
             }
         }
@@ -705,7 +710,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value*supEpics)/100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
 
@@ -772,6 +777,7 @@ if (Meteor.isClient) {
         var objects = new Array();
 
         //Iterate all Scrounging Slots
+        console.log('amountScrSlots: ' + amountScrSlots);
         for (var i = 0; i < amountScrSlots; i++) {
             //Is used?
             if (cursorMyBattlefield['scrs' + i].victim != "") {
@@ -862,7 +868,7 @@ if (Meteor.isClient) {
 
                 obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
 
-                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value*supEpics)/100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
                 obj0['epicness'] = supEpics + '%';
                 objects[i] = obj0;
             }
@@ -981,7 +987,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * cursorFightArena.value) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value*supEpics)/100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
                 obj0['epicnessChange'] = (supEpics + myEpic) + '%';
@@ -996,7 +1002,10 @@ if (Meteor.isClient) {
 
                 obj0['index'] = i;
                 obj0['supporter'] = supSlotsMemory;
-                obj0['locked'] = checkScroungeBattlefield(i, self.username, self.cu);
+                var lockCheck = checkScroungeBattlefield(i, self.username, self.cu);
+                obj0['lockedMsg'] = lockCheck;
+                if(lockCheck != false)lockCheck=true
+                obj0['locked'] = lockCheck;  
                 objects[i] = obj0;
             }
         }
@@ -1060,8 +1069,9 @@ if (Meteor.isClient) {
     };
 
     Template.standardBorder.resources = function() {
-
-        return resources.find({});
+        var arrayHelper = resources.find({}).fetch();
+        arrayHelper[0].values.green.matter = Math.floor(arrayHelper[0].values.green.matter);
+        return arrayHelper;
 
     };
 
@@ -1625,6 +1635,8 @@ if (Meteor.isClient) {
 
     Template.worldMap.events({
         'mouseenter .worldMapPlayerPlace': function(e, t) {
+            // var element = $(e.currentTarget).attr("id");
+            // $('#preview' + element).css({"visibility" : "visible"});
             // get orientation
             var player = $(e.currentTarget).attr("id");
             if (!player) return
@@ -1646,10 +1658,8 @@ if (Meteor.isClient) {
             var cursorMine = mine.findOne({
                 user: player
             });
-            var cursorBattlefield = battlefield.findOne({
-                user: player
-            });
-            //CheckMine
+            var cursorBattlefield = battlefield.findOne({user: player});            
+            //Check mine
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             var trueCount = 0;
             var falseCount = 0;
@@ -1662,18 +1672,19 @@ if (Meteor.isClient) {
                     trueCount++;
                     //check all circumstances
                     var checkResult = checkScroungeMine(i, myName, player);
-                    if (checkResult == true) falseCount++;
+                    //cannot be "==true": has to be !=false
+                    if (checkResult != false) falseCount++;
                 }
             }
-            obj0['minePossible'] = trueCount;
+            obj0['mineImpossible'] = falseCount;
             obj0['mineMax'] = maxCount;
             if (trueCount - falseCount > 0 || maxCount == 0) {
                 obj0['mineResult'] = false;
             } else {
                 obj0['mineResult'] = true;
             }
-
-            //CheckBattlefield
+            
+            //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
             var trueCount = 0;
             var falseCount = 0;
@@ -1686,10 +1697,11 @@ if (Meteor.isClient) {
                     trueCount++;
                     //check all circumstances
                     var checkResult = checkScroungeBattlefield(i, myName, player);
-                    if (checkResult == true) falseCount++;
+                    //cannot be "==true": has to be !=false
+                    if (checkResult != false) falseCount++;
                 }
             }
-            obj0['battlefieldPossible'] = trueCount;
+            obj0['battlefieldImpossible'] = falseCount;
             obj0['battlefieldMax'] = maxCount;
             if (trueCount - falseCount > 0 || maxCount == 0) {
                 obj0['battlefieldResult'] = false;
@@ -1699,6 +1711,11 @@ if (Meteor.isClient) {
             // update session variab
             Session.set("worldMapPreview", obj0);
         },
+
+        // 'mouseout .worldMapScroungePreview': function(e, t) {
+        //     var element = $(e.currentTarget).attr("id");
+        //     $('#' + element).css({"visibility" : "hidden"});
+        // },
 
         'click .worldMapNavigators': function(e, t) {
             //get max map size
@@ -2356,10 +2373,10 @@ if (Meteor.isClient) {
         var textAnimation = document.createElement("div");
         textAnimation.innerHTML = text;
         textAnimation.id = "textAnimation";
-        document.getElementById("mitte").appendChild(textAnimation);
+        if(document.getElementById("mitte"))document.getElementById("mitte").appendChild(textAnimation);
         textAnimation.style.color = color;
         setTimeout(function() {
-            document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+            if(document.getElementById("textAnimation"))document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
         }, 2000);
 
     }
@@ -2381,7 +2398,7 @@ if (Meteor.isClient) {
     function checkScroungeMine(slotId, myName, currentUser) {
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
         if (currentUser == myName) {
-            return true;
+            return 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
         }
         var cursorMyPlayerData = playerData.findOne({
             user: myName
@@ -2396,7 +2413,7 @@ if (Meteor.isClient) {
         });
         for (i = 0; i < amountScrSlots; i++) {
             if (cursorMineScrounger['scrs' + i].victim == currentUser) {
-                return true;
+                return 'You cannot scrounge here: You already scrounge this user!';
             }
         }
         //CHECK FREE SCRSLOTS OF SCROUNGER DATA
@@ -2408,7 +2425,7 @@ if (Meteor.isClient) {
             }
         }
         if (resultScrounger == -1) {
-            return true;
+            return 'You cannot scrounge here: Your Scrounge slots are all in use!';
         }
         //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
         var obj0 = {};
@@ -2435,11 +2452,11 @@ if (Meteor.isClient) {
         }
         //LAST CHECK: RANGE SLIDER
         if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
-            return true;
+            return 'You cannot scrounge here: You do not have the right miningrate!';
         }
         //SupSlot with id result is free and correct: update it ?
         if (resultOwner == -1) {
-            return true;
+            return 'You cannot scrounge here: The owners support slots are all full!';
         }
         return false;
     }
@@ -2447,7 +2464,7 @@ if (Meteor.isClient) {
     function checkScroungeBattlefield(slotId, myName, currentUser) {
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
         if (currentUser == myName) {
-            return true;
+            return 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
         }
         var cursorMyPlayerData = playerData.findOne({
             user: myName
@@ -2462,7 +2479,7 @@ if (Meteor.isClient) {
         });
         for (i = 0; i < amountScrSlots; i++) {
             if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
-                return true;
+                return 'You cannot scrounge here: You already scrounge this user!';
             }
         }
         //CHECK FREE SCRSLOTS OF SCROUNGER DATA
@@ -2474,7 +2491,7 @@ if (Meteor.isClient) {
             }
         }
         if (resultScrounger == -1) {
-            return true;
+            return 'You cannot scrounge here: Your Scrounge slots are all in use!';
         }
         //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
         var obj0 = {};
@@ -2501,7 +2518,7 @@ if (Meteor.isClient) {
         }
         //LAST CHECK: RANGE SLIDER
         if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
-            return true;
+            return 'You cannot scrounge here: You do not have the right epicness!';
         }
         return false;
     }
