@@ -598,15 +598,15 @@ div {
 .text_matter {
     display: inline;
     width: 200px;
-    left: 60px;
-    top: 16px;
+    left: 64px;
+    top: 15px;
     text-align: left;
 }
 .text_specialResources {
     display: inline;
     width: 100px;
-    left: 30px;
-    top: 3px;
+    left: 32px;
+    top: 8px;
     text-align: left;
 }
 .img_matter {
@@ -1090,11 +1090,10 @@ div {
     position: relative;
 }
 .text {
-    margin-top:5px;
-    margin-bottom:5px;
+    margin: 0px;
     color: white;
     font-family:'Hammersmith One', 'Arial', 'sans-serif';
-    font-size: 20px;
+    font-size: 18px;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .slotBackgroundBaseLeft {
@@ -1201,7 +1200,7 @@ div {
     height:27px;
 }
 .slot_stats {
-    top:42px;
+    top:50px;
     left:10px;
     right:5px;
 }
