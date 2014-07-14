@@ -1400,8 +1400,9 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            $('#buyMenuWrapper').fadeIn();
-            $('#background_fade').fadeIn();
+/*            $('#buyMenuWrapper').fadeIn();
+            $('#background_fade').fadeIn();*/
+            $( "#buyMenuWrapper" ).show(0, function() { $( "#background_fade" ).fadeIn();  });
             Session.set("clickedMatter", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#item').text("Matter: " + this.value);
@@ -1455,8 +1456,10 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            $('#buyMenuWrapper').fadeIn();
-            $('#background_fade').fadeIn();
+            
+/*            $('#background_fade').delay(3000).fadeIn();
+            $('#buyMenuWrapper').fadeIn();*/
+            $( "#buyMenuWrapper" ).show(0, function() { $( "#background_fade" ).fadeIn();  });
             Session.set("clickedFight", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
             $('#item').text("XP: " + this.value);
@@ -2586,7 +2589,7 @@ if (Meteor.isClient) {
                 to: 'middle'
             });
             $('#scrounge').css({
-                backgroundPosition: "0px -306px"
+                backgroundPosition: "0px -303px"
             });
         } else {
             Router.current().render(menu + 'Scrounge', {

@@ -52,7 +52,7 @@ Router.map(function() {
                 });
                 //change menu colors to green
                 $('#scrounge').css({
-                    backgroundPosition: "0px -306px"
+                    backgroundPosition: "0px -303px"
                 });
                 $('#character').css({
                     backgroundPosition: "0px 0px"
@@ -76,7 +76,7 @@ Router.map(function() {
                     backgroundPosition: "0px 0px"
                 });
                 $('#character').css({
-                    backgroundPosition: "0px -151px"
+                    backgroundPosition: "0px -152px"
                 });
                 $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
                 $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
