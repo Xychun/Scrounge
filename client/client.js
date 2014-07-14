@@ -1172,7 +1172,7 @@ if (Meteor.isClient) {
                             cu: Session.get("lastPlayer")
                         }
                     });
-                } 
+                }
                 // else {
                 //     switchToWorldMap();
                 // }
@@ -1642,16 +1642,19 @@ if (Meteor.isClient) {
     });
 
     Template.worldMap.events({
-        'mouseenter .worldMapPlayerPlace': function(e, t) {
+        'mouseover .worldMapPlayerPlace': function(e, t) {
             // var element = $(e.currentTarget).attr("id");
             // $('#preview' + element).css({"visibility" : "visible"});
             // get orientation
+
+
             var player = $(e.currentTarget).attr("id");
             if (!player) return
             var obj0 = {};
             obj0['id'] = 'preview' + player;
-            obj0['left'] = $(e.currentTarget).css("left");
-            obj0['bottom'] = $(e.currentTarget).css("bottom");
+
+            $("#scroungePreviewWrapper").css({"left":$(e.currentTarget).css("left")});
+            $("#scroungePreviewWrapper").css({"bottom":$(e.currentTarget).css("bottom")});
             // get db data
             var myName = Meteor.users.findOne({
                 _id: Meteor.userId()
@@ -1720,12 +1723,20 @@ if (Meteor.isClient) {
             }
             // update session variab
             Session.set("worldMapPreview", obj0);
+
+            $("#scroungePreviewWrapper").css({
+                    display: "block"
+                });
+            $("#scroungePreviewWrapper").stop().fadeTo("fast", 1);
         },
 
-        // 'mouseout .worldMapScroungePreview': function(e, t) {
-        //     var element = $(e.currentTarget).attr("id");
-        //     $('#' + element).css({"visibility" : "hidden"});
-        // },
+        'mouseout .worldMapScroungePreview': function(e, t) {
+            $("#scroungePreviewWrapper").stop().fadeTo("fast", 0, function() {
+                $("#scroungePreviewWrapper").css({
+                    display: "none"
+                });
+            });
+        },
 
         'click .worldMapNavigators': function(e, t) {
             //get max map size
@@ -2390,6 +2401,7 @@ if (Meteor.isClient) {
     }
 
     /*Farbe vorübergehend hardcoded*/
+
     function showInfoTextAnimation(text) {
 
         var textForAnimation = text.substring(1);
@@ -2413,29 +2425,29 @@ if (Meteor.isClient) {
     function checkColorCode(infoLogText) {
 
         var logInput = infoLogText.substring(1);
-        var colorCode = infoLogText.substring(0,1);
+        var colorCode = infoLogText.substring(0, 1);
         var color;
 
-        switch(colorCode) {
+        switch (colorCode) {
 
-          /*positive message*/
-          case "0":
+            /*positive message*/
+            case "0":
 
-            color ="tomato";
-            break;
+                color = "tomato";
+                break;
 
-          /*negative message*/
-          case "1":
+                /*negative message*/
+            case "1":
 
-            color ="greenyellow";
-            break;
+                color = "greenyellow";
+                break;
 
-          /*neutral message*/
-          case "2":
+                /*neutral message*/
+            case "2":
 
-            color="white";
+                color = "white";
 
-          default: 
+            default:
 
         }
 
@@ -2443,6 +2455,7 @@ if (Meteor.isClient) {
     }
 
     /*Farbe vorübergehend hardcoded*/
+
     function infoLog(text) {
 
         var logInput = text.substring(1);
