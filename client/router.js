@@ -67,10 +67,8 @@ Router.map(function() {
                 $('#character').css({
                     backgroundPosition: "0px 0px"
                 });
-                $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
-                $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
-                $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
-                $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
+                $(".category_1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
+                $(".category_3").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
                 $("#category_right").css({
                     backgroundPosition: "-109px 0px"
                 });
@@ -88,10 +86,8 @@ Router.map(function() {
                 $('#character').css({
                     backgroundPosition: "0px -151px"
                 });
-                $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
-                $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
-                $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
-                $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
+                $(".category_1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
+                $(".category_3").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
                 $("#category_right").css({
                     backgroundPosition: "-216px 0px"
                 });
