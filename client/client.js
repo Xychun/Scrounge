@@ -2404,13 +2404,13 @@ if (Meteor.isClient) {
           /*positive message*/
           case "0":
 
-            color ="red";
+            color ="tomato";
             break;
 
           /*negative message*/
           case "1":
 
-            color ="green";
+            color ="greenyellow";
             break;
 
           /*neutral message*/
