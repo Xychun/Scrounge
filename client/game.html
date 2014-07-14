@@ -789,7 +789,7 @@
                                         {{#each fightArenas}}
                                         <div id={{fight}} class="item relative">
                                             <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
-                                            <div class="itemTextValue">{{value}}XP</div>
+                                            <div class="itemTextValue">{{value}}</div>
                                             <div class="itemTextCost">{{cost}}</div>
                                         </div>
                                         {{/each}}
@@ -1260,6 +1260,7 @@
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
             <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; background-image: url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace{{backgroundNumber}}.png); background-repeat: no-repeat;">
+                {{#if playerImageId}}
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>
@@ -1267,6 +1268,7 @@
                     <div class="worldMapPlayerName">{{playerName}}</div>
 
                 </div>
+                {{/if}}
             </div>
             {{/each}} {{/each}}
         </div>

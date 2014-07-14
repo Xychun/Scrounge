@@ -192,14 +192,14 @@ if (Meteor.isClient) {
                             if (supMine['scrs' + m].victim == name) indexScr = m;
                         }
                         if (indexScr == -1) {
-                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                            console.log('Template.mineBase slot calculation problem - index scr Slot');
                             break;
                         }
                         var result = indexScr;
                         //calculate mined by currentSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -471,14 +471,14 @@ if (Meteor.isClient) {
                             if (supMine['scrs' + m].victim == name) indexScr = m;
                         }
                         if (indexScr == -1) {
-                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                            console.log('Template.mineBase slot calculation problem - index scr Slot');
                             break;
                         }
                         var result = indexScr;
                         //calculate mined by cSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -674,7 +674,7 @@ if (Meteor.isClient) {
                         //calculate timeSpent of currentSup
                         var supTime = supBattlefield['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -777,7 +777,6 @@ if (Meteor.isClient) {
         var objects = new Array();
 
         //Iterate all Scrounging Slots
-        console.log('amountScrSlots: ' + amountScrSlots);
         for (var i = 0; i < amountScrSlots; i++) {
             //Is used?
             if (cursorMyBattlefield['scrs' + i].victim != "") {
@@ -932,6 +931,7 @@ if (Meteor.isClient) {
                         for (var m = 0; m < currentSupScrSlots; m++) {
                             if (supBattlefield['scrs' + m].victim == name) indexScr = m;
                         }
+                        console.log('currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                         if (indexScr == -1) {
                             console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
                             break;
@@ -940,7 +940,7 @@ if (Meteor.isClient) {
                         //calculate timespent by cSup
                         var supTime = supBattlefield['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -1033,13 +1033,16 @@ if (Meteor.isClient) {
     };
 
     Template.battlefieldBase.fightArenas = function() {
-
-        return FightArenas.find({}, {
+        //add XP to the string for the shadow effect
+        var arrayHelper = FightArenas.find({}, {
             sort: {
                 fight: 1
             }
-        });
-
+        }).fetch();
+        for (var i = 0; i < arrayHelper.length; i++) {
+            arrayHelper[i].value = arrayHelper[i].value + 'XP';
+        }
+        return arrayHelper;
     };
 
     Template.worldMap.worldMapArray = function() {
@@ -1170,7 +1173,10 @@ if (Meteor.isClient) {
                             cu: Session.get("lastPlayer")
                         }
                     });
-                }
+                } 
+                // else {
+                //     switchToWorldMap();
+                // }
             }
         }
     });
@@ -1407,6 +1413,7 @@ if (Meteor.isClient) {
             $('#item').text("Matter: " + this.value);
             var amountSupSlots = cursorPlayerData.mine.supSlots;
             range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            $('#time').text("Time: " + msToTime(this.value / (7.5 / 3600000)));
             $('#price').text("Price: " + this.cost);
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
@@ -2542,15 +2549,43 @@ if (Meteor.isClient) {
             Router.current().render(menu + 'Base', {
                 to: 'middle'
             });
+            //change menu colors to green
             $('#scrounge').css({
                 backgroundPosition: "0px -306px"
+            });
+            $('#character').css({
+                backgroundPosition: "0px 0px"
+            });
+            $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
+            $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
+            $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
+            $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
+            $("#category_right").css({
+                backgroundPosition: "-109px 0px"
+            });
+            $("#category_left").css({
+                backgroundPosition: "-109px 0px"
             });
         } else {
             Router.current().render(menu + 'Scrounge', {
                 to: 'middle'
             });
+            //change menu colors to red
             $('#scrounge').css({
                 backgroundPosition: "0px 0px"
+            });
+            $('#character').css({
+                backgroundPosition: "0px -151px"
+            });
+            $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
+            $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
+            $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
+            $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
+            $("#category_right").css({
+                backgroundPosition: "-216px 0px"
+            });
+            $("#category_left").css({
+                backgroundPosition: "-216px 0px"
             });
         }
     }
