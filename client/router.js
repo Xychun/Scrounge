@@ -12,7 +12,7 @@ Router.map(function() {
             'login': {
                 to: 'middle'
             },
-/*            'register': {
+            /*            'register': {
                 to: 'middle'
             },*/
         },
@@ -30,6 +30,16 @@ Router.map(function() {
             'buyMenu': {
                 to: 'buyMenuField'
             },
+        },
+
+        onBeforeAction: function() {
+            //get the TIME ZONE difference (not the ping!)
+            Meteor.call("getServerTime", function(err, result) {
+                timeClient = new Date();
+                timeServer = result;
+                timeDifference = Math.round((timeClient - timeServer) / 10000) * 10000;
+                // console.log('timeServer' + timeServer.getTime());
+            });
         },
 
         //like autorun
@@ -87,7 +97,7 @@ Router.map(function() {
                 });
                 $("#category_left").css({
                     backgroundPosition: "-216px 0px"
-                });                
+                });
             }
         },
 

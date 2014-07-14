@@ -94,9 +94,9 @@ if (Meteor.isClient) {
         });
         var cu = self.cu;
         var menu = self.menu;
-        var color = "red";
+        var color = "firebrick";
         if (cu == self.username) {
-            cu = 'YOU ARE HOME! :-)';
+            cu = 'YOUR BASE';
             color = "green";
         }
         var cursorPlayerData = playerData.findOne({
@@ -192,14 +192,14 @@ if (Meteor.isClient) {
                             if (supMine['scrs' + m].victim == name) indexScr = m;
                         }
                         if (indexScr == -1) {
-                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                            console.log('Template.mineBase slot calculation problem - index scr Slot');
                             break;
                         }
                         var result = indexScr;
                         //calculate mined by currentSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -471,14 +471,14 @@ if (Meteor.isClient) {
                             if (supMine['scrs' + m].victim == name) indexScr = m;
                         }
                         if (indexScr == -1) {
-                            console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                            console.log('Template.mineBase slot calculation problem - index scr Slot');
                             break;
                         }
                         var result = indexScr;
                         //calculate mined by cSup
                         var supTime = supMine['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_mine_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -674,7 +674,7 @@ if (Meteor.isClient) {
                         //calculate timeSpent of currentSup
                         var supTime = supBattlefield['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -777,7 +777,6 @@ if (Meteor.isClient) {
         var objects = new Array();
 
         //Iterate all Scrounging Slots
-        //console.log('amountScrSlots: ' + amountScrSlots);
         for (var i = 0; i < amountScrSlots; i++) {
             //Is used?
             if (cursorMyBattlefield['scrs' + i].victim != "") {
@@ -932,6 +931,7 @@ if (Meteor.isClient) {
                         for (var m = 0; m < currentSupScrSlots; m++) {
                             if (supBattlefield['scrs' + m].victim == name) indexScr = m;
                         }
+                        console.log('currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                         if (indexScr == -1) {
                             console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
                             break;
@@ -940,7 +940,7 @@ if (Meteor.isClient) {
                         //calculate timespent by cSup
                         var supTime = supBattlefield['scrs' + result].stamp.getTime();
 
-                        obj00['timeSpentId'] = 'timerInc_' + k + '_battlefield_sup';
+                        obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
                         var obj01 = {};
                         obj01['id'] = obj00['timeSpentId'];
                         obj01['miliseconds'] = (calculatedServerTime - supTime);
@@ -1033,13 +1033,16 @@ if (Meteor.isClient) {
     };
 
     Template.battlefieldBase.fightArenas = function() {
-
-        return FightArenas.find({}, {
+        //add XP to the string for the shadow effect
+        var arrayHelper = FightArenas.find({}, {
             sort: {
                 fight: 1
             }
-        });
-
+        }).fetch();
+        for (var i = 0; i < arrayHelper.length; i++) {
+            arrayHelper[i].value = arrayHelper[i].value + 'XP';
+        }
+        return arrayHelper;
     };
 
     Template.worldMap.worldMapArray = function() {
@@ -1169,7 +1172,10 @@ if (Meteor.isClient) {
                             cu: Session.get("lastPlayer")
                         }
                     });
-                }
+                } 
+                // else {
+                //     switchToWorldMap();
+                // }
             }
         }
     });
@@ -1399,14 +1405,16 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            $('#buyMenu').fadeIn();
+            $('#buyMenuWrapper').fadeIn();
             $('#background_fade').fadeIn();
             Session.set("clickedMatter", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#item').text("Matter: " + this.value);
             var amountSupSlots = cursorPlayerData.mine.supSlots;
             range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            $('#time').text("Time: " + msToTime(this.value / (7.5 / 3600000)));
             $('#price').text("Price: " + this.cost);
+            $('#matterImg').attr("src", "/Aufloesung1920x1080/Mine/MatterBlockCost_" + this.color + ".png");
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
@@ -1453,7 +1461,7 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            $('#buyMenu').fadeIn();
+            $('#buyMenuWrapper').fadeIn();
             $('#background_fade').fadeIn();
             Session.set("clickedFight", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
@@ -1462,6 +1470,7 @@ if (Meteor.isClient) {
             range_slider("Buy_Menu", cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl);
             $('#time').text("Time: " + msToTime(this.time));
             $('#price').text("Price: " + this.cost);
+            $('#matterImg').attr("src", "/Aufloesung1920x1080/Mine/MatterBlockCost_" + this.color + ".png");
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
@@ -1526,8 +1535,8 @@ if (Meteor.isClient) {
                     console.log('goScroungingMine: ' + slotId + ' : ' + err);
                 }
                 if (result) {
-                    infoLog(result, "red");
-                    showInfoTextAnimation(result, "green");
+                    infoLog(result);
+                    showInfoTextAnimation(result);
                 }
             });
         },
@@ -1575,8 +1584,8 @@ if (Meteor.isClient) {
                     console.log('goScroungingBattlefield: ' + err);
                 }
                 if (result) {
-                    infoLog(result, "red");
-                    showInfoTextAnimation(result, "green");
+                    infoLog(result);
+                    showInfoTextAnimation(result);
                 }
             });
         }
@@ -1604,8 +1613,8 @@ if (Meteor.isClient) {
                         console.log(err);
                     }
                     if (result) {
-                        infoLog(result, "red");
-                        showInfoTextAnimation(result, "green");
+                        infoLog(result);
+                        showInfoTextAnimation(result);
                     }
                 });
             }
@@ -1615,18 +1624,18 @@ if (Meteor.isClient) {
                         console.log(err);
                     }
                     if (result) {
-                        infoLog(result, "red");
-                        showInfoTextAnimation(result, "green");
+                        infoLog(result);
+                        showInfoTextAnimation(result);
                     }
                 });
             }
-            $('#buyMenu').fadeOut();
+            $('#buyMenuWrapper').fadeOut();
             $('#background_fade').fadeOut();
 
         },
 
         'click #buyMenuNo': function(e, t) {
-            $('#buyMenu').fadeOut();
+            $('#buyMenuWrapper').fadeOut();
             $('#background_fade').fadeOut();
 
         },
@@ -2380,26 +2389,67 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
-    function showInfoTextAnimation(text, color) {
+    /*Farbe vorübergehend hardcoded*/
+    function showInfoTextAnimation(text) {
 
-        var textAnimation = document.createElement("div");
-        textAnimation.innerHTML = text;
+        var textForAnimation = text.substring(1);
+        var textAnimation = document.createElement("p");
+        var textAnimationWrapper = document.createElement("div");
+        textAnimation.innerHTML = textForAnimation;
+        textAnimation.style.color = checkColorCode(text);
         textAnimation.id = "textAnimation";
-        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimation);
-        textAnimation.style.color = color;
-        setTimeout(function() {
-            if (document.getElementById("textAnimation")) document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
-        }, 2000);
+        textAnimationWrapper.id = "textAnimationWrapper";
+        textAnimationWrapper.className = "div_center_vertical";
 
+
+        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimationWrapper);
+        if (document.getElementById("textAnimationWrapper")) document.getElementById("textAnimationWrapper").appendChild(textAnimation);
+
+        setTimeout(function() {
+            if (document.getElementById("textAnimationWrapper")) document.getElementById("mitte").removeChild(document.getElementById("textAnimationWrapper"))
+        }, 2000);
     }
 
-    function infoLog(text, color) {
+    function checkColorCode(infoLogText) {
 
+        var logInput = infoLogText.substring(1);
+        var colorCode = infoLogText.substring(0,1);
+        var color;
+
+        switch(colorCode) {
+
+          /*positive message*/
+          case "0":
+
+            color ="tomato";
+            break;
+
+          /*negative message*/
+          case "1":
+
+            color ="greenyellow";
+            break;
+
+          /*neutral message*/
+          case "2":
+
+            color="white";
+
+          default: 
+
+        }
+
+        return color;
+    }
+
+    /*Farbe vorübergehend hardcoded*/
+    function infoLog(text) {
+
+        var logInput = text.substring(1);
         var log = document.createElement("div");
-        var previousLogID;
-        log.innerHTML = text;
+        log.innerHTML = logInput;
         log.className = "logs";
-        log.style.color = color;
+        log.style.color = checkColorCode(text);
         $("#infoLog").prepend(log);
 
     }
@@ -2552,15 +2602,43 @@ if (Meteor.isClient) {
             Router.current().render(menu + 'Base', {
                 to: 'middle'
             });
+            //change menu colors to green
             $('#scrounge').css({
                 backgroundPosition: "0px -306px"
+            });
+            $('#character').css({
+                backgroundPosition: "0px 0px"
+            });
+            $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
+            $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
+            $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
+            $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
+            $("#category_right").css({
+                backgroundPosition: "-109px 0px"
+            });
+            $("#category_left").css({
+                backgroundPosition: "-109px 0px"
             });
         } else {
             Router.current().render(menu + 'Scrounge', {
                 to: 'middle'
             });
+            //change menu colors to red
             $('#scrounge').css({
                 backgroundPosition: "0px 0px"
+            });
+            $('#character').css({
+                backgroundPosition: "0px -151px"
+            });
+            $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
+            $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
+            $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
+            $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
+            $("#category_right").css({
+                backgroundPosition: "-216px 0px"
+            });
+            $("#category_left").css({
+                backgroundPosition: "-216px 0px"
             });
         }
     }
@@ -2795,6 +2873,13 @@ if (Meteor.isClient) {
     function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
         var row = {};
         var column = new Array();
+        var myName = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
         //go all columns
         for (var j = 0; j < mapColumns; j++) {
             //if coordinates are bigger than map max: get new data with modulo for infinite map size
@@ -2821,6 +2906,8 @@ if (Meteor.isClient) {
                 var backgroundNumber = cursorPlayerData.backgroundId;
                 infoMemory['playerLevel'] = playerLevel;
                 infoMemory['playerImage'] = "worldMapPlayerImage";
+                infoMemory['playerImageId'] = "01";
+                if (myName == user) infoMemory['playerImageId'] = "00";
                 infoMemory['playerName'] = user;
                 infoMemory['backgroundNumber'] = backgroundNumber;
             } else  {

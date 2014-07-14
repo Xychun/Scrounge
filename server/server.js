@@ -231,8 +231,9 @@ if (Meteor.isServer) {
                             for (var m = 0; m < currentSupScrSlots; m++) {
                                 if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
                             }
+                            console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                             if (indexScr == -1) {
-                                console.log('Server battlefield slot calculation problem - index scr Slot');
+                                console.log('Server battlefield slot calculation problem 1! - index scr Slot');
                                 break;
                             }
                             var result = indexScr;
@@ -331,8 +332,9 @@ if (Meteor.isServer) {
                         for (var m = 0; m < currentSupScrSlots; m++) {
                             if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
                         }
+                        console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                         if (indexScr == -1) {
-                            console.log('Server battlefield slot calculation problem - index scr Slot');
+                            console.log('Server battlefield slot calculation problem 2! - index scr Slot');
                             break;
                         }
                         var result = indexScr;
