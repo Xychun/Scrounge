@@ -94,9 +94,9 @@ if (Meteor.isClient) {
         });
         var cu = self.cu;
         var menu = self.menu;
-        var color = "red";
+        var color = "firebrick";
         if (cu == self.username) {
-            cu = 'YOU ARE HOME! :-)';
+            cu = 'YOUR BASE';
             color = "green";
         }
         var cursorPlayerData = playerData.findOne({
@@ -1406,7 +1406,7 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            $('#buyMenu').fadeIn();
+            $('#buyMenuWrapper').fadeIn();
             $('#background_fade').fadeIn();
             Session.set("clickedMatter", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
@@ -1415,6 +1415,7 @@ if (Meteor.isClient) {
             range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
             $('#time').text("Time: " + msToTime(this.value / (7.5 / 3600000)));
             $('#price').text("Price: " + this.cost);
+            $('#matterImg').attr("src", "/Aufloesung1920x1080/Mine/MatterBlockCost_" + this.color + ".png");
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
@@ -1461,7 +1462,7 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            $('#buyMenu').fadeIn();
+            $('#buyMenuWrapper').fadeIn();
             $('#background_fade').fadeIn();
             Session.set("clickedFight", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
@@ -1470,6 +1471,7 @@ if (Meteor.isClient) {
             range_slider("Buy_Menu", cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl);
             $('#time').text("Time: " + msToTime(this.time));
             $('#price').text("Price: " + this.cost);
+            $('#matterImg').attr("src", "/Aufloesung1920x1080/Mine/MatterBlockCost_" + this.color + ".png");
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
@@ -1534,8 +1536,8 @@ if (Meteor.isClient) {
                     console.log('goScroungingMine: ' + slotId + ' : ' + err);
                 }
                 if (result) {
-                    infoLog(result, "red");
-                    showInfoTextAnimation(result, "green");
+                    infoLog(result);
+                    showInfoTextAnimation(result);
                 }
             });
         },
@@ -1583,8 +1585,8 @@ if (Meteor.isClient) {
                     console.log('goScroungingBattlefield: ' + err);
                 }
                 if (result) {
-                    infoLog(result, "red");
-                    showInfoTextAnimation(result, "green");
+                    infoLog(result);
+                    showInfoTextAnimation(result);
                 }
             });
         }
@@ -1612,8 +1614,8 @@ if (Meteor.isClient) {
                         console.log(err);
                     }
                     if (result) {
-                        infoLog(result, "red");
-                        showInfoTextAnimation(result, "green");
+                        infoLog(result);
+                        showInfoTextAnimation(result);
                     }
                 });
             }
@@ -1623,18 +1625,18 @@ if (Meteor.isClient) {
                         console.log(err);
                     }
                     if (result) {
-                        infoLog(result, "red");
-                        showInfoTextAnimation(result, "green");
+                        infoLog(result);
+                        showInfoTextAnimation(result);
                     }
                 });
             }
-            $('#buyMenu').fadeOut();
+            $('#buyMenuWrapper').fadeOut();
             $('#background_fade').fadeOut();
 
         },
 
         'click #buyMenuNo': function(e, t) {
-            $('#buyMenu').fadeOut();
+            $('#buyMenuWrapper').fadeOut();
             $('#background_fade').fadeOut();
 
         },
@@ -2377,26 +2379,67 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
-    function showInfoTextAnimation(text, color) {
+    /*Farbe vorübergehend hardcoded*/
+    function showInfoTextAnimation(text) {
 
-        var textAnimation = document.createElement("div");
-        textAnimation.innerHTML = text;
+        var textForAnimation = text.substring(1);
+        var textAnimation = document.createElement("p");
+        var textAnimationWrapper = document.createElement("div");
+        textAnimation.innerHTML = textForAnimation;
+        textAnimation.style.color = checkColorCode(text);
         textAnimation.id = "textAnimation";
-        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimation);
-        textAnimation.style.color = color;
-        setTimeout(function() {
-            if (document.getElementById("textAnimation")) document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
-        }, 2000);
+        textAnimationWrapper.id = "textAnimationWrapper";
+        textAnimationWrapper.className = "div_center_vertical";
 
+
+        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimationWrapper);
+        if (document.getElementById("textAnimationWrapper")) document.getElementById("textAnimationWrapper").appendChild(textAnimation);
+
+        setTimeout(function() {
+            if (document.getElementById("textAnimationWrapper")) document.getElementById("mitte").removeChild(document.getElementById("textAnimationWrapper"))
+        }, 2000);
     }
 
-    function infoLog(text, color) {
+    function checkColorCode(infoLogText) {
 
+        var logInput = infoLogText.substring(1);
+        var colorCode = infoLogText.substring(0,1);
+        var color;
+
+        switch(colorCode) {
+
+          /*positive message*/
+          case "0":
+
+            color ="tomato";
+            break;
+
+          /*negative message*/
+          case "1":
+
+            color ="greenyellow";
+            break;
+
+          /*neutral message*/
+          case "2":
+
+            color="white";
+
+          default: 
+
+        }
+
+        return color;
+    }
+
+    /*Farbe vorübergehend hardcoded*/
+    function infoLog(text) {
+
+        var logInput = text.substring(1);
         var log = document.createElement("div");
-        var previousLogID;
-        log.innerHTML = text;
+        log.innerHTML = logInput;
         log.className = "logs";
-        log.style.color = color;
+        log.style.color = checkColorCode(text);
         $("#infoLog").prepend(log);
 
     }
