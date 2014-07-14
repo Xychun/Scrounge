@@ -55,8 +55,8 @@ if (Meteor.isClient) {
         for (var i = 0; i < timers.length; i++) {
             if ($('#' + timers[i].id).length > 0) {
                 var value = timers[i].miliseconds + (timers[i].prefix * 1000);
-                if(value<0)value=0;
-                timers[i].miliseconds = value; 
+                if (value < 0) value = 0;
+                timers[i].miliseconds = value;
                 $('#' + timers[i].id).text(msToTime(timers[i].miliseconds));
             } else {
                 //Element not found and deleted after 3rd time
@@ -551,8 +551,8 @@ if (Meteor.isClient) {
                 obj0['supporter'] = supSlotsMemory;
                 var lockCheck = checkScroungeMine(i, self.username, self.cu);
                 obj0['lockedMsg'] = lockCheck;
-                if(lockCheck != false)lockCheck=true
-                obj0['locked'] = lockCheck;                
+                if (lockCheck != false) lockCheck = true
+                obj0['locked'] = lockCheck;
                 objects[i] = obj0;
             }
         }
@@ -710,7 +710,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value*supEpics)/100))) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
 
@@ -777,7 +777,7 @@ if (Meteor.isClient) {
         var objects = new Array();
 
         //Iterate all Scrounging Slots
-        console.log('amountScrSlots: ' + amountScrSlots);
+        //console.log('amountScrSlots: ' + amountScrSlots);
         for (var i = 0; i < amountScrSlots; i++) {
             //Is used?
             if (cursorMyBattlefield['scrs' + i].victim != "") {
@@ -868,7 +868,7 @@ if (Meteor.isClient) {
 
                 obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
 
-                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value*supEpics)/100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value * supEpics) / 100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
                 obj0['epicness'] = supEpics + '%';
                 objects[i] = obj0;
             }
@@ -987,7 +987,7 @@ if (Meteor.isClient) {
                 if (amountUsedSupSlots == 0) {
                     obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
                 } else {
-                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value*supEpics)/100))) + '(50%)';
+                    obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
                 }
                 obj0['epicness'] = supEpics + '%';
                 obj0['epicnessChange'] = (supEpics + myEpic) + '%';
@@ -1004,8 +1004,8 @@ if (Meteor.isClient) {
                 obj0['supporter'] = supSlotsMemory;
                 var lockCheck = checkScroungeBattlefield(i, self.username, self.cu);
                 obj0['lockedMsg'] = lockCheck;
-                if(lockCheck != false)lockCheck=true
-                obj0['locked'] = lockCheck;  
+                if (lockCheck != false) lockCheck = true
+                obj0['locked'] = lockCheck;
                 objects[i] = obj0;
             }
         }
@@ -1101,30 +1101,29 @@ if (Meteor.isClient) {
         },
 
         'click .category_1': function(e, t) {
-            Meteor.users.update({
-                _id: Meteor.userId()
-            }, {
-                $set: {
-                    menu: 'mine'
-                }
-            });
-            Meteor.call('asyncJob', function(err, data) {
-                switch_category($(e.currentTarget), 200);
+            switch_category($(e.target), 100, function() {
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        menu: 'mine'
+                    }
+                });
             });
         },
 
         'click .category_3': function(e, t) {
-            Meteor.users.update({
-                _id: Meteor.userId()
-            }, {
-                $set: {
-                    menu: 'battlefield'
-                }
-            });
-            Meteor.call('asyncJob', function(err, data) {
-                switch_category($(e.currentTarget), 200);
+            switch_category($(e.target), 100, function() {
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        menu: 'battlefield'
+                    }
+                });
             });
         },
+
         'click #switchToWorldMap': function(e, t) {
             if (!$("#worldViewPort").length) {
                 switchToWorldMap();
@@ -1658,7 +1657,9 @@ if (Meteor.isClient) {
             var cursorMine = mine.findOne({
                 user: player
             });
-            var cursorBattlefield = battlefield.findOne({user: player});            
+            var cursorBattlefield = battlefield.findOne({
+                user: player
+            });
             //Check mine
             var amountOwnSlots = cursorPlayerData.mine.ownSlots;
             var trueCount = 0;
@@ -1683,7 +1684,7 @@ if (Meteor.isClient) {
             } else {
                 obj0['mineResult'] = true;
             }
-            
+
             //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
             var trueCount = 0;
@@ -1860,102 +1861,108 @@ if (Meteor.isClient) {
         }
     }
 
-    function hidden_menu_icon_check(direction) {
-        var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
-        var margin_left_middle = -1 * (parseFloat($("#categories_wrapper").width()) - width_child) / 2;
-        var current_margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+    function switch_category(clicked_obj, speed, callback) {
 
-        eval("animation_obj_middle = { 'margin-left' : '" + margin_left_middle + "px'}");
-        eval("animation_obj_back = { 'margin-left' : '" + (margin_left_middle - width_child) + "px'}");
-        eval("animation_obj_forth = { 'margin-left' : '" + (margin_left_middle + width_child) + "px'}");
+        if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
 
-        if (current_margin_left < margin_left_middle && direction === "right") {
-            $("#categories_wrapper").children().eq(0).remove();
-            var buffer = $("#categories_wrapper").children().eq(1).clone();
-            $("#categories_wrapper").append(buffer);
-            $("#categories_wrapper").css(
-                animation_obj_middle
-            );
-        }
-        if (current_margin_left >= margin_left_middle && direction === "left") {
-            $("#categories_wrapper").children().eq(-1).remove();
-            var buffer = $("#categories_wrapper").children().eq(-2).clone();
-            $("#categories_wrapper").prepend(buffer);
-            $("#categories_wrapper").css(
-                animation_obj_back
-            );
-        }
+            var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
+            var margin_left_middle = -1 * (parseFloat($("#categories_wrapper").width()) - width_child) / 2;
 
-    }
+            var current_margin_left = $("#categories_wrapper").attr("style");
+            if (current_margin_left == undefined) {
+                current_margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
+            } else {
+                var start = current_margin_left.search("margin-left: ");
+                var end = current_margin_left.search("px");
+                current_margin_left = parseFloat(current_margin_left.slice(start + 13, end));
+            }
 
-    function switch_category(clicked_obj, speed) {
-        var clicked_category = parseInt($(clicked_obj).attr("class").substr((9 + $(clicked_obj).attr("class").search("category_")), 1));
-        var category_offset_left = (Math.abs(clicked_category - 6) + current_category) % 6;
-        var category_offset_right = (clicked_category + Math.abs(current_category - 6)) % 6;
-        var direction;
-        var category_offset = 0;
-        var animation_type = "linear";
+            var direction = null;
+            var category_offset = null;
+            var animation_type = "linear";
+            var buffer_image = null;
 
-        if (!(category_offset_left == 0 && category_offset_right == 0)) {
+            var break_while = false;
+            var y = 0;
+            while (y < $("#categories_wrapper").children().length && break_while == false) {
+                if ($("#categories_wrapper").children().eq(y)[0] == $(clicked_obj)[0])
+                    break_while = true;
+                y++;
+            }
 
-            if (category_offset_left > category_offset_right) {
-                direction = "right";
-                category_offset = category_offset_right;
-            } else if (category_offset_left < category_offset_right) {
+            if (current_margin_left < margin_left_middle) {
+                buffer_image = "left";
+                y--;
+            } else if (current_margin_left >= margin_left_middle) {
+                buffer_image = "right";
+            }
+            category_offset = y - 4;
+
+            if (category_offset < 0) {
                 direction = "left";
-                category_offset = category_offset_left;
-            } else if (category_offset_left == category_offset_right) {
-                if ($(".category_" + clicked_category)[0] == $(clicked_obj)[0]) {
-                    direction = "left";
-                    category_offset = category_offset_left;
-                } else if ($(".category_" + clicked_category)[1] == $(clicked_obj)[0]) {
-                    direction = "left";
-                    category_offset = category_offset_left;
+                var forth_animation = margin_left_middle;
+                var rollback = margin_left_middle - width_child;
+                category_offset = Math.abs(category_offset);
+            } else if (category_offset > 0) {
+                direction = "right";
+                var forth_animation = margin_left_middle - width_child;
+                var rollback = margin_left_middle;
+            }
+
+            if (!(buffer_image == direction)) {
+                if (direction == "right") {
+                    $("#categories_wrapper").children().eq(0).remove();
+                    var buffer = $("#categories_wrapper").children().eq(1).clone();
+                    $("#categories_wrapper").append(buffer);
+                    $("#categories_wrapper").css({
+                        "margin-left": margin_left_middle
+                    });
+                } else if (direction == "left") {
+                    $("#categories_wrapper").children().eq(-1).remove();
+                    var buffer = $("#categories_wrapper").children().eq(-2).clone();
+                    $("#categories_wrapper").prepend(buffer);
+                    $("#categories_wrapper").css({
+                        "margin-left": (margin_left_middle - width_child)
+                    });
                 }
             }
 
-            if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
-                hidden_menu_icon_check(direction);
+            var animation_type = "linear";
+            var animation_obj_forth = ({
+                'margin-left': forth_animation
+            });
+            var animation_obj_rollback = ({
+                'margin-left': rollback
+            });
 
-                var margin_left = parseFloat($("#categories_wrapper").css("margin-left"));
-                var width_child = parseFloat($("#categories_wrapper").children().eq(0).width()) + 10;
-
-                if (direction === "left") {
-                    var animation_obj_start = ({
-                        'margin-left': (margin_left + width_child)
-                    });
-                } else if (direction === "right") {
-                    var animation_obj_start = ({
-                        'margin-left': (margin_left - width_child)
-                    });
+            var animation_count = 0;
+            for (var x = 0; x < category_offset; x++) {
+                //console.log('for x : ' + x + " offset: " + category_offset);
+                if (x == category_offset - 1) {
+                    animation_type = "easeOutCubic";
+                    speed = speed * 4;
                 }
-                var animation_obj_stop = ({
-                    'margin-left': margin_left
-                });
-
-                update_current_category(direction, category_offset);
-
-                for (var x = 0; x < category_offset; x++) {
-                    if (x == category_offset - 1) {
-                        animation_type = "easeOutCubic";
-                        speed = speed * 4;
+                $("#categories_wrapper").animate(animation_obj_forth, speed, animation_type, function() {
+                    //console.log('animate: ' + x);
+                    if (direction == "left") {
+                        $("#categories_wrapper").children().eq(-1).remove();
+                        $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
+                        $("#categories_wrapper").css(
+                            animation_obj_rollback
+                        );
+                    } else if (direction == "right") {
+                        $("#categories_wrapper").children().eq(0).remove();
+                        var buffer = $("#categories_wrapper").children().eq(1).clone();
+                        $("#categories_wrapper").append(buffer);
+                        $("#categories_wrapper").css(
+                            animation_obj_rollback
+                        );
                     }
-                    $("#categories_wrapper").animate(animation_obj_start, speed, animation_type, function() {
-                        if (direction === "left") {
-                            $("#categories_wrapper").children().eq(-1).remove();
-                            $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
-                            $("#categories_wrapper").css(
-                                animation_obj_stop
-                            );
-                        } else if (direction === "right") {
-                            $("#categories_wrapper").children().eq(0).remove();
-                            $("#categories_wrapper").append($("#categories_wrapper").children().eq(1).clone());
-                            $("#categories_wrapper").css(
-                                animation_obj_stop
-                            );
-                        }
-                    });
-                }
+                    animation_count++;
+                    if (animation_count == category_offset) {
+                        callback();
+                    }
+                });
             }
         }
     }
@@ -2010,8 +2017,8 @@ if (Meteor.isClient) {
 
     }
 
-    function slide_start(direction, orientation, pixel, speed, element1, element2) {
-        //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " element1: " + element1 + " element2: " + element2);
+    function slide_start(direction, orientation, pixel, speed, content_div) {
+        //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " content_div: " + content_div);
         var px;
         var animation_obj = {};
         var css_direction;
@@ -2020,33 +2027,32 @@ if (Meteor.isClient) {
         var pos_neg;
         var parent_end;
 
-        if (direction === "back") {
-            transition = "+=" + pixel + "px";
-            pos_neg = +1;
-        } else if (direction === "forth") {
-            transition = "-=" + pixel + "px";
-            pos_neg = -1;
-        }
-
-        if (orientation === "horizontal") {
-            css_direction = "left";
-            current_position = $(element1).position().left;
-            content_end = $(element1).width();
-            parent_end = $(element1).parent().width();
-        } else if (orientation === "vertical") {
-            css_direction = "top";
-            current_position = $(element1).position().top;
-            content_end = $(element1).height();
-            parent_end = $(element1).parent().height();
-
-        }
-
-
-
-        eval("animation_obj = {" + css_direction + ": '" + transition + "'}");
-
-        if ($(element1).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
+        if ($(content_div).filter(':not(:animated)').length == 1) //Wenn Animation läuft keine neue Anfangen
         {
+
+            if (direction === "back") {
+                transition = "+=" + pixel + "px";
+                pos_neg = +1;
+            } else if (direction === "forth") {
+                transition = "-=" + pixel + "px";
+                pos_neg = -1;
+            }
+
+            if (orientation === "horizontal") {
+                css_direction = "left";
+                current_position = $(content_div).position().left;
+                content_end = $(content_div).width();
+                parent_end = $(content_div).parent().width();
+            } else if (orientation === "vertical") {
+                css_direction = "top";
+                current_position = $(content_div).position().top;
+                content_end = $(content_div).height();
+                parent_end = $(content_div).parent().height();
+
+            }
+
+            eval("animation_obj = {" + css_direction + ": '" + transition + "'}");
+
             //Rekursiver Intervall (unendlich)
             var action = function() {
                 //Animation im laufenden Intervall
@@ -2054,12 +2060,12 @@ if (Meteor.isClient) {
 
                     if (parent_end - content_end > current_position + (pos_neg * pixel) && direction === "forth") {
                         eval("animation_obj = {" + css_direction + ": '" + (parent_end - content_end) + "px'}");
-                        $(element1).animate(animation_obj, speed, "swing");
+                        $(content_div).animate(animation_obj, speed, "swing");
                     } else if (current_position + (pos_neg * pixel) > 0 && direction === "back") {
                         eval("animation_obj = {" + css_direction + ": '0px'}");
-                        $(element1).animate(animation_obj, speed, "swing");
+                        $(content_div).animate(animation_obj, speed, "swing");
                     } else {
-                        $(element1).animate(animation_obj, speed, "linear");
+                        $(content_div).animate(animation_obj, speed, "linear");
                     }
                     current_position = current_position + (pos_neg * pixel);
                 }
@@ -2256,7 +2262,7 @@ if (Meteor.isClient) {
 
     var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"]
 
-        function update_current_category(direction, category_offset) {
+        function update_current_category(direction, category_offset, callback) {
             for (var x = 0; x < category_offset; x++) {
                 if (direction == "left") {
                     current_category--;
@@ -2280,7 +2286,13 @@ if (Meteor.isClient) {
                     }
                 });
             }
-            //console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
+            console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
+
+            if (typeof callback === "function") {
+                // Call it, since we have confirmed it is callable
+                console.log("callback update_current_category()");
+                callback();
+            }
         }
 
         function size_check() {
@@ -2373,10 +2385,10 @@ if (Meteor.isClient) {
         var textAnimation = document.createElement("div");
         textAnimation.innerHTML = text;
         textAnimation.id = "textAnimation";
-        if(document.getElementById("mitte"))document.getElementById("mitte").appendChild(textAnimation);
+        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimation);
         textAnimation.style.color = color;
         setTimeout(function() {
-            if(document.getElementById("textAnimation"))document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
+            if (document.getElementById("textAnimation")) document.getElementById("mitte").removeChild(document.getElementById("textAnimation"))
         }, 2000);
 
     }
@@ -2650,6 +2662,23 @@ if (Meteor.isClient) {
         if (deps_count == 1) {
             init_draggable();
             init_droppable();
+
+            var menu = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }).menu;
+            var break_while = false;
+            var while_count = 0;
+            while (while_count < category_names.length && break_while == false) {
+                if (menu.search(category_names[while_count]) == 0)
+                    break_while = true;
+                while_count++;
+            }
+            var category_offset_left = (Math.abs(while_count - 6) + current_category) % 6;
+            for (var x = 0; x < (category_offset_left); x++) {
+                $("#categories_wrapper").children().eq(-1).remove();
+                $("#categories_wrapper").prepend($("#categories_wrapper").children().eq(-2).clone());
+            }
+            current_category = while_count;
         }
 
         var middle = Session.get("middle");
