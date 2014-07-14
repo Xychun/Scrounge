@@ -180,12 +180,27 @@ div {
     overflow:hidden;
 }
 #mitte {
-    overflow:hidden;
     top:86px;
     bottom:86px;
     left:86px;
-    right:8 min-width: 1000px;
-}
+    right:86px;
+    min-width: 1000px;
+/*    -webkit-animation-name: MiddleAnimation;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-play-state: running;
+	-webkit-animation-animation-timing-function: ease;
+	}
+
+	@-webkit-keyframes MiddleAnimation {
+	    0% {
+	        opacity: 0.75;
+	    }
+	    100% {
+	        opacity: 1;
+	    }*/
+	}
+
 #unten {
     left:86px;
     right:86px;
@@ -255,6 +270,7 @@ div {
     overflow:hidden;
 }
 #seperation_bar {
+	z-index: -1;
     margin-left: auto;
     margin-right: auto;
     top:37px;
@@ -584,24 +600,14 @@ div {
     width: 200px;
     left: 60px;
     top: 16px;
-    margin: 0px;
-    color: white;
-    font-family:'Hammersmith One', 'Arial', 'sans-serif';
-    font-size: 1.5em;
     text-align: left;
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .text_specialResources {
     display: inline;
     width: 100px;
     left: 30px;
-    top: 12px;
-    margin: 0px;
-    color: white;
-    font-family:'Hammersmith One', 'Arial', 'sans-serif';
-    font-size: 0.9em;
+    top: 3px;
     text-align: left;
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .img_matter {
     position: relative;
@@ -686,6 +692,20 @@ div {
     top: 50%;
     margin-right: -1200px;
     margin-top: -750px;
+/*    -webkit-animation-name: MiddleAnimation;
+	-webkit-animation-duration: 1.5s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-play-state: running;
+	-webkit-animation-animation-timing-function: ease-in;
+	}
+
+	@-webkit-keyframes MiddleAnimation {
+	    0% {
+	        opacity: 0;
+	    }
+	    100% {
+	        opacity: 1;
+	    }*/
 }
 #worldViewPort {
     top: 160px;
@@ -1074,6 +1094,7 @@ div {
     margin-bottom:5px;
     color: white;
     font-family:'Hammersmith One', 'Arial', 'sans-serif';
+    font-size: 20px;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .slotBackgroundBaseLeft {
@@ -1180,7 +1201,7 @@ div {
     height:27px;
 }
 .slot_stats {
-    top:53px;
+    top:42px;
     left:10px;
     right:5px;
 }
@@ -1280,7 +1301,7 @@ div {
     height: 20px;
     margin: 0px;
     font-family:'Hammersmith One', 'Arial', 'sans-serif';
-    font-size: 1em;
+    font-size: 25px;
     text-align: center;
     color: white;
     text-shadow: 4px 4px 4px black, 4px -4px 4px black, -4px 4px 4px black, -4px -4px 4px black;
@@ -1290,7 +1311,7 @@ div {
     margin: 0px 5px;
     color: white;
     font-family:'Hammersmith One', 'Arial', 'sans-serif';
-    font-size: 1em;
+    font-size: 20px;
     text-align: left;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
@@ -1299,14 +1320,13 @@ div {
     margin: 0px;
     color: white;
     font-family:'Hammersmith One', 'Arial', 'sans-serif';
-    font-size: 1em;
+    font-size: 20px;
     text-align: left;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 .itemTextCostAfter {
     width: 20px;
     height: 20px;
-    bottom: 3px;
     display: inline;
     margin: 0px;
 }
@@ -1400,7 +1420,6 @@ div {
 .SSscroungeBaseButton {
     width: 0px;
     height: 0px;
-    padding: 40px;
     background-image:url(/Aufloesung1024xXXX/Interface/ScroungeBaseButton.png);
     background-repeat: no-repeat;
     border-style: none;
@@ -1550,6 +1569,21 @@ div {
         left:109px;
         right:109px;
         min-width: 1000px;
+/*        -webkit-animation-name: MiddleAnimation;
+    	-webkit-animation-duration: 1s;
+    	-webkit-animation-iteration-count: 1;
+    	-webkit-animation-play-state: running;
+    	-webkit-animation-animation-timing-function: ease;
+		}
+
+		@-webkit-keyframes MiddleAnimation {
+		    0% {
+		        opacity: 0.75;
+		    }
+		    100% {
+		        opacity: 1;
+		    }
+    	}*/
     }
     #unten {
         left:109px;
@@ -1561,7 +1595,6 @@ div {
     .SSscroungeBaseButton {
         width: 0px;
         height: 0px;
-        padding: 51px;
         background-position: 0px 0px;
         background-image:url(/Aufloesung1280xXXX/Interface/ScroungeBaseButton.png);
         background-repeat: no-repeat;
@@ -1837,7 +1870,22 @@ div {
         left:162px;
         right:162px;
         min-width: 1000px;
-    }
+/*        -webkit-animation-name: MiddleAnimation;
+    	-webkit-animation-duration: 1s;
+    	-webkit-animation-iteration-count: 1;
+    	-webkit-animation-play-state: running;
+    	-webkit-animation-animation-timing-function: ease-in;
+		}
+
+		@-webkit-keyframes MiddleAnimation {
+		    0% {
+		        opacity: 0.75;
+		    }
+		    100% {
+		        opacity: 1;
+		    }*/
+    	}
+  
     #unten {
         left:162px;
         right:162px;
@@ -1930,9 +1978,8 @@ div {
     /*///////////////////////////////////////////////////////////////////////////   HOVER BUTTONS   ///////////////////////////////////////////////////////////////////////////*/
     /*Workaround für Chrome, Höhe und Breite auf 0 setzen und die Platzierung via padding regeln, sonst wird ein leichter Rahmen um das Bild herum angezeigt*/
     .SSscroungeBaseButton {
-        width: 0px;
-        height: 0px;
-        padding: 76px;
+        width: 152px;
+        height: 152px;
         background-image:url(/Aufloesung1920x1080/Interface/ScroungeBaseButton.png);
         background-repeat: no-repeat;
         border-style: none;
