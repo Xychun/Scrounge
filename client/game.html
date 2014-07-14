@@ -167,7 +167,7 @@
             <img class="category_4 categories_icon_size" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
             <img class="category_5 categories_icon_size" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
             <img class="category_6 categories_icon_size" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
-            <img class="category_1 categories_icon_size" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.gif">
+            <img class="category_1 categories_icon_size" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png">
             <img class="category_2 categories_icon_size" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuLocked.png">
             <img class="category_3 categories_icon_size" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
             <img class="category_4 categories_icon_size" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
@@ -797,7 +797,7 @@
                                         {{#each fightArenas}}
                                         <div id={{fight}} class="item relative">
                                             <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
-                                            <div class="itemTextValue">{{value}}XP</div>
+                                            <div class="itemTextValue">{{value}}</div>
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
@@ -1281,6 +1281,7 @@
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
             <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; background-image: url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace{{backgroundNumber}}.png); background-repeat: no-repeat;">
+                {{#if playerImageId}}
                 <div class="worldMapPlayerStats">
 
                     <div class="worldMapPlayerLevel">{{playerLevel}}</div>
@@ -1288,6 +1289,7 @@
                     <div class="worldMapPlayerName">{{playerName}}</div>
 
                 </div>
+                {{/if}}
             </div>
             {{/each}} {{/each}}
         </div>

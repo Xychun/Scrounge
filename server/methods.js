@@ -78,7 +78,7 @@ if (Meteor.isServer) {
                     $set: obj2
                 });
                 //Show the new generated map position in the console
-                console.log('Position done - ' + username + ' (x: ' + obj2['x'] + ' y: ' + obj2['y'] + ')!');
+                console.log(new Date() + ': Position done - ' + username + ' (x: ' + obj2['x'] + ' y: ' + obj2['y'] + ')!');
                 Meteor.call('updateDensity');
             } else {
                 //WorldMap has to high density: Extend and create position again
