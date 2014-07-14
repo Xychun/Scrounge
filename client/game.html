@@ -568,7 +568,7 @@
         <div class="unused_slot slotBackgroundBaseRight">
             <div class="div_center_vertical">
                 <div class="scrounge_slot_stats">
-                    <p class="text relative">Click to Scrounge !</p>
+                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
                 </div>
             </div>
         </div>
@@ -642,6 +642,8 @@
             </div>
 
             <div id="scroungeAreaWrapper">
+
+                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeMine.png);"> </div>
 
                 <div id="scroungeAreaContent" class="relative">
 
@@ -937,7 +939,7 @@
         <div class="unused_slot slotBackgroundBaseRight">
             <div class="div_center_vertical">
                 <div class="scrounge_slot_stats">
-                    <p class="text relative">Click to Scrounge !</p>
+                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
                 </div>
             </div>
         </div>
@@ -1014,6 +1016,8 @@
             </div>
 
             <div id="scroungeAreaWrapper">
+
+                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeBattlefield.png);"> </div>
 
                 <div id="scroungeAreaContent" class="relative">
 
@@ -1139,41 +1143,46 @@
 <template name="buyMenu">
 
     <div id="background_fade"></div>
-    <div id="buyMenu" class="left right">
+    <div id="buyMenuWrapper"> 
+        <div id="buyMenu" class="left right">
 
-        <div id="buyMenuTopEnd" class="left right">
+            <div id="buyMenuTopEnd" class="left right">
 
-            <img id="buyMenuItem">
-            <div class="range_slider_wrapper tooltip_hover">
-                <span id="tooltip_left_handle_Buy_Menu" class="tooltip"></span>
-                <span id="tooltip_right_handle_Buy_Menu" class="tooltip"></span>
-                <div id="range_slider_Buy_Menu" class="range_slider"></div>
+                <img id="buyMenuItem">
+                <div class="range_slider_wrapper tooltip_hover">
+                    <span id="tooltip_left_handle_Buy_Menu" class="tooltip"></span>
+                    <span id="tooltip_right_handle_Buy_Menu" class="tooltip"></span>
+                    <div id="range_slider_Buy_Menu" class="range_slider"></div>
+                </div>
+
             </div>
 
-        </div>
+            <div id="buyMenuFrame" class="left right">
 
-        <div id="buyMenuFrame" class="left right">
-
-            <div id="buyMenuText">
-                <p id="price" class='relative'></p>
-                <p id="item" class='relative'></p>
-                <p id="time" class='relative'></p>
-            </div>
-
-            <div id="AmountScroungerSlots">
-
+                <div id="AmountScroungerSlots">  
 
                 <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
 
+                </div>
+
+                <div id="buyMenuText">
+                    <p id="item" ></p>
+                    <div style="position: relative; margin-top: 24px; margin-bottom: 24px"> <p id="price" class='relative' style="float: left; margin: 0px"></p> <img id="matterImg" style="width: 20px; height: 20px; position: relative; top: 3px; left: 5px; "> </div> 
+                    <p id="time" ></p>
+                </div>
+
+                
+
+
+                   
+
+                <div id="buyMenuYes"></div>
+                <div id="buyMenuNo"></div>
 
             </div>
 
-            <div id="buyMenuYes"></div>
-            <div id="buyMenuNo"></div>
-
+            <div id="buyMenuBottomEnd" class="left right"></div>
         </div>
-
-        <div id="buyMenuBottomEnd" class="left right"></div>
     </div>
 
     <script>
