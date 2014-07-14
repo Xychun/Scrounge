@@ -2598,6 +2598,10 @@ if (Meteor.isClient) {
         if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
             return 'You cannot scrounge here: You do not have the right epicness!';
         }
+        //SupSlot with id result is free and correct: update it ?
+        if (resultOwner == -1) {
+            return 'You cannot scrounge here: The owners support slots are all full!';
+        }
         return false;
     }
 
