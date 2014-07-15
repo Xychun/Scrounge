@@ -1,12 +1,19 @@
 <head>
-	<link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
-	<title>Scrounge</title>
-	<meta charset="UTF-8">
+    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+    <title>Scrounge</title>
+    <meta charset="UTF-8">
 </head>
 
 <template name="masterLayout">
-	{{> yield region='border'}}
-	{{> yield region='middle'}}
-	{{> yield region='buyMenuField'}}
-
+    <div id="right_resolution">
+        {{> yield region='border'}} {{> yield region='middle'}} {{> yield region='buyMenuField'}}
+    </div>
+    <div id="wrong_resolution">
+        <div id="resize_instruction">
+            <p class="text">Scrounge currently only supports a resolution of 1920px or higher (width).</p>
+            <p class="text" style="margin-top: 30px;">Please zoom out to play the game.</p>
+            <p class="text">(Ctrl and -)</p>
+            <p class="text">(Cmd and -)</p>
+        </div>
+    </div>
 </template>

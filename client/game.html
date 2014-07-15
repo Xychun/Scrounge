@@ -1,9 +1,9 @@
 <template name="standardBorder">
-    <div id="switchToWorldMap" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 3; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)"></div>
+    <div id="switchToWorldMap" class="short_tooltip" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 3; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)" title="World Map"></div>
     <div id="links" class="top left">
         <div class="corner top left">
             <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
-            <div id="scrounge" class="corner top left inherit SSscroungeBaseButton"> </div>
+            <div id="scrounge" class="corner top left inherit SSscroungeBaseButton"></div>
             <img id="category_left" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
             <img id="stolen_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
         </div>
@@ -155,7 +155,7 @@
             <div class="inv_edge bot inventory_left_background_bot"></div>
         </div>
         <div class="corner bot left">
-            <div id="social" class="corner bot left inherit SSsocialButton"> </div>
+            <div id="social" class="corner bot left inherit SSsocialButton short_tooltip" title="coming soon!"></div>
             <img id="matter_left" class="slider left_slider right inherit sliderRotate180 SShoverButton">
             <img id="stolen_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
         </div>
@@ -163,14 +163,14 @@
     <div id="oben" class="top">
         <div id="MenuFrame" class="center_h"></div>
         <div id="categories_wrapper">
-            <img class="category_3 categories_icon_size" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
-            <img class="category_4 categories_icon_size" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
-            <img class="category_5 categories_icon_size" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
-            <img class="category_6 categories_icon_size" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
-            <img class="category_1 categories_icon_size" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png">
-            <img class="category_2 categories_icon_size" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuLocked.png">
-            <img class="category_3 categories_icon_size" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
-            <img class="category_4 categories_icon_size" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
+            <img class="category_3 categories_icon_size short_tooltip" title="Battlefield" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
+            <img class="category_4 categories_icon_size short_tooltip" title="Workshop" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
+            <img class="category_5 categories_icon_size short_tooltip" title="Thiefery" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
+            <img class="category_6 categories_icon_size short_tooltip" title="Smelter" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
+            <img class="category_1 categories_icon_size short_tooltip" title="Mine" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png">
+            <img class="category_2 categories_icon_size short_tooltip" title="Laboratory" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuLocked.png">
+            <img class="category_3 categories_icon_size short_tooltip" title="Battlefield" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
+            <img class="category_4 categories_icon_size short_tooltip" title="Workshop" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
         </div>
     </div>
 
@@ -183,9 +183,9 @@
                 {{#each resources}}
 
                 <div class="matter_colorBlocks">
-                    <img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png">
+                    <img class="img_matter short_tooltip" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png" title="Green Matter Block">
                     <div style="top: 8px; font-size: 30px;" class="text text_matter">{{values.green.matter}}</div>
-                    <div class="wrapper_specialResource">
+                    <div class="wrapper_specialResource short_tooltip" title="coming soon!">
                         <div class="sr_left">
                             <div class="sr_slot">
                                 <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_green.png">
@@ -217,9 +217,9 @@
                     </div>
                 </div>
                 <div class="matter_colorBlocks">
-                    <img class="img_matter" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png">
+                    <img class="img_matter short_tooltip" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png" title="Red Matter Block">
                     <div style="top: 8px; font-size: 30px;" class="text text_matter">{{values.red.matter}}</div>
-                    <div class="wrapper_specialResource">
+                    <div class="wrapper_specialResource short_tooltip" title="coming soon!">
                         <div class="sr_left">
                             <div class="sr_slot">
                                 <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_red.png">
@@ -257,7 +257,7 @@
     </div>
     <div id="rechts" class="top right">
         <div class="corner top right">
-            <div id="character" class="corner top right inherit SScharacterButton hover"> </div>
+            <div id="character" class="corner top right inherit SScharacterButton hover short_tooltip" title="Character Screen"></div>
             <img id="category_right" class="slider right_slider left inherit SShoverButton">
             <img id="own_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
         </div>
@@ -359,7 +359,7 @@
             <div class="inv_edge inv_bot bot inventory_right_background_bot"></div>
         </div>
         <div class="corner bot right">
-            <div id="message" class="corner bot right inherit SSmessageButton"> </div>
+            <div id="message" class="corner bot right inherit SSmessageButton short_tooltip" title="coming soon!"></div>
             <img id="matter_right" class="slider right_slider left inherit SShoverButton">
             <img id="own_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
         </div>
@@ -377,7 +377,7 @@
         <div id="improvements">
             {{#with improvement}}
             <div class="improvementsText" style="color: {{color}};">{{name}}</div>
-            <div id="improvementsText" style="display:table-cell"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
+            <div id="improvementsText" style="display:table-cell">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
             {{/with}}
         </div>
         <div id="improvementsRightEdge"></div>
@@ -427,7 +427,9 @@
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
-                                            <div class="itemTextCostPre relative"> pay </div> <div class="itemTextCost relative">{{cost}}</div> <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"> </div>
+                                                <div class="itemTextCostPre relative">pay</div>
+                                                <div class="itemTextCost relative">{{cost}}</div>
+                                                <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"></div>
 
                                             </div>
 
@@ -454,8 +456,8 @@
                             </div>
                             <div class="used_slot slotBackgroundBaseLeft">
                                 <div class="slot_upper_bar tooltip_hover">
-                                    <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
-                                    <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
+                                    <span id="tooltip_left_handle_{{slot}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slot}}" class="range_slider_tooltip"></span>
                                     <div id="range_slider_{{slot}}" class="range_slider"></div>
                                 </div>
                                 <div class="slot_stats">
@@ -591,8 +593,8 @@
             </div>
             <div class="used_slot slotBackgroundBaseRight">
                 <!-- <div class="slot_upper_bar tooltip_hover">
-                    <span id="tooltip_left_handle_{{slider_id}}" class="tooltip"></span>
-                    <span id="tooltip_right_handle_{{slider_id}}" class="tooltip"></span>
+                    <span id="tooltip_left_handle_{{slider_id}}" class="range_slider_tooltip"></span>
+                    <span id="tooltip_right_handle_{{slider_id}}" class="range_slider_tooltip"></span>
                     <div id="range_slider_{{slider_id}}" class="range_slider"></div>
                 </div> -->
                 <div class="div_center_vertical">
@@ -643,7 +645,7 @@
 
             <div id="scroungeAreaWrapper">
 
-                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeMine.png);"> </div>
+                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeMine.png);"></div>
 
                 <div id="scroungeAreaContent" class="relative">
 
@@ -664,8 +666,8 @@
                             <div class="scroungable_slot slotBackgroundScrounge">
 
                                 <div class="slot_upper_bar scrounge_left tooltip_hover">
-                                    <span id="tooltip_left_handle_{{index}}" class="tooltip"></span>
-                                    <span id="tooltip_right_handle_{{index}}" class="tooltip"></span>
+                                    <span id="tooltip_left_handle_{{index}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{index}}" class="range_slider_tooltip"></span>
                                     <div id="range_slider_{{index}}" class="range_slider"></div>
                                 </div>
                                 <div class="slot_stats scrounge_left">
@@ -801,7 +803,9 @@
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
-                                            <div class="itemTextCostPre relative"> pay </div> <div class="itemTextCost relative">{{cost}}</div> <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"> </div>
+                                                <div class="itemTextCostPre relative">pay</div>
+                                                <div class="itemTextCost relative">{{cost}}</div>
+                                                <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"></div>
 
                                             </div>
 
@@ -826,8 +830,8 @@
                             </div>
                             <div class="used_slot slotBackgroundBaseLeft">
                                 <div class="slot_upper_bar tooltip_hover">
-                                    <span id="tooltip_left_handle_{{slot}}" class="tooltip"></span>
-                                    <span id="tooltip_right_handle_{{slot}}" class="tooltip"></span>
+                                    <span id="tooltip_left_handle_{{slot}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slot}}" class="range_slider_tooltip"></span>
                                     <div id="range_slider_{{slot}}" class="range_slider"></div>
                                 </div>
                                 <div class="slot_stats">
@@ -965,8 +969,8 @@
             </div>
             <div class="used_slot slotBackgroundBaseRight">
                 <!-- <div class="slot_upper_bar tooltip_hover">
-                    <span id="tooltip_left_handle_{{slider_id}}" class="tooltip"></span>
-                    <span id="tooltip_right_handle_{{slider_id}}" class="tooltip"></span>
+                    <span id="tooltip_left_handle_{{slider_id}}" class="range_slider_tooltip"></span>
+                    <span id="tooltip_right_handle_{{slider_id}}" class="range_slider_tooltip"></span>
                     <div id="range_slider_{{slider_id}}" class="range_slider"></div>
                 </div> -->
                 <div class="div_center_vertical">
@@ -1017,7 +1021,7 @@
 
             <div id="scroungeAreaWrapper">
 
-                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeBattlefield.png);"> </div>
+                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeBattlefield.png);"></div>
 
                 <div id="scroungeAreaContent" class="relative">
 
@@ -1038,8 +1042,8 @@
                             <div class="scroungable_slot slotBackgroundScrounge">
 
                                 <div class="slot_upper_bar scrounge_left tooltip_hover">
-                                    <span id="tooltip_left_handle_{{index}}" class="tooltip"></span>
-                                    <span id="tooltip_right_handle_{{index}}" class="tooltip"></span>
+                                    <span id="tooltip_left_handle_{{index}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{index}}" class="range_slider_tooltip"></span>
                                     <div id="range_slider_{{index}}" class="range_slider"></div>
                                 </div>
                                 <div class="slot_stats scrounge_left">
@@ -1143,15 +1147,15 @@
 <template name="buyMenu">
 
     <div id="background_fade"></div>
-    <div id="buyMenuWrapper"> 
+    <div id="buyMenuWrapper">
         <div id="buyMenu" class="left right">
 
             <div id="buyMenuTopEnd" class="left right">
 
                 <img id="buyMenuItem">
                 <div class="range_slider_wrapper tooltip_hover">
-                    <span id="tooltip_left_handle_Buy_Menu" class="tooltip"></span>
-                    <span id="tooltip_right_handle_Buy_Menu" class="tooltip"></span>
+                    <span id="tooltip_left_handle_Buy_Menu" class="range_slider_tooltip"></span>
+                    <span id="tooltip_right_handle_Buy_Menu" class="range_slider_tooltip"></span>
                     <div id="range_slider_Buy_Menu" class="range_slider"></div>
                 </div>
 
@@ -1159,22 +1163,25 @@
 
             <div id="buyMenuFrame" class="left right">
 
-                <div id="AmountScroungerSlots">  
+                <div id="AmountScroungerSlots">
 
-                <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
+                    <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
 
                 </div>
 
                 <div id="buyMenuText">
-                    <p id="item" ></p>
-                    <div style="position: relative; margin-top: 24px; margin-bottom: 24px"> <p id="price" class='relative' style="float: left; margin: 0px"></p> <img id="matterImg" style="width: 20px; height: 20px; position: relative; top: 3px; left: 5px; "> </div> 
-                    <p id="time" ></p>
+                    <p id="item"></p>
+                    <div style="position: relative; margin-top: 24px; margin-bottom: 24px">
+                        <p id="price" class='relative' style="float: left; margin: 0px"></p>
+                        <img id="matterImg" style="width: 20px; height: 20px; position: relative; top: 3px; left: 5px; ">
+                    </div>
+                    <p id="time"></p>
                 </div>
 
-                
 
 
-                   
+
+
 
                 <div id="buyMenuYes"></div>
                 <div id="buyMenuNo"></div>
@@ -1276,7 +1283,7 @@
 
             <!-- worldMapSlotsPreview enthält die sechs Divs mit der Slotpreview. Positionierung müsste dann via javascript variabel erfolgen. Bisher hardcoded auf DIV links (GELB) -->
             <div id="scroungePreviewWrapper">
-            {{>scroungePreview}}
+                {{>scroungePreview}}
             </div>
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
