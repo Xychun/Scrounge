@@ -367,7 +367,7 @@
 
     <!-- Zu Testzwecken -->
     <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
-    <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div>
+    <!-- <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div> -->
 
 </template>
 
@@ -645,13 +645,14 @@
 
             <div id="scroungeAreaWrapper">
 
+                {{#if mineSupporterSlots}}
+                <!-- content is here! -->
+                {{else}}
                 <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeMine.png);"></div>
+                {{/if}}
 
                 <div id="scroungeAreaContent" class="relative">
-
                     {{#each mineSupporterSlots}}
-
-
                     <div id="scrounge_slot_{{index}}" class="scrounge_slot dropdown relative">
 
 
@@ -1021,13 +1022,14 @@
 
             <div id="scroungeAreaWrapper">
 
+                {{#if battlefieldSupporterSlots}}
+                <!-- content is here! -->
+                {{else}}
                 <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeBattlefield.png);"></div>
+                {{/if}}
 
                 <div id="scroungeAreaContent" class="relative">
-
                     {{#each battlefieldSupporterSlots}}
-
-
                     <div class="scrounge_slot dropdown relative">
 
 

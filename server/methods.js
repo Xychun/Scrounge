@@ -384,7 +384,7 @@ if (Meteor.isServer) {
             }).username;
             //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
             if (currentUser == myName) {
-                Meteor.call("infoLog", '0You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O', myName);
                 return '0You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
             }
             var cursorMyPlayerData = playerData.findOne({
@@ -400,7 +400,7 @@ if (Meteor.isServer) {
             });
             for (i = 0; i < amountScrSlots; i++) {
                 if (cursorMineScrounger['scrs' + i].victim == currentUser) {
-                    Meteor.call("infoLog", '0You cannot scrounge here: You already scrounge this user!', myName);
+                    Meteor.call("infoLog", 'You cannot scrounge here: You already scrounge this user!', myName);
                     return '0You cannot scrounge here: You already scrounge this user!';
                 }
             }
@@ -413,7 +413,7 @@ if (Meteor.isServer) {
                 }
             }
             if (resultScrounger == -1) {
-                Meteor.call("infoLog", '0You cannot scrounge here: Your Scrounge slots are all in use!', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: Your Scrounge slots are all in use!', myName);
                 return '0You cannot scrounge here: Your Scrounge slots are all in use!';
             }
             //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
@@ -441,13 +441,13 @@ if (Meteor.isServer) {
             }
             //LAST CHECK: RANGE SLIDER
             if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
-                Meteor.call("infoLog", '0You cannot scrounge here: You do not have the right miningrate!', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: You do not have the right miningrate!', myName);
                 return '0You cannot scrounge here: You do not have the right miningrate!';
             }
 
             //SupSlot with id result is free and correct: update it ?
             if (resultOwner == -1) {
-                Meteor.call("infoLog", '0You cannot scrounge here: The owners support slots are all full!', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: The owners support slots are all full!', myName);
                 return '0You cannot scrounge here: The owners support slots are all full!';
             }
             //set to mine of owner
@@ -489,7 +489,7 @@ if (Meteor.isServer) {
             }).username;
             //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
             if (currentUser == myName) {
-                Meteor.call("infoLog", '0You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O', myName);
                 return '0You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
             }
             var cursorMyPlayerData = playerData.findOne({
@@ -505,7 +505,7 @@ if (Meteor.isServer) {
             });
             for (i = 0; i < amountScrSlots; i++) {
                 if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
-                    Meteor.call("infoLog", '0You cannot scrounge here: You already scrounge this user!', myName);
+                    Meteor.call("infoLog", 'You cannot scrounge here: You already scrounge this user!', myName);
                     return '0You cannot scrounge here: You already scrounge this user!';
                 }
             }
@@ -518,7 +518,7 @@ if (Meteor.isServer) {
                 }
             }
             if (resultScrounger == -1) {
-                Meteor.call("infoLog", '0You cannot scrounge here: Your Scrounge slots are all in use!', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: Your Scrounge slots are all in use!', myName);
                 return '0You cannot scrounge here: Your Scrounge slots are all in use!';
             }
             //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
@@ -546,13 +546,13 @@ if (Meteor.isServer) {
             }
             //LAST CHECK: RANGE SLIDER
             if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
-                Meteor.call("infoLog", '0You cannot scrounge here: You do not have the right epicness!', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: You do not have the right epicness!', myName);
                 return '0You cannot scrounge here: You do not have the right epicness!';
             }
 
             //SupSlot with id result is free and correct: update it ?
             if (resultOwner == -1) {
-                Meteor.call("infoLog", '0You cannot scrounge here: The owners support slots are all full!', myName);
+                Meteor.call("infoLog", 'You cannot scrounge here: The owners support slots are all full!', myName);
                 return '0You cannot scrounge here: The owners support slots are all full!';
             }
             //set to battlefield of owner
@@ -602,7 +602,7 @@ if (Meteor.isServer) {
 
             //check costs
             if (!(matter >= cost)) {
-                Meteor.call("infoLog", '0You cannot buy this matter: You do not have enough matter!', name);
+                Meteor.call("infoLog", 'You cannot buy this matter: You do not have enough matter!', name);
                 return '0You cannot buy this matter: You do not have enough matter!';
             }
             var amountSlots = playerData.findOne({
@@ -667,7 +667,7 @@ if (Meteor.isServer) {
 
             //check costs
             if (!(matter >= cost)) {
-                Meteor.call("infoLog", '0You cannot buy this fight: You do not have enough matter!', name);
+                Meteor.call("infoLog", 'You cannot buy this fight: You do not have enough matter!', name);
                     return '0You cannot buy this fight: You do not have enough matter!';
             }
             var amountSlots = playerData.findOne({
@@ -735,6 +735,15 @@ if (Meteor.isServer) {
                 user: name,
                 values: {
                     green: {
+                        matter: 0,
+                        sr1: 0,
+                        sr2: 0,
+                        sr3: 0,
+                        sr4: 0,
+                        sr5: 0,
+                        sr6: 0
+                    },
+                    red: {
                         matter: 0,
                         sr1: 0,
                         sr2: 0,

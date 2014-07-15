@@ -931,7 +931,7 @@ if (Meteor.isClient) {
                         for (var m = 0; m < currentSupScrSlots; m++) {
                             if (supBattlefield['scrs' + m].victim == name) indexScr = m;
                         }
-                        console.log('currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
+                        // console.log('currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                         if (indexScr == -1) {
                             console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
                             break;
@@ -2610,6 +2610,10 @@ if (Meteor.isClient) {
         if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
             return 'You cannot scrounge here: You do not have the right epicness!';
         }
+        //SupSlot with id result is free and correct: update it ?
+        if (resultOwner == -1) {
+            return 'You cannot scrounge here: The owners support slots are all full!';
+        }
         return false;
     }
 
@@ -2630,43 +2634,9 @@ if (Meteor.isClient) {
             Router.current().render(menu + 'Base', {
                 to: 'middle'
             });
-            //change menu colors to green
-            $('#scrounge').css({
-                backgroundPosition: "0px -303px"
-            });
-            $('#character').css({
-                backgroundPosition: "0px 0px"
-            });
-            $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
-            $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
-            $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
-            $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
-            $("#category_right").css({
-                backgroundPosition: "-109px 0px"
-            });
-            $("#category_left").css({
-                backgroundPosition: "-109px 0px"
-            });
         } else {
             Router.current().render(menu + 'Scrounge', {
                 to: 'middle'
-            });
-            //change menu colors to red
-            $('#scrounge').css({
-                backgroundPosition: "0px 0px"
-            });
-            $('#character').css({
-                backgroundPosition: "0px -151px"
-            });
-            $("#mineMenu0").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
-            $("#battlefieldMenu0").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
-            $("#mineMenu1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
-            $("#battlefieldMenu1").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
-            $("#category_right").css({
-                backgroundPosition: "-216px 0px"
-            });
-            $("#category_left").css({
-                backgroundPosition: "-216px 0px"
             });
         }
     }
