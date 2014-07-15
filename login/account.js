@@ -113,6 +113,24 @@ if (Meteor.isClient) {
             }
         });
         if (self) {
+            if ($(window).width() < 1920) {
+                current_resolution = "<1920";
+                $("#wrong_resolution").css({
+                    "display": "block"
+                });
+                $("#right_resolution").css({
+                    "display": "none"
+                });
+            }
+            if ($(window).width() >= 1920) {
+                current_resolution = ">=1920";
+                $("#wrong_resolution").css({
+                    "display": "none"
+                });
+                $("#right_resolution").css({
+                    "display": "block"
+                });
+            }
             Router.go('game');
         } else {
             console.log("User not yet defined problem switchToGame");

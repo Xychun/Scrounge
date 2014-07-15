@@ -1084,10 +1084,6 @@ if (Meteor.isClient) {
 
     }
 
-    Template.masterLayout.rendered = function() {
-        $("body").append("<div id='item_tooltip_window' title=''></div>");
-    }
-
     //////////////////
     ///// EVENTS /////
     //////////////////
@@ -1300,6 +1296,71 @@ if (Meteor.isClient) {
                 });
             });
         },
+        'mouseover .short_tooltip': function(e, t) {
+            $("#short_tooltip_text").html($(e.currentTarget).attr("title"));
+            $(e.currentTarget).attr("title", "");
+            $("#short_tooltip_window").css({
+                display: "table"
+            });
+            if ($("#short_tooltip_window").width() + e.clientX > $(window).width()) {
+                var offset = -1 * $("#short_tooltip_window").width();
+                $("#short_tooltip_window").css({
+                    "margin-left": offset
+                });
+            } else {
+                $("#short_tooltip_window").css({
+                    "margin-left": "0px"
+                });
+            }
+            if ($("#short_tooltip_window").height() + e.clientY + 18 > $(window).height()) {
+                var offset = -1 * $("#short_tooltip_window").height();
+                $("#short_tooltip_window").css({
+                    "margin-top": (offset - 10)
+                });
+            } else {
+                $("#short_tooltip_window").css({
+                    "margin-top": "18px"
+                });
+            }
+
+            $("#short_tooltip_window").stop(true).fadeTo(400, 0);
+            $("#short_tooltip_window").fadeTo("fast", 1);
+        },
+        'mousemove .short_tooltip': function(e, t) {
+            if ($("#short_tooltip_window").width() + e.clientX > $(window).width()) {
+                var offset = -1 * $("#short_tooltip_window").width();
+                $("#short_tooltip_window").css({
+                    "margin-left": offset
+                });
+            } else {
+                $("#short_tooltip_window").css({
+                    "margin-left": "0px"
+                });
+            }
+            if ($("#short_tooltip_window").height() + e.clientY + 18 > $(window).height()) {
+                var offset = -1 * $("#short_tooltip_window").height();
+                $("#short_tooltip_window").css({
+                    "margin-top": (offset - 10)
+                });
+            } else {
+                $("#short_tooltip_window").css({
+                    "margin-top": "18px"
+                });
+            }
+            $("#short_tooltip_window").css({
+                left: e.clientX,
+                top: e.clientY
+            });
+        },
+        'mouseout .short_tooltip': function(e, t) {
+            //Session.set("changes", "onMouseOut");
+            $(e.currentTarget).attr("title", $("#short_tooltip_text").html());
+            $("#short_tooltip_window").stop(true).fadeTo("fast", 0, function() {
+                $("#short_tooltip_window").css({
+                    display: "none"
+                });
+            });
+        },
         'mouseover .slider': function(e, t) {
             slide($(e.target));
         },
@@ -1405,9 +1466,11 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-/*            $('#buyMenuWrapper').fadeIn();
+            /*            $('#buyMenuWrapper').fadeIn();
             $('#background_fade').fadeIn();*/
-            $( "#buyMenuWrapper" ).show(0, function() { $( "#background_fade" ).fadeIn();  });
+            $("#buyMenuWrapper").show(0, function() {
+                $("#background_fade").fadeIn();
+            });
             Session.set("clickedMatter", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#item').text("Matter: " + this.value);
@@ -1462,10 +1525,12 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            
-/*            $('#background_fade').delay(3000).fadeIn();
+
+            /*            $('#background_fade').delay(3000).fadeIn();
             $('#buyMenuWrapper').fadeIn();*/
-            $( "#buyMenuWrapper" ).show(0, function() { $( "#background_fade" ).fadeIn();  });
+            $("#buyMenuWrapper").show(0, function() {
+                $("#background_fade").fadeIn();
+            });
             Session.set("clickedFight", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
             $('#item').text("XP: " + this.value);
@@ -1656,8 +1721,12 @@ if (Meteor.isClient) {
             var obj0 = {};
             obj0['id'] = 'preview' + player;
 
-            $("#scroungePreviewWrapper").css({"left":$(e.currentTarget).css("left")});
-            $("#scroungePreviewWrapper").css({"bottom":$(e.currentTarget).css("bottom")});
+            $("#scroungePreviewWrapper").css({
+                "left": $(e.currentTarget).css("left")
+            });
+            $("#scroungePreviewWrapper").css({
+                "bottom": $(e.currentTarget).css("bottom")
+            });
             // get db data
             var myName = Meteor.users.findOne({
                 _id: Meteor.userId()
@@ -1728,8 +1797,8 @@ if (Meteor.isClient) {
             Session.set("worldMapPreview", obj0);
 
             $("#scroungePreviewWrapper").css({
-                    display: "block"
-                });
+                display: "block"
+            });
             $("#scroungePreviewWrapper").stop().fadeTo("fast", 1);
         },
 
@@ -1742,49 +1811,7 @@ if (Meteor.isClient) {
         },
 
         'click .worldMapNavigators': function(e, t) {
-            //get max map size
-            var maxX = worldMapFields.find({}, {
-                fields: {
-                    x: 1
-                },
-                sort: {
-                    x: -1
-                }
-            }).fetch()[0].x;
-            var maxY = worldMapFields.find({}, {
-                fields: {
-                    y: 1
-                },
-                sort: {
-                    y: -1
-                }
-            }).fetch()[0].y;
-            switch (e.currentTarget.id) {
-                case "worldMapGoUp":
-                    var yValue = worldMapArray[0].columns[0].y + 1;
-                    if (yValue > maxY) yValue = 0
-                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
-                    break;
-                case "worldMapGoDown":
-                    var yValue = worldMapArray[0].columns[0].y - 1;
-                    if (yValue < 0) yValue = maxY
-                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
-                    break;
-                case "worldMapGoRight":
-                    var xValue = worldMapArray[0].columns[0].x + 1;
-                    if (xValue > maxX) xValue = 0
-                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
-                    break;
-                case "worldMapGoLeft":
-                    var xValue = worldMapArray[0].columns[0].x - 1;
-                    if (xValue < 0) xValue = maxX
-                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
-                    break;
-                default:
-                    console.log('default case: worldMapNavigators');
-                    break;
-            }
-            Session.set("worldMapArray", worldMapArray);
+            navigateWorldMap($(e.currentTarget).attr("id"));
         },
 
         'click .worldMapScroungePreview': function(e, t) {
@@ -1808,26 +1835,60 @@ if (Meteor.isClient) {
     var current_category = 1; //Start Kategorie
     var max_cat = 6; //Anzahl Kategorien
     var interval;
-    var ready_check;
-    var size;
-    var slots_count = 10;
+    var current_resolution = null;
     var handle_check = false;
     var hover_check = false;
-    var range_slider_width;
     var stop_bool = false;
 
-    if ($(window).width() <= 1024) {
-        // console.log("1024");
-        ready_check = 1;
-    }
-    if ($(window).width() <= 1280 && $(window).width() >= 1024) {
-        // console.log("1280");
-        ready_check = 2;
-    }
-    if ($(window).width() >= 1280) {
-        // console.log("1920");
-        ready_check = 3;
-    }
+
+
+
+
+
+
+
+
+    (function($) {
+
+        $(document).keyup(function(event) {
+            if ($("#worldViewPort").length == 1) {
+                if (event.keyCode >= 37 && event.keyCode <= 40) {
+                    switch (event.keyCode) {
+                        case 37:
+                            navigateWorldMap("worldMapGoLeft");
+                            break;
+                        case 38:
+                            navigateWorldMap("worldMapGoUp");
+                            break;
+                        case 39:
+                            navigateWorldMap("worldMapGoRight");
+                            break;
+                        case 40:
+                            navigateWorldMap("worldMapGoDown");
+                            break;
+                        default:
+                            console.log("fehler beim verschieben der map !");
+                            break;
+                    }
+                    $("#scroungePreviewWrapper").stop().fadeTo("fast", 0, function() {
+                        $("#scroungePreviewWrapper").css({
+                            display: "none"
+                        });
+                    });
+                }
+            }
+        });
+
+    })(jQuery);
+
+
+
+
+
+
+
+
+
 
     function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
     {
@@ -2042,7 +2103,6 @@ if (Meteor.isClient) {
 
     function slide_start(direction, orientation, pixel, speed, content_div) {
         //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " content_div: " + content_div);
-        var px;
         var animation_obj = {};
         var css_direction;
         var current_position;
@@ -2200,7 +2260,7 @@ if (Meteor.isClient) {
             /*            $("#range_slider_" + slot).width($("#range_slider_" + slot).parent().width());*/
 
             tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, "left");
-            $('.tooltip').hide();
+            $('.range_slider_tooltip').hide();
 
             if (slot === "Buy_Menu") {
                 disable_boolean = false;
@@ -2237,7 +2297,7 @@ if (Meteor.isClient) {
                 }
             });
         }
-    };
+    }
 
     function tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, handle) {
         var ctrl_range = max_ctrl - min_ctrl,
@@ -2283,100 +2343,52 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"]
+    var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"];
 
-        function update_current_category(direction, category_offset, callback) {
-            for (var x = 0; x < category_offset; x++) {
-                if (direction == "left") {
-                    current_category--;
-                } else if (direction == "right") {
-                    current_category++;
-                }
+    // function update_current_category(direction, category_offset) {
+    //     for (var x = 0; x < category_offset; x++) {
+    //         if (direction == "left") {
+    //             current_category--;
+    //         } else if (direction == "right") {
+    //             current_category++;
+    //         }
 
-                if (current_category == 0 && direction == "left") {
-                    current_category = max_cat;
-                } else if (current_category == (max_cat + 1) && direction == "right") {
-                    current_category = 1;
-                }
-            }
+    //         if (current_category == 0 && direction == "left") {
+    //             current_category = max_cat;
+    //         } else if (current_category == (max_cat + 1) && direction == "right") {
+    //             current_category = 1;
+    //         }
+    //     }
 
-            if (current_category == 1 || current_category == 3) {
-                Meteor.users.update({
-                    _id: Meteor.userId()
-                }, {
-                    $set: {
-                        menu: category_names[current_category - 1]
-                    }
-                });
-            }
-            console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
-
-            if (typeof callback === "function") {
-                // Call it, since we have confirmed it is callable
-                console.log("callback update_current_category()");
-                callback();
-            }
-        }
-
-        function size_check() {
-            switch (ready_check) {
-                case 3:
-                    var pos = 256;
-                    var pos_plus = pos + 10;
-                    break;
-                case 2:
-                    var pos = 170;
-                    var pos_plus = pos + 7;
-                    break;
-                case 1:
-                    var pos = 136;
-                    var pos_plus = pos + 6;
-                    break;
-                default:
-                    console.log("failed to check size !(default)");
-                    break;
-            }
-            var pos_reset = pos_plus * max_cat;
-
-            return {
-                p: pos,
-                pp: pos_plus,
-                pr: pos_reset
-            };
-        }
-
-        function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
-        {
-            // size = size_check();
-            // var pos = size.p;
-            // var pos_r = size.pr;
-            // var pos_p = size.pp;
-
-            // var cur_pos_right = (c * pos_p) - pos_p;
-            // var cur_pos_left = cur_pos_right - (pos_r);
-            // $("#k1").css({
-            //     left: cur_pos_left
-            // });
-            // $("#k2").css({
-            //     left: cur_pos_right
-            // });
-        }
+    //     if (current_category == 1 || current_category == 3) {
+    //         Meteor.users.update({
+    //             _id: Meteor.userId()
+    //         }, {
+    //             $set: {
+    //                 menu: category_names[current_category - 1]
+    //             }
+    //         });
+    //     }
+    //     console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
+    // }
 
     $(window).resize(function() {
-        if ($(window).width() <= 1024 && ready_check !== 1) {
-            //console.log("1024");
-            ready_check = 1;
-            repositioning(ready_check);
-        }
-        if ($(window).width() <= 1280 && $(window).width() >= 1024 && ready_check != 2) {
-            //console.log("1280");
-            ready_check = 2;
-            repositioning(ready_check);
-        }
-        if ($(window).width() >= 1280 && ready_check != 3) {
-            //console.log("1920");
-            ready_check = 3;
-            repositioning(ready_check);
+        if ($(window).width() < 1920 && current_resolution != "<1920" && $("#loginWrapper").length == 0) {
+            current_resolution = "<1920";
+            $("#wrong_resolution").css({
+                "display": "block"
+            });
+            $("#right_resolution").css({
+                "display": "none"
+            });
+        } else if ($(window).width() >= 1920 && current_resolution != ">=1920" && $("#loginWrapper").length == 0) {
+            current_resolution = ">=1920";
+            $("#wrong_resolution").css({
+                "display": "none"
+            });
+            $("#right_resolution").css({
+                "display": "block"
+            });
         }
         if ($("#range_slider_0").length > 0) { // Damit der Tooltip des Range Sliders beim verändern der Größe mitgeht.
             for (var x = 0; x < 6; x++) {
@@ -2673,49 +2685,49 @@ if (Meteor.isClient) {
 
     function navigateWorldMap(direction) {
 
-        var top = parseInt($('#currentMapView').css("margin-top"));
-        var right = parseInt($('#currentMapView').css("margin-right"));
-
+        //get max map size
+        var maxX = worldMapFields.find({}, {
+            fields: {
+                x: 1
+            },
+            sort: {
+                x: -1
+            }
+        }).fetch()[0].x;
+        var maxY = worldMapFields.find({}, {
+            fields: {
+                y: 1
+            },
+            sort: {
+                y: -1
+            }
+        }).fetch()[0].y;
         switch (direction) {
-
-            case 'worldMapGoUp':
-
-                $('#currentMapView').filter(':not(:animated)').animate({
-                    "margin-top": (top + 300) + "px"
-                }, 250);
-
+            case "worldMapGoUp":
+                var yValue = worldMapArray[0].columns[0].y + 1;
+                if (yValue > maxY) yValue = 0
+                initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
                 break;
-
-            case 'worldMapGoDown':
-
-                $('#currentMapView').filter(':not(:animated)').animate({
-                    "margin-top": (top - 300) + "px"
-                }, 250);
-
+            case "worldMapGoDown":
+                var yValue = worldMapArray[0].columns[0].y - 1;
+                if (yValue < 0) yValue = maxY
+                initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
                 break;
-
-            case 'worldMapGoRight':
-
-                $('#currentMapView').filter(':not(:animated)').animate({
-                    "margin-right": (right + 300) + "px"
-                }, 250);
-
+            case "worldMapGoRight":
+                var xValue = worldMapArray[0].columns[0].x + 1;
+                if (xValue > maxX) xValue = 0
+                initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
                 break;
-
-            case 'worldMapGoLeft':
-
-                $('#currentMapView').filter(':not(:animated)').animate({
-                    "margin-right": (right - 300) + "px"
-                }, 250);
-
+            case "worldMapGoLeft":
+                var xValue = worldMapArray[0].columns[0].x - 1;
+                if (xValue < 0) xValue = maxX
+                initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
                 break;
-
             default:
-                //console.log("Slide für diesen Hover nicht definiert !");
+                console.log('default case: worldMapNavigators');
                 break;
-
         }
-
+        Session.set("worldMapArray", worldMapArray);
     }
 
     var deps_count = 0;
@@ -2724,8 +2736,31 @@ if (Meteor.isClient) {
         var init = Session.get("init");
         // console.log("count: " + deps_count);
         if (deps_count == 1) {
+
             init_draggable();
             init_droppable();
+
+            $("#right_resolution").append("<div id='item_tooltip_window' title=''></div>");
+            $("#right_resolution").append("<div id='short_tooltip_window' title=''><div id='short_tooltip_background'><p id='short_tooltip_text' class='text'></p></div></div>");
+
+            if ($(window).width() < 1920 && $("#loginWrapper").length == 0) {
+                current_resolution = "<1920";
+                $("#wrong_resolution").css({
+                    "display": "block"
+                });
+                $("#right_resolution").css({
+                    "display": "none"
+                });
+            }
+            if ($(window).width() >= 1920 && $("#loginWrapper").length == 0) {
+                current_resolution = ">=1920";
+                $("#wrong_resolution").css({
+                    "display": "none"
+                });
+                $("#right_resolution").css({
+                    "display": "block"
+                });
+            }
 
             var menu = Meteor.users.findOne({
                 _id: Meteor.userId()
