@@ -1768,7 +1768,9 @@ if (Meteor.isClient) {
             } else {
                 obj0['mineResult'] = true;
             }
-            if (maxCount == 0) { obj0['mineInactive'] = true; }
+            if (maxCount == 0) {
+                obj0['mineInactive'] = true;
+            }
 
             //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
@@ -1794,7 +1796,9 @@ if (Meteor.isClient) {
             } else {
                 obj0['battlefieldResult'] = true;
             }
-            if (maxCount == 0) { obj0['battlefieldInactive'] = true; }
+            if (maxCount == 0) {
+                obj0['battlefieldInactive'] = true;
+            }
             // update session variab
             Session.set("worldMapPreview", obj0);
 
@@ -1843,8 +1847,8 @@ if (Meteor.isClient) {
     var stop_bool = false;
 
 
-
-
+    var posX = 0;
+    var posY = 0;
 
 
 
@@ -1852,9 +1856,16 @@ if (Meteor.isClient) {
 
     (function($) {
 
+        // Workaround für den Firefox zum Scrollen mit Mausrad
+        document.addEventListener("mousemove", function(event) {
+            posX = event.clientX;
+            posY = event.clientY;
+        });
+
         $(document).keyup(function(event) {
+            console.log(event.keyCode);
             if ($("#worldViewPort").length == 1) {
-                if (event.keyCode >= 37 && event.keyCode <= 40) {
+                if ((event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode == 87 || event.keyCode == 68 || event.keyCode == 83 || event.keyCode == 65) {
                     switch (event.keyCode) {
                         case 37:
                             navigateWorldMap("worldMapGoLeft");
@@ -1867,6 +1878,18 @@ if (Meteor.isClient) {
                             break;
                         case 40:
                             navigateWorldMap("worldMapGoDown");
+                            break;
+                        case 65:
+                            navigateWorldMap("worldMapGoLeft");
+                            break;
+                        case 68:
+                            navigateWorldMap("worldMapGoRight");
+                            break;
+                        case 83:
+                            navigateWorldMap("worldMapGoDown");
+                            break;
+                        case 87:
+                            navigateWorldMap("worldMapGoUp");
                             break;
                         default:
                             console.log("fehler beim verschieben der map !");
@@ -1891,8 +1914,9 @@ if (Meteor.isClient) {
             var direction = "forth"
         }
         if (direction) {
-            var parent = $(document.elementFromPoint(event.clientX, event.clientY)).parent();
-            item_found = false;
+            //var parent = document.elementFromPoint(x, y);
+            //console.log(parent);
+            var parent = $(document.elementFromPoint(posX, posY)).parent();
             var x = 0;
 
             while (!parent.hasClass("scrollable") && x < 4) {
