@@ -819,51 +819,51 @@ div {
     height: 120px;
     background-image: url(/Aufloesung1920x1080/Interface/inventory_slot.png);
 }
-#scrounge_item_slot_1 {
+#scrounge_item_slotx1 {
     left:140px;
     top:0px;
 }
-#scrounge_item_slot_2 {
+#scrounge_item_slotx2 {
     left:280px;
     top:125px;
 }
-#scrounge_item_slot_3 {
+#scrounge_item_slotx3 {
     left:280px;
     top:255px;
 }
-#scrounge_item_slot_4 {
+#scrounge_item_slotx4 {
     left:140px;
     top:380px;
 }
-#scrounge_item_slot_5 {
+#scrounge_item_slotx5 {
     left:0px;
     top:255px;
 }
-#scrounge_item_slot_6 {
+#scrounge_item_slotx6 {
     left:0px;
     top:125px;
 }
-#base_item_slot_1 {
+#base_item_slotx1 {
     top:140px;
     left:0px;
 }
-#base_item_slot_2 {
+#base_item_slotx2 {
     top:280px;
     left:125px;
 }
-#base_item_slot_3 {
+#base_item_slotx3 {
     top:280px;
     left:255px;
 }
-#base_item_slot_4 {
+#base_item_slotx4 {
     top:140px;
     left:380px;
 }
-#base_item_slot_5 {
+#base_item_slotx5 {
     top:0px;
     left:255px;
 }
-#base_item_slot_6 {
+#base_item_slotx6 {
     top:0px;
     left:125px;
 }

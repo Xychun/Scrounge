@@ -417,6 +417,15 @@ if (Meteor.isServer) {
         }
     });
 
+    Meteor.publish("Items", function() {
+        if (this.userId) {
+            return Items.find({});
+        } else {
+            this.ready();
+        }
+    });
+
+
     Meteor.publish("mine", function(current) {
         if (this.userId) {
             return mine.find({});
@@ -446,6 +455,22 @@ if (Meteor.isServer) {
     Meteor.publish("worldMapFields", function() {
         if (this.userId) {
             return worldMapFields.find({});
+        } else {
+            this.ready();
+        }
+    });
+
+    Meteor.publish("craftedItems", function() {
+        if (this.userId) {
+            return craftedItems.find({});
+        } else {
+            this.ready();
+        }
+    });
+
+    Meteor.publish("stolenItems", function() {
+        if (this.userId) {
+            return stolenItems.find({});
         } else {
             this.ready();
         }

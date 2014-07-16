@@ -468,7 +468,7 @@ if (Meteor.isServer) {
             }, {
                 $set: obj0
             });
-            Meteor.call("infoLog", '1Scrounging successful!', myName);
+            Meteor.call("infoLog", 'Scrounging successful!', myName);
             return "1Scrounging successful!";
         },
 
@@ -573,7 +573,7 @@ if (Meteor.isServer) {
             }, {
                 $set: obj0
             });
-            Meteor.call("infoLog", '1Scrounging successful!', myName);
+            Meteor.call("infoLog", 'Scrounging successful!', myName);
             return '1Scrounging successful!';
         },
 
@@ -638,7 +638,7 @@ if (Meteor.isServer) {
                     break;
                 }
             }
-            Meteor.call("infoLog", '1Matter purchase successful!', name);
+            Meteor.call("infoLog", 'Matter purchase successful!', name);
             return '1Matter purchase successful!';
         },
 
@@ -668,7 +668,7 @@ if (Meteor.isServer) {
             //check costs
             if (!(matter >= cost)) {
                 Meteor.call("infoLog", 'You cannot buy this fight: You do not have enough matter!', name);
-                    return '0You cannot buy this fight: You do not have enough matter!';
+                return '0You cannot buy this fight: You do not have enough matter!';
             }
             var amountSlots = playerData.findOne({
                 user: name
@@ -703,8 +703,276 @@ if (Meteor.isServer) {
                     break;
                 }
             }
-            Meteor.call("infoLog", '1Fight purchase successful!', name);
+            Meteor.call("infoLog", 'Fight purchase successful!', name);
             return '1Fight purchase successful!';
+        },
+
+        dropItem: function(fromId, toId) {
+            var menuNames = new Array('mine', 'laboratory', 'workshop', 'battlefield', 'thivery', 'smelter');
+            var self = Meteor.users.findOne({
+                _id: Meteor.userId()
+            }, {
+                fields: {
+                    username: 1,
+                    cu: 1
+                }
+            });
+            var myName = self.username;
+            var current = self.cu;
+            if (myName != current) {
+                return;
+            }
+
+            var firstCheck = false;
+            var secondCheck = false;
+
+            //FIRST CHECK: Is the drop possible?
+            // ~'foo'.indexOf('oo') returns a truthy value if the substring is found, and a falsy value (0) if it is not
+            if (~fromId.indexOf('scrounge')) {
+                if (~toId.indexOf('crafted')) {
+                    console.log('scrounge crafted');
+                    firstCheck = true;
+                    var n = fromId.lastIndexOf('x');
+                    var result = fromId.substring(n + 1);
+                    var menu = menuNames[result - 1];
+                    var cursorFromItem = playerData.findOne({
+                        user: myName
+                    })[menu].scrItem;
+                    var fromStatus = 'scrounge';
+                    var n = toId.lastIndexOf('_');
+                    var result = toId.substr(n + 1, 1);
+                    var cursorToItem = craftedItems.findOne({
+                        user: myName
+                    })['s' + result];
+                    var toStatus = 'crafted';
+                }
+            } else if (~fromId.indexOf('base')) {
+                if (~toId.indexOf('crafted')) {
+                    console.log('base crafted');
+                    firstCheck = true;
+                    var n = fromId.lastIndexOf('x');
+                    var result = fromId.substring(n + 1);
+                    var menu = menuNames[result - 1];
+                    var cursorFromItem = playerData.findOne({
+                        user: myName
+                    })[menu].ownItem;
+                    var fromStatus = 'base';
+                    var n = toId.lastIndexOf('_');
+                    var result = toId.substr(n + 1, 1);
+                    var cursorToItem = craftedItems.findOne({
+                        user: myName
+                    })['s' + result];
+                    var toStatus = 'crafted';
+                }
+            } else if (~fromId.indexOf('stolen')) {
+                if (~toId.indexOf('stolen')) {
+                    console.log('stolen stolen');
+                    firstCheck = true;
+                    var n = fromId.lastIndexOf('_');
+                    var result = fromId.substr(n + 1, 1);
+                    var cursorFromItem = stolenItems.findOne({
+                        user: myName
+                    })['s' + result];
+                    var fromStatus = 'stolen';
+                    var n = toId.lastIndexOf('_');
+                    var result = toId.substr(n + 1, 1);
+                    var cursorToItem = stolenItems.findOne({
+                        user: myName
+                    })['s' + result];
+                    var toStatus = 'stolen';
+                }
+            } else if (~fromId.indexOf('crafted')) {
+                if (~toId.indexOf('scrounge')) {
+                    console.log('crafted scrounge');
+                    var n1 = fromId.lastIndexOf('x');
+                    var result1 = fromId.substring(n1 + 1);
+                    var n2 = toId.lastIndexOf('x');
+                    var result2 = toId.substring(n2 + 1);
+                    if (result1 == result2) {
+                        firstCheck = true
+                        var n = fromId.lastIndexOf('_');
+                        var result = fromId.substr(n + 1, 1);
+                        var cursorFromItem = craftedItems.findOne({
+                            user: myName
+                        })['s' + result];
+                        var fromStatus = 'crafted';
+                        var n = toId.lastIndexOf('x');
+                        var result = toId.substring(n + 1);
+                        var menu = menuNames[result - 1];
+                        var cursorToItem = playerData.findOne({
+                            user: myName
+                        })[menu].scrItem;
+                        var toStatus = 'scrounge';
+                    }
+                } else if (~toId.indexOf('base')) {
+                    var n1 = fromId.lastIndexOf('x');
+                    var result1 = fromId.substring(n1 + 1);
+                    var n2 = toId.lastIndexOf('x');
+                    var result2 = toId.substring(n2 + 1);
+                    console.log(result1 + 'result2: ' + result2);
+                    if (result1 == result2) {
+                        console.log('crafted base');
+                        firstCheck = true
+                        var n = fromId.lastIndexOf('_');
+                        var result = fromId.substr(n + 1, 1);
+                        var cursorFromItem = craftedItems.findOne({
+                            user: myName
+                        })['s' + result];
+                        var toStatus = 'base';
+                        var n = toId.lastIndexOf('x');
+                        var result = toId.substring(n + 1);
+                        var menu = menuNames[result - 1];
+                        var cursorToItem = playerData.findOne({
+                            user: myName
+                        })[menu].ownItem;
+                        var toStatus = 'base';
+                    }
+                } else if (~toId.indexOf('crafted')) {
+                    console.log('crafted crafted');
+                    firstCheck = true;
+                    var n = fromId.lastIndexOf('_');
+                    var result = fromId.substr(n + 1, 1);
+                    var cursorFromItem = craftedItems.findOne({
+                        user: myName
+                    })['s' + result];
+                    var fromStatus = 'crafted';
+                    var n = toId.lastIndexOf('_');
+                    var result = toId.substr(n + 1, 1);
+                    var cursorToItem = craftedItems.findOne({
+                        user: myName
+                    })['s' + result];
+                    var toStatus = 'crafted';
+                }
+            }
+
+            if (firstCheck == true) {
+                console.log('firstCheck true');
+                //SECOND CHECK: is there an allowed swap?
+                secondCheck = true;
+                if (cursorToItem.blank != "") {
+                    //there is a swap, allowed?
+                    if (toStatus != 'crafted') {
+                        //different character view?
+                        if ((fromStatus == 'base' && toStatus == 'scr') || (fromStatus == 'scr' && toStatus == 'base')) {
+                            secondCheck = false;
+                        }
+                        var n1 = fromId.lastIndexOf('x');
+                        var result1 = fromId.substring(n1 + 1);
+                        var n2 = toId.lastIndexOf('x');
+                        var result2 = toId.substring(n2 + 1);
+                        //different category?
+                        if (result1 != result2) {
+                            secondCheck = false;
+                        }
+                    }
+                }
+            }
+
+            // execute command ?
+            if (firstCheck == true && secondCheck == true) {
+                console.log('TRU TRU');
+                console.log(cursorFromItem);
+                console.log(cursorToItem);
+                //update from item slot
+                var obj0 = {};
+                if (fromStatus == 'scrounge') {
+                    obj0 = {};
+                    var n = fromId.lastIndexOf('x');
+                    var result = fromId.substring(n + 1);
+                    var menu = menuNames[result - 1];
+                    obj0[menu + '.scrItem'] = cursorToItem;
+                    playerData.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                } else if (fromStatus == 'base') {
+                    obj0 = {};
+                    var n = fromId.lastIndexOf('x');
+                    var result = fromId.substring(n + 1);
+                    var menu = menuNames[result - 1];
+                    obj0[menu + '.ownItem'] = cursorToItem;
+                    playerData.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                } else if (fromStatus == 'stolen') {
+                    obj0 = {};
+                    var n = fromId.lastIndexOf('_');
+                    var result = fromId.substr(n + 1, 1);
+                    obj0['s' + result] = cursorToItem;
+                    stolenItems.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                } else {
+                    //crafted
+                    obj0 = {};
+                    var n = fromId.lastIndexOf('_');
+                    var result = fromId.substr(n + 1, 1);
+                    obj0['s' + result] = cursorToItem;
+                    craftedItems.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                }
+                //update to item slot
+                var obj0 = {};
+                if (toStatus == 'scrounge') {
+                    obj0 = {};
+                    var n = toId.lastIndexOf('x');
+                    var result = toId.substring(n + 1);
+                    var menu = menuNames[result - 1];
+                    obj0[menu + '.scrItem'] = cursorFromItem;
+                    playerData.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                } else if (toStatus == 'base') {
+                    obj0 = {};
+                    var n = toId.lastIndexOf('x');
+                    var result = toId.substring(n + 1);
+                    var menu = menuNames[result - 1];
+                    obj0[menu + '.ownItem'] = cursorFromItem;
+                    playerData.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                } else if (toStatus == 'stolen') {
+                    obj0 = {};
+                    var n = toId.lastIndexOf('_');
+                    var result = toId.substr(n + 1, 1);
+                    obj0['s' + result] = cursorFromItem;
+                    stolenItems.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                } else {
+                    //crafted
+                    obj0 = {};
+                    var n = toId.lastIndexOf('_');
+                    var result = toId.substr(n + 1, 1);
+                    obj0['s' + result] = cursorFromItem;
+                    craftedItems.update({
+                        user: myName
+                    }, {
+                        $set: obj0
+                    });
+                }
+            } else {
+                console.log('INVALID');
+                return 'Invalid!';
+            }
+        },
+
+        checkCategory: function(itemId1, itemId2) {
+            return false;
         },
 
         init: function() {
@@ -761,6 +1029,154 @@ if (Meteor.isServer) {
                 }
             });
 
+            // CRAFTEDITEMS //
+            craftedItems.insert({
+                user: name,
+                s0: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s1: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s2: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s3: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s4: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s5: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s6: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s7: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s8: {
+                    blank: "1040102",
+                    benefit: 1,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                }
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation craftedItems error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
+
+            // STOLENITEMS //
+            stolenItems.insert({
+                user: name,
+                s0: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s1: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s2: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s3: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s4: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s5: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s6: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s7: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                },
+                s8: {
+                    blank: "",
+                    benefit: 0,
+                    upgrades: 1,
+                    stolen: "null",
+                    active: "false"
+                }
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation stolenItems error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
+
             //Values randomNumber are [1-5]
             var randomNumber = Math.floor((Math.random() * 5)) + 1;
 
@@ -771,16 +1187,18 @@ if (Meteor.isServer) {
                 XP: 0,
                 requiredXP: 2014,
                 backgroundId: randomNumber,
+                craftedInventorySlots: 9,
+                stolenInventorySlots: 9,
                 mine: {
                     ownItem: {
-                        blank: "",
+                        blank: "1010101",
                         benefit: 1,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
-                        blank: "",
+                        blank: "2010101",
                         benefit: 5,
                         upgrades: 1,
                         stolen: "null",
@@ -796,14 +1214,14 @@ if (Meteor.isServer) {
                 laboratory: {
                     ownItem: {
                         blank: "",
-                        benefit: 110,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
                         blank: "",
-                        benefit: 1,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
@@ -818,14 +1236,14 @@ if (Meteor.isServer) {
                 workshop: {
                     ownItem: {
                         blank: "",
-                        benefit: 5,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
                         blank: "",
-                        benefit: 1,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
@@ -839,14 +1257,14 @@ if (Meteor.isServer) {
                 },
                 battlefield: {
                     ownItem: {
-                        blank: "",
+                        blank: "1040101",
                         benefit: 0.5,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
-                        blank: "",
+                        blank: "2040101",
                         benefit: 50,
                         upgrades: 1,
                         stolen: "null",
@@ -862,14 +1280,14 @@ if (Meteor.isServer) {
                 thivery: {
                     ownItem: {
                         blank: "",
-                        benefit: 5,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
                         blank: "",
-                        benefit: 1,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
@@ -884,14 +1302,14 @@ if (Meteor.isServer) {
                 smelter: {
                     ownItem: {
                         blank: "",
-                        benefit: 5,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
                     },
                     scrItem: {
                         blank: "",
-                        benefit: 1,
+                        benefit: 0,
                         upgrades: 1,
                         stolen: "null",
                         active: "false"

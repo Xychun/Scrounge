@@ -37,7 +37,7 @@ Router.map(function() {
             Meteor.call("getServerTime", function(err, result) {
                 timeClient = new Date();
                 timeServer = result;
-                timeDifference = Math.round((timeClient - timeServer) / 10000) * 10000;
+                timeDifference = Math.round((timeClient - timeServer)/3600000);
                 // console.log('timeServer' + timeServer.getTime());
             });
         },
@@ -106,7 +106,10 @@ Router.map(function() {
                 Meteor.subscribe("FightArenas"),
                 Meteor.subscribe("resources"),
                 Meteor.subscribe("mine"),
-                Meteor.subscribe("battlefield")
+                Meteor.subscribe("battlefield"),
+                Meteor.subscribe("craftedItems"),
+                Meteor.subscribe("stolenItems"),
+                Meteor.subscribe("Items"),               
             ];
         },
 

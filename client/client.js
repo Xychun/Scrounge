@@ -585,7 +585,6 @@ if (Meteor.isClient) {
                 matter: 1
             }
         });
-
     };
 
     /////////////////////////
@@ -1082,11 +1081,545 @@ if (Meteor.isClient) {
 
         return worldMapFields.find({});
 
-    }
+    };
+
+    Template.standardBorder.inventoryCraftedSlots = function() {
+        var objects = new Array();
+        var myName = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var amountCraftedItemSlots = playerData.findOne({
+            user: myName
+        }, {
+            fields: {
+                craftedInventorySlots: 1
+            }
+        }).craftedInventorySlots;
+        var cursorCraftedItems = craftedItems.findOne({
+            user: myName
+        });
+        //iterate all slots
+        for (var i = 0; i < amountCraftedItemSlots; i++) {
+            var obj0 = {};
+            var item = cursorCraftedItems['s' + i];
+            var category = item.blank.substr(2, 1);
+            obj0['categoryNumber'] = category;
+            obj0['itemSlotId'] = i;
+            switch (category) {
+                case "1":
+                    category = "Mine";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Possession';
+                    obj0['benefit'] = item.benefit;
+                    break
+                case "2":
+                    category = "Laboratory";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'IQ';
+                    obj0['benefit'] = item.benefit;
+                    break
+                case "3":
+                    category = "Workshop";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Possession';
+                    obj0['benefit'] = item.benefit;
+                    break
+                case "4":
+                    category = "Battlefield";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Shiled' : obj0['type'] = 'Sword'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Possession';
+                    obj0['benefit'] = item.benefit;
+                    break
+                case "5":
+                    category = "Thivery";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Possession';
+                    obj0['benefit'] = item.benefit;
+                    break
+                case "6":
+                    category = "Smelter";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Possession';
+                    obj0['benefit'] = item.benefit;
+                    break
+                default:
+                    //case default: empty slot
+            }
+            objects.push(obj0);
+        }
+        return objects;
+    };
+
+    Template.standardBorder.inventoryStolenSlots = function() {
+        var objects = new Array();
+        var myName = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        var amountStolenItemSlots = playerData.findOne({
+            user: myName
+        }, {
+            fields: {
+                stolenInventorySlots: 1
+            }
+        }).stolenInventorySlots;
+        var cursorStolenItems = stolenItems.findOne({
+            user: myName
+        });
+        //iterate all slots
+        for (var i = 0; i < amountStolenItemSlots; i++) {
+            var obj0 = {};
+            var item = cursorStolenItems['s' + i];
+            var category = item.blank.substr(2, 1);
+            obj0['categoryNumber'] = category;
+            obj0['itemSlotId'] = i;
+            switch (category) {
+                case "1":
+                    category = "Mine";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Miningrate';
+                    obj0['benefit'] = item.benefit + '/hr';
+                    break
+                case "2":
+                    category = "Laboratory";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Miningrate';
+                    obj0['benefit'] = item.benefit + '/hr';
+                    break
+                case "3":
+                    category = "Workshop";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Miningrate';
+                    obj0['benefit'] = item.benefit + '/hr';
+                    break
+                case "4":
+                    category = "Battlefield";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Shiled' : obj0['type'] = 'Sword'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Miningrate';
+                    obj0['benefit'] = item.benefit + '%';
+                    break
+                case "5":
+                    category = "Thivery";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Miningrate';
+                    obj0['benefit'] = item.benefit + '/hr';
+                    break
+                case "6":
+                    category = "Smelter";
+                    obj0['menu'] = category;
+                    obj0['itemId'] = item.blank;
+                    obj0['name'] = Items.findOne({
+                        blankId: item.blank
+                    }, {
+                        fields: {
+                            name: 1
+                        }
+                    }).name;
+                    item.blank.substr(0, 1) == 1 ? obj0['type'] = 'Gloves' : obj0['type'] = 'Pick'
+                    obj0['upgrades'] = item.upgrades - 1;
+                    obj0['benefitType'] = 'Miningrate';
+                    obj0['benefit'] = item.benefit + '/hr';
+                    break
+                default:
+                    //case default: empty slot
+            }
+            objects.push(obj0);
+        }
+        return objects;
+    };
+
+    Template.characterView.scroungerItems = function() {
+        var objects = new Array();
+        var current = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1
+            }
+        }).cu;
+        var cursorPlayerData = playerData.findOne({
+            user: current
+        });
+        //mine
+        var obj0 = {};
+        var mineItem = cursorPlayerData.mine.scrItem;
+        obj0['categoryNumber'] = 1;
+        if (mineItem.blank != "") {
+            obj0['menu'] = 'Mine';
+            obj0['itemId'] = mineItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: mineItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Pick';
+            obj0['upgrades'] = mineItem.upgrades - 1;
+            obj0['benefitType'] = 'Miningrate';
+            obj0['benefit'] = mineItem.benefit + '/hr';
+        }
+        objects.push(obj0);
+        //laboratory
+        var obj0 = {};
+        var laboratoryItem = cursorPlayerData.laboratory.scrItem;
+        obj0['categoryNumber'] = 2;
+        if (laboratoryItem.blank != "") {
+            obj0['menu'] = 'laboratory';
+            obj0['itemId'] = laboratoryItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: laboratoryItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Reagenz';
+            obj0['upgrades'] = laboratoryItem.upgrades - 1;
+            obj0['benefitType'] = 'IQ';
+            obj0['benefit'] = laboratoryItem.benefit;
+        }
+        objects.push(obj0);
+        //workshop
+        var obj0 = {};
+        var workshopItem = cursorPlayerData.workshop.scrItem;
+        obj0['categoryNumber'] = 3;
+        if (workshopItem.blank != "") {
+            obj0['menu'] = 'workshop';
+            obj0['itemId'] = workshopItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: workshopItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Axe';
+            obj0['upgrades'] = workshopItem.upgrades - 1;
+            obj0['benefitType'] = 'Powah';
+            obj0['benefit'] = workshopItem.benefit;
+        }
+        objects.push(obj0);
+        //battlefield
+        obj0 = {};
+        var battlefieldItem = cursorPlayerData.battlefield.scrItem;
+        obj0['categoryNumber'] = 4;
+        if (battlefieldItem.blank != "") {
+            obj0['menu'] = 'Battlefield';
+            obj0['itemId'] = battlefieldItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: battlefieldItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Sword';
+            obj0['upgrades'] = battlefieldItem.upgrades - 1;
+            obj0['benefitType'] = 'Epicness';
+            obj0['benefit'] = battlefieldItem.benefit + '%';
+        }
+        objects.push(obj0);
+        //thivery
+        var obj0 = {};
+        var thiveryItem = cursorPlayerData.thivery.scrItem;
+        obj0['categoryNumber'] = 5;
+        if (thiveryItem.blank != "") {
+            obj0['menu'] = 'thivery';
+            obj0['itemId'] = thiveryItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: thiveryItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Yeh';
+            obj0['upgrades'] = thiveryItem.upgrades - 1;
+            obj0['benefitType'] = 'Sneakiness';
+            obj0['benefit'] = thiveryItem.benefit;
+        }
+        objects.push(obj0);
+        //smelter
+        var obj0 = {};
+        var smelterItem = cursorPlayerData.smelter.scrItem;
+        obj0['categoryNumber'] = 6;
+        if (smelterItem.blank != "") {
+            obj0['menu'] = 'smelter';
+            obj0['itemId'] = smelterItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: smelterItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Zange';
+            obj0['upgrades'] = smelterItem.upgrades - 1;
+            obj0['benefitType'] = 'Lava';
+            obj0['benefit'] = smelterItem.benefit;
+        }
+        objects.push(obj0);
+        // console.log(objects);
+        return objects;
+    };
+
+    Template.characterView.ownerItems = function() {
+        var objects = new Array();
+        var current = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1
+            }
+        }).cu;
+        var cursorPlayerData = playerData.findOne({
+            user: current
+        });
+        //mine
+        var obj0 = {};
+        var mineItem = cursorPlayerData.mine.ownItem;
+        obj0['categoryNumber'] = 1;
+        if (mineItem.blank != "") {
+            obj0['menu'] = 'Mine';
+            obj0['itemId'] = mineItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: mineItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Gloves';
+            obj0['upgrades'] = mineItem.upgrades - 1;
+            obj0['benefitType'] = 'Possession';
+            obj0['benefit'] = mineItem.benefit;
+        }
+        objects.push(obj0);
+        //laboratory
+        var obj0 = {};
+        var laboratoryItem = cursorPlayerData.laboratory.ownItem;
+        obj0['categoryNumber'] = 2;
+        if (laboratoryItem.blank != "") {
+            obj0['menu'] = 'laboratory';
+            obj0['itemId'] = laboratoryItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: laboratoryItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Pick';
+            obj0['upgrades'] = laboratoryItem.upgrades - 1;
+            obj0['benefitType'] = 'Possession';
+            obj0['benefit'] = laboratoryItem.benefit;
+        }
+        objects.push(obj0);
+        //workshop
+        var obj0 = {};
+        var workshopItem = cursorPlayerData.workshop.ownItem;
+        obj0['categoryNumber'] = 3;
+        if (workshopItem.blank != "") {
+            obj0['menu'] = 'workshop';
+            obj0['itemId'] = workshopItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: workshopItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Pick';
+            obj0['upgrades'] = workshopItem.upgrades - 1;
+            obj0['benefitType'] = 'Possession';
+            obj0['benefit'] = workshopItem.benefit;
+        }
+        objects.push(obj0);
+        //battlefield
+        obj0 = {};
+        var battlefieldItem = cursorPlayerData.battlefield.ownItem;
+        obj0['categoryNumber'] = 4;
+        if (battlefieldItem.blank != "") {
+            obj0['menu'] = 'Battlefield';
+            obj0['itemId'] = battlefieldItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: battlefieldItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Shield';
+            obj0['upgrades'] = battlefieldItem.upgrades - 1;
+            obj0['benefitType'] = 'Possession';
+            obj0['benefit'] = battlefieldItem.benefit;
+        }
+        objects.push(obj0);
+        //thivery
+        var obj0 = {};
+        var thiveryItem = cursorPlayerData.thivery.ownItem;
+        obj0['categoryNumber'] = 5;
+        if (thiveryItem.blank != "") {
+            obj0['menu'] = 'thivery';
+            obj0['itemId'] = thiveryItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: thiveryItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Pick';
+            obj0['upgrades'] = thiveryItem.upgrades - 1;
+            obj0['benefitType'] = 'Possession';
+            obj0['benefit'] = thiveryItem.benefit;
+        }
+        objects.push(obj0);
+        //smelter
+        var obj0 = {};
+        var smelterItem = cursorPlayerData.smelter.ownItem;
+        obj0['categoryNumber'] = 6;
+        if (smelterItem.blank != "") {
+            obj0['menu'] = 'smelter';
+            obj0['itemId'] = smelterItem.blank;
+            obj0['name'] = Items.findOne({
+                blankId: smelterItem.blank
+            }, {
+                fields: {
+                    name: 1
+                }
+            }).name;
+            obj0['type'] = 'Pick';
+            obj0['upgrades'] = smelterItem.upgrades - 1;
+            obj0['benefitType'] = 'Possession';
+            obj0['benefit'] = smelterItem.benefit;
+        }
+        objects.push(obj0);
+        // console.log(objects);
+        return objects;
+    };
 
     Template.masterLayout.rendered = function() {
         $("body").append("<div id='item_tooltip_window' title=''></div>");
-    }
+    };
 
     //////////////////
     ///// EVENTS /////
@@ -1405,9 +1938,11 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-/*            $('#buyMenuWrapper').fadeIn();
+            /*            $('#buyMenuWrapper').fadeIn();
             $('#background_fade').fadeIn();*/
-            $( "#buyMenuWrapper" ).show(0, function() { $( "#background_fade" ).fadeIn();  });
+            $("#buyMenuWrapper").show(0, function() {
+                $("#background_fade").fadeIn();
+            });
             Session.set("clickedMatter", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
             $('#item').text("Matter: " + this.value);
@@ -1462,10 +1997,12 @@ if (Meteor.isClient) {
             var cursorPlayerData = playerData.findOne({
                 user: currentUser
             });
-            
-/*            $('#background_fade').delay(3000).fadeIn();
+
+            /*            $('#background_fade').delay(3000).fadeIn();
             $('#buyMenuWrapper').fadeIn();*/
-            $( "#buyMenuWrapper" ).show(0, function() { $( "#background_fade" ).fadeIn();  });
+            $("#buyMenuWrapper").show(0, function() {
+                $("#background_fade").fadeIn();
+            });
             Session.set("clickedFight", e.currentTarget.id);
             $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
             $('#item').text("XP: " + this.value);
@@ -1656,8 +2193,12 @@ if (Meteor.isClient) {
             var obj0 = {};
             obj0['id'] = 'preview' + player;
 
-            $("#scroungePreviewWrapper").css({"left":$(e.currentTarget).css("left")});
-            $("#scroungePreviewWrapper").css({"bottom":$(e.currentTarget).css("bottom")});
+            $("#scroungePreviewWrapper").css({
+                "left": $(e.currentTarget).css("left")
+            });
+            $("#scroungePreviewWrapper").css({
+                "bottom": $(e.currentTarget).css("bottom")
+            });
             // get db data
             var myName = Meteor.users.findOne({
                 _id: Meteor.userId()
@@ -1728,8 +2269,8 @@ if (Meteor.isClient) {
             Session.set("worldMapPreview", obj0);
 
             $("#scroungePreviewWrapper").css({
-                    display: "block"
-                });
+                display: "block"
+            });
             $("#scroungePreviewWrapper").stop().fadeTo("fast", 1);
         },
 
@@ -1802,7 +2343,6 @@ if (Meteor.isClient) {
         }
 
     });
-
 
     var time = 1200; //Animationszeit in ms
     var current_category = 1; //Start Kategorie
@@ -2117,42 +2657,34 @@ if (Meteor.isClient) {
     }
 
     function init_droppable() {
-        $(".droppable").droppable({
+        $(".dropCheckInventories").droppable({
             addClasses: false,
             hoverClass: "droppable_slot_hover",
             drop: function(event, ui) {
-                if ($(this).html().trim().length == 0) {
-                    $(ui.draggable).detach().appendTo($(this));
-                } else if ($(this).html().trim().length > 0) {
-                    var buffer_parent = $(ui.draggable).parent();
-                    $(ui.draggable).detach();
-                    $(this).children().detach().appendTo(buffer_parent);
-                    $(ui.draggable).appendTo($(this));
-                }
-            },
+                Meteor.call("dropItem", $(ui.draggable).parent().attr('id'), $(this).attr('id'));
+            }
         });
         Session.set("init_bool", false);
     }
 
     function character_view_droppable() {
-        for (var x = 1; x <= 6; x++) {
-            item_type = "#item_type_" + x;
-            $("#scrounge_item_slot_" + x).droppable({
-                accept: ".item_type_" + x,
-                addClasses: false,
-                hoverClass: "proper_droppable_slot_hover",
-                drop: function(event, ui) {
-                    if ($(this).html().trim().length == 0) {
-                        $(ui.draggable).detach().appendTo($(this));
-                    } else if ($(this).html().trim().length > 0) {
-                        var buffer_parent = $(ui.draggable).parent();
-                        $(ui.draggable).detach();
-                        $(this).children().detach().appendTo(buffer_parent);
-                        $(ui.draggable).appendTo($(this));
-                    }
-                }
-            });
-        }
+        $(".dropCheckCharacterView").droppable({
+            // accept: ".item_type_" + x,
+            addClasses: false,
+            hoverClass: "proper_droppable_slot_hover",
+            drop: function(event, ui) {
+                Meteor.call("dropItem", $(ui.draggable).parent().attr('id'), $(this).attr('id'));
+
+                // if ($(this).html().trim().length == 0) {
+                //     $(ui.draggable).detach().appendTo($(this));
+                // } else if ($(this).html().trim().length > 0) {
+                //     var buffer_parent = $(ui.draggable).parent();
+                //     $(ui.draggable).detach();
+                //     $(this).children().detach().appendTo(buffer_parent);
+                //     $(ui.draggable).appendTo($(this));
+                // }
+            }
+        });
     }
     // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
 
@@ -2283,84 +2815,84 @@ if (Meteor.isClient) {
         clearInterval(interval);
     }
 
-    var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"]
+    var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"];
 
-        function update_current_category(direction, category_offset, callback) {
-            for (var x = 0; x < category_offset; x++) {
-                if (direction == "left") {
-                    current_category--;
-                } else if (direction == "right") {
-                    current_category++;
+    function update_current_category(direction, category_offset, callback) {
+        for (var x = 0; x < category_offset; x++) {
+            if (direction == "left") {
+                current_category--;
+            } else if (direction == "right") {
+                current_category++;
+            }
+
+            if (current_category == 0 && direction == "left") {
+                current_category = max_cat;
+            } else if (current_category == (max_cat + 1) && direction == "right") {
+                current_category = 1;
+            }
+        }
+
+        if (current_category == 1 || current_category == 3) {
+            Meteor.users.update({
+                _id: Meteor.userId()
+            }, {
+                $set: {
+                    menu: category_names[current_category - 1]
                 }
-
-                if (current_category == 0 && direction == "left") {
-                    current_category = max_cat;
-                } else if (current_category == (max_cat + 1) && direction == "right") {
-                    current_category = 1;
-                }
-            }
-
-            if (current_category == 1 || current_category == 3) {
-                Meteor.users.update({
-                    _id: Meteor.userId()
-                }, {
-                    $set: {
-                        menu: category_names[current_category - 1]
-                    }
-                });
-            }
-            console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
-
-            if (typeof callback === "function") {
-                // Call it, since we have confirmed it is callable
-                console.log("callback update_current_category()");
-                callback();
-            }
+            });
         }
+        console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
 
-        function size_check() {
-            switch (ready_check) {
-                case 3:
-                    var pos = 256;
-                    var pos_plus = pos + 10;
-                    break;
-                case 2:
-                    var pos = 170;
-                    var pos_plus = pos + 7;
-                    break;
-                case 1:
-                    var pos = 136;
-                    var pos_plus = pos + 6;
-                    break;
-                default:
-                    console.log("failed to check size !(default)");
-                    break;
-            }
-            var pos_reset = pos_plus * max_cat;
-
-            return {
-                p: pos,
-                pp: pos_plus,
-                pr: pos_reset
-            };
+        if (typeof callback === "function") {
+            // Call it, since we have confirmed it is callable
+            console.log("callback update_current_category()");
+            callback();
         }
+    }
 
-        function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
-        {
-            // size = size_check();
-            // var pos = size.p;
-            // var pos_r = size.pr;
-            // var pos_p = size.pp;
-
-            // var cur_pos_right = (c * pos_p) - pos_p;
-            // var cur_pos_left = cur_pos_right - (pos_r);
-            // $("#k1").css({
-            //     left: cur_pos_left
-            // });
-            // $("#k2").css({
-            //     left: cur_pos_right
-            // });
+    function size_check() {
+        switch (ready_check) {
+            case 3:
+                var pos = 256;
+                var pos_plus = pos + 10;
+                break;
+            case 2:
+                var pos = 170;
+                var pos_plus = pos + 7;
+                break;
+            case 1:
+                var pos = 136;
+                var pos_plus = pos + 6;
+                break;
+            default:
+                console.log("failed to check size !(default)");
+                break;
         }
+        var pos_reset = pos_plus * max_cat;
+
+        return {
+            p: pos,
+            pp: pos_plus,
+            pr: pos_reset
+        };
+    }
+
+    function repositioning(ready_check) //Bei Media Query Sprung neu Posi der Leiste [Parameter : Aktueller Media Querie]
+    {
+        // size = size_check();
+        // var pos = size.p;
+        // var pos_r = size.pr;
+        // var pos_p = size.pp;
+
+        // var cur_pos_right = (c * pos_p) - pos_p;
+        // var cur_pos_left = cur_pos_right - (pos_r);
+        // $("#k1").css({
+        //     left: cur_pos_left
+        // });
+        // $("#k2").css({
+        //     left: cur_pos_right
+        // });
+    }
 
     $(window).resize(function() {
         if ($(window).width() <= 1024 && ready_check !== 1) {
@@ -2722,8 +3254,10 @@ if (Meteor.isClient) {
 
     Deps.autorun(function() {
         var init = Session.get("init");
+        var trololo = Session.get("dragQueen");
         // console.log("count: " + deps_count);
         if (deps_count == 1) {
+            Session.set("dragQueen", 0);
             init_draggable();
             init_droppable();
 
@@ -2838,6 +3372,7 @@ if (Meteor.isClient) {
 
         } else if (middle === "characterView") {
             character_view_droppable();
+            init_draggable();
             Session.set("middle", "");
         }
 
