@@ -1768,6 +1768,7 @@ if (Meteor.isClient) {
             } else {
                 obj0['mineResult'] = true;
             }
+            if (maxCount == 0) { obj0['mineInactive'] = true; }
 
             //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
@@ -1793,6 +1794,7 @@ if (Meteor.isClient) {
             } else {
                 obj0['battlefieldResult'] = true;
             }
+            if (maxCount == 0) { obj0['battlefieldInactive'] = true; }
             // update session variab
             Session.set("worldMapPreview", obj0);
 

@@ -1324,9 +1324,14 @@
         <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMineLocked.png);">
         </div>
         {{else}}
+        {{#if mineInactive}}
+        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMineInactive.png);">
+        </div>
+        {{else}}
         <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png);">
             <div class="worldMapSlotsPreviewText">{{mineImpossible}} / {{mineMax}}</div>
         </div>
+        {{/if}}
         {{/if}}
         <!-- <div class="worldMapSlotsPreview" style="left: -50px; top: -50px;">
 
@@ -1341,9 +1346,14 @@
         <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefieldLocked.png);">
         </div>
         {{else}}
+        {{#if battlefieldInactive}}
+        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefieldInactive.png);">
+        </div>
+        {{else}}
         <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png);">
             <div class="worldMapSlotsPreviewText">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
         </div>
+        {{/if}}
         {{/if}}
     </div>
     {{/with}}
