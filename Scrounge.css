@@ -134,6 +134,9 @@ div {
 .inventory_content {
     width:120px;
     left:50%;
+    /* top:0px wichtig */
+    top:0px;
+    /* wegen der scroll funktion !*/
     margin-left: -60px;
 }
 .inv_bot {
@@ -311,6 +314,10 @@ div {
     width:100%;
     top:40px;
     bottom:40px;
+}
+#base_area_content {
+    top:0px;
+    /*wichtig für scroll funktion !*/
 }
 #scrounge_area {
     overflow:hidden;
@@ -1305,6 +1312,9 @@ div {
     height:90px;
 }
 .slot_items_content {
+    /* left:0px */
+    left:0px;
+    /*wichtig für scroll funktion !*/
     height:90px;
     overflow: hidden;
     display:inline-flex;
@@ -1969,6 +1979,10 @@ div {
         right: 0px;
         left: 50%;
         margin-left: 20px;
+    }
+    #scroungeAreaContent {
+        top:0px;
+        /*wichtig für scroll funktion !*/
     }
     .scrounge_slot {
         z-index: 3;

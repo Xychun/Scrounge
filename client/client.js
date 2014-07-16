@@ -1848,7 +1848,7 @@ if (Meteor.isClient) {
 
 
 
-
+    // WorldMap Steuerung per Pfeiltasten
 
     (function($) {
 
@@ -1884,13 +1884,30 @@ if (Meteor.isClient) {
     })(jQuery);
 
 
+    $(window).bind('mousewheel DOMMouseScroll', function(event) {
+        if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+            var direction = "back";
+        } else {
+            var direction = "forth"
+        }
+        if (direction) {
+            var parent = $(document.elementFromPoint(event.clientX, event.clientY)).parent();
+            item_found = false;
+            var x = 0;
 
-
-
-
-
-
-
+            while (!parent.hasClass("scrollable") && x < 4) {
+                parent = parent.parent();
+                x++;
+            }
+            if (parent.hasClass("scrollable")) {
+                if (!parent.attr("id")) {
+                    scroll_content(direction, "horizontal", 100, parent);
+                } else {
+                    scroll_content(direction, "vertical", 100, parent);
+                }
+            }
+        }
+    });
 
     function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
     {
@@ -2025,7 +2042,7 @@ if (Meteor.isClient) {
             for (var x = 0; x < category_offset; x++) {
                 //console.log('for x : ' + x + " offset: " + category_offset);
                 if (x == category_offset - 1) {
-                    animation_type = "easeOutCubic";
+                    animation_type = "easeOutBack";
                     speed = speed * 4;
                 }
                 $("#categories_wrapper").animate(animation_obj_forth, speed, animation_type, function() {
@@ -2103,6 +2120,52 @@ if (Meteor.isClient) {
 
     }
 
+    function scroll_content(direction, orientation, pixel, content_div) {
+
+        var css_direction;
+        var css_changes_obj = {};
+        var current_position;
+        var content_end;
+        var pos_neg;
+        var parent_end;
+
+        if (direction === "back") {
+            transition = "+=" + pixel + "px";
+            pos_neg = +1;
+        } else if (direction === "forth") {
+            transition = "-=" + pixel + "px";
+            pos_neg = -1;
+        }
+
+        if (orientation === "horizontal") {
+            css_direction = "left";
+            current_position = $(content_div).position().left;
+            content_end = $(content_div).width();
+            parent_end = $(content_div).parent().width();
+        } else if (orientation === "vertical") {
+            css_direction = "top";
+            current_position = $(content_div).position().top;
+            content_end = $(content_div).height();
+            parent_end = $(content_div).parent().height();
+
+        }
+
+        eval("css_changes_obj = {" + css_direction + ": '" + transition + "'}");
+
+        if (current_position < 0 && direction === "back" || current_position + content_end > parent_end && direction === "forth") {
+
+            if (parent_end - content_end > current_position + (pos_neg * pixel) && direction === "forth") {
+                eval("css_changes_obj = {" + css_direction + ": '" + (parent_end - content_end) + "px'}");
+                $(content_div).css(css_changes_obj);
+            } else if (current_position + (pos_neg * pixel) > 0 && direction === "back") {
+                eval("css_changes_obj = {" + css_direction + ": '0px'}");
+                $(content_div).css(css_changes_obj);
+            } else {
+                $(content_div).css(css_changes_obj);
+            }
+        }
+    }
+
     function slide_start(direction, orientation, pixel, speed, content_div) {
         //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " content_div: " + content_div);
         var animation_obj = {};
@@ -2145,10 +2208,10 @@ if (Meteor.isClient) {
 
                     if (parent_end - content_end > current_position + (pos_neg * pixel) && direction === "forth") {
                         eval("animation_obj = {" + css_direction + ": '" + (parent_end - content_end) + "px'}");
-                        $(content_div).animate(animation_obj, speed, "swing");
+                        $(content_div).animate(animation_obj, speed, "linear");
                     } else if (current_position + (pos_neg * pixel) > 0 && direction === "back") {
                         eval("animation_obj = {" + css_direction + ": '0px'}");
-                        $(content_div).animate(animation_obj, speed, "swing");
+                        $(content_div).animate(animation_obj, speed, "linear");
                     } else {
                         $(content_div).animate(animation_obj, speed, "linear");
                     }

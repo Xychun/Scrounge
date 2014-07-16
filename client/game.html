@@ -10,7 +10,7 @@
         <div class="inventory left">
             <div class="inv_edge top inventory_left_background_top"></div>
             <div class="inventory_wrapper inventory_left_background">
-                <div id="inventory_stolen" class="inventory_content">
+                <div id="inventory_stolen" class="inventory_content scrollable">
                     <div class="inventory_slots droppable">
                         <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_pick.png)" title="
                                 <div class='item_tooltip_window_name'>
@@ -264,7 +264,7 @@
         <div class="inventory right">
             <div class="inv_edge inv_top top inventory_right_background_top"></div>
             <div class="inventory_wrapper inventory_right_background">
-                <div id="inventory_own" class="inventory_content">
+                <div id="inventory_own" class="inventory_content scrollable">
                     <div class="inventory_slots droppable">
                         <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_pick.png)" title="
                                 <div class='item_tooltip_window_name'>
@@ -394,7 +394,7 @@
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
             </div>
             <div id="base_area">
-                <div id="base_area_content" class="relative">
+                <div id="base_area_content" class="scrollable relative">
 
                     {{#each mineUnusedSlots}}
                     <div class="slotWrapper">
@@ -419,7 +419,7 @@
                             <div class="slot_items">
                                 <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
                                 <div class="slot_items_wrapper">
-                                    <div class="slot_items_content relative">
+                                    <div class="slot_items_content scrollable relative">
                                         {{#each matterBlocks}}
                                         <div id={{matter}} class="item relative">
                                             <img class="itemImg" src="/Aufloesung1920x1080/Mine/MatterBlockBuyable_{{color}}.png">
@@ -547,7 +547,7 @@
                 <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpYellowNormal.png">
             </div>
             <div id="scrounge_area">
-                <div id="scroungeAreaContent" class="relative">
+                <div id="scroungeAreaContent" class="scrollable relative">
                     {{> mineRightBaseUnusedSlots}} {{> mineRightBaseUsedSlots}}
                 </div>
             </div>
@@ -651,7 +651,7 @@
                 <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeMine.png);"></div>
                 {{/if}}
 
-                <div id="scroungeAreaContent" class="relative">
+                <div id="scroungeAreaContent" class="scrollable relative">
                     {{#each mineSupporterSlots}}
                     <div id="scrounge_slot_{{index}}" class="scrounge_slot dropdown relative">
 
@@ -771,7 +771,7 @@
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
             </div>
             <div id="base_area">
-                <div id="base_area_content" class="relative">
+                <div id="base_area_content" class="scrollable relative">
 
                     {{#each battlefieldUnusedSlots}}
                     <div class="slotWrapper">
@@ -796,7 +796,7 @@
                             <div class="slot_items">
                                 <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
                                 <div class="slot_items_wrapper">
-                                    <div class="slot_items_content relative">
+                                    <div class="slot_items_content scrollable relative">
                                         {{#each fightArenas}}
                                         <div id={{fight}} class="item relative">
                                             <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
@@ -921,7 +921,7 @@
                 <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpYellowNormal.png">
             </div>
             <div id="scrounge_area">
-                <div id="scroungeAreaContent" class="relative">
+                <div id="scroungeAreaContent" class="scrollable relative">
                     {{> battlefieldRightBaseUnusedSlots}} {{> battlefieldRightBaseUsedSlots}}
                 </div>
             </div>
@@ -1028,7 +1028,7 @@
                 <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeBattlefield.png);"></div>
                 {{/if}}
 
-                <div id="scroungeAreaContent" class="relative">
+                <div id="scroungeAreaContent" class="scrollable relative">
                     {{#each battlefieldSupporterSlots}}
                     <div class="scrounge_slot dropdown relative">
 
