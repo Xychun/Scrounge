@@ -717,6 +717,14 @@ div {
     background-image: url(/Aufloesung1920x1080/Interface/NavWorldLeft1.png);
     background-repeat: no-repeat;
 }
+#worldMapHomeButton {
+	width: 91px;
+	height: 91px;
+	right: 15px;
+	bottom: 15px;
+	background-image: url(/Aufloesung1920x1080/Interface/WorldmapHomeButton.png);
+    background-repeat: no-repeat;
+}
 #currentMapView {
     width: 2400px;
     height: 1500px;
