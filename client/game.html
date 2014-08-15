@@ -3,9 +3,9 @@
     <div id="links" class="top left">
         <div class="corner top left">
             <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
-            <div id="scrounge" class="corner top left inherit SSscroungeBaseButton"></div>
-            <img id="category_left" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
-            <img id="stolen_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+            <div id="scrounge" class="corner top left inherit SSscroungeBaseButton hover ssh"></div>
+            <div id="category_left" class="slider left_slider right inherit relative SScategory_left hover ssh"></div>
+            <div id="stolen_up" class="slider slider_inv bot inherit SSstolen_up hover ssh"></div>
         </div>
         <div class="inventory left">
             <div class="inv_edge top inventory_left_background_top"></div>
@@ -155,22 +155,22 @@
             <div class="inv_edge bot inventory_left_background_bot"></div>
         </div>
         <div class="corner bot left">
-            <div id="social" class="corner bot left inherit SSsocialButton short_tooltip" title="coming soon!"></div>
-            <img id="matter_left" class="slider left_slider right inherit sliderRotate180 SShoverButton">
-            <img id="stolen_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+            <div id="social" class="corner bot left inherit SSsocialButton hover short_tooltip ssh" title="coming soon!"></div>
+            <div id="matter_left" class="slider left_slider right inherit SSmatter_left hover ssh"></div>
+            <div id="stolen_down" class="slider slider_inv top inherit SSstolen_down hover ssh"></div>
         </div>
     </div>
     <div id="oben" class="top">
         <div id="MenuFrame" class="center_h"></div>
         <div id="categories_wrapper">
-            <img class="category_3 categories_icon_size short_tooltip" title="Battlefield" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
-            <img class="category_4 categories_icon_size short_tooltip" title="Workshop" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
-            <img class="category_5 categories_icon_size short_tooltip" title="Thiefery" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
-            <img class="category_6 categories_icon_size short_tooltip" title="Smelter" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
-            <img class="category_1 categories_icon_size short_tooltip" title="Mine" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png">
-            <img class="category_2 categories_icon_size short_tooltip" title="Laboratory" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuLocked.png">
-            <img class="category_3 categories_icon_size short_tooltip" title="Battlefield" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
-            <img class="category_4 categories_icon_size short_tooltip" title="Workshop" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
+            <div class="category_3 categories_icon_size short_tooltip SSCategoryBattlefield hover relative ssh" title="Battlefield"></div>
+            <div class="category_4 categories_icon_size short_tooltip SSCategoryWorkshop relative ssh" title="Workshop"></div>
+            <div class="category_5 categories_icon_size short_tooltip SSCategoryThievery relative ssh" title="Thiefery"></div>
+            <div class="category_6 categories_icon_size short_tooltip SSCategorySmelter relative ssh" title="Smelter"></div>
+            <div class="category_1 categories_icon_size short_tooltip SSCategoryMine hover relative ssh" title="Mine"></div>
+            <div class="category_2 categories_icon_size short_tooltip SSCategoryLaboratory relative ssh" title="Laboratory"></div>
+            <div class="category_3 categories_icon_size short_tooltip SSCategoryBattlefield hover relative ssh" title="Battlefield"></div>
+            <div class="category_4 categories_icon_size short_tooltip SSCategoryWorkshop relative ssh" title="Workshop"></div>
         </div>
     </div>
 
@@ -257,9 +257,9 @@
     </div>
     <div id="rechts" class="top right">
         <div class="corner top right">
-            <div id="character" class="corner top right inherit SScharacterButton hover short_tooltip" title="Character Screen"></div>
-            <img id="category_right" class="slider right_slider left inherit SShoverButton">
-            <img id="own_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+            <div id="character" class="corner top right inherit SScharacterButton hover short_tooltip ssh" title="Character Screen"></div>
+            <div id="category_right" class="slider right_slider left inherit SScategory_right hover ssh"></div>
+            <div id="own_up" class="slider slider_inv bot inherit SSown_up hover ssh"></div>
         </div>
         <div class="inventory right">
             <div class="inv_edge inv_top top inventory_right_background_top"></div>
@@ -359,9 +359,9 @@
             <div class="inv_edge inv_bot bot inventory_right_background_bot"></div>
         </div>
         <div class="corner bot right">
-            <div id="message" class="corner bot right inherit SSmessageButton short_tooltip" title="coming soon!"></div>
-            <img id="matter_right" class="slider right_slider left inherit SShoverButton">
-            <img id="own_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+            <div id="message" class="corner bot right inherit SSmessageButton hover short_tooltip ssh" title="coming soon!"></div>
+            <div id="matter_right" class="slider right_slider left inherit SSmatter_right hover ssh"></div>
+            <div id="own_down" class="slider slider_inv top inherit SSown_down hover ssh"></div>
         </div>
     </div>
 
@@ -390,7 +390,7 @@
     <div id="mitte">
         {{> improvements}}
         <div class="area_left bot">
-            <div id="up_slider_base" class="hover_slide_height top slider_base_height">
+            <div id="up_slider_base" class="hover_slide_height top slider_base_height SSup_slider_base">
                 <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
             </div>
             <div id="base_area">
@@ -417,7 +417,7 @@
                                 <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
                             </div>
                             <div class="slot_items">
-                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background ssh"></div>
                                 <div class="slot_items_wrapper">
                                     <div class="slot_items_content scrollable relative">
                                         {{#each matterBlocks}}
@@ -437,7 +437,7 @@
                                         {{/each}}
                                     </div>
                                 </div>
-                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background ssh"></div>
                             </div>
                         </div>
                         <div class="slot_edge_right_BaseLeft right"></div>
@@ -534,7 +534,7 @@
                     {{/each}}
                 </div>
             </div>
-            <div id="down_slider_base" class="hover_slide_height bot">
+            <div class="down_slider_base hover_slide_height bot">
                 <img id="base_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
             </div>
         </div>
@@ -794,7 +794,7 @@
                                 <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
                             </div>
                             <div class="slot_items">
-                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background ssh"></div>
                                 <div class="slot_items_wrapper">
                                     <div class="slot_items_content scrollable relative">
                                         {{#each fightArenas}}
@@ -814,7 +814,7 @@
                                         {{/each}}
                                     </div>
                                 </div>
-                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background ssh"></div>
                             </div>
                         </div>
                         <div class="slot_edge_right_BaseLeft right"></div>
