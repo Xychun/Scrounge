@@ -4,46 +4,52 @@ Router.configure({
     // notFoundTemplate: 'NotFound'
 })
 
-Router.map(function() {
-    this.route('login', {
-        path: '/',
-        layoutTemplate: 'masterLayout',
-        yieldTemplates: {
-            'login': {
-                to: 'middle'
-            },
-            /*            'register': {
+
+Router.route('login', {
+    path: '/',
+    layoutTemplate: 'masterLayout',
+    yieldTemplates: {
+        'login': {
+            to: 'middle'
+        },
+        /*            'register': {
                 to: 'middle'
             },*/
+    },
+});
+
+Router.route('game', {
+    path: '/game',
+    layoutTemplate: 'masterLayout',
+    yieldTemplates: {
+        'standardBorder': {
+            to: 'border'
         },
-
-    });
-
-    this.route('game', {
-        path: '/game',
-        layoutTemplate: 'masterLayout',
-
-        yieldTemplates: {
-            'standardBorder': {
-                to: 'border'
-            },
-            'buyMenu': {
-                to: 'buyMenuField'
-            },
+        'buyMenu': {
+            to: 'buyMenuField'
         },
-
-        onBeforeAction: function() {
-            //get the TIME ZONE difference (not the ping!)
-            Meteor.call("getServerTime", function(err, result) {
-                timeClient = new Date();
-                timeServer = result;
-                timeDifference = Math.round((timeClient - timeServer) / 10000) * 10000;
-                // console.log('timeServer' + timeServer.getTime());
-            });
-        },
-
-        //like autorun
-        onData: function() {
+    },
+    onBeforeAction: function() {
+        //get the TIME ZONE difference (not the ping!)
+        timeClient = new Date();
+        timeServer = TimeSync.serverTime(Date.now());
+        timeDifference = Math.round((timeClient - timeServer) / 10000) * 10000;
+        this.next();
+    },
+    // a place to put your subscriptions
+    subscriptions: function() {
+        // add the subscription to the waitlist
+        this.subscribe("userData").wait();
+        this.subscribe("playerData").wait();
+        this.subscribe("MatterBlocks").wait();
+        this.subscribe("FightArenas").wait();
+        this.subscribe("resources").wait();
+        this.subscribe("mine").wait();
+        this.subscribe("battlefield").wait();        
+    },
+    action: function() {
+        if (this.ready()) {
+            this.render();
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -95,24 +101,6 @@ Router.map(function() {
                     backgroundPosition: "-216px 0px"
                 });
             }
-        },
-
-        //returns true or false for the array: does NOT stop or pause
-        waitOn: function() {
-            return [
-                Meteor.subscribe("userData"),
-                Meteor.subscribe("playerData"),
-                Meteor.subscribe("MatterBlocks"),
-                Meteor.subscribe("FightArenas"),
-                Meteor.subscribe("resources"),
-                Meteor.subscribe("mine"),
-                Meteor.subscribe("battlefield")
-            ];
-        },
-
-        action: function() {
-            //render if waitOn is true
-            if (this.ready()) this.render();
         }
-    });
+    }
 });

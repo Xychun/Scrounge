@@ -12,6 +12,7 @@ if (Meteor.isServer) {
         },
 
         getServerTime: function() {
+            console.log('getServerTime server: ' + new Date());
             return new Date();
         },
 
