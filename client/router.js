@@ -138,7 +138,7 @@ function switchScroungeBaseMode (pos, classToBeChanged, mode) {
                   var posXY = pos.split(" ");
                   var posXAbsolute = Math.abs(parseInt(posXY[0]));
                   var newPosX;
-                  // console.log(classToBeChanged+" "+posXAbsolute+"  "+spriteSheetWidth/2);
+                  console.log(classToBeChanged+" "+posXAbsolute+"  "+spriteSheetWidth/2);
                   //Falls Wechsel von Base zu Scrounge
                   if(mode == 'base' && posXAbsolute <= spriteSheetWidth/2) {
                     console.log("BASE TO SCROUNGE");
@@ -153,7 +153,7 @@ function switchScroungeBaseMode (pos, classToBeChanged, mode) {
                     //großer Sprung in die linke Hälfte des SpriteSheets
                     newPosX = parseInt(posXY[0])+spriteSheetWidth/2;
                   }
-                  // console.log("newPosX  "+newPosX);
+                  console.log("newPosX  "+newPosX);
 
                   if(newPosX || newPosX === 0) {
 
