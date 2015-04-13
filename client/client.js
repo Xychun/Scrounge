@@ -1480,17 +1480,6 @@ if (Meteor.isClient) {
     });
 
     ///// STANDARD BORDER /////
-    // Template.standardBorder.onCreated(function() {
-    //     // Use this.subscribe inside onCreated callback
-    //     this.subscribe("userData");
-    //     this.subscribe("playerData");
-    //     this.subscribe("MatterBlocks");
-    //     this.subscribe("FightArenas");
-    //     this.subscribe("resources");
-    //     this.subscribe("mine");
-    //     this.subscribe("battlefield");
-    // });
-
     Template.standardBorder.helpers({
         resources: function() {
             var arrayHelper = resources.find({}).fetch();
@@ -1712,7 +1701,7 @@ if (Meteor.isClient) {
 
         //To-DO Media Queries in 3 CSS files aufteilen und je nach Query nutzen
         //      Evtl. SpriteSheets anlegen im 4er Block und abhängig von der Größe benutzen
-        /*'mouseover .hover': function(e, t) {
+        'mouseover .hover': function(e, t) {
             //console.log(e.target);
             var pos = $(e.target).css("background-position");
             var size = $(e.target).css("padding");
@@ -1731,47 +1720,7 @@ if (Meteor.isClient) {
             $(e.target).css({
                 "background-image": bImage
             });
-        },*/
-        'mouseover .hover': function(e, t) {
-            var pos = $(e.currentTarget).css("background-position");
-
-            //Get only the className which is responsible for the background-Image to manipulate its background-position
-            //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
-            var className = e.currentTarget.className;
-            var temp1 = className.indexOf("SS");
-            var classNameSub = className.substr(temp1);
-            var temp2 = classNameSub.indexOf(" ");
-            var classToBeChanged = "." + classNameSub.substr(0, temp2);
-
-            /*          console.log(className);
-          console.log(temp1);
-          console.log(classNameSub);
-          console.log(temp2);
-          console.log(classToBeChanged);*/
-            /*          console.log("IN");*/
-            moveSpriteSheetBackground(pos, classToBeChanged);
         },
-
-        'mouseout .hover': function(e, t) {
-            var pos = $(e.currentTarget).css("background-position");
-
-            //Get only the className which is responsible for the background-Image to manipulate its background-position
-            //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
-            var className = e.currentTarget.className;
-            var temp1 = className.indexOf("SS");
-            var classNameSub = className.substr(temp1);
-            var temp2 = classNameSub.indexOf(" ");
-            var classToBeChanged = "." + classNameSub.substr(0, temp2);
-
-            /*          console.log(className);
-          console.log(temp1);
-          console.log(classNameSub);
-          console.log(temp2);
-          console.log(classToBeChanged);*/
-            /*          console.log("OUT");*/
-            moveSpriteSheetBackground(pos, classToBeChanged);
-        },
-
         'click .scrounge_now': function(e, t) {
             switchToWorldMap();
         },
@@ -1936,6 +1885,7 @@ if (Meteor.isClient) {
         });
 
         $(document).keyup(function(event) {
+            // console.log(event.keyCode);
             if ($("#worldViewPort").length == 1) {
                 if ((event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode == 87 || event.keyCode == 68 || event.keyCode == 83 || event.keyCode == 65) {
                     switch (event.keyCode) {
@@ -3197,86 +3147,6 @@ if (Meteor.isClient) {
                 oldRender && oldRender.apply(this, arguments);
             };
         });
-    }
-
-    //SpriteSheet anpassen
-
-    function moveSpriteSheetBackground(pos, classToBeChanged, scrounge) {
-
-        var styleSheetList = document.styleSheets;
-        var rules = styleSheetList[0].cssRules;
-
-        /*to get the width of the spritesheet*/
-        var tempImg = new Image;
-        //Man könnte theoretisch auch jedes andere div nehmen, das das SpriteSheet als background-image hat
-        tempImg.src = $("#scrounge").css('background-image').replace(/url\(|\)$/ig, "");
-        var spriteSheetWidth = tempImg.width;
-
-        /*Der Umweg via split ist notwendig, da Firefox background-position-x bzw. -y nicht unterstützt*/
-        var posXY = pos.split(" ");
-        var posXAbsolute = Math.abs(parseInt(posXY[0]));
-
-        /*          console.log(posXY[0]); 
-          console.log("case 1 "+ (parseInt(posXY[0]) < spriteSheetWidth/4 || (posXY[0] >= spriteSheetWidth/2 && parseInt(posXY[0]) < spriteSheetWidth*0.75)));
-          console.log(posXAbsolute+" "+spriteSheetWidth/4+" "+posXAbsolute+" "+spriteSheetWidth/2+" "+posXAbsolute+" "+spriteSheetWidth*0.75);*/
-
-        //Falls es sich um eine Schaltfläche im Status "normal" handelt (linke Abfrage Base / rechte Abfrage Scrounge)
-        if (posXAbsolute < spriteSheetWidth / 4 || (posXAbsolute >= spriteSheetWidth / 2 && posXAbsolute < spriteSheetWidth * 0.75)) {
-            var newPosX = parseInt(posXY[0]) - (spriteSheetWidth / 4);
-        }
-        //Falls es sich um eine Schaltfläche im Status "hovered" handelt
-        else {
-            var newPosX = parseInt(posXY[0]) + (spriteSheetWidth / 4);
-        }
-
-        for (i = 0; i < rules.length; i++) {
-            /*console.log("obereForSchleife "+i)*/
-
-            //Falls kleinstes SpriteSheet, classToBeChanged Klasse ist in der obersten Ebene des spriteSheets zu finden
-            if (spriteSheetWidth == 1472) {
-
-                /*console.log("kleinstesSpriteSheet");*/
-                if (rules[i].selectorText == classToBeChanged) {
-                    rules[i].style.backgroundPosition = newPosX + "px " + posXY[1];
-                    /*                console.log(rules[i].style.backgroundPosition);*/
-                    break;
-                }
-
-            }
-
-            //Falls mittelgroßes SpriteSheet
-            else if (spriteSheetWidth == 1880) {
-
-                /*console.log("mittelgroßesSpriteSheet");*/
-                if (rules[i].cssText.substr(0, 42) == "@media only screen and (max-width: 1919px)") {
-                    //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
-                    var rulesInner = rules[i].cssRules;
-                    for (k = 0; k < rulesInner.length; k++) {
-                        /*console.log("innereForSchleife" + k);*/
-                        if (rulesInner[k].selectorText == classToBeChanged) {
-                            rulesInner[k].style.backgroundPosition = newPosX + "px " + posXY[1];
-                            /*                    console.log("mittelgroß "+rulesInner[k].style.backgroundPosition);*/
-                            break;
-                        }
-                    }
-                }
-            } else if (spriteSheetWidth == 2800) {
-
-                /*console.log("großesSpriteSheet");*/
-                if (rules[i].cssText.substr(0, 42) == "@media only screen and (min-width: 1920px)") {
-                    //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
-                    var rulesInner = rules[i].cssRules;
-                    for (j = 0; j < rulesInner.length; j++) {
-                        /*console.log("innereForSchleife" + j);*/
-                        if (rulesInner[j].selectorText == classToBeChanged) {
-                            rulesInner[j].style.backgroundPosition = newPosX + "px " + posXY[1];
-                            /*                    console.log("groß "+rulesInner[j].style.backgroundPosition);*/
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
