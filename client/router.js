@@ -61,66 +61,50 @@ Router.route('game', {
             });
             var cu = self.cu;
             var menu = self.menu;
-
             //in your own menu? base:scrounge
             if (cu == self.username) {
                 Router.current().render(menu + 'Base', {
                     to: 'middle'
                 });
                 //change menu colors to green
-/*/////////////////////////////////////////////////// SOLL EIGENTLICH IN CLIENT.JS AUFGERUFEN WERDEN   ///////////////////////////////////////////////////////////////////////////*/
-          if($('#scrounge').css("backgroundPosition")) switchScroungeBaseMode ($('#scrounge').css("backgroundPosition"), '.SSscroungeBaseButton', 'scrounge');
-          if($('#character').css("backgroundPosition")) switchScroungeBaseMode ($('#character').css("backgroundPosition"), '.SScharacterButton', 'scrounge');
-          if($('.category_1').css("backgroundPosition")) switchScroungeBaseMode ($('.category_1').css("backgroundPosition"), '.SSCategoryMine', 'scrounge');
-          if($('.category_3').css("backgroundPosition")) switchScroungeBaseMode ($('.category_3').css("backgroundPosition"), '.SSCategoryBattlefield', 'scrounge');
-          if($('#category_right').css("backgroundPosition")) switchScroungeBaseMode ($('#category_right').css("backgroundPosition"), '.SScategory_right', 'scrounge');
-          if($('#category_left').css("backgroundPosition")) switchScroungeBaseMode ($('#category_left').css("backgroundPosition"), '.SScategory_left', 'scrounge');
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-/*                $('#scrounge').css({
+                $('#scrounge').css({
                     backgroundPosition: "0px -303px"
-                });*/
-/*                $('#character').css({
+                });
+                $('#character').css({
                     backgroundPosition: "0px 0px"
-                });*/
-/*                $(".category_1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
-                $(".category_3").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");*/
-/*                $("#category_right").css({
+                });
+                $(".category_1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png");
+                $(".category_3").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png");
+                $("#category_right").css({
                     backgroundPosition: "-109px 0px"
                 });
                 $("#category_left").css({
                     backgroundPosition: "-109px 0px"
-                });*/
+                });
             } else {
                 Router.current().render(menu + 'Scrounge', {
                     to: 'middle'
                 });
                 //change menu colors to red
-/*/////////////////////////////////////////////////// SOLL EIGENTLICH IN CLIENT.JS AUFGERUFEN WERDEN   ///////////////////////////////////////////////////////////////////////////*/
-          if($('#scrounge').css("backgroundPosition")) switchScroungeBaseMode ($('#scrounge').css("backgroundPosition"), '.SSscroungeBaseButton', 'base');
-          if($('#character').css("backgroundPosition")) switchScroungeBaseMode ($('#character').css("backgroundPosition"), '.SScharacterButton', 'base');
-          if($('.category_1').css("backgroundPosition")) switchScroungeBaseMode ($('.category_1').css("backgroundPosition"), '.SSCategoryMine', 'base');
-          if($('.category_3').css("backgroundPosition")) switchScroungeBaseMode ($('.category_3').css("backgroundPosition"), '.SSCategoryBattlefield', 'base');
-          if($('#category_right').css("backgroundPosition")) switchScroungeBaseMode ($('#category_right').css("backgroundPosition"), '.SScategory_right', 'base');
-          if($('#category_left').css("backgroundPosition")) switchScroungeBaseMode ($('#category_left').css("backgroundPosition"), '.SScategory_left', 'base');
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-/*                $('#scrounge').css({
+                $('#scrounge').css({
                     backgroundPosition: "0px 0px"
                 });
                 $('#character').css({
                     backgroundPosition: "0px -152px"
-                });*/
-/*                $(".category_1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
-                $(".category_3").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");*/
-/*                $("#category_right").css({
+                });
+                $(".category_1").attr("src", "/Aufloesung1920x1080/Mine/MineMenuScroungeNormal.png");
+                $(".category_3").attr("src", "/Aufloesung1920x1080/Battlefield/BattlefieldMenuScroungeNormal.png");
+                $("#category_right").css({
                     backgroundPosition: "-216px 0px"
                 });
                 $("#category_left").css({
                     backgroundPosition: "-216px 0px"
-                });*/
+                });
             }
         }
     }
 });
+
 
 function switchScroungeBaseMode (pos, classToBeChanged, mode) {
 
