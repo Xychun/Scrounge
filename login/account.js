@@ -35,7 +35,8 @@ if (Meteor.isClient) {
                     });
                 } else {
                     // Everything is all right, login successfull
-                    switchToGame();
+                      switchToGame();
+                    
                 }
             });
             return false;
@@ -103,6 +104,9 @@ if (Meteor.isClient) {
 
 
     function switchToGame() {
+
+        preloadImages();
+
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
         }, {
@@ -136,4 +140,35 @@ if (Meteor.isClient) {
             console.log("User not yet defined problem switchToGame");
         }
     }
+
+    function preloadImages() {
+      var imgPath;
+      //lade die kleinen Bilder
+      if ($(window).width() < 1280) {
+        imgPath = "/Aufloesung1024xXXX/";
+      }
+
+      //lade die mittelgroßen Bilder
+      if ($(window).width() < 1920) {
+        imgPath = "/Aufloesung1280xXXX/";
+      }
+
+      //lade die großen Bilder
+      else {
+        imgPath = "/Aufloesung1920x1080/";
+      }
+
+      var ImgList = new Array();
+      ImgList[0] = imgPath+"MegaSpriteSheets/MegaSpriteSheetInterfaceHover.gif";
+      ImgList[1] = imgPath+"MegaSpriteSheets/MegaSpriteSheetInterfaceStatic.gif";
+
+      var Images = new Array();
+
+      for (i = 0; i < ImgList.length; i++) 
+        { 
+          Images[i] = new Image(); 
+          Images[i].src = ImgList[i]; 
+        } 
+
+      }
 }
