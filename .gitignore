@@ -1,3 +1,4 @@
 packages/
 .meteor/
+server/kadira.js
 *.db
