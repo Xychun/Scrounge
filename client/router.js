@@ -45,7 +45,8 @@ Router.route('game', {
         this.subscribe("FightArenas").wait();
         this.subscribe("resources").wait();
         this.subscribe("mine").wait();
-        this.subscribe("battlefield").wait();        
+        this.subscribe("battlefield").wait();
+        this.subscribe("worldMapFields").wait();      
     },
     action: function() {
         if (this.ready()) {

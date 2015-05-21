@@ -27,11 +27,11 @@ if (Meteor.isClient) {
     ///// SUBSCRIPTIONS /////
     /////////////////////////
 
-    Meteor.subscribe("userData");
-    Meteor.subscribe("playerData");
-    Meteor.subscribe("MatterBlocks");
-    Meteor.subscribe("resources");
-    Meteor.subscribe("worldMapFields");
+    // Meteor.subscribe("userData");
+    // Meteor.subscribe("playerData");
+    // Meteor.subscribe("MatterBlocks");
+    // Meteor.subscribe("resources");
+    // Meteor.subscribe("worldMapFields");
 
     ////////////////////////////
     ///// GLOBAL VARIABLES /////
