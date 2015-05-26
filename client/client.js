@@ -1496,13 +1496,11 @@ if (Meteor.isClient) {
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-
+            createBots();
         },
 
         'click #testButton2': function(e, t) {
-
             logRenders();
-
         },
 
         'click .category_1': function(e, t) {
@@ -3149,6 +3147,7 @@ if (Meteor.isClient) {
         });
     }
 }
+
 
 /*  function hoverScroungeBase() {
     var pos = button.style.backgroundPosition;

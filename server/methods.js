@@ -669,7 +669,7 @@ if (Meteor.isServer) {
             //check costs
             if (!(matter >= cost)) {
                 Meteor.call("infoLog", 'You cannot buy this fight: You do not have enough matter!', name);
-                    return '0You cannot buy this fight: You do not have enough matter!';
+                return '0You cannot buy this fight: You do not have enough matter!';
             }
             var amountSlots = playerData.findOne({
                 user: name
@@ -708,16 +708,53 @@ if (Meteor.isServer) {
             return '1Fight purchase successful!';
         },
 
-        init: function() {
-            var self = Meteor.users.findOne({
-                _id: this.userId
-            });
-            var name = self.username;
-            if (!self) return;
+        initBots: function(i) {
+            function asyncInitBots(callsCount, callback) {
+                callback(null);
+            }
+            var syncInitBots = Meteor.wrapAsync(asyncInitBots);
+            try {
+                var res = syncInitBots(i);
+                var name = "bot" + i;
+                var pw = i.toString();
+                Accounts.createUser({
+                    username: name,
+                    password: pw
+                });
+                Meteor.call('init', name);
+                return res;
+            } catch (exception) {
+                console.log('exc:', exception);
+                throw exception;
+            }
+        },
+
+        init: function(name) {
+            // var self = Meteor.users.findOne({
+            //     _id: this.userId
+            // });
+            // var name = self.username;
+            // if (!self) return;
+
+            // // USERS //
+            // Meteor.users.update({
+            //     _id: this.userId
+            // }, {
+            //     $set: {
+            //         menu: 'mine',
+            //         cu: name
+            //     }
+            // }, function(err) {
+            //     if (err) {
+            //         throw new Meteor.Error(404, 'account creation users error: ' + err);
+            //     } else {
+            //         //upsert successful
+            //     }
+            // });
 
             // USERS //
             Meteor.users.update({
-                _id: this.userId
+                username: name
             }, {
                 $set: {
                     menu: 'mine',
@@ -732,28 +769,35 @@ if (Meteor.isServer) {
             });
 
             // RESOURCES //
-            resources.insert({
-                user: name,
-                values: {
-                    green: {
-                        matter: 0,
-                        sr1: 0,
-                        sr2: 0,
-                        sr3: 0,
-                        sr4: 0,
-                        sr5: 0,
-                        sr6: 0
-                    },
-                    red: {
-                        matter: 0,
-                        sr1: 0,
-                        sr2: 0,
-                        sr3: 0,
-                        sr4: 0,
-                        sr5: 0,
-                        sr6: 0
+            resources.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    values: {
+                        green: {
+                            matter: 0,
+                            sr1: 0,
+                            sr2: 0,
+                            sr3: 0,
+                            sr4: 0,
+                            sr5: 0,
+                            sr6: 0
+                        },
+                        red: {
+                            matter: 0,
+                            sr1: 0,
+                            sr2: 0,
+                            sr3: 0,
+                            sr4: 0,
+                            sr5: 0,
+                            sr6: 0
+                        }
                     }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation resources error: ' + err);
@@ -766,144 +810,151 @@ if (Meteor.isServer) {
             var randomNumber = Math.floor((Math.random() * 5)) + 1;
 
             // PLAYERDATA //
-            playerData.insert({
-                user: name,
-                level: 0,
-                XP: 0,
-                requiredXP: 2014,
-                backgroundId: randomNumber,
-                mine: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
+            playerData.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    level: 0,
+                    XP: 0,
+                    requiredXP: 2014,
+                    backgroundId: randomNumber,
+                    mine: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 5,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 3,
+                        scrSlots: 6,
+                        supSlots: 2,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
                     },
-                    scrItem: {
-                        blank: "",
-                        benefit: 5,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
+                    laboratory: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 110,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 1,
+                        scrSlots: 1,
+                        supSlots: 1,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
                     },
-                    ownSlots: 3,
-                    scrSlots: 6,
-                    supSlots: 2,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
-                },
-                laboratory: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 110,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
+                    workshop: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 5,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 1,
+                        scrSlots: 1,
+                        supSlots: 1,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
                     },
-                    scrItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
+                    battlefield: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 0.5,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 50,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 3,
+                        scrSlots: 6,
+                        supSlots: 2,
+                        science: 0.1,
+                        minControl: 50,
+                        maxControl: 80
                     },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
-                },
-                workshop: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 5,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
+                    thivery: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 5,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 1,
+                        scrSlots: 1,
+                        supSlots: 1,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
                     },
-                    scrItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
-                },
-                battlefield: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 0.5,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    scrItem: {
-                        blank: "",
-                        benefit: 50,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    ownSlots: 3,
-                    scrSlots: 6,
-                    supSlots: 2,
-                    science: 0.1,
-                    minControl: 50,
-                    maxControl: 80
-                },
-                thivery: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 5,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    scrItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
-                },
-                smelter: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 5,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    scrItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
+                    smelter: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 5,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 1,
+                        scrSlots: 1,
+                        supSlots: 1,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
+                    }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation playerData error: ' + err);
@@ -913,68 +964,75 @@ if (Meteor.isServer) {
             });
 
             // MINE //
-            mine.insert({
-                user: name,
-                owns0: {
-                    input: "0000",
-                    stamp: "",
-                    control: {
-                        min: 5,
-                        max: 10
+            mine.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    owns0: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 5,
+                            max: 10
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
-                    sup0: "",
-                    sup1: ""
-                },
-                owns1: {
-                    input: "0000",
-                    stamp: "",
-                    control: {
-                        min: 5,
-                        max: 10
+                    owns1: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 5,
+                            max: 10
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
-                    sup0: "",
-                    sup1: ""
-                },
-                owns2: {
-                    input: "0000",
-                    stamp: "",
-                    control: {
-                        min: 5,
-                        max: 10
+                    owns2: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 5,
+                            max: 10
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
-                    sup0: "",
-                    sup1: ""
-                },
-                scrs0: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs1: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs2: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs3: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs4: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs5: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
+                    scrs0: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs1: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs2: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs3: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs4: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs5: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation mine error: ' + err);
@@ -984,22 +1042,29 @@ if (Meteor.isServer) {
             });
 
             // LABORATORY //
-            laboratory.insert({
-                user: name,
-                owns0: {
-                    input: "000000",
-                    stamp: "",
-                    control: {
-                        min: 105,
-                        max: 113
+            laboratory.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    owns0: {
+                        input: "000000",
+                        stamp: "",
+                        control: {
+                            min: 105,
+                            max: 113
+                        },
+                        sup0: ""
                     },
-                    sup0: ""
-                },
-                scrs0: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 110
+                    scrs0: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 110
+                    }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation laboratory error: ' + err);
@@ -1009,7 +1074,10 @@ if (Meteor.isServer) {
             });
 
             // WORKSHOP //
-            workshop.insert({
+            workshop.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "000000",
@@ -1025,17 +1093,23 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 2.5
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation workshop error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation workshop error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
 
             // BATTLEFIELD //
-            battlefield.insert({
+            battlefield.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "0000",
@@ -1097,17 +1171,23 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 50
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation battlefield error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation battlefield error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
 
             // THIEVERY //
-            thievery.insert({
+            thievery.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "0000",
@@ -1123,17 +1203,23 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 1
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation thivery error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation thivery error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
 
             // SMELTER //
-            smelter.insert({
+            smelter.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "0000",
@@ -1149,14 +1235,17 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 0.1
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation smelter error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation smelter error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
             Meteor.call('createMapPosition', name);
             return "account init OK!";
         }

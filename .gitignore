@@ -1,3 +1,4 @@
 .meteor/
 server/kadira.js
+client/bots.js
 *.db
