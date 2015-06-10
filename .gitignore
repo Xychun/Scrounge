@@ -1,4 +1,7 @@
 .meteor/
+mup.json
+settings.json
 server/kadira.js
 client/bots.js
+client/lein.sh
 *.db

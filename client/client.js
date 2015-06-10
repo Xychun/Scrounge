@@ -36,7 +36,7 @@ if (Meteor.isClient) {
     ////////////////////////////
     ///// GLOBAL VARIABLES /////
     ////////////////////////////
-
+    
     timers = new Array();
     mapRows = 6;
     mapColumns = 8;
@@ -1496,11 +1496,21 @@ if (Meteor.isClient) {
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-            createBots();
+            console.log('action Button!');
+            // This methodes activates l-k bots with the names from l to k
+            // createBots(0, 9);
+            // This methodes activates n bots to simulate user actions
+            // actionBots(5);
         },
 
         'click #testButton2': function(e, t) {
-            logRenders();
+            // logRenders();
+            Meteor.call('singleUpdate');
+        },
+
+        'click #testButton3': function(e, t) {
+            //param: interval in seconds
+            Meteor.call('updateLoop', 25);
         },
 
         'click .category_1': function(e, t) {
@@ -2590,7 +2600,6 @@ if (Meteor.isClient) {
         $("#infoLog").prepend(log);
 
     }
-
 
     //returns true if locked
 
