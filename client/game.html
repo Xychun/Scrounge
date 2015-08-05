@@ -1,24 +1,25 @@
 <template name="standardBorder">
-    <div id="switchToWorldMap" class="short_tooltip" style="position: absolute; width: 80px; height: 80px; top: 127px; left: 127px; z-index: 3; background-image: url(/Aufloesung1920x1080/Interface/SwitchToWorldMap2.png)" title="World Map"></div>
+{{> worldMapPreload}}
+{{#if Template.subscriptionsReady}}
+<!--     <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"></div> -->
     <div id="links" class="top left">
         <div class="corner top left">
-            <!-- <img id="scrounge" class="corner top left inherit" src="/Aufloesung1920x1080/Interface/SwitchToScroungeButtonNormal.gif"> -->
-            <div id="scrounge" class="corner top left inherit SSscroungeBaseButton"></div>
-            <img id="category_left" class="slider left_slider right inherit relative sliderRotate180 SShoverButton">
-            <img id="stolen_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+            <div id="scrounge" class="corner top left inherit SSscroungeBaseButton hover ssh"></div>
+            <div id="category_left" class="slider left_slider right inherit relative SScategory_left hover ssh"></div>
+            <div id="stolen_up" class="slider slider_inv bot inherit SSstolen_up hover ssh"></div>
         </div>
         <div class="inventory left">
-            <div class="inv_edge top inventory_left_background_top"></div>
-            <div class="inventory_wrapper inventory_left_background">
+            <div class="inv_edge top inventory_left_background_top ssvr"></div>
+            <div class="inventory_wrapper inventory_left_background ssvr">
                 <div id="inventory_stolen" class="inventory_content scrollable">
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_pick.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -440px 0px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Pick</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_pick.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position:-440px 0px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -38,14 +39,14 @@
                             <!-- Beim mouseout wird alles aus dem Tooltip Fenster wieder zurück in den title gespeichert -->
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}red_pick.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -440px -110px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Red Pick</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}red_pick.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position: -440px -110px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -63,14 +64,14 @@
                                 ">
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_2 ssib" style="background-position: -330px 0px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Gloves</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position: -330px 0px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -88,14 +89,14 @@
                                 ">
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Battlefield/Items/{{pick_name}}green_sword.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -110px 0px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Sword</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Battlefield/Items/{{pick_name}}green_sword.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position:-110px 0px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -115,14 +116,14 @@
                             <!-- Beim mouseout wird alles aus dem Tooltip Fenster wieder zurück in den title gespeichert -->
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Battlefield/Items/{{pick_name}}green_shield.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: 0px 0px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Shield</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Battlefield/Items/{{pick_name}}green_shield.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position: 0px 0px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -142,109 +143,109 @@
                             <!-- Beim mouseout wird alles aus dem Tooltip Fenster wieder zurück in den title gespeichert -->
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
                 </div>
             </div>
-            <div class="inv_edge bot inventory_left_background_bot"></div>
+            <div class="inv_edge bot inventory_left_background_bot ssvr"></div>
         </div>
         <div class="corner bot left">
-            <div id="social" class="corner bot left inherit SSsocialButton short_tooltip" title="coming soon!"></div>
-            <img id="matter_left" class="slider left_slider right inherit sliderRotate180 SShoverButton">
-            <img id="stolen_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+            <div id="social" class="corner bot left inherit SSsocialButton hover short_tooltip ssh" title="coming soon!"></div>
+            <div id="matter_left" class="slider left_slider right inherit SSmatter_left hover ssh"></div>
+            <div id="stolen_down" class="slider slider_inv top inherit SSstolen_down hover ssh"></div>
         </div>
     </div>
     <div id="oben" class="top">
-        <div id="MenuFrame" class="center_h"></div>
+        <div id="MenuFrame" class="center_h ssvr"></div>
         <div id="categories_wrapper">
-            <img class="category_3 categories_icon_size short_tooltip" title="Battlefield" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
-            <img class="category_4 categories_icon_size short_tooltip" title="Workshop" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
-            <img class="category_5 categories_icon_size short_tooltip" title="Thiefery" src="/Aufloesung1920x1080/Thiefery/ThieveryMenuLocked.png">
-            <img class="category_6 categories_icon_size short_tooltip" title="Smelter" src="/Aufloesung1920x1080/Smelter/SmelterMenuLocked.png">
-            <img class="category_1 categories_icon_size short_tooltip" title="Mine" src="/Aufloesung1920x1080/Mine/MineMenuBaseNormal.png">
-            <img class="category_2 categories_icon_size short_tooltip" title="Laboratory" src="/Aufloesung1920x1080/Laboratory/LaboratoryMenuLocked.png">
-            <img class="category_3 categories_icon_size short_tooltip" title="Battlefield" src="/Aufloesung1920x1080/Battlefield/BattlefieldMenuBaseNormal.png">
-            <img class="category_4 categories_icon_size short_tooltip" title="Workshop" src="/Aufloesung1920x1080/Workshop/WorkshopMenuLocked.png">
+            <div class="category_3 categories_icon_size short_tooltip SSCategoryBattlefield hover relative ssh" title="Battlefield"></div>
+            <div class="category_4 categories_icon_size short_tooltip SSCategoryWorkshop relative ssh" title="Workshop"></div>
+            <div class="category_5 categories_icon_size short_tooltip SSCategoryThievery relative ssh" title="Thiefery"></div>
+            <div class="category_6 categories_icon_size short_tooltip SSCategorySmelter relative ssh" title="Smelter"></div>
+            <div class="category_1 categories_icon_size short_tooltip SSCategoryMine hover relative ssh" title="Mine"></div>
+            <div class="category_2 categories_icon_size short_tooltip SSCategoryLaboratory relative ssh" title="Laboratory"></div>
+            <div class="category_3 categories_icon_size short_tooltip SSCategoryBattlefield hover relative ssh" title="Battlefield"></div>
+            <div class="category_4 categories_icon_size short_tooltip SSCategoryWorkshop relative ssh" title="Workshop"></div>
         </div>
     </div>
 
     <div id="unten" class="bot">
 
-        <div id="matter_left" class="matter_edge bot left matter_background_left"></div>
-        <div id="matter_wrapper" class="bot matter_background">
-            <div id="infoLog"></div>
+        <div id="matter_left" class="matter_edge bot left matter_background_left sshr"></div>
+        <div id="matter_wrapper" class="bot matter_background sshr">
+            <div id="infoLog" class="hammersmith"></div>
             <div id="matter_content">
                 {{#each resources}}
 
                 <div class="matter_colorBlocks">
-                    <img class="img_matter short_tooltip" src="/Aufloesung1920x1080/Mine/MatterBlock_green.png" title="Green Matter Block">
+                    <div class="img_matter short_tooltip ssib" style="background-position: -1660px -0px;" title="Green Matter Block"></div>
                     <div style="top: 8px; font-size: 30px;" class="text text_matter">{{values.green.matter}}</div>
                     <div class="wrapper_specialResource short_tooltip" title="coming soon!">
                         <div class="sr_left">
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_green.png">
+                                <div class="img_specialResources ssib" style="background-position: -2578px 0px;"></div>
                                 <div class="text text_specialResources">{{values.green.sr1}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_green.png">
+                                <div class="img_specialResources ssib" style="background-position: -2551px 0px;"></div>
                                 <div class="text text_specialResources">{{values.green.sr2}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_green.png">
+                                <div class="img_specialResources ssib" style="background-position: -2628px 0px;"></div>
                                 <div class="text text_specialResources">{{values.green.sr3}}</div>
                             </div>
                         </div>
                         <div class="sr_right">
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_green.png">
+                                <div class="img_specialResources ssib" style="background-position: -2603px 0px;"></div>
                                 <div class="text text_specialResources">{{values.green.sr4}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_green.png">
+                                <div class="img_specialResources ssib" style="background-position: -2655px 0px;"></div>
                                 <div class="text text_specialResources">{{values.green.sr5}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_green.png">
+                                <div class="img_specialResources ssib" style="background-position: -2524px 0px;"></div>
                                 <div class="text text_specialResources">{{values.green.sr6}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="matter_colorBlocks">
-                    <img class="img_matter short_tooltip" src="/Aufloesung1920x1080/Mine/MatterBlock_red.png" title="Red Matter Block">
+                    <div class="img_matter short_tooltip ssib" style="background-position: -1660px -55px;" title="Red Matter Block"></div>
                     <div style="top: 8px; font-size: 30px;" class="text text_matter">{{values.red.matter}}</div>
                     <div class="wrapper_specialResource short_tooltip" title="coming soon!">
                         <div class="sr_left">
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srMine_red.png">
+                                <div class="img_specialResources ssib" style="background-position: -2578px -23px;"></div>
                                 <div class="text text_specialResources">{{values.red.sr1}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srLaboratory_red.png">
+                                <div class="img_specialResources ssib" style="background-position: -2551px -23px;"></div>
                                 <div class="text text_specialResources">{{values.red.sr2}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srThievery_red.png">
+                                <div class="img_specialResources ssib" style="background-position: -2628px -23px;"></div>
                                 <div class="text text_specialResources">{{values.red.sr3}}</div>
                             </div>
                         </div>
                         <div class="sr_right">
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srSmelter_red.png">
+                                <div class="img_specialResources ssib" style="background-position: -2603px -23px;"></div>
                                 <div class="text text_specialResources">{{values.red.sr4}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srWorkshop_red.png">
+                                <div class="img_specialResources ssib" style="background-position: -2655px -23px;"></div>
                                 <div class="text text_specialResources">{{values.red.sr5}}</div>
                             </div>
                             <div class="sr_slot">
-                                <img class="img_specialResources" src="/Aufloesung1920x1080/SpecialResources/srBattlefield_red.png">
+                                <div class="img_specialResources ssib" style="background-position: -2524px -23px;"></div>
                                 <div class="text text_specialResources">{{values.red.sr6}}</div>
                             </div>
                         </div>
@@ -253,26 +254,26 @@
                 {{/each}}
             </div>
         </div>
-        <div id="matter_right" class="matter_edge bot right matter_background_right"></div>
+        <div id="matter_right" class="matter_edge bot right matter_background_right sshr"></div>
     </div>
     <div id="rechts" class="top right">
         <div class="corner top right">
-            <div id="character" class="corner top right inherit SScharacterButton hover short_tooltip" title="Character Screen"></div>
-            <img id="category_right" class="slider right_slider left inherit SShoverButton">
-            <img id="own_up" class="slider slider_inv bot inherit sliderRotate270 SShoverButton">
+            <div id="character" class="corner top right inherit SScharacterButton hover short_tooltip ssh" title="Character Screen"></div>
+            <div id="category_right" class="slider right_slider left inherit SScategory_right hover ssh"></div>
+            <div id="own_up" class="slider slider_inv bot inherit SSown_up hover ssh"></div>
         </div>
         <div class="inventory right">
-            <div class="inv_edge inv_top top inventory_right_background_top"></div>
-            <div class="inventory_wrapper inventory_right_background">
+            <div class="inv_edge inv_top top inventory_right_background_top ssvr"></div>
+            <div class="inventory_wrapper inventory_right_background ssvr">
                 <div id="inventory_own" class="inventory_content scrollable">
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_pick.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -440px 0px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Pick</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_pick.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position: -440px 0px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -292,14 +293,15 @@
                             <!-- Beim mouseout wird alles aus dem Tooltip Fenster wieder zurück in den title gespeichert -->
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_1" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}red_pick.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                    <!-- Es ist sehr wichtig, dass die Klasse "item_type_1" ganz am Ende steht, sonst funktioniert Michas Methode "init draggable" nicht" -->
+                        <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -440px -110px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Red Pick</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}red_pick.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position:-440px -110px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -317,14 +319,14 @@
                                 ">
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
-                        <div class="inventory_items draggable item_tooltip item_type_2" style="background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)" title="
+                    <div class="ssh inventory_slots droppable">
+                        <div class="inventory_items draggable item_tooltip item_type_2 ssib" style="background-position: -330px 0px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Green Gloves</p>
                                 </div>
                                 <div class='item_tooltip_window_wrapper'>
                                     <div class='item_tooltip_window_icon inventory_slots'>
-                                        <div class='inventory_items' style='background-image: url(/Aufloesung1920x1080/Mine/Items/{{pick_name}}green_gloves.png)'></div>
+                                        <div class='ssib inventory_items' style='background-position:-330px 0px'></div>
                                     </div>
                                     <div class='item_tooltip_window_content'>
                                         <p class='text'>
@@ -342,94 +344,96 @@
                                 ">
                         </div>
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
-                    <div class="inventory_slots droppable">
+                    <div class="ssh inventory_slots droppable">
                     </div>
                 </div>
             </div>
-            <div class="inv_edge inv_bot bot inventory_right_background_bot"></div>
+            <div class="inv_edge inv_bot bot inventory_right_background_bot ssvr"></div>
         </div>
         <div class="corner bot right">
-            <div id="message" class="corner bot right inherit SSmessageButton short_tooltip" title="coming soon!"></div>
-            <img id="matter_right" class="slider right_slider left inherit SShoverButton">
-            <img id="own_down" class="slider slider_inv top inherit sliderRotate90 SShoverButton">
+            <div id="message" class="corner bot right inherit SSmessageButton hover short_tooltip ssh" title="coming soon!"></div>
+            <div id="matter_right" class="slider right_slider left inherit SSmatter_right hover ssh"></div>
+            <div id="own_down" class="slider slider_inv top inherit SSown_down hover ssh"></div>
         </div>
     </div>
 
     <!-- Zu Testzwecken -->
-    <!--     <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
+    <!-- <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
     <!-- <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div> -->
-
+    {{else}}
+{{/if}}
 </template>
 
 <template name="improvements">
+    {{#if Template.subscriptionsReady}}
     <div id="improvementsWrapper" class="top left right">
-        <div id="improvementsLeftEdge"></div>
-        <div id="improvements">
+        <div id="improvementsLeftEdge" class="sshr"></div>
+        <div id="improvements" class="sshr">
             {{#with improvement}}
-            <div class="improvementsText" style="color: {{color}};">{{name}}</div>
-            <div id="improvementsText" style="display:table-cell">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
+            <div class="improvementsText hammersmith" style="color: {{color}};">{{name}}</div>
+            <div id="improvementsText" class="hammersmith" style="display:table-cell">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XP: {{xp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LEVEL: {{level}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SCIENCE: {{science}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITEM: {{item}}</div>
             {{/with}}
         </div>
-        <div id="improvementsRightEdge"></div>
+        <div id="improvementsRightEdge" class="sshr"></div>
     </div>
+    {{/if}}
 </template>
 
 <!-- MINEBASE -->
 
 <template name="mineBase">
+{{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div class="area_left bot">
             <div id="up_slider_base" class="hover_slide_height top slider_base_height">
-                <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
+                <div id="base_up" class="slider slider_size center_h SSbase_left_slider_up hover ssh"></div>
             </div>
             <div id="base_area">
                 <div id="base_area_content" class="scrollable relative">
 
                     {{#each mineUnusedSlots}}
                     <div class="slotWrapper">
-                        <div class="slot_edge_left_BaseLeft left">
-                            <div class="slot_icon">
-                                <img src="/Aufloesung1920x1080/Mine/CubeEmptySlot.png">
-                            </div>
+                        <div class="slot_edge_left_BaseLeft left sshr">
+                            <div class="slot_icon slot_icon_mineUnused ssvr"></div>
                         </div>
-                        <div class="unused_slot slotBackgroundBaseLeft">
+                        <div class="unused_slot slotBackgroundBaseLeft sshr">
                             <div class="slot_upper_bar">
-                                <div id="left_slider_slot_colors" class="left slot_colors_slider test_colors_pfeil_left"></div>
+                                <div id="left_slider_slot_colors" class="left slot_colors_slider SScolors_pfeil_left ssh"></div>
                                 <div class="slot_colors_wrapper">
-                                    <div class="left slot_colors_edges"></div>
-                                    <div class="slot_colors_content">
+                                    <div class="left slot_colors_edges sshr"></div>
+                                    <div class="slot_colors_content sshr">
                                         {{#each blockColors}}
-                                        <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItem{{color}}Normal.png">{{/each}}
+                                        <div class="SScolor relative ssh" style="background-position:{{color}}"></div>{{/each}}
                                     </div>
-                                    <div class="right slot_colors_edges"></div>
+                                    <div class="right slot_colors_edges sshr"></div>
                                 </div>
-                                <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
+                                <div id="right_slider_slot_colors" class="right slot_colors_slider SScolors_pfeil_right ssh"></div>
                             </div>
                             <div class="slot_items">
-                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items ssh"></div>
                                 <div class="slot_items_wrapper">
                                     <div class="slot_items_content scrollable relative">
                                         {{#each matterBlocks}}
                                         <div id={{matter}} class="item relative">
-                                            <img class="itemImg" src="/Aufloesung1920x1080/Mine/MatterBlockBuyable_{{color}}.png">
+                                            <div class="itemImg ssib" style="background-position:{{color}}"> </div>
                                             <div class="itemTextValue">{{value}}</div>
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
                                                 <div class="itemTextCostPre relative">pay</div>
                                                 <div class="itemTextCost relative">{{cost}}</div>
-                                                <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"></div>
+                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"> </div>
 
                                             </div>
 
@@ -437,10 +441,10 @@
                                         {{/each}}
                                     </div>
                                 </div>
-                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items ssh"></div>
                             </div>
                         </div>
-                        <div class="slot_edge_right_BaseLeft right"></div>
+                        <div class="slot_edge_right_BaseLeft right sshr"></div>
                     </div>
 
 
@@ -449,12 +453,10 @@
 
                         <div class="used_slot_Wrapper relative">
 
-                            <div class="slot_edge_left_BaseLeft left">
-                                <div class="slot_icon">
-                                    <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
-                                </div>
+                            <div class="slot_edge_left_BaseLeft left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{color}}"></div>
                             </div>
-                            <div class="used_slot slotBackgroundBaseLeft">
+                            <div class="used_slot slotBackgroundBaseLeft sshr">
                                 <div class="slot_upper_bar tooltip_hover">
                                     <span id="tooltip_left_handle_{{slot}}" class="range_slider_tooltip"></span>
                                     <span id="tooltip_right_handle_{{slot}}" class="range_slider_tooltip"></span>
@@ -467,7 +469,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="slot_edge_right_BaseLeft right"></div>
+                            <div class="slot_edge_right_BaseLeft right sshr"></div>
                         </div>
 
 
@@ -476,9 +478,9 @@
 
                             <div class="used_slot_advanced">
 
-                                <div class="slot_edge_left_BaseLeft_advanced left"></div>
+                                <div class="slot_edge_left_BaseLeft_advanced left sshr"></div>
 
-                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced">
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced sshr">
 
                                     <div class="div_center_vertical">
 
@@ -493,23 +495,23 @@
 
                                 </div>
 
-                                <div class="slot_edge_right_BaseLeft_advanced right"></div>
+                                <div class="slot_edge_right_BaseLeft_advanced right sshr"></div>
 
                             </div>
 
                             {{#each supporter}}
                             <div class="scrounge_slot_supporter relative">
 
-                                <div class="slot_edge_left_BaseLeft_supporter left">
+                                <div class="slot_edge_left_BaseLeft_supporter left sshr">
 
-                                    <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Mine/Items/green_pick_scrounger.png)"></div>
+                                    <div class="scrounger_icon ssib" style="background-position: -1754px 4px "></div>
 
-                                    <div class="scrounger_icon_userName">{{supName}}</div>
+                                    <div class="scrounger_icon_userName hammersmith">{{supName}}</div>
 
                                 </div>
 
 
-                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter">
+                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter sshr">
                                     <div class="div_center_vertical">
                                         <div class="scrounger_stats relative">
                                             <p class='text relative'>Miningrate: {{miningrate}}</p>
@@ -520,7 +522,7 @@
                                     </div>
                                 </div>
 
-                                <div class="slot_edge_right_BaseLeft_supporter right"></div>
+                                <div class="slot_edge_right_BaseLeft_supporter right sshr"></div>
 
                             </div>
                             {{/each}}
@@ -534,113 +536,101 @@
                     {{/each}}
                 </div>
             </div>
-            <div id="down_slider_base" class="hover_slide_height bot">
-                <img id="base_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
+            <div class="down_slider_base hover_slide_height bot">
+                <div id="base_down" class="slider slider_size center_h SSbase_left_slider_down hover ssh"></div>
             </div>
         </div>
 
-        <div id="seperation_bar" class="left right"></div>
+        <div id="seperation_bar" class="left right ssvr"></div>
 
 
         <div class="area_right bot">
             <div id="up_slider_scrounge" class="hover_slide_height top">
-                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpYellowNormal.png">
+                <div id="scrounge_up" class="slider slider_size center_h SSbase_right_slider_up hover ssh"></div>
             </div>
             <div id="scrounge_area">
                 <div id="scroungeAreaContent" class="scrollable relative">
-                    {{> mineRightBaseUnusedSlots}} {{> mineRightBaseUsedSlots}}
+
+                    {{#each mineUnusedScroungeSlots}}
+                    <div class="slotWrapper scrounge_now">
+                        <div class="slot_edge_left_BaseRight left sshr">
+                            <div class="slot_icon ssvr slot_icon_mineUnused"></div>
+                        </div>
+                        <div class="unused_slot slotBackgroundBaseRight sshr">
+                            <div class="div_center_vertical">
+                                <div class="scrounge_slot_stats">
+                                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slot_edge_right_BaseRight right sshr"></div>
+                    </div>
+                    
+                    {{/each}} {{#each mineUsedScroungeSlots}}
+                    <div class="slotWrapper dropdown">
+                        <div class="used_slot_Wrapper relative">
+                            <div class="slot_icon_userName">
+                                <p class="slot_icon_userName_text hammersmith">{{victim}}</p>
+                            </div>
+                            <div class="slot_edge_left_BaseRight left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{color}}"></div>
+                            </div>
+                            <div class="used_slot slotBackgroundBaseRight sshr">
+                                <div class="div_center_vertical">
+                                    <div class="scrounge_slot_stats">
+                                        <p class='text relative'>Profit: {{profit}}</p>
+                                        <p class='text relative'>Slots: {{slots}}</p>
+                                        <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slot_edge_right_BaseRight right sshr"></div>
+                        </div>
+
+                        <div class="used_slot_advanced_wrapper">
+                            <div class="used_slot_advanced">
+                                <div class="slot_edge_left_BaseRight_advanced left sshr"></div>
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseRightAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="slot_advanced_stats">
+                                            <p class='text relative'>Mined: {{mined}}</p>
+                                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
+                                            </p>
+                                            <p class='text relative'>Miningrate: {{miningrate}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseRight_advanced right sshr"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {{/each}}
+
                 </div>
             </div>
 
             <div id="down_slider_scrounge" class="hover_slide_height bot">
-                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownYellowNormal.png">
+                <div id="scrounge_down" class="slider slider_size center_h SSbase_right_slider_down hover ssh"></div>
             </div>
         </div>
     </div>
+{{else}}
+<div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
+{{/if}}
 </template>
-
-<template name="mineRightBaseUnusedSlots">
-    {{#each mineUnusedScroungeSlots}}
-    <div class="slotWrapper scrounge_now">
-        <div class="slot_edge_left_BaseRight left">
-            <div class="slot_icon">
-                <img src="/Aufloesung1920x1080/Mine/CubeEmptySlot.png">
-            </div>
-        </div>
-        <div class="unused_slot slotBackgroundBaseRight">
-            <div class="div_center_vertical">
-                <div class="scrounge_slot_stats">
-                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
-                </div>
-            </div>
-        </div>
-        <div class="slot_edge_right_BaseRight right"></div>
-    </div>
-    {{/each}}
-</template>
-
-<template name="mineRightBaseUsedSlots">
-    {{#each mineUsedScroungeSlots}}
-    <div class="slotWrapper dropdown">
-        <div class="used_slot_Wrapper relative">
-            <div class="slot_icon_userName">
-                <p class="slot_icon_userName_text">{{victim}}</p>
-            </div>
-            <div class="slot_edge_left_BaseRight left">
-                <div class="slot_icon">
-                    <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
-                </div>
-            </div>
-            <div class="used_slot slotBackgroundBaseRight">
-                <!-- <div class="slot_upper_bar tooltip_hover">
-                    <span id="tooltip_left_handle_{{slider_id}}" class="range_slider_tooltip"></span>
-                    <span id="tooltip_right_handle_{{slider_id}}" class="range_slider_tooltip"></span>
-                    <div id="range_slider_{{slider_id}}" class="range_slider"></div>
-                </div> -->
-                <div class="div_center_vertical">
-                    <div class="scrounge_slot_stats">
-                        <p class='text relative'>Profit: {{profit}}</p>
-                        <p class='text relative'>Slots: {{slots}}</p>
-                        <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="slot_edge_right_BaseRight right"></div>
-        </div>
-
-        <div class="used_slot_advanced_wrapper">
-            <div class="used_slot_advanced">
-                <div class="slot_edge_left_BaseRight_advanced left"></div>
-                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseRightAdvanced">
-                    <div class="div_center_vertical">
-                        <div class="slot_advanced_stats">
-                            <p class='text relative'>Mined: {{mined}}</p>
-                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
-                            </p>
-                            <p class='text relative'>Miningrate: {{miningrate}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slot_edge_right_BaseRight_advanced right"></div>
-            </div>
-        </div>
-
-    </div>
-    {{/each}}
-</template>
-
-
 
 <!-- MINESCROUNGE -->
 
 <template name="mineScrounge">
+{{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div id="scroungeArea" class="bot">
 
             <div id="up_slider_scrounge" class="hover_slide_height top">
-                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+                <div id="scrounge_up" class="slider slider_size center_h SSscrounge_slider_up hover ssh"></div>
             </div>
 
             <div id="scroungeAreaWrapper">
@@ -648,7 +638,7 @@
                 {{#if mineSupporterSlots}}
                 <!-- content is here! -->
                 {{else}}
-                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeMine.png);"></div>
+                <div id="nothingToScrounge" class="ssvr nothingToScroungeMine"></div>
                 {{/if}}
 
                 <div id="scroungeAreaContent" class="scrollable relative">
@@ -658,13 +648,11 @@
 
                         <div class="scrounge_slot relative">
 
-                            <div class="slot_edge_left_Scrounge left">
-                                <div class="slot_icon">
-                                    <img src="/Aufloesung1920x1080/Mine/MatterBlock_{{color}}.png">
-                                </div>
+                            <div class="slot_edge_left_Scrounge left sshr">
+                                <div class="slot_icon ssib" style="background-position: {{color}}"></div>
                             </div>
 
-                            <div class="scroungable_slot slotBackgroundScrounge">
+                            <div class="scroungable_slot slotBackgroundScrounge sshr">
 
                                 <div class="slot_upper_bar scrounge_left tooltip_hover">
                                     <span id="tooltip_left_handle_{{index}}" class="range_slider_tooltip"></span>
@@ -679,15 +667,13 @@
                                 </div>
                                 {{#if locked}}
                                 <div class="scrounge_right right">
-                                    <img style="float: left" src="/Aufloesung1920x1080/Interface/Lock.png">
+                                    <div id="scrounging_locked" class="ssvr"> </div>
                                     <div class="div_center_vertical" style="height: 100%; left: 140px;">
                                         <p class="text">{{lockedMsg}}</p>
                                     </div>
                                 </div>
                                 {{else}}
-                                <div id="{{goScrounging}}" class="goScroungingMine goScroungingIcon scrounge_right">
-                                    <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
-                                </div>
+                                <div id="{{goScrounging}}" class="goScroungingMine goScroungingIcon scrounge_right ssvr"></div>
                                 <div class="div_center_vertical scrounge_right">
                                     <div class="scroungableText">
                                         <p class='text relative'>Miningrate: {{miningrateChange}}</p>
@@ -699,16 +685,16 @@
                                 {{/if}}
                             </div>
 
-                            <div class="slot_edge_right_Scrounge right"></div>
+                            <div class="slot_edge_right_Scrounge right sshr"></div>
 
                         </div>
 
                         <div class="scrounge_slot_advanced_wrapper relative">
 
                             <div class="scrounge_slot_advanced relative">
-                                <div class="slot_edge_left_ScroungeAdvanced left"></div>
+                                <div class="slot_edge_left_ScroungeAdvanced left sshr"></div>
 
-                                <div class="scroungable_slot_advanced slotBackgroundScroungeAdvanced">
+                                <div class="scroungable_slot_advanced slotBackgroundScroungeAdvanced sshr">
 
                                     <div class="div_center_vertical">
                                         <div class="scrounge_slot_advanced_text">
@@ -719,19 +705,19 @@
                                     </div>
                                 </div>
 
-                                <div class="slot_edge_right_ScroungeAdvanced right"></div>
+                                <div class="slot_edge_right_ScroungeAdvanced right sshr"></div>
                             </div>
 
                             {{#each supporter}}
 
                             <div class="scrounge_slot_supporter relative">
 
-                                <div class="slot_edge_left_ScroungeSupporter left">
-                                    <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Mine/Items/green_pick_scrounger.png)"></div>
-                                    <div class="scrounger_icon_userName">{{supName}}</div>
+                                <div class="slot_edge_left_ScroungeSupporter left sshr">
+                                    <div class="scrounger_icon ssib" style="background-position: -1754px 4px "></div>
+                                    <div class="scrounger_icon_userName hammersmith">{{supName}}</div>
                                 </div>
 
-                                <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter">
+                                <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter sshr">
 
                                     <div class="div_center_vertical">
                                         <div class="scrounge_slot_supporter_text">
@@ -742,7 +728,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="slot_edge_right_ScroungeSupporter right"></div>
+                                <div class="slot_edge_right_ScroungeSupporter right sshr"></div>
                             </div>
                             {{/each}}
                         </div>
@@ -752,61 +738,63 @@
                     </script>
                     {{/each}}
                 </div>
-                <!-- <div id="seperationBarScrounge" class="left right"></div> -->
             </div>
             <div id="down_slider_base" class="hover_slide_height bot">
-                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+                <div id="scrounge_down" class="slider slider_size center_h SSscrounge_slider_down hover ssh"></div>
             </div>
         </div>
     </div>
+    {{else}}
+    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
+{{/if}}
 </template>
 
 <!-- BATTLEFIELDBASE -->
 
 <template name="battlefieldBase">
+{{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div class="area_left bot">
             <div id="up_slider_base" class="hover_slide_height top">
-                <img id="base_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpGreenNormal.png">
+                <div id="base_up" class="slider slider_size center_h SSbase_left_slider_up hover ssh"></div>
             </div>
             <div id="base_area">
                 <div id="base_area_content" class="scrollable relative">
 
                     {{#each battlefieldUnusedSlots}}
                     <div class="slotWrapper">
-                        <div class="slot_edge_left_BaseLeft left">
-                            <div class="slot_icon">
-                                <img src="/Aufloesung1920x1080/Battlefield/BattlesEmptySlot.png">
+                        <div class="slot_edge_left_BaseLeft left sshr">
+                            <div class="slot_icon slot_icon_battlefieldUnused ssvr">
                             </div>
                         </div>
-                        <div class="unused_slot slotBackgroundBaseLeft">
+                        <div class="unused_slot slotBackgroundBaseLeft sshr">
                             <div class="slot_upper_bar">
-                                <div id="left_slider_slot_colors" class="left slot_colors_slider test_colors_pfeil_left"></div>
+                                <div id="left_slider_slot_colors" class="left slot_colors_slider SScolors_pfeil_left ssh"></div>
                                 <div class="slot_colors_wrapper">
-                                    <div class="left slot_colors_edges"></div>
-                                    <div class="slot_colors_content">
+                                    <div class="left slot_colors_edges sshr"></div>
+                                    <div class="slot_colors_content sshr">
                                         {{#each arenaColors}}
-                                        <img class="color relative" src="/Aufloesung1920x1080/Interface/TempImages/TEST_AktionsKastenSortingBarItem{{color}}Normal.png">{{/each}}
+                                        <div class="SScolor relative ssh" style="background-position:{{color}}"></div>{{/each}}
                                     </div>
-                                    <div class="right slot_colors_edges"></div>
+                                    <div class="right slot_colors_edges sshr"></div>
                                 </div>
-                                <div id="right_slider_slot_colors" class="right slot_colors_slider test_colors_pfeil_right"></div>
+                                <div id="right_slider_slot_colors" class="right slot_colors_slider SScolors_pfeil_right ssh"></div>
                             </div>
                             <div class="slot_items">
-                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items_background"></div>
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items ssh"></div>
                                 <div class="slot_items_wrapper">
                                     <div class="slot_items_content scrollable relative">
                                         {{#each fightArenas}}
                                         <div id={{fight}} class="item relative">
-                                            <img class="itemImg" src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
+                                            <div class="itemImg ssib" style="background-position:{{color}}"> </div>
                                             <div class="itemTextValue">{{value}}</div>
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
                                                 <div class="itemTextCostPre relative">pay</div>
                                                 <div class="itemTextCost relative">{{cost}}</div>
-                                                <div class="itemTextCostAfter relative" style="background-image: url(/Aufloesung1920x1080/Mine/MatterBlockCost_{{color}}.png)"></div>
+                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"> </div>
 
                                             </div>
 
@@ -814,22 +802,20 @@
                                         {{/each}}
                                     </div>
                                 </div>
-                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items_background"></div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items ssh"></div>
                             </div>
                         </div>
-                        <div class="slot_edge_right_BaseLeft right"></div>
+                        <div class="slot_edge_right_BaseLeft right sshr"></div>
                     </div>
                     {{/each}} {{#each battlefieldUsedSlots}}
                     <div class="slotWrapper dropdown">
 
                         <div class="used_slot_Wrapper relative">
 
-                            <div class="slot_edge_left_BaseLeft left">
-                                <div class="slot_icon">
-                                    <img src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
-                                </div>
+                            <div class="slot_edge_left_BaseLeft left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{color}}"></div>
                             </div>
-                            <div class="used_slot slotBackgroundBaseLeft">
+                            <div class="used_slot slotBackgroundBaseLeft sshr">
                                 <div class="slot_upper_bar tooltip_hover">
                                     <span id="tooltip_left_handle_{{slot}}" class="range_slider_tooltip"></span>
                                     <span id="tooltip_right_handle_{{slot}}" class="range_slider_tooltip"></span>
@@ -841,7 +827,7 @@
                                     <p class='text relative'>XP: {{xp}}</p>
                                 </div>
                             </div>
-                            <div class="slot_edge_right_BaseLeft right"></div>
+                            <div class="slot_edge_right_BaseLeft right sshr"></div>
 
                         </div>
 
@@ -852,9 +838,9 @@
 
                             <div class="used_slot_advanced">
 
-                                <div class="slot_edge_left_BaseLeft_advanced left"></div>
+                                <div class="slot_edge_left_BaseLeft_advanced left sshr"></div>
 
-                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced">
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced sshr">
 
                                     <div class="div_center_vertical">
 
@@ -866,22 +852,22 @@
                                     </div>
                                 </div>
 
-                                <div class="slot_edge_right_BaseLeft_advanced right"></div>
+                                <div class="slot_edge_right_BaseLeft_advanced right sshr"></div>
 
                             </div>
 
                             {{#each supporter}}
                             <div class="scrounge_slot_supporter relative">
 
-                                <div class="slot_edge_left_BaseLeft_supporter left">
+                                <div class="slot_edge_left_BaseLeft_supporter left sshr">
 
-                                    <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Battlefield/Items/green_sword_scrounger.png)"></div>
+                                    <div class="scrounger_icon ssib" style="background-position: -1863px 4px"></div>
 
-                                    <div class="scrounger_icon_userName">{{supName}}</div>
+                                    <div class="scrounger_icon_userName hammersmith">{{supName}}</div>
 
                                 </div>
 
-                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter">
+                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter sshr">
 
                                     <div class="div_center_vertical">
 
@@ -894,7 +880,7 @@
                                     </div>
                                 </div>
 
-                                <div class="slot_edge_right_BaseLeft_supporter right"></div>
+                                <div class="slot_edge_right_BaseLeft_supporter right sshr"></div>
                             </div>
                             {{/each}}
                         </div>
@@ -909,115 +895,109 @@
                 </div>
             </div>
             <div id="down_slider_base" class="hover_slide_height bot">
-                <img id="base_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownGreenNormal.png">
+                <div id="base_down" class="slider slider_size center_h SSbase_left_slider_down hover ssh"></div>
             </div>
         </div>
 
-        <div id="seperation_bar" class="left right"></div>
+        <div id="seperation_bar" class="left right ssvr"></div>
 
 
         <div class="area_right bot">
             <div id="up_slider_scrounge" class="hover_slide_height top">
-                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseUpYellowNormal.png">
+                <div class="slider slider_size center_h SSbase_right_slider_up hover ssh"></div>
             </div>
             <div id="scrounge_area">
                 <div id="scroungeAreaContent" class="scrollable relative">
-                    {{> battlefieldRightBaseUnusedSlots}} {{> battlefieldRightBaseUsedSlots}}
+
+                {{#each battlefieldUnusedScroungeSlots}}
+                    <div class="slotWrapper scrounge_now">
+                        <div class="slot_edge_left_BaseRight left sshr">
+                            <div class="slot_icon slot_icon_battlefieldUnused ssvr">
+                            </div>
+                        </div>
+                        <div class="unused_slot slotBackgroundBaseRight sshr">
+                            <div class="div_center_vertical">
+                                <div class="scrounge_slot_stats">
+                                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slot_edge_right_BaseRight right sshr"></div>
+                    </div>
+                    
+                {{/each}} {{#each battlefieldUsedScroungeSlots}}
+                    <div class="slotWrapper dropdown">
+
+                        <div class="used_slot_Wrapper relative">
+
+                            <div class="slot_icon_userName">
+                                <p class="slot_icon_userName_text hammersmith">{{victim}}</p>
+                            </div>
+
+                            <div class="slot_edge_left_BaseRight left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{color}}"></div>
+                            </div>
+                            <div class="used_slot slotBackgroundBaseRight sshr">
+                                <!-- <div class="slot_upper_bar tooltip_hover">
+                                    <span id="tooltip_left_handle_{{slider_id}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slider_id}}" class="range_slider_tooltip"></span>
+                                    <div id="range_slider_{{slider_id}}" class="range_slider"></div>
+                                </div> -->
+                                <div class="div_center_vertical">
+                                    <div class="scrounge_slot_stats">
+                                        <p class='text relative'>XP: {{profit}}</p>
+                                        <p class='text relative'>Slots: {{slots}}</p>
+                                        <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slot_edge_right_BaseRight right sshr"></div>
+                        </div>
+
+                        <div class="used_slot_advanced_wrapper">
+                            <div class="used_slot_advanced">
+                                <div class="slot_edge_left_BaseRight_advanced left sshr"></div>
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseRightAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="slot_advanced_stats">
+                                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a> 
+                                                <p class='text relative'>Epicness: {{epicness}}</p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseRight_advanced right"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                {{/each}}
+
                 </div>
             </div>
 
             <div id="down_slider_scrounge" class="hover_slide_height bot">
-                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonBaseDownYellowNormal.png">
+                <div class="slider slider_size center_h SSbase_right_slider_down hover ssh"></div>
             </div>
         </div>
     </div>
+    {{else}}
+    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
+<!--     <div id="mitte" style="background-color: blue"> BATTLEFIELD CONTENT IS LOADING </div> -->
+{{/if}}
 </template>
-
-<template name="battlefieldRightBaseUnusedSlots">
-    {{#each battlefieldUnusedScroungeSlots}}
-    <div class="slotWrapper scrounge_now">
-        <div class="slot_edge_left_BaseRight left">
-            <div class="slot_icon">
-                <img src="/Aufloesung1920x1080/Battlefield/BattlesEmptySlot.png">
-            </div>
-        </div>
-        <div class="unused_slot slotBackgroundBaseRight">
-            <div class="div_center_vertical">
-                <div class="scrounge_slot_stats">
-                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
-                </div>
-            </div>
-        </div>
-        <div class="slot_edge_right_BaseRight right"></div>
-    </div>
-    {{/each}}
-</template>
-
-<template name="battlefieldRightBaseUsedSlots">
-    {{#each battlefieldUsedScroungeSlots}}
-    <div class="slotWrapper dropdown">
-
-        <div class="used_slot_Wrapper relative">
-
-            <div class="slot_icon_userName">
-                <p class="slot_icon_userName_text">{{victim}}</p>
-            </div>
-
-            <div class="slot_edge_left_BaseRight left">
-                <div class="slot_icon">
-                    <img src="/Aufloesung1920x1080/Battlefield/Battles_{{color}}.png">
-                </div>
-            </div>
-            <div class="used_slot slotBackgroundBaseRight">
-                <!-- <div class="slot_upper_bar tooltip_hover">
-                    <span id="tooltip_left_handle_{{slider_id}}" class="range_slider_tooltip"></span>
-                    <span id="tooltip_right_handle_{{slider_id}}" class="range_slider_tooltip"></span>
-                    <div id="range_slider_{{slider_id}}" class="range_slider"></div>
-                </div> -->
-                <div class="div_center_vertical">
-                    <div class="scrounge_slot_stats">
-                        <p class='text relative'>XP: {{profit}}</p>
-                        <p class='text relative'>Slots: {{slots}}</p>
-                        <p class='text relative'>Remaining: <a id='{{remainingId}}' class='text relative'> {{remaining}} </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="slot_edge_right_BaseRight right"></div>
-        </div>
-
-        <div class="used_slot_advanced_wrapper">
-            <div class="used_slot_advanced">
-                <div class="slot_edge_left_BaseRight_advanced left"></div>
-                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseRightAdvanced">
-                    <div class="div_center_vertical">
-                        <div class="slot_advanced_stats">
-                            <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a> 
-                                <p class='text relative'>Epicness: {{epicness}}</p>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slot_edge_right_BaseRight_advanced right"></div>
-            </div>
-        </div>
-
-    </div>
-    {{/each}}
-</template>
-
-
-
 
 <!-- BATTLEFIELDSCROUNGE -->
 
 <template name="battlefieldScrounge">
+{{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div id="scroungeArea" class="bot">
 
             <div id="up_slider_scrounge" class="hover_slide_height top">
-                <img id="scrounge_up" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeUpNormal.png">
+                <div id="scrounge_up" class="slider slider_size center_h SSscrounge_slider_up hover ssh"></div>
             </div>
 
             <div id="scroungeAreaWrapper">
@@ -1025,7 +1005,7 @@
                 {{#if battlefieldSupporterSlots}}
                 <!-- content is here! -->
                 {{else}}
-                <div id="nothingToScrounge" style="background-image: url(/Aufloesung1920x1080/Interface/NothingToScroungeBattlefield.png);"></div>
+                <div id="nothingToScrounge" class="ssvr nothingToScroungeBattlefield"></div>
                 {{/if}}
 
                 <div id="scroungeAreaContent" class="scrollable relative">
@@ -1035,13 +1015,11 @@
 
                         <div class="scrounge_slot relative">
 
-                            <div class="slot_edge_left_Scrounge left">
-                                <div class="slot_icon">
-                                    <img src="/Aufloesung1920x1080/Battlefield/Battles_green.png">
-                                </div>
+                            <div class="slot_edge_left_Scrounge left sshr">
+                                <div class="slot_icon ssib" style="background-position: {{color}}"></div>
                             </div>
 
-                            <div class="scroungable_slot slotBackgroundScrounge">
+                            <div class="scroungable_slot slotBackgroundScrounge sshr">
 
                                 <div class="slot_upper_bar scrounge_left tooltip_hover">
                                     <span id="tooltip_left_handle_{{index}}" class="range_slider_tooltip"></span>
@@ -1055,14 +1033,13 @@
                                 </div>
                                 {{#if locked}}
                                 <div class="scrounge_right right">
-                                    <img style="float: left" src="/Aufloesung1920x1080/Interface/Lock.png">
+                                    <div id="scrounging_locked" class="ssvr"> </div>
                                     <div class="div_center_vertical" style="height: 100%; left: 140px;">
                                         <p class="text">{{lockedMsg}}</p>
                                     </div>
                                 </div>
                                 {{else}}
-                                <div id="{{goScrounging}}" class="goScroungingBattlefield goScroungingIcon scrounge_right">
-                                    <img src="/Aufloesung1920x1080/Interface/ScroungeHere3.png">
+                                <div id="{{goScrounging}}" class="goScroungingBattlefield goScroungingIcon scrounge_right ssvr">
                                 </div>
                                 <div class="div_center_vertical scrounge_right">
                                     <div class="scroungableText">
@@ -1074,16 +1051,16 @@
                                 {{/if}}
                             </div>
 
-                            <div class="slot_edge_right_Scrounge right"></div>
+                            <div class="slot_edge_right_Scrounge right sshr"></div>
 
                         </div>
 
                         <div class="scrounge_slot_advanced_wrapper relative">
 
                             <div class="scrounge_slot_advanced relative">
-                                <div class="slot_edge_left_ScroungeAdvanced left"></div>
+                                <div class="slot_edge_left_ScroungeAdvanced left sshr"></div>
 
-                                <div class="scroungable_slot_advanced slotBackgroundScroungeAdvanced">
+                                <div class="scroungable_slot_advanced slotBackgroundScroungeAdvanced sshr">
 
                                     <div class="div_center_vertical">
                                         <div class="scrounge_slot_advanced_text">
@@ -1092,20 +1069,20 @@
                                     </div>
                                 </div>
 
-                                <div class="slot_edge_right_ScroungeAdvanced right"></div>
+                                <div class="slot_edge_right_ScroungeAdvanced right sshr"></div>
                             </div>
 
                             {{#each supporter}}
 
                             <div class="scrounge_slot_supporter relative">
 
-                                <div class="slot_edge_left_ScroungeSupporter left">
-                                    <div class="scrounger_icon" style="background-image: url(/Aufloesung1920x1080/Battlefield/Items/green_sword_scrounger.png)"></div>
-                                    <div class="scrounger_icon_userName">{{supName}}</div>
+                                <div class="slot_edge_left_ScroungeSupporter left sshr">
+                                    <div class="scrounger_icon ssib" style="background-position: -1863px 4px"></div>
+                                    <div class="scrounger_icon_userName hammersmith">{{supName}}</div>
                                 </div>
 
 
-                                <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter">
+                                <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter sshr">
 
                                     <div class="div_center_vertical">
                                         <div class="scrounge_slot_supporter_text">
@@ -1117,7 +1094,7 @@
                                     </div>
                                 </div>
 
-                                <div class="slot_edge_right_ScroungeSupporter right"></div>
+                                <div class="slot_edge_right_ScroungeSupporter right sshr"></div>
 
                             </div>
 
@@ -1138,10 +1115,13 @@
             </div>
 
             <div id="down_slider_base" class="hover_slide_height bot">
-                <img id="scrounge_down" class="slider slider_size center_h" src="/Aufloesung1920x1080/Interface/SmallHoverButtonScroungeDownNormal.png">
+                <div id="scrounge_down" class="slider slider_size center_h SSscrounge_slider_down hover ssh"></div>
             </div>
         </div>
     </div>
+    {{else}}
+    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
+{{/if}}
 </template>
 
 <!-- BUYMENU -->
@@ -1152,9 +1132,9 @@
     <div id="buyMenuWrapper">
         <div id="buyMenu" class="left right">
 
-            <div id="buyMenuTopEnd" class="left right">
+            <div id="buyMenuTopEnd" class="left right sshr">
 
-                <img id="buyMenuItem">
+                <div id="buyMenuItem" class="ssib"> </div>
                 <div class="range_slider_wrapper tooltip_hover">
                     <span id="tooltip_left_handle_Buy_Menu" class="range_slider_tooltip"></span>
                     <span id="tooltip_right_handle_Buy_Menu" class="range_slider_tooltip"></span>
@@ -1163,7 +1143,7 @@
 
             </div>
 
-            <div id="buyMenuFrame" class="left right">
+            <div id="buyMenuFrame" class="left right sshr">
 
                 <div id="AmountScroungerSlots">
 
@@ -1171,11 +1151,11 @@
 
                 </div>
 
-                <div id="buyMenuText">
+                <div id="buyMenuText" class="hammersmith">
                     <p id="item"></p>
                     <div style="position: relative; margin-top: 24px; margin-bottom: 24px">
-                        <p id="price" class='relative' style="float: left; margin: 0px"></p>
-                        <img id="matterImg" style="width: 20px; height: 20px; position: relative; top: 3px; left: 5px; ">
+                        <div id="price" class='relative' style="float: left; margin: 0px"></div>
+                        <div id="matterImg" class="ssib" style="width: 20px; height: 20px; position: relative; top: 3px; left: 10px; display: inline-flex"></div>
                     </div>
                     <p id="time"></p>
                 </div>
@@ -1185,12 +1165,12 @@
 
 
 
-                <div id="buyMenuYes"></div>
-                <div id="buyMenuNo"></div>
+                <div id="buyMenuYes" class="sshr"></div>
+                <div id="buyMenuNo" class="sshr"></div>
 
             </div>
 
-            <div id="buyMenuBottomEnd" class="left right"></div>
+            <div id="buyMenuBottomEnd" class="left right sshr"></div>
         </div>
     </div>
 
@@ -1211,12 +1191,12 @@
 
             <div id="scroungeItemsWrapper">
 
-                <div id="scrounge_item_slot_1" class="itemSlotBackground"></div>
-                <div id="scrounge_item_slot_2" class="itemSlotBackground"></div>
-                <div id="scrounge_item_slot_3" class="itemSlotBackground"></div>
-                <div id="scrounge_item_slot_4" class="itemSlotBackground"></div>
-                <div id="scrounge_item_slot_5" class="itemSlotBackground"></div>
-                <div id="scrounge_item_slot_6" class="itemSlotBackground"></div>
+                <div id="scrounge_item_slot_1" class="ssh itemSlotBackground"></div>
+                <div id="scrounge_item_slot_2" class="ssh itemSlotBackground"></div>
+                <div id="scrounge_item_slot_3" class="ssh itemSlotBackground"></div>
+                <div id="scrounge_item_slot_4" class="ssh itemSlotBackground"></div>
+                <div id="scrounge_item_slot_5" class="ssh itemSlotBackground"></div>
+                <div id="scrounge_item_slot_6" class="ssh itemSlotBackground"></div>
 
             </div>
 
@@ -1244,12 +1224,12 @@
 
                 <div id="baseItemsWrapper">
 
-                    <div id="base_item_slot_1" class="itemSlotBackground"></div>
-                    <div id="base_item_slot_2" class="itemSlotBackground"></div>
-                    <div id="base_item_slot_3" class="itemSlotBackground"></div>
-                    <div id="base_item_slot_4" class="itemSlotBackground"></div>
-                    <div id="base_item_slot_5" class="itemSlotBackground"></div>
-                    <div id="base_item_slot_6" class="itemSlotBackground"></div>
+                    <div id="base_item_slot_1" class="ssh itemSlotBackground"></div>
+                    <div id="base_item_slot_2" class="ssh itemSlotBackground"></div>
+                    <div id="base_item_slot_3" class="ssh itemSlotBackground"></div>
+                    <div id="base_item_slot_4" class="ssh itemSlotBackground"></div>
+                    <div id="base_item_slot_5" class="ssh itemSlotBackground"></div>
+                    <div id="base_item_slot_6" class="ssh itemSlotBackground"></div>
 
                 </div>
 
@@ -1265,38 +1245,45 @@
 
 </template>
 
-<template name="worldMap">
+<template name="worldMapPreload">
+{{#if Template.subscriptionsReady}}
 
+    <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"> </div>
+
+{{else}}
+
+    <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"> </div>
+
+{{/if}}
+</template>
+
+<template name="worldMap">
+{{#if Template.subscriptionsReady}}
     <div id="worldViewPort">
 
-        <div class="worldMapNavigators" id="worldMapGoUp"></div>
-        <div class="worldMapNavigators" id="worldMapGoDown"></div>
-        <div class="worldMapNavigators" id="worldMapGoRight"></div>
-        <div class="worldMapNavigators" id="worldMapGoLeft"></div>
+        <div id="worldMapGoUp" class="worldMapNavigators SSworldMapGoUp hover ssh"></div>
+        <div id="worldMapGoDown" class="worldMapNavigators SSworldMapGoDown hover ssh"></div>
+        <div id="worldMapGoRight" class="worldMapNavigators SSworldMapGoRight hover ssh"></div>
+        <div id="worldMapGoLeft" class="worldMapNavigators SSworldMapGoLeft hover ssh"></div>
+        <div class="ssvr" id="worldMapHomeButton"></div>
 
 
         <!-- currentMapView umfasst alle slots, die ein Spieler sehen kann. Beim Navigieren via der Richtungspfeile, werden entsprechend der Bewegungsrichtung die divs neu mit Daten befüllt -->
-        <div id="currentMapView" style="background-image:url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace0.png);">
+        <div id="currentMapView" class="ssw" style="background-position: 0px 0px);">
 
-
-
-            <!-- Möglichkeit zur Variabilität 1: Diese sechs slots selbst in ein div packen und dieses eine div variabel über das jeweils angewählte div legen mit den entsprechenden Daten -->
-            <!-- Hierbei handelt es sich um die slot-preview, die um jeden PlayerPlace herum angezeigt werden soll. Mit der Info, ob man hier scroungen kann und wie viele slots noch frei sind -->
-
-            <!-- worldMapSlotsPreview enthält die sechs Divs mit der Slotpreview. Positionierung müsste dann via javascript variabel erfolgen. Bisher hardcoded auf DIV links (GELB) -->
             <div id="scroungePreviewWrapper">
                 {{>scroungePreview}}
             </div>
 
             <!-- Hier die ganzen slots. Ingesamt 4x6 slots. Jeweils 300x250 groß.-->
             {{#each worldMapArray}} {{#each columns}}
-            <div class="worldMapPlayerPlace" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; background-image: url(/Aufloesung1920x1080/Interface/BackgroundPlayerPlace{{backgroundNumber}}.jpg); background-repeat: no-repeat;">
+            <div class="worldMapPlayerPlace ssw" id={{playerName}} style="left: {{left}}px; bottom: {{bottom}}px; background-position:{{backgroundNumber}};">
                 {{#if playerImageId}}
                 <div class="worldMapPlayerStats">
 
-                    <div class="worldMapPlayerLevel">{{playerLevel}}</div>
-                    <div class="{{playerImage}}" style="background-image: url(/Aufloesung1920x1080/Interface/PlayerImage{{playerImageId}}.png);"></div>
-                    <div class="worldMapPlayerName">{{playerName}}</div>
+                    <div class="worldMapPlayerLevel hammersmith">{{playerLevel}}</div>
+                    <div class="{{playerImage}} ssvr" style="background-position: {{playerImageId}};"></div>
+                    <div class="worldMapPlayerName hammersmith">{{playerName}}</div>
 
                 </div>
                 {{/if}}
@@ -1304,57 +1291,49 @@
             {{/each}} {{/each}}
         </div>
     </div>
+<!--     {{else}}  
+    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div> -->
+{{/if}}
 </template>
 
 <template name="scroungePreview">
     {{#with previewInfos}}
     <div id={{id}} class="worldMapScroungePreview relative" style="width: 300px; height: 250px;">
-        <!-- <div class="worldMapSlotsPreview" style="right: -50px; top: -50px;">
 
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div class="worldMapSlotsPreview" style="right: -50px; bottom: -50px;">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div> -->
         <!-- mine preview -->
         {{#if mineResult}}
-        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMineLocked.png);">
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -601px -440px;">
         </div>
         {{else}}
         {{#if mineInactive}}
-        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMineInactive.png);">
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -501px -440px;">
         </div>
         {{else}}
-        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; top: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewMine.png);">
-            <div class="worldMapSlotsPreviewText">{{mineImpossible}} / {{mineMax}}</div>
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -401px -440px;">
+            <div class="worldMapSlotsPreviewText hammersmith">{{mineImpossible}} / {{mineMax}}</div>
         </div>
         {{/if}}
         {{/if}}
-        <!-- <div class="worldMapSlotsPreview" style="left: -50px; top: -50px;">
 
-                <div class="worldMapSlotsPreviewText">0 / 4</div>
-
-            </div>
-            <div class="worldMapSlotsPreview" style="left: -50px; bottom: -50px;">
-
-                <div class="worldMapSlotsPreviewText">0 / 4</div> -->
         <!-- battlefield preview -->
         {{#if battlefieldResult}}
-        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefieldLocked.png);">
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -601px -220px;">
         </div>
         {{else}}
         {{#if battlefieldInactive}}
-        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefieldInactive.png);">
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -501px -220px;">
         </div>
         {{else}}
-        <div class="worldMapSlotsPreview" style="left: 50%; margin-left: -50px; bottom: -50px; background-image: url(/Aufloesung1920x1080/Interface/WorldMapSlotsPreviewBattlefield.png);">
-            <div class="worldMapSlotsPreviewText">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -401px -220px;">
+            <div class="worldMapSlotsPreviewText hammersmith">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
         </div>
         {{/if}}
         {{/if}}
     </div>
     {{/with}}
+</template>
+
+<template name="loading">
+<!-- <div id="mitte"> <img style="position: absolute; width:256px; height:152px; top:50%; left:50%; margin-left:-128px;" src="loadingScreen.gif"> </div> -->
+<div id="mitte"> <div class="hammersmith slot_icon_userName_text" style="position: absolute; width:500px; height:200px; top:50%; left:50%; margin-left:-250px; margin-top:-100px; font-size: 2em; text-shadow: 4px 4px 10px black, 4px -4px 10px black, -4px 4px 10px black, -4px -4px 10px black;"> UPDATING YOUR SLOTS...BE PATIENT...IT'S WORTH YOUR TIME </div> <img style="position: absolute; width:256px; height:152px; top:50%; left:50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
 </template>

@@ -22,6 +22,17 @@ function validLength(val) {
 if (Meteor.isClient) {
     Template.login.events({
         'submit #login-form': function(e, t) {
+            console.time("LOGINMB");
+            console.time("LOGINSB");
+            console.time("LOGINI");
+            console.time("LOGINWP");
+            console.time("LOGINHELPER1");
+            console.time("LOGINHELPER2");
+            console.time("LOGINHELPER3");
+            console.time("LOGINHELPER4");
+            console.time("LOGINHELPER5");
+            console.time("LOGINHELPER6");
+            console.time('Oo');
             var name = t.find('#login-name').value;
             var password = t.find('#login-password').value;
             // TO-DO: Trim and validate your fields here
@@ -35,7 +46,7 @@ if (Meteor.isClient) {
                     });
                 } else {
                     // Everything is all right, login successfull
-                    switchToGame();
+                    switchToGame('login');
                 }
             });
             return false;
@@ -63,7 +74,7 @@ if (Meteor.isClient) {
                                 if (err) {
                                     console.log('account init: ' + err);
                                 } else {
-                                    switchToGame();
+                                    switchToGame('register');
                                 }
                             });
                         }
@@ -102,7 +113,7 @@ if (Meteor.isClient) {
     });
 
 
-    function switchToGame() {
+    function switchToGame(loginOrRegister) {
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
         }, {
@@ -112,6 +123,17 @@ if (Meteor.isClient) {
                 username: 1
             }
         });
+        if(loginOrRegister === 'login') {
+            //update everything of active player if need be
+            Meteor.call('initialUpdate', self.username, function(err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log(result);
+                }
+            });
+        }
         if (self) {
             if ($(window).width() < 1920) {
                 current_resolution = "<1920";

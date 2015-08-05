@@ -9,7 +9,7 @@ deps-ext - https://github.com/EventedMind/deps-ext
 blaze-layout - https://github.com/EventedMind/blaze-layout
 
 Installation:
-LaunchMeteor.exe starten zur Installtion und dann 
+LaunchMeteor.exe starten zur Installation und dann 
 in den "packages" Ordner alle Packages reinkopieren
 
 Meteor starten :
