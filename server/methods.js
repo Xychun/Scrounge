@@ -4,11 +4,22 @@
 
 if (Meteor.isServer) {
     var turfUpdateArray = new Array();
+
     //Array, das Fertigstellung der slots trackt
     var timers = [];
+    var loop = false;
+
+    Meteor.startup(function() {
+        // code to run on server at startup
+        // Meteor.call('updateLoop', 25);
+    });
 
     //Methods
     Meteor.methods({
+        rootUrl: function() {
+            return process.env.ROOT_URL;
+        },
+
         asyncJob: function() {
             this.unblock();
         },
@@ -18,6 +29,361 @@ if (Meteor.isServer) {
             return new Date();
         },
 
+        singleUpdate: function() {
+            Meteor.call('update');
+        },
+
+        updateLoop: function(tick) {
+            if (loop == false) {
+                loop = true;
+                console.log('update LOOP starts!');
+                Meteor.call('update');
+                updateInterval = Meteor.setInterval(function() {
+                    Meteor.call('update');
+                }, tick * 1000);
+            } else {
+                console.log('update LOOP stopps!');
+                Meteor.clearInterval(updateInterval);
+            }
+        },
+
+        update: function() {
+            var START = new Date().getTime();
+            console.log('update START', new Date());
+
+            var allUsers = Meteor.users.find({}).fetch();
+            //Iterate all users
+            for (var i = 0; i < allUsers.length; i++) {
+                var cUser = allUsers[i].username;
+                var cPData = playerData.findOne({
+                    user: cUser
+                });
+                Meteor.call('updateMine', cUser, cPData);
+                Meteor.call('updateBattlefield', cUser, cPData);
+            };
+
+            var END = new Date().getTime();
+            var DURATION = END - START;
+            console.log('update END:', new Date(), 'Duration:', DURATION);
+        },
+
+        //updates the mine
+        updateMine: function(cUser, cPData) {
+            var cMine = mine.findOne({
+                user: cUser
+            });
+
+            var serverTime = new Date().getTime();
+
+            //update current users MINE || all ownSlots
+            for (var j = 0; j < cPData.mine.ownSlots; j++) {
+                var cSlot = 'owns' + j;
+                //Matter exists?
+                var cMatterID = cMine[cSlot].input;
+                if (cMatterID > 0) {
+                    var cMatter = MatterBlocks.findOne({
+                        matter: cMatterID
+                    });
+                    var cValue = cMatter.value;
+
+                    var startTime = cMine[cSlot].stamp.getTime();
+                    var progress = (serverTime - startTime) * (7.5 / 3600000);
+                    // console.log(cUser + ': ' + progress);
+
+                    var allSups = new Array();
+                    //Iterate Supporter
+                    for (var k = 0; k < cPData.mine.supSlots; k++) {
+                        var cSup = cMine[cSlot]['sup' + k];
+                        //SupSlot used?
+                        if (cSup != undefined && cSup.length != 0) {
+                            var sMine = mine.findOne({
+                                user: cSup
+                            });
+                            var currentSupScrSlots = playerData.findOne({
+                                user: cSup
+                            }, {
+                                fields: {
+                                    mine: 1
+                                }
+                            }).mine.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sMine['scrs' + m].victim == cUser) indexScr = m;
+                            }
+                            if (indexScr == -1) {
+                                console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
+
+                            allSups[k] = cSup;
+                            //calculate mined by cSup
+                            var sTime = sMine['scrs' + result].stamp.getTime();
+                            var sRate = sMine['scrs' + result].benefit;
+                            progress = progress + (serverTime - sTime) * (sRate / 3600000);
+
+                            /*console.log(cUser + ' Progress: ' + progress);*/
+                        }
+                    }
+                    //Matter CLEAR?
+                    if (progress > cValue) {
+                        //split matter
+                        var matterColor = cMatter.color;
+                        var ownProfit = 0;
+                        if (allSups.length == 0) {
+                            ownProfit = cValue;
+                        } else {
+                            ownProfit = 0.5 * cValue;
+                            var supProfit = (0.5 * cValue) / (allSups.length);
+                        }
+                        var cUserResources = resources.findOne({
+                            user: cUser
+                        });
+                        var cUserMatter = cUserResources.values[matterColor].matter;
+                        //owner
+                        var obj0 = {};
+                        obj0['values.' + matterColor + '.matter'] = cUserMatter + ownProfit;
+                        resources.update({
+                            user: cUser
+                        }, {
+                            $set: obj0
+                        });
+                        //sups
+                        for (var l = 0; l < allSups.length; l++) {
+                            var obj0 = {};
+                            var cSupResources = resources.findOne({
+                                user: allSups[l]
+                            });
+                            var cSupMatter = cSupResources.values[matterColor].matter;
+                            obj0['values.' + matterColor + '.matter'] = cSupMatter + supProfit;
+                            resources.update({
+                                user: allSups[l]
+                            }, {
+                                $set: obj0
+                            });
+                            //reset scr slot of sup
+                            //get index of scr slot
+                            var sMine = mine.findOne({
+                                user: allSups[l]
+                            });
+                            var currentSupScrSlots = playerData.findOne({
+                                user: allSups[l]
+                            }, {
+                                fields: {
+                                    mine: 1
+                                }
+                            }).mine.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sMine['scrs' + m].victim == cUser) indexScr = m;
+                            }
+                            if (indexScr == -1) {
+                                console.log('Template.rmineBase slot calculation problem - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
+
+                            var obj0 = {};
+                            obj0['scrs' + result + '.victim'] = "";
+
+                            mine.update({
+                                user: allSups[l]
+                            }, {
+                                $set: obj0
+                            });
+                        }
+
+                        //reset owner slots
+                        var obj0 = {};
+                        obj0[cSlot + '.input'] = '0000';
+                        for (var m = 0; m < cPData.mine.supSlots; m++) {
+                            obj0[cSlot + '.sup' + m] = "";
+                        }
+                        mine.update({
+                            user: cUser
+                        }, {
+                            $set: obj0
+                        });
+                    }
+                }
+            }
+        },
+
+        //updates the battlefield
+        updateBattlefield: function(cUser, cPData) {
+            var cBattlefield = battlefield.findOne({
+                user: cUser
+            });
+            var serverTime = new Date().getTime();
+            //update current users BATTLEFIELD || all ownSlots
+            for (var j = 0; j < cPData.battlefield.ownSlots; j++) {
+                var cSlot = 'owns' + j;
+                //Fight exists?
+                var cFightID = cBattlefield[cSlot].input;
+                if (cFightID > 0) {
+                    var cFight = FightArenas.findOne({
+                        fight: cFightID
+                    });
+                    var overallTime = cFight.time;
+                    var startTime = cBattlefield[cSlot].stamp.getTime();
+                    //Fight DONE?
+                    if ((serverTime - startTime) > overallTime) {
+                        var sEpics = 0;
+                        var allSups = new Array();
+                        //Iterate Supporter
+                        for (var k = 0; k < cPData.battlefield.supSlots; k++) {
+                            var cSup = cBattlefield[cSlot]['sup' + k];
+                            //SupSlot used?
+                            if (cSup != undefined && cSup.length != 0) {
+                                var sBattlefield = battlefield.findOne({
+                                    user: cSup
+                                });
+                                var currentSupScrSlots = playerData.findOne({
+                                    user: cSup
+                                }, {
+                                    fields: {
+                                        battlefield: 1
+                                    }
+                                }).battlefield.scrSlots;
+                                //get index of scr slot
+                                var indexScr = -1;
+                                for (var m = 0; m < currentSupScrSlots; m++) {
+                                    if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
+                                }
+                                // console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
+                                if (indexScr == -1) {
+                                    console.log('Server battlefield slot calculation problem 1! - index scr Slot');
+                                    break;
+                                }
+                                var result = indexScr;
+
+                                allSups[k] = cSup;
+                                //calculate epicness of cSup
+                                var sEpic = sBattlefield['scrs' + result].benefit;
+                                sEpics = sEpics + sEpic;
+                                /*console.log(cUser + ' Progress: ' + progress);*/
+                            }
+                        }
+                        //split XP
+                        var overallXP = (cFight.value * (100 + sEpics)) / 100;
+                        var ownProfit = 0;
+                        if (allSups.length == 0) {
+                            ownProfit = overallXP;
+                        } else {
+                            ownProfit = 0.5 * overallXP;
+                            var supProfit = (0.5 * overallXP) / (allSups.length);
+                        }
+                        //owner
+                        var cUserXP = cPData.XP;
+                        var cUserRequXP = cPData.requiredXP;
+                        //LvlUP?
+                        if ((cUserXP + ownProfit) >= cUserRequXP) {
+                            var lvl = cPData.level;
+                            var obj0 = {};
+                            obj0['requiredXP'] = cUserRequXP + (225 * ((lvl + 10) / 2))
+                            obj0['XP'] = (cUserXP + ownProfit) - cUserRequXP;
+                            obj0['level'] = lvl + 1;
+                            playerData.update({
+                                user: cUser
+                            }, {
+                                $set: obj0
+                            });
+                        } else {
+                            var ownerNewXPValue = (cUserXP + ownProfit);
+                            playerData.update({
+                                user: cUser
+                            }, {
+                                $set: {
+                                    XP: ownerNewXPValue
+                                },
+                            });
+                        }
+
+                        //sups
+                        for (var l = 0; l < allSups.length; l++) {
+                            var cSupPData = playerData.findOne({
+                                user: allSups[l]
+                            }, {
+                                fields: {
+                                    requiredXP: 1,
+                                    XP: 1,
+                                    level: 1
+                                }
+                            });
+                            var cSupXP = cSupPData.XP;
+                            var cSupRequXP = cSupPData.requiredXP;
+                            //LvlUP?
+                            if ((cSupXP + supProfit) >= cSupRequXP) {
+                                var lvl = cSupPData.level;
+                                var obj0 = {};
+                                obj0['requiredXP'] = cSupRequXP + (225 * ((lvl + 10) / 2))
+                                obj0['XP'] = (cSupXP + supProfit) - cSupRequXP;
+                                obj0['level'] = lvl + 1;
+                                playerData.update({
+                                    user: allSups[l]
+                                }, {
+                                    $set: obj0
+                                });
+                            } else {
+                                var supNewXPValue = (cSupXP + supProfit);
+                                playerData.update({
+                                    user: allSups[l]
+                                }, {
+                                    $set: {
+                                        XP: supNewXPValue
+                                    },
+                                });
+                            }
+                            //reset scr slot of sup
+                            //get index of scr slot
+                            var sBattlefield = battlefield.findOne({
+                                user: allSups[l]
+                            });
+                            var currentSupScrSlots = playerData.findOne({
+                                user: allSups[l]
+                            }, {
+                                fields: {
+                                    battlefield: 1
+                                }
+                            }).battlefield.scrSlots;
+                            //get index of scr slot
+                            var indexScr = -1;
+                            for (var m = 0; m < currentSupScrSlots; m++) {
+                                if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
+                            }
+                            // console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
+                            if (indexScr == -1) {
+                                console.log('Server battlefield slot calculation problem 2! - index scr Slot');
+                                break;
+                            }
+                            var result = indexScr;
+                            var obj0 = {};
+                            obj0['scrs' + result + '.victim'] = "";
+                            battlefield.update({
+                                user: allSups[l]
+                            }, {
+                                $set: obj0
+                            });
+                        }
+                        //reset owner slots
+                        var obj0 = {};
+                        obj0[cSlot + '.input'] = '0000';
+                        for (var m = 0; m < cPData.battlefield.supSlots; m++) {
+                            obj0[cSlot + '.sup' + m] = "";
+                        }
+                        battlefield.update({
+                            user: cUser
+                        }, {
+                            $set: obj0
+                        });
+                    }
+                }
+            }
+        },
+
+        // // DENSITIY MAP POSITION
         createMapPosition: function(username) {
             turfUpdateArray.length = 0;
             //Find random position
@@ -92,6 +458,55 @@ if (Meteor.isServer) {
                 //WorldMap has to high density: Extend and create position again
                 Meteor.call('extendMapSize', cursorGodTurf);
                 Meteor.call('createMapPosition', username);
+            }
+        },
+
+        // RANDOM MAP POSITION
+        createRandomMapPosition: function(username) {
+            //Find all free slots
+            var cursorFreeSlots = worldMapFields.find({
+                user: ""
+            }, {
+                fields: {
+                    _id: 1
+                }
+            }).fetch();
+            if (cursorFreeSlots.length > 0) {
+                //Place player into free slot
+                var obj1 = {};
+                obj1['_id'] = cursorFreeSlots[0]._id;
+                worldMapFields.update(obj1, {
+                    $set: {
+                        user: username
+                    }
+                });
+                cursorWorldMap = worldMapFields.findOne({
+                    user: username
+                });
+                var obj2 = {};
+                obj2['x'] = cursorWorldMap.x;
+                obj2['y'] = cursorWorldMap.y;
+                Meteor.users.update({
+                    username: username
+                }, {
+                    $set: obj2
+                });
+                //Show the new generated map position in the console
+                console.log(new Date() + ': Position done - ' + username + ' (x: ' + obj2['x'] + ' y: ' + obj2['y'] + ')!');
+            } else {
+                var cursorGodTurf = Turf.find({}, {
+                    fields: {
+                        turfSize: 1,
+                        density: 1,
+                        _id: 1
+                    },
+                    sort: {
+                        turfSize: -1
+                    }
+                }).fetch()[0];
+                //WorldMap has to high density: Extend and create position again
+                Meteor.call('extendMapSize', cursorGodTurf);
+                Meteor.call('createRandomMapPosition', username);
             }
         },
 
@@ -384,10 +799,17 @@ if (Meteor.isServer) {
 
         //ERROR logging
         infoLog: function(text, username) {
-            console.log(new Date() + ': ' + username + ': ' + text);
+            console.log(new Date(), username + ':', text);
         },
 
-        //goScroungingMine new
+        // testGrinder: function(obj) {
+        //     console.log(new Date(), 'UN:', obj.username, 'txt:', obj.text, 'userID:', this.userId);
+        // },
+
+        // testSpooky: function() {
+        //     console.log('this is Spooky!');
+        // },
+
         goScroungingMine: function(slotId) {
             console.time("SCROUNGING");
             var currentUser = Meteor.users.findOne({
@@ -916,7 +1338,7 @@ if (Meteor.isServer) {
             //check costs
             if (!(matter >= cost)) {
                 Meteor.call("infoLog", 'You cannot buy this fight: You do not have enough matter!', name);
-                    return '0You cannot buy this fight: You do not have enough matter!';
+                return '0You cannot buy this fight: You do not have enough matter!';
             }
 
             var cursor = playerData.findOne({
@@ -1487,8 +1909,29 @@ if (Meteor.isServer) {
         
         return remaining;
     },
+        
+        initBots: function(i) {
+            function asyncInitBots(callsCount, callback) {
+                callback(null);
+            }
+            var syncInitBots = Meteor.wrapAsync(asyncInitBots);
+            try {
+                var res = syncInitBots(i);
+                var name = "bot" + i;
+                var pw = i.toString();
+                Accounts.createUser({
+                    username: name,
+                    password: pw
+                });
+                Meteor.call('init', name);
+                return res;
+            } catch (exception) {
+                console.log('exc:', exception);
+                throw exception;
+            }
+        },
 
-        init: function() {
+    init: function() {
             var self = Meteor.users.findOne({
                 _id: this.userId
             });
@@ -1497,7 +1940,7 @@ if (Meteor.isServer) {
 
             // USERS //
             Meteor.users.update({
-                _id: this.userId
+                username: name
             }, {
                 $set: {
                     menu: 'mine',
@@ -1512,28 +1955,35 @@ if (Meteor.isServer) {
             });
 
             // RESOURCES //
-            resources.insert({
-                user: name,
-                values: {
-                    green: {
-                        matter: 0,
-                        sr1: 0,
-                        sr2: 0,
-                        sr3: 0,
-                        sr4: 0,
-                        sr5: 0,
-                        sr6: 0
-                    },
-                    red: {
-                        matter: 0,
-                        sr1: 0,
-                        sr2: 0,
-                        sr3: 0,
-                        sr4: 0,
-                        sr5: 0,
-                        sr6: 0
+            resources.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    values: {
+                        green: {
+                            matter: 0,
+                            sr1: 0,
+                            sr2: 0,
+                            sr3: 0,
+                            sr4: 0,
+                            sr5: 0,
+                            sr6: 0
+                        },
+                        red: {
+                            matter: 0,
+                            sr1: 0,
+                            sr2: 0,
+                            sr3: 0,
+                            sr4: 0,
+                            sr5: 0,
+                            sr6: 0
+                        }
                     }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation resources error: ' + err);
@@ -2034,43 +2484,47 @@ if (Meteor.isServer) {
                         upgrades: 1,
                         stolen: "null",
                         active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 1,
+                        scrSlots: 1,
+                        supSlots: 1,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
                     },
-                    scrItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
-                },
-                smelter: {
-                    ownItem: {
-                        blank: "",
-                        benefit: 5,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    scrItem: {
-                        blank: "",
-                        benefit: 1,
-                        upgrades: 1,
-                        stolen: "null",
-                        active: "false"
-                    },
-                    ownSlots: 1,
-                    scrSlots: 1,
-                    supSlots: 1,
-                    science: 0.1,
-                    minControl: 0.1,
-                    maxControl: 10
+                    smelter: {
+                        ownItem: {
+                            blank: "",
+                            benefit: 5,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        scrItem: {
+                            blank: "",
+                            benefit: 1,
+                            upgrades: 1,
+                            stolen: "null",
+                            active: "false"
+                        },
+                        ownSlots: 1,
+                        scrSlots: 1,
+                        supSlots: 1,
+                        science: 0.1,
+                        minControl: 0.1,
+                        maxControl: 10
+                    }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation playerData error: ' + err);
@@ -2080,68 +2534,75 @@ if (Meteor.isServer) {
             });
 
             // MINE //
-            mine.insert({
-                user: name,
-                owns0: {
-                    input: "0000",
-                    stamp: "",
-                    control: {
-                        min: 5,
-                        max: 10
+            mine.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    owns0: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 5,
+                            max: 10
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
-                    sup0: "",
-                    sup1: ""
-                },
-                owns1: {
-                    input: "0000",
-                    stamp: "",
-                    control: {
-                        min: 5,
-                        max: 10
+                    owns1: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 5,
+                            max: 10
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
-                    sup0: "",
-                    sup1: ""
-                },
-                owns2: {
-                    input: "0000",
-                    stamp: "",
-                    control: {
-                        min: 5,
-                        max: 10
+                    owns2: {
+                        input: "0000",
+                        stamp: "",
+                        control: {
+                            min: 5,
+                            max: 10
+                        },
+                        sup0: "",
+                        sup1: ""
                     },
-                    sup0: "",
-                    sup1: ""
-                },
-                scrs0: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs1: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs2: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs3: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs4: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
-                },
-                scrs5: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 5
+                    scrs0: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs1: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs2: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs3: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs4: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    },
+                    scrs5: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 5
+                    }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation mine error: ' + err);
@@ -2151,22 +2612,29 @@ if (Meteor.isServer) {
             });
 
             // LABORATORY //
-            laboratory.insert({
-                user: name,
-                owns0: {
-                    input: "000000",
-                    stamp: "",
-                    control: {
-                        min: 105,
-                        max: 113
+            laboratory.update({
+                user: name
+            }, {
+                $set: {
+                    user: name,
+                    owns0: {
+                        input: "000000",
+                        stamp: "",
+                        control: {
+                            min: 105,
+                            max: 113
+                        },
+                        sup0: ""
                     },
-                    sup0: ""
-                },
-                scrs0: {
-                    victim: "",
-                    stamp: "",
-                    benefit: 110
+                    scrs0: {
+                        victim: "",
+                        stamp: "",
+                        benefit: 110
+                    }
                 }
+            }, {
+                multi: false,
+                upsert: true
             }, function(err) {
                 if (err) {
                     throw new Meteor.Error(404, 'account creation laboratory error: ' + err);
@@ -2176,7 +2644,10 @@ if (Meteor.isServer) {
             });
 
             // WORKSHOP //
-            workshop.insert({
+            workshop.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "000000",
@@ -2192,17 +2663,23 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 2.5
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation workshop error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation workshop error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
 
             // BATTLEFIELD //
-            battlefield.insert({
+            battlefield.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "0000",
@@ -2264,17 +2741,23 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 50
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation battlefield error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation battlefield error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
 
             // THIEVERY //
-            thievery.insert({
+            thievery.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "0000",
@@ -2290,17 +2773,23 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 1
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation thivery error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation thivery error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
 
             // SMELTER //
-            smelter.insert({
+            smelter.update({
+                user: name
+            }, {
+                $set: {
                     user: name,
                     owns0: {
                         input: "0000",
@@ -2316,15 +2805,18 @@ if (Meteor.isServer) {
                         stamp: "",
                         benefit: 0.1
                     }
-                },
-                function(err) {
-                    if (err) {
-                        throw new Meteor.Error(404, 'account creation smelter error: ' + err);
-                    } else {
-                        //insert successful
-                    }
-                });
-            Meteor.call('createMapPosition', name);
+                }
+            }, {
+                multi: false,
+                upsert: true
+            }, function(err) {
+                if (err) {
+                    throw new Meteor.Error(404, 'account creation smelter error: ' + err);
+                } else {
+                    //insert successful
+                }
+            });
+            Meteor.call('createRandomMapPosition', name);
             return "account init OK!";
         }
     });

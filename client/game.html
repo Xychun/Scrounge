@@ -368,10 +368,9 @@
     </div>
 
     <!-- Zu Testzwecken -->
-    <!-- <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: blue"></div> -->
-    <!-- <div id="testButton2" style="position: absolute; left: 90px; top: 10px; width:40px; height: 40px; z-index: 20; background-color: red">LOG</div> -->
-    {{else}}
-{{/if}}
+        <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:100px; height: 25px; z-index: 20; background-color: yellow; font-size: large; text-align: center">BotsCreation</div>
+        <div id="testButton2" style="position: absolute; left: 10px; top: 45px; width:100px; height: 25px; z-index: 20; background-color: lightblue; font-size: large; text-align: center">SingleUpdate</div>
+        <div id="testButton3" style="position: absolute; left: 10px; top: 80px; width:100px; height: 45px; z-index: 20; background-color: blue; color: white; font-size: large; text-align: center">Toggle UpLoop</div>
 </template>
 
 <template name="improvements">
@@ -405,7 +404,7 @@
                     {{#each mineUnusedSlots}}
                     <div class="slotWrapper">
                         <div class="slot_edge_left_BaseLeft left sshr">
-                            <div class="slot_icon slot_icon_mineUnused ssvr"></div>
+                            <div class="slot_icon slot_icon_mineUnused waitMine ssvr"></div>
                         </div>
                         <div class="unused_slot slotBackgroundBaseLeft sshr">
                             <div class="slot_upper_bar">
@@ -765,7 +764,7 @@
                     {{#each battlefieldUnusedSlots}}
                     <div class="slotWrapper">
                         <div class="slot_edge_left_BaseLeft left sshr">
-                            <div class="slot_icon slot_icon_battlefieldUnused ssvr">
+                            <div class="slot_icon slot_icon_battlefieldUnused waitBf ssvr">
                             </div>
                         </div>
                         <div class="unused_slot slotBackgroundBaseLeft sshr">

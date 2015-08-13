@@ -70,7 +70,7 @@ if (Meteor.isClient) {
                         } else {
                             // Success. Account has been created and the user has logged in successfully. 
                             // Now init account data
-                            Meteor.call('init', function(err) {
+                            Meteor.call('init', name, function(err) {
                                 if (err) {
                                     console.log('account init: ' + err);
                                 } else {

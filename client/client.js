@@ -36,6 +36,15 @@ if (Meteor.isClient) {
     ////// FUNCTION CALLS //////
     ////////////////////////////
 
+    Meteor.call('rootUrl', function(err, result) {
+        if (err) {
+            console.log('rootUrl Error: ' + err);
+        }
+        if (result) {
+            console.log('Serving from: ' + result);
+        }
+    });
+
     setInterval(function() {
         updateTimers();
     }, 1 * 1000);
@@ -78,34 +87,34 @@ if (Meteor.isClient) {
     Template.improvements.onCreated(function() {
 
         console.log('createImprovementStart');
-        console.time('createImprovement');
+        //console.time('createImprovement');
         var inst = this;
         inst.state = new ReactiveDict();
         var cursorSelf = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    menu: 1,
-                    username: 1,
-                    _id: 0
-                }
-            });
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                menu: 1,
+                username: 1,
+                _id: 0
+            }
+        });
         var self = cursorSelf.username;
         var currentUser = cursorSelf.cu;
         var menu = cursorSelf.menu;
         inst.autorun(function() {
-            var subsPlayerDataImprovements = inst.subscribe('playerDataImprovements'+menu, self);
-            if(subsPlayerDataImprovements.ready()) {
+            var subsPlayerDataImprovements = inst.subscribe('playerDataImprovements' + menu, self);
+            if (subsPlayerDataImprovements.ready()) {
 
                 //set Data Context for other helpers
                 inst.state.set('self', self);
                 inst.state.set('currentUser', currentUser);
                 inst.state.set('menu', menu);
-                console.timeEnd('createImprovement');
-                console.timeEnd('SWITCH CATEGORY4');
-                console.timeEnd('LOGINI');
+                //console.timeEnd('createImprovement');
+                //console.timeEnd('SWITCH CATEGORY4');
+                //console.timeEnd('LOGINI');
             }
-            
+
         })
     });
 
@@ -128,11 +137,11 @@ if (Meteor.isClient) {
             obj0['name'] = cu;
             obj0['xp'] = Math.floor(cursorPlayerData.XP) + '/' + cursorPlayerData.requiredXP;
             obj0['level'] = cursorPlayerData.level;
-            if(cursorPlayerData[menu]) {
+            if (cursorPlayerData[menu]) {
                 obj0['science'] = cursorPlayerData[menu].science;
                 obj0['item'] = cursorPlayerData[menu].scrItem.benefit;
             }
-            // console.timeEnd("LOGINHELPER5");
+            // //console.timeEnd("LOGINHELPER5");
             return obj0;
         }
     });
@@ -145,66 +154,66 @@ if (Meteor.isClient) {
     Template.mineBase.onCreated(function() {
 
         console.log('createMineBaseStart');
-        console.time('createMineBase');
+        //console.time('createMineBase');
         var inst = this;
         inst.state = new ReactiveDict();
         var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1,
-                    _id: 0
-                }
-            }).username;
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                _id: 0
+            }
+        }).username;
         var users = [self];
 
-        inst.autorun(function () { 
+        inst.autorun(function() {
 
             var subsPlayerDataMine = inst.subscribe('playerDataMine', users);
             var color = 'green';
             var subsMatterBlocks = inst.subscribe('MatterBlocks', color);
 
-            if(subsPlayerDataMine.ready() && subsMatterBlocks.ready()) {
+            if (subsPlayerDataMine.ready() && subsMatterBlocks.ready()) {
                 var cursorPlayerDataMine = playerData.findOne({
                     user: self
                 }, {
                     fields: {
                         mine: 1
                     }
-                }).mine;                
+                }).mine;
 
                 //Get data from all own slots
                 var inputs = [];
                 var stampsSlotsLeft = [];
                 var supStamps = [];
-                var supMiningrates = []; 
-                var supNames = [];  
+                var supMiningrates = [];
+                var supNames = [];
                 var matterBlocksValues = [];
-                var matterBlocksColors = [];           
+                var matterBlocksColors = [];
 
                 var amountOwnSlots = cursorPlayerDataMine.amountOwnSlots;
                 var amountSupSlots = cursorPlayerDataMine.amountSupSlots;
                 var ownRate = cursorPlayerDataMine.scrItem.benefit;
 
-                for(i = 0; i < amountOwnSlots; i++) {
-                    inputs[i] = cursorPlayerDataMine.ownSlots['owns'+i].input;
+                for (i = 0; i < amountOwnSlots; i++) {
+                    inputs[i] = cursorPlayerDataMine.ownSlots['owns' + i].input;
                     //falls der slot benutzt ist
-                    if(inputs[i] > 0) {
+                    if (inputs[i] > 0) {
                         var cursorMatterBlock = MatterBlocks.findOne({
                             matter: inputs[i]
                         })
                         matterBlocksValues[i] = cursorMatterBlock.value;
                         matterBlocksColors[i] = cursorMatterBlock.color;
                     }
-                    stampsSlotsLeft[i] = cursorPlayerDataMine.ownSlots['owns'+i].stamp;
+                    stampsSlotsLeft[i] = cursorPlayerDataMine.ownSlots['owns' + i].stamp;
 
                     var supStampsOneSlot = [];
                     var supMiningratesOneSlot = [];
                     var supNamesOneSlot = [];
-                    for(k = 0; k < amountSupSlots; k++) {
-                        supStampsOneSlot[k] = cursorPlayerDataMine.ownSlots['owns'+i]['sup'+k].stamp;
-                        supMiningratesOneSlot[k] = cursorPlayerDataMine.ownSlots['owns'+i]['sup'+k].benefit;
-                        supNamesOneSlot[k] = cursorPlayerDataMine.ownSlots['owns'+i]['sup'+k].name;
+                    for (k = 0; k < amountSupSlots; k++) {
+                        supStampsOneSlot[k] = cursorPlayerDataMine.ownSlots['owns' + i]['sup' + k].stamp;
+                        supMiningratesOneSlot[k] = cursorPlayerDataMine.ownSlots['owns' + i]['sup' + k].benefit;
+                        supNamesOneSlot[k] = cursorPlayerDataMine.ownSlots['owns' + i]['sup' + k].name;
                     }
                     supStamps[i] = supStampsOneSlot;
                     supMiningrates[i] = supMiningratesOneSlot;
@@ -216,7 +225,7 @@ if (Meteor.isClient) {
                 var stampsSlotsRight = [];
                 var ownMiningrates = [];
                 var matterBlocksValuesScrounge = [];
-                var matterBlocksColorsScrounge = [];           
+                var matterBlocksColorsScrounge = [];
                 var stampsScroungedUsers = [];
                 var inputsScroungedUsers = [];
                 var namesScroungedUsers = [];
@@ -224,16 +233,16 @@ if (Meteor.isClient) {
                 var supsVictimsRates = [];
                 var amountVictimsSupSlots = [];
 
-                var amountScrSlots = cursorPlayerDataMine.amountScrSlots;  
+                var amountScrSlots = cursorPlayerDataMine.amountScrSlots;
 
-                for(i = 0; i < amountScrSlots; i++) {
-                    ownMiningrates[i] = cursorPlayerDataMine.scrSlots['scrs'+i].benefit;
-                    stampsSlotsRight[i] = cursorPlayerDataMine.scrSlots['scrs'+i].stamp;
-                    stampsScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs'+i].victim.stamp;
-                    inputsScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs'+i].victim.input;
-                    namesScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs'+i].victim.name;
+                for (i = 0; i < amountScrSlots; i++) {
+                    ownMiningrates[i] = cursorPlayerDataMine.scrSlots['scrs' + i].benefit;
+                    stampsSlotsRight[i] = cursorPlayerDataMine.scrSlots['scrs' + i].stamp;
+                    stampsScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs' + i].victim.stamp;
+                    inputsScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs' + i].victim.input;
+                    namesScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs' + i].victim.name;
                     //falls der slot benutzt ist
-                    if(inputsScroungedUsers[i] > 0) {
+                    if (inputsScroungedUsers[i] > 0) {
                         var cursorMatterBlock = MatterBlocks.findOne({
                             matter: inputsScroungedUsers[i]
                         })
@@ -241,14 +250,14 @@ if (Meteor.isClient) {
                         matterBlocksColorsScrounge[i] = cursorMatterBlock.color;
                     }
 
-                    var amountVictimSupSlots = cursorPlayerDataMine.scrSlots['scrs'+i].victim.supSlotsVictim;
+                    var amountVictimSupSlots = cursorPlayerDataMine.scrSlots['scrs' + i].victim.supSlotsVictim;
                     amountVictimsSupSlots[i] = amountVictimSupSlots;
 
                     var supsVictimsStampsOneSlot = [];
-                    var supsVictimsRatesOneSlot = [];                    
-                    for(k = 0; k < amountVictimSupSlots; k++) {
-                        supsVictimsStampsOneSlot[k] = cursorPlayerDataMine.scrSlots['scrs'+i].victim['sup'+k].stamp;
-                        supsVictimsRatesOneSlot[k] = cursorPlayerDataMine.scrSlots['scrs'+i].victim['sup'+k].benefit;
+                    var supsVictimsRatesOneSlot = [];
+                    for (k = 0; k < amountVictimSupSlots; k++) {
+                        supsVictimsStampsOneSlot[k] = cursorPlayerDataMine.scrSlots['scrs' + i].victim['sup' + k].stamp;
+                        supsVictimsRatesOneSlot[k] = cursorPlayerDataMine.scrSlots['scrs' + i].victim['sup' + k].benefit;
                     }
                     supsVictimsStamps[i] = supsVictimsStampsOneSlot;
                     supsVictimsRates[i] = supsVictimsRatesOneSlot;
@@ -280,8 +289,8 @@ if (Meteor.isClient) {
                 inst.state.set('supTimeStampsScrounge', supsVictimsStamps);
                 inst.state.set('matterBlocksColorsScrounge', matterBlocksColorsScrounge);
                 inst.state.set('matterBlocksValuesScrounge', matterBlocksValuesScrounge);
-                console.timeEnd('createMineBase');
-                console.timeEnd("LOGINMB");
+                //console.timeEnd('createMineBase');
+                //console.timeEnd("LOGINMB");
 
                 // console.log('mineBaseDict');
                 // console.log(inst.state);
@@ -296,7 +305,7 @@ if (Meteor.isClient) {
             //get fields from data context
             var name = Template.instance().state.get('self');
             var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
-            var matterIds = Template.instance().state.get('matterIds');            
+            var matterIds = Template.instance().state.get('matterIds');
             var objects = new Array();
             var amountObjects = 0;
 
@@ -306,9 +315,9 @@ if (Meteor.isClient) {
                 }
             }
             for (var j = 0; j < amountObjects; j++) {
-                    objects[j] = {};
+                objects[j] = {};
             }
-            console.timeEnd("LOGINHELPER1");
+            //console.timeEnd("LOGINHELPER1");
             console.log('objects mineUnused', objects);
 
             console.log(Template.instance());
@@ -334,7 +343,7 @@ if (Meteor.isClient) {
             /*Iterate OwnSlots*/
             for (var i = 0; i < amountOwnSlots; i++) {
                 //falls der slot benutzt ist (nicht 0000)
-                 if (matterIds[i] > 0) {
+                if (matterIds[i] > 0) {
                     //falls es keinen Supporter gibt > iteriere gar nicht
                     // if(supporters[i] == undefined) {
                     var amountUsedSupSlots = 0;
@@ -348,8 +357,8 @@ if (Meteor.isClient) {
                     //Iterate Supporter
                     for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if(supporters[i] != "") {
-                            if(supporters[i][k] != "") {
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
                                 amountUsedSupSlots++;
                                 var obj00 = {};
                                 var supTime = supTimeStamps[i][k];
@@ -381,7 +390,7 @@ if (Meteor.isClient) {
                     //Im HTML wird der Wert entsprechend für die background-position eingesetzt
                     //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
                     //background-position nötig ist. (Unterschiedlich große images)
-                    switch(matterBlocksColors[i]) {
+                    switch (matterBlocksColors[i]) {
                         case "green":
                             obj0['color'] = "-550px 0px";
                             break;
@@ -430,7 +439,7 @@ if (Meteor.isClient) {
                     objects[i] = obj0;
                 }
             }
-            console.timeEnd("LOGINHELPER2");
+            //console.timeEnd("LOGINHELPER2");
             console.log('objects mineUsed', objects);
             return objects;
         },
@@ -440,13 +449,13 @@ if (Meteor.isClient) {
             //get fields from data context
             var name = Template.instance().state.get('self');
             var victims = Template.instance().state.get('victims');
-            var amountScrSlots = Template.instance().state.get('amountScrSlots');          
+            var amountScrSlots = Template.instance().state.get('amountScrSlots');
             var objects = new Array();
 
             for (var i = 0; i < amountScrSlots; i++) {
                 if (victims[i] == "") objects[i] = {};
             }
-            console.timeEnd("LOGINHELPER3");
+            //console.timeEnd("LOGINHELPER3");
             return objects;
         },
 
@@ -471,77 +480,77 @@ if (Meteor.isClient) {
             //Iterate all Scrounging Slots (i = scrounge slots)
             for (var i = 0; i < amountScrSlots; i++) {
                 //Is used?
-                if (victims[i] != "") {                    
-                        var progressOwn = (calculatedServerTime - timeStampsScrounge[i]) * (7.5 / 3600000);
-                        var progressSups = 0;
-                        var supRatesScroungeAdded = 0;
-                        var amountUsedSupSlots = 0;
-                        //Iterate Supporter (l = supporter slot)
-                        for (var l = 0; l < victimsSupSlots[i]; l++) {
-                            //Falls ein Supporter vorhanden ist, verwende dessen supRate und Zeitstempel
-                            //scr slot überhaupt benutzt?
-                            if(supTimeStampsScrounge[i] != "") {
-                                //welcher/wieviele supporter slots des scr slots sind besetzt
-                                if(supTimeStampsScrounge[i][l] != "") {
-                                    amountUsedSupSlots++;
-                                    var supTime = supTimeStampsScrounge[i][l];
-                                    var supRate = supRatesScrounge[i][l];
-                                    supRatesScroungeAdded = supRatesScroungeAdded + supRate;
-                                    progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
-                                }
+                if (victims[i] != "") {
+                    var progressOwn = (calculatedServerTime - timeStampsScrounge[i]) * (7.5 / 3600000);
+                    var progressSups = 0;
+                    var supRatesScroungeAdded = 0;
+                    var amountUsedSupSlots = 0;
+                    //Iterate Supporter (l = supporter slot)
+                    for (var l = 0; l < victimsSupSlots[i]; l++) {
+                        //Falls ein Supporter vorhanden ist, verwende dessen supRate und Zeitstempel
+                        //scr slot überhaupt benutzt?
+                        if (supTimeStampsScrounge[i] != "") {
+                            //welcher/wieviele supporter slots des scr slots sind besetzt
+                            if (supTimeStampsScrounge[i][l] != "") {
+                                amountUsedSupSlots++;
+                                var supTime = supTimeStampsScrounge[i][l];
+                                var supRate = supRatesScrounge[i][l];
+                                supRatesScroungeAdded = supRatesScroungeAdded + supRate;
+                                progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
                             }
                         }
-                        var obj0 = {};
-                        var progressTotal = progressOwn + progressSups;
-                        //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
-                        //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
-                        //Im HTML wird der Wert entsprechend für die background-position eingesetzt
-                        //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
-                        //background-position nötig ist. (Unterschiedlich große images)
-                        //switch(cursorMatterBlock.color) {
-                        switch(matterBlocksColorsScrounge[i]) {
-                            case "green":
-                                obj0['color'] = "-550px 0px";
-                                break;
-                            case "red":
-                                obj0['color'] = "-550px -100px";
-                                break;
-                            default:
-                                console.log("mineUsedScroungeSlots oops");
-                        }
-                        //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
-                        /*if(cursorMatterBlock.color == "green") {obj0['color'] = "-550px 0px";}*/
-                        //vorherige Lösung
-                        /*obj0['color'] = cursorMatterBlock.color;*/
-                        obj0['victim'] = victims[i];
-                        obj0['slots'] = amountUsedSupSlots + '/' + victimsSupSlots[i];
-                        obj0['remainingId'] = 'timerDec_' + i + '_mine_scr';
-                        obj0['timeSpentId'] = 'timerInc_' + i + '_mine_scr';
+                    }
+                    var obj0 = {};
+                    var progressTotal = progressOwn + progressSups;
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    //switch(cursorMatterBlock.color) {
+                    switch (matterBlocksColorsScrounge[i]) {
+                        case "green":
+                            obj0['color'] = "-550px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-550px -100px";
+                            break;
+                        default:
+                            console.log("mineUsedScroungeSlots oops");
+                    }
+                    //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
+                    /*if(cursorMatterBlock.color == "green") {obj0['color'] = "-550px 0px";}*/
+                    //vorherige Lösung
+                    /*obj0['color'] = cursorMatterBlock.color;*/
+                    obj0['victim'] = victims[i];
+                    obj0['slots'] = amountUsedSupSlots + '/' + victimsSupSlots[i];
+                    obj0['remainingId'] = 'timerDec_' + i + '_mine_scr';
+                    obj0['timeSpentId'] = 'timerInc_' + i + '_mine_scr';
 
-                        var obj1 = {};
-                        obj1['id'] = obj0['remainingId'];
-                        obj1['miliseconds'] = ((matterBlocksValuesScrounge[i] - progressTotal) / ((7.5 + supRatesScroungeAdded) / 3600000));
-                        obj1['notFound'] = 0;
-                        obj1['prefix'] = -1;
-                        timers.push(obj1);
-                        obj0['remaining'] = msToTime((matterBlocksValuesScrounge[i] - progressTotal) / ((7.5 + supRatesScroungeAdded) / 3600000));
+                    var obj1 = {};
+                    obj1['id'] = obj0['remainingId'];
+                    obj1['miliseconds'] = ((matterBlocksValuesScrounge[i] - progressTotal) / ((7.5 + supRatesScroungeAdded) / 3600000));
+                    obj1['notFound'] = 0;
+                    obj1['prefix'] = -1;
+                    timers.push(obj1);
+                    obj0['remaining'] = msToTime((matterBlocksValuesScrounge[i] - progressTotal) / ((7.5 + supRatesScroungeAdded) / 3600000));
 
-                        var obj2 = {};
-                        obj2['id'] = obj0['timeSpentId'];
-                        obj2['miliseconds'] = (calculatedServerTime - ownTimeStamps[i]);
-                        obj2['notFound'] = 0;
-                        obj2['prefix'] = 1;
-                        timers.push(obj2);
-                        obj0['timeSpent'] = msToTime((calculatedServerTime - ownTimeStamps[i]));
+                    var obj2 = {};
+                    obj2['id'] = obj0['timeSpentId'];
+                    obj2['miliseconds'] = (calculatedServerTime - ownTimeStamps[i]);
+                    obj2['notFound'] = 0;
+                    obj2['prefix'] = 1;
+                    timers.push(obj2);
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - ownTimeStamps[i]));
 
-                        obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * matterBlocksValuesScrounge[i]) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
-                        obj0['miningrate'] = ownRate + '/hr';
-                        obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (ownRate / 3600000));
-                        obj0['slider_id'] = i + 6;
-                        objects[i] = obj0;
+                    obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * matterBlocksValuesScrounge[i]) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                    obj0['miningrate'] = ownRate + '/hr';
+                    obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (ownRate / 3600000));
+                    obj0['slider_id'] = i + 6;
+                    objects[i] = obj0;
                 }
             }
-            console.timeEnd("LOGINHELPER4");
+            //console.timeEnd("LOGINHELPER4");
             return objects;
         },
 
@@ -558,15 +567,19 @@ if (Meteor.isClient) {
             var result = distinct(colorArray);
             var objects = new Array();
             for (var j = 0; j < result.length; j++) {
-                switch(result[j]) {
-                        case "green":
-                            objects[j] = {'color': "-683px -27px"};
-                            break;
-                        case "red":
-                            objects[j] = {'color': "-683px -45px"};
-                            break;
-                        default:
-                            console.log("oops");
+                switch (result[j]) {
+                    case "green":
+                        objects[j] = {
+                            'color': "-683px -27px"
+                        };
+                        break;
+                    case "red":
+                        objects[j] = {
+                            'color': "-683px -45px"
+                        };
+                        break;
+                    default:
+                        console.log("oops");
                 }
             }
             return objects;
@@ -578,26 +591,26 @@ if (Meteor.isClient) {
                     matter: 1
                 }
             }).fetch();
-            for ( var i =0; i < cursorMatterBlocks.length; i++) {
+            for (var i = 0; i < cursorMatterBlocks.length; i++) {
                 var obj0 = {};
                 obj0['matter'] = cursorMatterBlocks[i].matter;
-                switch(cursorMatterBlocks[i].color) {
-                        case "green":
-                            obj0['color'] = "-1658px 2px";
-                            obj0['colorCost'] = "-1725px 0px";
-                            break;
-                        case "red":
-                            obj0['color'] = "-1658px -50px";
-                            obj0['colorCost'] = "-1725px -25px";
-                            break;
-                        default:
-                            console.log("oops");
-                    }
+                switch (cursorMatterBlocks[i].color) {
+                    case "green":
+                        obj0['color'] = "-1658px 2px";
+                        obj0['colorCost'] = "-1725px 0px";
+                        break;
+                    case "red":
+                        obj0['color'] = "-1658px -50px";
+                        obj0['colorCost'] = "-1725px -25px";
+                        break;
+                    default:
+                        console.log("oops");
+                }
                 obj0['cost'] = cursorMatterBlocks[i].cost;
                 obj0['value'] = cursorMatterBlocks[i].value;
                 objects[i] = obj0;
             }
-            console.timeEnd("LOGINHELPER6");
+            //console.timeEnd("LOGINHELPER6");
             return objects;
         }
     });
@@ -613,17 +626,25 @@ if (Meteor.isClient) {
                 $("#background_fade").fadeIn();
             });
             Session.set("clickedMatter", e.currentTarget.id);
-            switch(e.currentTarget.id.substring(0, 2)) {
-                        case "01":
-                            $("#buyMenuItem").css({backgroundPosition:"-550px 0px"});
-                            $("#matterImg").css({backgroundPosition:"-1725px 0px"});
-                            break;
-                        case "02":
-                            $("#buyMenuItem").css({backgroundPosition:"-550px -100px"});
-                            $("#matterImg").css({backgroundPosition:"-1725px -50px"});
-                            break;
-                        default:
-                            console.log("oops");
+            switch (e.currentTarget.id.substring(0, 2)) {
+                case "01":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-550px 0px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px 0px"
+                    });
+                    break;
+                case "02":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-550px -100px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px -50px"
+                    });
+                    break;
+                default:
+                    console.log("oops");
             };
             $('#item').text("Matter: " + this.value);
             range_slider("Buy_Menu", cursorPlayerDataMine.minControl, cursorPlayerDataMine.maxControl, cursorPlayerDataMine.minControl, cursorPlayerDataMine.maxControl);
@@ -654,42 +675,42 @@ if (Meteor.isClient) {
     ///// MINE SCROUNGE /////
     Template.mineScrounge.onCreated(function() {
 
-        console.time('createMineScrounge');
+        //console.time('createMineScrounge');
         var inst = this;
         inst.state = new ReactiveDict();
         var cursorSelf = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1,
-                    cu: 1
-                }
-            });
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                cu: 1
+            }
+        });
         var currentUser = cursorSelf.cu;
         var self = cursorSelf.username;
         var users = [currentUser, self];
 
-        inst.autorun(function () {   
+        inst.autorun(function() {
 
             var subsPlayerDataMine = inst.subscribe('playerDataMine', users);
             var color = 'green';
             var subsMatterBlocks = inst.subscribe('MatterBlocks', color);
 
-            if(subsPlayerDataMine.ready() && subsMatterBlocks.ready()) {
+            if (subsPlayerDataMine.ready() && subsMatterBlocks.ready()) {
                 var cursorPlayerDataMineSelf = playerData.findOne({
                     user: self
                 }, {
                     fields: {
                         mine: 1
                     }
-                }).mine; 
+                }).mine;
                 var cursorPlayerDataMineCu = playerData.findOne({
                     user: currentUser
                 }, {
                     fields: {
                         mine: 1
                     }
-                }).mine; 
+                }).mine;
 
                 //data from active player
                 var namesScroungedUsers = [];
@@ -709,15 +730,15 @@ if (Meteor.isClient) {
 
                 for (i = 0; i < amountScrSlots; i++) {
                     namesScroungedUsers[i] = cursorPlayerDataMineSelf.scrSlots['scrs' + i].victim.name;
-                };       
+                };
 
                 for (var i = 0; i < amountOwnSlots; i++) {
-                    inputs[i] = cursorPlayerDataMineCu.ownSlots['owns' + i].input; 
+                    inputs[i] = cursorPlayerDataMineCu.ownSlots['owns' + i].input;
                     //falls der slot benutzt ist                                      
                     if (inputs[i] > 0) {
                         cursorMatterBlock = MatterBlocks.findOne({
                             matter: inputs[i]
-                        });  
+                        });
                         matterBlocksValues[i] = cursorMatterBlock.value;
                         matterBlocksColors[i] = cursorMatterBlock.color;
                     }
@@ -728,14 +749,14 @@ if (Meteor.isClient) {
                     var supStampsOneSlot = [];
                     var supMiningratesOneSlot = [];
                     for (var k = 0; k < amountSupSlots; k++) {
-                        supNamesOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup'+k].name;
-                        supStampsOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup'+k].stamp;
-                        supMiningratesOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup'+k].benefit;
+                        supNamesOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup' + k].name;
+                        supStampsOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup' + k].stamp;
+                        supMiningratesOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup' + k].benefit;
                     }
                     supNames[i] = supNamesOneSlot;
                     supStamps[i] = supStampsOneSlot;
                     supMiningrates[i] = supMiningratesOneSlot;
-                }    
+                }
 
                 //set Data Context for other helpers
                 inst.state.set('self', users);
@@ -753,8 +774,8 @@ if (Meteor.isClient) {
                 inst.state.set('supTimeStamps', supStamps);
                 inst.state.set('supRates', supMiningrates);
                 inst.state.set('matterBlocksValues', matterBlocksValues);
-                inst.state.set('matterBlocksColors', matterBlocksColors); 
-                console.timeEnd('createMineScrounge');
+                inst.state.set('matterBlocksColors', matterBlocksColors);
+                //console.timeEnd('createMineScrounge');
             }
         })
     });
@@ -792,8 +813,8 @@ if (Meteor.isClient) {
                     //Iterate Supporter
                     for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if(supporters[i] != "") {
-                            if(supporters[i][k] != "") {
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
                                 amountUsedSupSlots++;
                                 var obj00 = {};
                                 var supTime = supTimeStamps[i][k];
@@ -825,7 +846,7 @@ if (Meteor.isClient) {
                     //Im HTML wird der Wert entsprechend für die background-position eingesetzt
                     //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
                     //background-position nötig ist. (Unterschiedlich große images)
-                    switch(matterBlocksColors[i]) {
+                    switch (matterBlocksColors[i]) {
                         case "green":
                             obj0['color'] = "-550px 0px";
                             break;
@@ -835,7 +856,7 @@ if (Meteor.isClient) {
                         default:
                             console.log("mineScrounge oops");
                     }
-/*                    obj0['color'] = cursorMatterBlock.color;*/
+                    /*                    obj0['color'] = cursorMatterBlock.color;*/
                     obj0['slots'] = amountUsedSupSlots + '/' + amountSupSlots;
                     obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountSupSlots;
                     obj0['remainingId'] = 'timerDec_' + i + '_mine';
@@ -923,7 +944,7 @@ if (Meteor.isClient) {
         },
 
         'click .goScroungingMine': function(e, t) {
-            console.time("GO SCROUNGING");
+            //console.time("GO SCROUNGING");
             var slotId = e.currentTarget.id.split("_").pop();
             Meteor.call('goScroungingMine', slotId, function(err, result) {
                 if (err) {
@@ -932,7 +953,7 @@ if (Meteor.isClient) {
                 if (result) {
                     infoLog(result);
                     showInfoTextAnimation(result);
-                    console.timeEnd("GO SCROUNGING");
+                    //console.timeEnd("GO SCROUNGING");
                 }
             });
         },
@@ -945,53 +966,53 @@ if (Meteor.isClient) {
     ///// BATTLEFIELD BASE /////
     Template.battlefieldBase.onCreated(function() {
 
-        console.time('createBattlefieldBase');
+        //console.time('createBattlefieldBase');
         var inst = this;
         inst.state = new ReactiveDict();
         var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1,
-                    _id: 0
-                }
-            }).username;
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                _id: 0
+            }
+        }).username;
         var users = [self];
 
-        inst.autorun(function () { 
+        inst.autorun(function() {
 
             var subsPlayerDataBattlefield = inst.subscribe('playerDataBattlefield', users);
             var color = 'green';
             var subsFightArenas = inst.subscribe('FightArenas', color);
 
-            if(subsPlayerDataBattlefield.ready() && subsFightArenas.ready()) {
+            if (subsPlayerDataBattlefield.ready() && subsFightArenas.ready()) {
                 var cursorPlayerDataBattlefield = playerData.findOne({
                     user: self
                 }, {
                     fields: {
                         battlefield: 1
                     }
-                }).battlefield;                
+                }).battlefield;
 
                 //Get data from all own slots
                 var inputs = [];
                 var stampsSlotsLeft = [];
                 var supStamps = [];
-                var supEpicness = []; 
-                var supNames = [];  
-                var supLevels = []; 
+                var supEpicness = [];
+                var supNames = [];
+                var supLevels = [];
                 var fightArenasValues = [];
-                var fightArenasColors = []; 
-                var fightArenasTimes = [];          
+                var fightArenasColors = [];
+                var fightArenasTimes = [];
 
                 var amountOwnSlots = cursorPlayerDataBattlefield.amountOwnSlots;
                 var amountSupSlots = cursorPlayerDataBattlefield.amountSupSlots;
                 var ownEpic = cursorPlayerDataBattlefield.scrItem.benefit;
 
-                for(i = 0; i < amountOwnSlots; i++) {
-                    inputs[i] = cursorPlayerDataBattlefield.ownSlots['owns'+i].input;
+                for (i = 0; i < amountOwnSlots; i++) {
+                    inputs[i] = cursorPlayerDataBattlefield.ownSlots['owns' + i].input;
                     //falls der slot benutzt ist
-                    if(inputs[i] > 0) {
+                    if (inputs[i] > 0) {
                         var cursorFightArena = FightArenas.findOne({
                             fight: inputs[i]
                         })
@@ -999,17 +1020,17 @@ if (Meteor.isClient) {
                         fightArenasColors[i] = cursorFightArena.color;
                         fightArenasTimes[i] = cursorFightArena.time;
                     }
-                    stampsSlotsLeft[i] = cursorPlayerDataBattlefield.ownSlots['owns'+i].stamp;
+                    stampsSlotsLeft[i] = cursorPlayerDataBattlefield.ownSlots['owns' + i].stamp;
 
                     var supStampsOneSlot = [];
                     var supEpicnessOneSlot = [];
                     var supNamesOneSlot = [];
                     var supLevelsOneSlot = [];
-                    for(k = 0; k < amountSupSlots; k++) {
-                        supStampsOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns'+i]['sup'+k].stamp;
-                        supEpicnessOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns'+i]['sup'+k].benefit;
-                        supNamesOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns'+i]['sup'+k].name;
-                        supLevelsOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns'+i]['sup'+k].level;
+                    for (k = 0; k < amountSupSlots; k++) {
+                        supStampsOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].stamp;
+                        supEpicnessOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].benefit;
+                        supNamesOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].name;
+                        supLevelsOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].level;
                     }
                     supStamps[i] = supStampsOneSlot;
                     supEpicness[i] = supEpicnessOneSlot;
@@ -1022,8 +1043,8 @@ if (Meteor.isClient) {
                 var stampsSlotsRight = [];
                 var ownEpicness = [];
                 var fightArenasValuesScrounge = [];
-                var fightArenasColorsScrounge = [];    
-                var fightArenasTimesScrounge = [];        
+                var fightArenasColorsScrounge = [];
+                var fightArenasTimesScrounge = [];
                 var stampsScroungedUsers = [];
                 var inputsScroungedUsers = [];
                 var namesScroungedUsers = [];
@@ -1031,16 +1052,16 @@ if (Meteor.isClient) {
                 var supsVictimsEpics = [];
                 var amountVictimsSupSlots = [];
 
-                var amountScrSlots = cursorPlayerDataBattlefield.amountScrSlots;                
+                var amountScrSlots = cursorPlayerDataBattlefield.amountScrSlots;
 
-                for(i = 0; i < amountScrSlots; i++) {
-                    ownEpicness[i] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].benefit;
-                    stampsSlotsRight[i] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].stamp;
-                    stampsScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].victim.stamp;
-                    inputsScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].victim.input;
-                    namesScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].victim.name;
+                for (i = 0; i < amountScrSlots; i++) {
+                    ownEpicness[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].benefit;
+                    stampsSlotsRight[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].stamp;
+                    stampsScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.stamp;
+                    inputsScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.input;
+                    namesScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.name;
                     //falls der slot benutzt ist
-                    if(inputsScroungedUsers[i] > 0) {
+                    if (inputsScroungedUsers[i] > 0) {
                         var cursorFightArena = FightArenas.findOne({
                             fight: inputsScroungedUsers[i]
                         })
@@ -1049,19 +1070,19 @@ if (Meteor.isClient) {
                         fightArenasTimesScrounge[i] = cursorFightArena.time;
                     }
 
-                    var amountVictimSupSlots = cursorPlayerDataBattlefield.scrSlots['scrs'+i].victim.supSlotsVictim;
+                    var amountVictimSupSlots = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.supSlotsVictim;
                     amountVictimsSupSlots[i] = amountVictimSupSlots;
 
                     var supsVictimsStampsOneSlot = [];
-                    var supsVictimsEpicsOneSlot = [];                    
-                    for(k = 0; k < amountVictimSupSlots; k++) {
-                        supsVictimsStampsOneSlot[k] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].victim['sup'+k].stamp;
-                        supsVictimsEpicsOneSlot[k] = cursorPlayerDataBattlefield.scrSlots['scrs'+i].victim['sup'+k].benefit;
+                    var supsVictimsEpicsOneSlot = [];
+                    for (k = 0; k < amountVictimSupSlots; k++) {
+                        supsVictimsStampsOneSlot[k] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim['sup' + k].stamp;
+                        supsVictimsEpicsOneSlot[k] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim['sup' + k].benefit;
                     }
                     supsVictimsStamps[i] = supsVictimsStampsOneSlot;
                     supsVictimsEpics[i] = supsVictimsEpicsOneSlot;
                 }
-                 //set Data Context for other helpers         
+                //set Data Context for other helpers         
 
                 //allgemeine Daten
                 inst.state.set('self', users);
@@ -1091,7 +1112,7 @@ if (Meteor.isClient) {
                 inst.state.set('fightArenasColorsScrounge', fightArenasColorsScrounge);
                 inst.state.set('fightArenasValuesScrounge', fightArenasValuesScrounge);
                 inst.state.set('fightArenasTimesScrounge', fightArenasTimesScrounge);
-                console.timeEnd('createBattlefieldBase');
+                //console.timeEnd('createBattlefieldBase');
 
                 // console.log('battlefieldBaseDict');
                 // console.log(inst.state);
@@ -1106,7 +1127,7 @@ if (Meteor.isClient) {
             //get fields from data context
             var name = Template.instance().state.get('self');
             var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
-            var fightIds = Template.instance().state.get('fightIds');            
+            var fightIds = Template.instance().state.get('fightIds');
             var objects = new Array();
             var amountObjects = 0;
 
@@ -1116,7 +1137,7 @@ if (Meteor.isClient) {
                 }
             }
             for (var j = 0; j < amountObjects; j++) {
-                    objects[j] = {};
+                objects[j] = {};
             }
             console.log('objectsUnusedB', objects);
             return objects;
@@ -1142,7 +1163,7 @@ if (Meteor.isClient) {
             /*Iterate OwnSlots*/
             for (var i = 0; i < amountOwnSlots; i++) {
                 //falls der slot benutzt ist (nicht 0000)
-                 if (fightIds[i] > 0) {
+                if (fightIds[i] > 0) {
                     var amountUsedSupSlots = 0;
                     var obj0 = {};
                     var supEpicsAdded = 0;
@@ -1151,8 +1172,8 @@ if (Meteor.isClient) {
                     //Iterate Supporter
                     for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if(supporters[i] != "") {
-                            if(supporters[i][k] != "") {
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
                                 amountUsedSupSlots++;
                                 var obj00 = {};
                                 var supTime = supTimeStamps[i][k];
@@ -1181,7 +1202,7 @@ if (Meteor.isClient) {
                     //Im HTML wird der Wert entsprechend für die background-position eingesetzt
                     //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
                     //background-position nötig ist. (Unterschiedlich große images)
-                    switch(fightArenasColors[i]) {
+                    switch (fightArenasColors[i]) {
                         case "green":
                             obj0['color'] = "-216px 0px";
                             break;
@@ -1241,7 +1262,7 @@ if (Meteor.isClient) {
             //get fields from data context
             var name = Template.instance().state.get('self');
             var victims = Template.instance().state.get('victims');
-            var amountScrSlots = Template.instance().state.get('amountScrSlots');          
+            var amountScrSlots = Template.instance().state.get('amountScrSlots');
             var objects = new Array();
 
             for (var i = 0; i < amountScrSlots; i++) {
@@ -1271,71 +1292,71 @@ if (Meteor.isClient) {
             //Iterate all Scrounging Slots (i = scrounge slots)
             for (var i = 0; i < amountScrSlots; i++) {
                 //Is used?
-                if (victims[i] != "") {                    
-                        var supEpicsScroungeAdded = 0;
-                        var amountUsedSupSlots = 0
-                        //Iterate Supporter (l = supporter slot)
-                        for (var l = 0; l < victimsSupSlots[i]; l++) {
-                            //Falls ein Supporter vorhanden ist, verwende dessen supEpic und Zeitstempel
-                            //scr slot überhaupt benutzt?
-                            if(supTimeStampsScrounge[i] != "") {
-                                //welcher/wieviele supporter slots des scr slots sind besetzt
-                                if(supTimeStampsScrounge[i][l] != "") {
-                                    amountUsedSupSlots++;
-                                    var supTime = supTimeStampsScrounge[i][l];
-                                    var supEpic = supEpicsScrounge[i][l];
-                                    supEpicsScroungeAdded = supEpicsScroungeAdded + supEpic;
-                                }
+                if (victims[i] != "") {
+                    var supEpicsScroungeAdded = 0;
+                    var amountUsedSupSlots = 0
+                    //Iterate Supporter (l = supporter slot)
+                    for (var l = 0; l < victimsSupSlots[i]; l++) {
+                        //Falls ein Supporter vorhanden ist, verwende dessen supEpic und Zeitstempel
+                        //scr slot überhaupt benutzt?
+                        if (supTimeStampsScrounge[i] != "") {
+                            //welcher/wieviele supporter slots des scr slots sind besetzt
+                            if (supTimeStampsScrounge[i][l] != "") {
+                                amountUsedSupSlots++;
+                                var supTime = supTimeStampsScrounge[i][l];
+                                var supEpic = supEpicsScrounge[i][l];
+                                supEpicsScroungeAdded = supEpicsScroungeAdded + supEpic;
                             }
                         }
-                        var obj0 = {};
-                        //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
-                        //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
-                        //Im HTML wird der Wert entsprechend für die background-position eingesetzt
-                        //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
-                        //background-position nötig ist. (Unterschiedlich große images)
-                        //switch(cursorFightArena.color) {
-                        switch(fightArenasColorsScrounge[i]) {
-                            case "green":
-                                obj0['color'] = "-216px 0px";
-                                break;
-                            case "red":
-                                obj0['color'] = "-0px -0px";
-                                break;
-                            default:
-                                console.log("oops");
-                        }
-                        //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
-                        /*if(cursorFightArena.color == "green") {obj0['color'] = "-550px 0px";}*/
-                        //vorherige Lösung
-                        /*obj0['color'] = cursorFightArena.color;*/
-                        obj0['victim'] = victims[i];
-                        obj0['slots'] = amountUsedSupSlots + '/' + victimsSupSlots[i];
-                        obj0['remainingId'] = 'timerDec_' + i + '_battlefield_scr';
-                        obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield_scr';
+                    }
+                    var obj0 = {};
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    //switch(cursorFightArena.color) {
+                    switch (fightArenasColorsScrounge[i]) {
+                        case "green":
+                            obj0['color'] = "-216px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-0px -0px";
+                            break;
+                        default:
+                            console.log("oops");
+                    }
+                    //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
+                    /*if(cursorFightArena.color == "green") {obj0['color'] = "-550px 0px";}*/
+                    //vorherige Lösung
+                    /*obj0['color'] = cursorFightArena.color;*/
+                    obj0['victim'] = victims[i];
+                    obj0['slots'] = amountUsedSupSlots + '/' + victimsSupSlots[i];
+                    obj0['remainingId'] = 'timerDec_' + i + '_battlefield_scr';
+                    obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield_scr';
 
-                        var obj1 = {};
-                        obj1['id'] = obj0['remainingId'];
-                        obj1['miliseconds'] = (fightArenasTimesScrounge[i]) - (calculatedServerTime - ownTimeStamps[i])
-                        obj1['notFound'] = 0;
-                        obj1['prefix'] = -1;
-                        timers.push(obj1);
-                        obj0['remaining'] = msToTime(obj1['miliseconds']);
+                    var obj1 = {};
+                    obj1['id'] = obj0['remainingId'];
+                    obj1['miliseconds'] = (fightArenasTimesScrounge[i]) - (calculatedServerTime - ownTimeStamps[i])
+                    obj1['notFound'] = 0;
+                    obj1['prefix'] = -1;
+                    timers.push(obj1);
+                    obj0['remaining'] = msToTime(obj1['miliseconds']);
 
-                        var obj2 = {};
-                        obj2['id'] = obj0['timeSpentId'];
-                        obj2['miliseconds'] = (calculatedServerTime - ownTimeStamps[i]);
-                        obj2['notFound'] = 0;
-                        obj2['prefix'] = 1;
-                        timers.push(obj2);
-                        obj0['timeSpent'] = msToTime((calculatedServerTime - ownTimeStamps[i]));
+                    var obj2 = {};
+                    obj2['id'] = obj0['timeSpentId'];
+                    obj2['miliseconds'] = (calculatedServerTime - ownTimeStamps[i]);
+                    obj2['notFound'] = 0;
+                    obj2['prefix'] = 1;
+                    timers.push(obj2);
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - ownTimeStamps[i]));
 
-                        obj0['timeOverall'] = '/' + msToTime(fightArenasTimesScrounge[i]) + '(' + Math.floor((obj2['miliseconds'] / fightArenasTimesScrounge[i]) * 100) + '%)';
+                    obj0['timeOverall'] = '/' + msToTime(fightArenasTimesScrounge[i]) + '(' + Math.floor((obj2['miliseconds'] / fightArenasTimesScrounge[i]) * 100) + '%)';
 
-                        obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * fightArenasValuesScrounge[i]) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
-                        obj0['epicness'] = supEpicsScroungeAdded + '%';
-                        obj0['slider_id'] = i + 6;
-                        objects[i] = obj0;
+                    obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * fightArenasValuesScrounge[i]) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                    obj0['epicness'] = supEpicsScroungeAdded + '%';
+                    obj0['slider_id'] = i + 6;
+                    objects[i] = obj0;
                 }
             }
             return objects;
@@ -1354,15 +1375,19 @@ if (Meteor.isClient) {
             var result = distinct(colorArray);
             var objects = new Array();
             for (var j = 0; j < result.length; j++) {
-                switch(result[j]) {
-                        case "green":
-                            objects[j] = {'color': "-683px -27px"};
-                            break;
-                        case "red":
-                            objects[j] = {'color': "-683px -45px"};
-                            break;
-                        default:
-                            console.log("oops");
+                switch (result[j]) {
+                    case "green":
+                        objects[j] = {
+                            'color': "-683px -27px"
+                        };
+                        break;
+                    case "red":
+                        objects[j] = {
+                            'color': "-683px -45px"
+                        };
+                        break;
+                    default:
+                        console.log("oops");
                 }
             }
             return objects;
@@ -1374,23 +1399,23 @@ if (Meteor.isClient) {
                     fight: 1
                 }
             }).fetch();
-            for ( var i =0; i < cursorFightArenas.length; i++) {
+            for (var i = 0; i < cursorFightArenas.length; i++) {
                 var obj0 = {};
                 obj0['fight'] = cursorFightArenas[i].fight;
-                switch(cursorFightArenas[i].color) {
-                        case "green":
-                            obj0['color'] = "-2678px 0px";
-                            obj0['colorCost'] = "-1725px 0px";
-                            break;
-                        case "red":
-                            obj0['color'] = "-2678px -50px";
-                            obj0['colorCost'] = "-1725px -25px";
-                            break;
-                        default:
-                            console.log("oops");
-                    }
+                switch (cursorFightArenas[i].color) {
+                    case "green":
+                        obj0['color'] = "-2678px 0px";
+                        obj0['colorCost'] = "-1725px 0px";
+                        break;
+                    case "red":
+                        obj0['color'] = "-2678px -50px";
+                        obj0['colorCost'] = "-1725px -25px";
+                        break;
+                    default:
+                        console.log("oops");
+                }
                 obj0['cost'] = cursorFightArenas[i].cost;
-                obj0['value'] = cursorFightArenas[i].value +"XP";
+                obj0['value'] = cursorFightArenas[i].value + "XP";
                 obj0['time'] = cursorFightArenas[i].time;
                 objects[i] = obj0;
             }
@@ -1409,18 +1434,26 @@ if (Meteor.isClient) {
                 $("#background_fade").fadeIn();
             });
             Session.set("clickedFight", e.currentTarget.id);
-            switch(e.currentTarget.id.substring(0, 2)) {
-                    case "01":
-                        $("#buyMenuItem").css({backgroundPosition:"-220px 0px"});
-                        $("#matterImg").css({backgroundPosition:"-1725px 0px"});
-                        break;
-                    case "02":
-                        $("#buyMenuItem").css({backgroundPosition:"-220px -100px"});
-                        $("#matterImg").css({backgroundPosition:"-1725px -50px"});
-                        break;
-                    default:
-                        console.log("oops");
-                };
+            switch (e.currentTarget.id.substring(0, 2)) {
+                case "01":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-220px 0px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px 0px"
+                    });
+                    break;
+                case "02":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-220px -100px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px -50px"
+                    });
+                    break;
+                default:
+                    console.log("oops");
+            };
             $('#item').text("XP: " + this.value);
             range_slider("Buy_Menu", cursorPlayerDataBattlefield.minControl, cursorPlayerDataBattlefield.maxControl, cursorPlayerDataBattlefield.minControl, cursorPlayerDataBattlefield.maxControl);
             $('#time').text("Time: " + msToTime(this.time));
@@ -1450,42 +1483,42 @@ if (Meteor.isClient) {
     ///// BATTLEFIELD SCROUNGE /////
     Template.battlefieldScrounge.onCreated(function() {
 
-        console.time('createBattlefieldScrounge');
+        //console.time('createBattlefieldScrounge');
         var inst = this;
         inst.state = new ReactiveDict();
         var cursorSelf = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1,
-                    cu: 1
-                }
-            });
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                cu: 1
+            }
+        });
         var currentUser = cursorSelf.cu;
         var self = cursorSelf.username;
         var users = [currentUser, self];
 
-        inst.autorun(function () {   
+        inst.autorun(function() {
 
             var subsPlayerDataBattlefield = inst.subscribe('playerDataBattlefield', users);
             var color = 'green';
             var subsFightArenas = inst.subscribe('FightArenas', color);
 
-            if(subsPlayerDataBattlefield.ready() && subsFightArenas.ready()) {
+            if (subsPlayerDataBattlefield.ready() && subsFightArenas.ready()) {
                 var cursorPlayerDataBattlefieldSelf = playerData.findOne({
                     user: self
                 }, {
                     fields: {
                         battlefield: 1
                     }
-                }).battlefield; 
+                }).battlefield;
                 var cursorPlayerDataBattlefieldCu = playerData.findOne({
                     user: currentUser
                 }, {
                     fields: {
                         battlefield: 1
                     }
-                }).battlefield; 
+                }).battlefield;
 
                 //data from active player
                 var namesScroungedUsers = [];
@@ -1507,15 +1540,15 @@ if (Meteor.isClient) {
 
                 for (i = 0; i < amountScrSlots; i++) {
                     namesScroungedUsers[i] = cursorPlayerDataBattlefieldSelf.scrSlots['scrs' + i].victim.name;
-                };       
+                };
 
                 for (var i = 0; i < amountOwnSlots; i++) {
-                    inputs[i] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i].input; 
+                    inputs[i] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i].input;
                     //falls der slot benutzt ist                                      
                     if (inputs[i] > 0) {
                         cursorFightArena = FightArenas.findOne({
                             fight: inputs[i]
-                        });  
+                        });
                         fightArenasValues[i] = cursorFightArena.value;
                         fightArenasColors[i] = cursorFightArena.color;
                         fightArenasTimes[i] = cursorFightArena.time;
@@ -1528,16 +1561,16 @@ if (Meteor.isClient) {
                     var supEpicnessOneSlot = [];
                     var supLevelsOneSlot = [];
                     for (var k = 0; k < amountSupSlots; k++) {
-                        supNamesOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup'+k].name;
-                        supStampsOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup'+k].stamp;
-                        supEpicnessOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup'+k].benefit;
-                        supLevelsOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup'+k].level;
+                        supNamesOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].name;
+                        supStampsOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].stamp;
+                        supEpicnessOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].benefit;
+                        supLevelsOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].level;
                     }
                     supNames[i] = supNamesOneSlot;
                     supStamps[i] = supStampsOneSlot;
                     supEpicness[i] = supEpicnessOneSlot;
                     supLevels[i] = supLevelsOneSlot;
-                }    
+                }
 
                 //set Data Context for other helpers
                 inst.state.set('self', users);
@@ -1556,9 +1589,9 @@ if (Meteor.isClient) {
                 inst.state.set('supTimeStamps', supStamps);
                 inst.state.set('supEpics', supEpicness);
                 inst.state.set('fightArenasValues', fightArenasValues);
-                inst.state.set('fightArenasColors', fightArenasColors); 
+                inst.state.set('fightArenasColors', fightArenasColors);
                 inst.state.set('fightArenasTimes', fightArenasTimes);
-                console.timeEnd('createBattlefieldScrounge');
+                //console.timeEnd('createBattlefieldScrounge');
             }
         })
     });
@@ -1596,8 +1629,8 @@ if (Meteor.isClient) {
                     //Iterate Supporter
                     for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if(supporters[i] != "") {
-                            if(supporters[i][k] != "") {
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
                                 amountUsedSupSlots++;
                                 var obj00 = {};
                                 var supTime = supTimeStamps[i][k];
@@ -1626,7 +1659,7 @@ if (Meteor.isClient) {
                     //Im HTML wird der Wert entsprechend für die background-position eingesetzt
                     //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
                     //background-position nötig ist. (Unterschiedlich große images)
-                    switch(fightArenasColors[i]) {
+                    switch (fightArenasColors[i]) {
                         case "green":
                             obj0['color'] = "-216px 0px";
                             break;
@@ -1718,44 +1751,48 @@ if (Meteor.isClient) {
             });
         }
     });
-    
+
     Template.worldMapPreload.onCreated(function() {
 
         console.log('createWorldMapPreStart');
-        console.time('createWorldMapPre');
+        //console.time('createWorldMapPre');
 
         var inst = this;
         var user = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    cu: 1,
-                    username: 1
-                }
-            });
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1,
+                username: 1
+            }
+        });
         var myName = user.username;
         var currentUser = user.cu;
         var cursorUser = Meteor.users.findOne({
-                username: currentUser
-            }, {
-                fields: {
-                    x: 1,
-                    y: 1
-                }
-            });
+            username: currentUser
+        }, {
+            fields: {
+                x: 1,
+                y: 1
+            }
+        });
 
-        inst.autorun(function() {  
+        inst.autorun(function() {
 
             var subsWorldMapSize = inst.subscribe('worldMapSize');
 
-            if(subsWorldMapSize.ready()) {
+            if (subsWorldMapSize.ready()) {
 
                 //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
                 //in diesem Fall ist das nur ein Objekt
                 //workaround, weil Suche über _id nicht funktioniert
-                var maxX = worldMapFields.findOne({maxXY: {$exists: true}}).maxXY;
+                var maxX = worldMapFields.findOne({
+                    maxXY: {
+                        $exists: true
+                    }
+                }).maxXY;
                 var maxY = maxX;
-                var orientationX = cursorUser.x; 
+                var orientationX = cursorUser.x;
                 var orientationY = cursorUser.y;
                 var xInformation = [];
                 var yInformation = [];
@@ -1772,16 +1809,16 @@ if (Meteor.isClient) {
                 neededWorldMapFields[1] = yInformation;
 
                 var subsWorldMapPlayerData = inst.subscribe('playerDataForWorldMap', neededWorldMapFields);
-                if(subsWorldMapPlayerData.ready()) {
-                    console.timeEnd('createWorldMapPre');
-                    // console.timeEnd("LOGINWP");
-                } 
+                if (subsWorldMapPlayerData.ready()) {
+                    //console.timeEnd('createWorldMapPre');
+                    // //console.timeEnd("LOGINWP");
+                }
             }
         })
     });
     ///// WORLD MAP /////
     Template.worldMap.onCreated(function() {
-        console.time('createWorldMap');
+        //console.time('createWorldMap');
 
         var inst = this;
         inst.state = new ReactiveDict();
@@ -1792,20 +1829,20 @@ if (Meteor.isClient) {
                 username: 1
             }
         }).username;
-        inst.autorun(function () {
+        inst.autorun(function() {
 
             var subsSelfM = inst.subscribe('playerDataMine', [self]);
             var subsSelfB = inst.subscribe('playerDataBattlefield', [self]);
-            if(subsSelfM.ready() && subsSelfB.ready()) {
+            if (subsSelfM.ready() && subsSelfB.ready()) {
                 var cursorMyPlayerData = playerData.findOne({
-                user: self
+                    user: self
                 }, {
                     fields: {
                         mine: 1,
                         battlefield: 1
                     }
                 });
-                if(cursorMyPlayerData) {
+                if (cursorMyPlayerData) {
                     //Die Funktionen checkScroungeMine/Battlefield werden aus zwei verschiedenen Templates heraus
                     //aufgerufen. 
                     var amountScrSlotsM = cursorMyPlayerData.mine.amountScrSlots;
@@ -1829,15 +1866,15 @@ if (Meteor.isClient) {
                     inst.state.set('ownEpic', ownEpic);
                     inst.state.set('amountScrSlotsM', amountScrSlotsM);
                     inst.state.set('amountScrSlotsB', amountScrSlotsB);
-                    console.timeEnd('createWorldMap');
-                    console.timeEnd("SWITCH TO WORLD MAP");
+                    //console.timeEnd('createWorldMap');
+                    //console.timeEnd("SWITCH TO WORLD MAP");
                     // console.log('worldMapDict');
                     // console.log(inst.state);
                 }
             }
-            
 
-        })        
+
+        })
     });
 
     Template.worldMap.helpers({
@@ -1899,7 +1936,7 @@ if (Meteor.isClient) {
             if (maxCount == 0 && self != player) {
                 obj0['mineInactive'] = true;
             }
-//WWW
+            //WWW
             //Check battlefield
             var amountOwnSlots = cursorPlayerData.battlefield.amountOwnSlots;
             var trueCount = 0;
@@ -1947,6 +1984,20 @@ if (Meteor.isClient) {
             navigateWorldMap($(e.currentTarget).attr("id"));
         },
 
+        'click .worldMapPlayerPlace': function(e, t) {
+            if (e.currentTarget.id != '') {
+                var current = e.currentTarget.id;
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        cu: current
+                    }
+                });
+                renderActiveMiddle();
+            }
+        },
+
         'click .worldMapScroungePreview': function(e, t) {
             if (e.currentTarget.id != '') {
                 var current = (e.currentTarget.id).substring(7);;
@@ -1965,39 +2016,39 @@ if (Meteor.isClient) {
     ///// SCROUNGE PREVIEW /////
     Template.scroungePreview.onCreated(function() {
         console.log('createScroungePreviewStart');
-        console.time('createScroungePreview');
+        //console.time('createScroungePreview');
 
         var inst = this;
         var neededWorldMapFields = {};
         var xInformation = [];
         var yInformation = [];
         var worldMapArray = Session.get('worldMapArray');
-        for(i=0;i<worldMapArray[0].columns.length;i++){
-            for(j=0;j<worldMapArray.length;j++){
-                if(worldMapArray[j].columns[i].playerName != undefined){
+        for (i = 0; i < worldMapArray[0].columns.length; i++) {
+            for (j = 0; j < worldMapArray.length; j++) {
+                if (worldMapArray[j].columns[i].playerName != undefined) {
                     x = worldMapArray[j].columns[i].x;
                     y = worldMapArray[j].columns[i].y;
-                    if($.inArray(x, xInformation) == -1) xInformation.push(x);
-                    if($.inArray(y, yInformation) == -1) yInformation.push(y);
+                    if ($.inArray(x, xInformation) == -1) xInformation.push(x);
+                    if ($.inArray(y, yInformation) == -1) yInformation.push(y);
                 }
-            }                    
+            }
         }
         neededWorldMapFields[0] = xInformation;
         neededWorldMapFields[1] = yInformation;
 
-        inst.autorun(function () {
+        inst.autorun(function() {
 
             var subsPlayerDataScroungePreview = inst.subscribe('playerDataForWorldMap', neededWorldMapFields);
-               if(subsPlayerDataScroungePreview.ready()) { 
-                console.timeEnd('createScroungePreview');
-                // console.timeEnd("SWITCH TO WORLD MAP");
+            if (subsPlayerDataScroungePreview.ready()) {
+                //console.timeEnd('createScroungePreview');
+                // //console.timeEnd("SWITCH TO WORLD MAP");
             }
         })
     });
-//PI
+    //PI
     Template.scroungePreview.helpers({
         previewInfos: function() {
-            return Session.get("worldMapPreview");  
+            return Session.get("worldMapPreview");
         },
     });
 
@@ -2014,8 +2065,8 @@ if (Meteor.isClient) {
     //TODO: noch nicht fertig !
     Template.buyMenu.events({
         'click #buyMenuYes': function(e, t) {
-            console.time("BUYRESOURCE");
-            console.time("S1");
+            //console.time("BUYRESOURCE");
+            //console.time("S1");
             var menu = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -2023,7 +2074,7 @@ if (Meteor.isClient) {
                     menu: 1,
                 }
             }).menu;
-            console.timeEnd("S1");
+            //console.timeEnd("S1");
 
             // Werte des Range Sliders
             var slider_range = $('#range_slider_Buy_Menu').slider("option", "values");
@@ -2037,7 +2088,7 @@ if (Meteor.isClient) {
                     if (result) {
                         infoLog(result);
                         showInfoTextAnimation(result);
-                        console.timeEnd("BUYRESOURCE");                    
+                        //console.timeEnd("BUYRESOURCE");
                     }
                 });
             }
@@ -2048,7 +2099,7 @@ if (Meteor.isClient) {
                     }
                     if (result) {
                         infoLog(result);
-                        showInfoTextAnimation(result);                     
+                        showInfoTextAnimation(result);
                     }
                 });
             }
@@ -2066,18 +2117,18 @@ if (Meteor.isClient) {
     ///// STANDARD BORDER /////
     Template.standardBorder.onCreated(function() {
 
-        console.timeEnd('Oo');
+        //console.timeEnd('Oo');
         console.log('createBorderStart');
-        console.time('createBorder');
+        //console.time('createBorder');
 
         var inst = this;
 
         inst.autorun(function() {
             var subsResourcesBorder = inst.subscribe('resources');
-            if(subsResourcesBorder.ready()) {
-                console.timeEnd("LOGINSB");
-                console.timeEnd('createBorder');
-            } 
+            if (subsResourcesBorder.ready()) {
+                //console.timeEnd("LOGINSB");
+                //console.timeEnd('createBorder');
+            }
         })
     });
 
@@ -2096,41 +2147,31 @@ if (Meteor.isClient) {
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-            // Meteor.call('blubb', function(err, result) {
-            //         if (err) {
-            //             console.log(err);
-            //         }
-            //         if (result) {
-            //             console.log('aha');                    
-            //         }
-            // });
-            // // Meteor.call('updateMineOfUser', 'bot50', function(err, result) {
-            // //         if (err) {
-            // //             console.log(err);
-            // //         }
-            // //         if (result) {
-            // //             console.log('aha');                    
-            // //         }
-            // // });
-            // Meteor.call('updateBattlefieldOfUser', 'bot50', function(err, result) {
-            //         if (err) {
-            //             console.log(err);
-            //         }
-            //         if (result) {
-            //             console.log('aha');                    
-            //         }
-            // });
+            console.log('action Button!');
+            // This methodes activates l-k bots with the names from l to k
+            // createBots(201, 1000);
+            // This methodes activates n bots to simulate user actions
+            // actionBots(5);
         },
 
         'click #testButton2': function(e, t) {
+            // logRenders();
+            Meteor.call('singleUpdate');
+        },
 
-            logRenders();
+        'click #testButton3': function(e, t) {
+            //param: interval in seconds
+            Meteor.call('updateLoop', 25);
+        },
 
+        'click #testButton4': function(e, t) {
+            //param: interval in seconds
+            Meteor.call('updateLoop', 25);
         },
 
         'click .category_1': function(e, t) {
-            console.time("SWITCH CATEGORY3");
-            console.time("SWITCH CATEGORY4");
+            //console.time("SWITCH CATEGORY3");
+            //console.time("SWITCH CATEGORY4");
             switch_category($(e.target), 100, function() {
                 Meteor.users.update({
                     _id: Meteor.userId()
@@ -2143,8 +2184,8 @@ if (Meteor.isClient) {
         },
 
         'click .category_3': function(e, t) {
-            console.time("SWITCH CATEGORY3");
-            console.time("SWITCH CATEGORY4");
+            //console.time("SWITCH CATEGORY3");
+            //console.time("SWITCH CATEGORY4");
             switch_category($(e.target), 100, function() {
                 Meteor.users.update({
                     _id: Meteor.userId()
@@ -2175,7 +2216,6 @@ if (Meteor.isClient) {
         },
 
         'click #scrounge': function(e, t) {
-            console.log("SWITCH MODE");
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -2202,12 +2242,11 @@ if (Meteor.isClient) {
                             cu: Session.get("lastPlayer")
                         }
                     });
-                }
-                else {
-                     switchToWorldMap();
+                } else {
+                    switchToWorldMap();
                 }
             }
-            console.log("SWITCH MODE");
+            // console.log("SWITCH MODE");
         }
     });
 
@@ -2331,28 +2370,28 @@ if (Meteor.isClient) {
         //To-DO Media Queries in 3 CSS files aufteilen und je nach Query nutzen
         //      Evtl. SpriteSheets anlegen im 4er Block und abhängig von der Größe benutzen
         'mouseover .hover': function(e, t) {
-          var pos = $(e.currentTarget).css("background-position");
-          
-          //Get only the className which is responsible for the background-Image to manipulate its background-position
-          //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
-          var className = e.currentTarget.className;
-          var temp1 = className.indexOf("SS");
-          var classNameSub = className.substr(temp1);
-          var temp2 = classNameSub.indexOf(" ");
-          var classToBeChanged = "."+classNameSub.substr(0, temp2);
-          moveSpriteSheetBackground(pos, classToBeChanged);
+            var pos = $(e.currentTarget).css("background-position");
+
+            //Get only the className which is responsible for the background-Image to manipulate its background-position
+            //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
+            var className = e.currentTarget.className;
+            var temp1 = className.indexOf("SS");
+            var classNameSub = className.substr(temp1);
+            var temp2 = classNameSub.indexOf(" ");
+            var classToBeChanged = "." + classNameSub.substr(0, temp2);
+            moveSpriteSheetBackground(pos, classToBeChanged);
         },
         'mouseout .hover': function(e, t) {
-          var pos = $(e.currentTarget).css("background-position");
+            var pos = $(e.currentTarget).css("background-position");
 
-          //Get only the className which is responsible for the background-Image to manipulate its background-position
-          //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
-          var className = e.currentTarget.className;
-          var temp1 = className.indexOf("SS");
-          var classNameSub = className.substr(temp1);
-          var temp2 = classNameSub.indexOf(" ");
-          var classToBeChanged = "."+classNameSub.substr(0, temp2);
-          moveSpriteSheetBackground(pos, classToBeChanged);
+            //Get only the className which is responsible for the background-Image to manipulate its background-position
+            //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
+            var className = e.currentTarget.className;
+            var temp1 = className.indexOf("SS");
+            var classNameSub = className.substr(temp1);
+            var temp2 = classNameSub.indexOf(" ");
+            var classToBeChanged = "." + classNameSub.substr(0, temp2);
+            moveSpriteSheetBackground(pos, classToBeChanged);
         },
         'click .scrounge_now': function(e, t) {
             switchToWorldMap();
@@ -2427,7 +2466,7 @@ if (Meteor.isClient) {
 
     // WorldMap Steuerung per Pfeiltasten
 
-    (function($) {            
+    (function($) {
 
         // Workaround für den Firefox zum Scrollen mit Mausrad
         document.addEventListener("mousemove", function(event) {
@@ -2556,15 +2595,15 @@ if (Meteor.isClient) {
                 slide_start("forth", "vertical", 100, 400, "#inventory_stolen");
                 break;
             default:
-                console.log("Slide für "+element.attr("id")+" nicht definiert !");
+                console.log("Slide für " + element.attr("id") + " nicht definiert !");
                 break;
         }
     }
 
     function switch_category(clicked_obj, speed, callback) {
 
-        console.time("SWITCH CATEGORY1");
-        console.time("SWITCH CATEGORY2");
+        //console.time("SWITCH CATEGORY1");
+        //console.time("SWITCH CATEGORY2");
         console.log("SWITCH CATEGORY");
 
         if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
@@ -2644,7 +2683,7 @@ if (Meteor.isClient) {
                 //console.log('for x : ' + x + " offset: " + category_offset);
                 if (x == category_offset - 1) {
                     animation_type = "easeOutBack";
-                    speed = speed*4;
+                    speed = speed * 4;
                 }
                 $("#categories_wrapper").animate(animation_obj_forth, speed, animation_type, function() {
                     //console.log('animate: ' + x);
@@ -3087,13 +3126,13 @@ if (Meteor.isClient) {
                 color = "tomato";
                 break;
 
-            /*negative message*/
+                /*negative message*/
             case "1":
 
                 color = "greenyellow";
                 break;
 
-            /*neutral message*/
+                /*neutral message*/
             case "2":
 
                 color = "white";
@@ -3119,7 +3158,7 @@ if (Meteor.isClient) {
     //returns true if locked
 
     function checkScroungeMine(slotId, myName, currentUser) {
-        
+
         //get Data Context
         var self = Template.instance().state.get('self');
         var ownRate = Template.instance().state.get('ownRate');
@@ -3135,8 +3174,7 @@ if (Meteor.isClient) {
         for (i = 0; i < amountScrSlots; i++) {
             if (victims[i] == currentUser) {
                 return 'You cannot scrounge here: You already scrounge this user!';
-            }
-            else if (victims[i] == "") {
+            } else if (victims[i] == "") {
                 resultScrounger = i;
                 break;
             }
@@ -3154,7 +3192,7 @@ if (Meteor.isClient) {
             }
         }).mine;
         var amountSupSlots = cursorPlayerDataCu.amountSupSlots;
-        var chosenScroungeSlot = cursorPlayerDataCu.ownSlots['owns'+slotId];
+        var chosenScroungeSlot = cursorPlayerDataCu.ownSlots['owns' + slotId];
 
         var resultOwner = -1;
         for (i = 0; i < amountSupSlots; i++) {
@@ -3164,7 +3202,7 @@ if (Meteor.isClient) {
             }
         }
         //LAST CHECK: RANGE SLIDER
-        if (!(chosenScroungeSlot.control.min <= ownRate && ownRate <= chosenScroungeSlot.control.max)) {    
+        if (!(chosenScroungeSlot.control.min <= ownRate && ownRate <= chosenScroungeSlot.control.max)) {
             return 'You cannot scrounge here: You do not have the right miningrate!';
         }
         //SupSlot with id result is free and correct: update it ?
@@ -3190,8 +3228,7 @@ if (Meteor.isClient) {
         for (i = 0; i < amountScrSlots; i++) {
             if (victims[i] == currentUser) {
                 return 'You cannot scrounge here: You already scrounge this user!';
-            }
-            else if (victims[i] == "") {
+            } else if (victims[i] == "") {
                 resultScrounger = i;
                 break;
             }
@@ -3209,7 +3246,7 @@ if (Meteor.isClient) {
             }
         });
         var amountSupSlots = cursorPlayerDataCu.battlefield.amountSupSlots;
-        var chosenScroungeSlot = cursorPlayerDataCu.battlefield.ownSlots['owns'+slotId];
+        var chosenScroungeSlot = cursorPlayerDataCu.battlefield.ownSlots['owns' + slotId];
         var resultOwner = -1;
         for (i = 0; i < amountSupSlots; i++) {
             if (chosenScroungeSlot['sup' + i].name == "") {
@@ -3218,7 +3255,7 @@ if (Meteor.isClient) {
             }
         }
         //LAST CHECK: RANGE SLIDER
-        if (!(chosenScroungeSlot.control.min <= ownEpic && ownEpic <= chosenScroungeSlot.control.max)) {      
+        if (!(chosenScroungeSlot.control.min <= ownEpic && ownEpic <= chosenScroungeSlot.control.max)) {
             return 'You cannot scrounge here: You do not have the right epicness!';
         }
         //SupSlot with id result is free and correct: update it ?
@@ -3229,6 +3266,7 @@ if (Meteor.isClient) {
     }
 
     function renderActiveMiddle() {
+        // console.log('renderActiveMiddle');
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
         }, {
@@ -3253,8 +3291,8 @@ if (Meteor.isClient) {
     }
 
     function switchToWorldMap() {
-        console.time("SWITCH TO WORLD MAP");
-        console.time("SWITCH TO WORLD MAP2");
+        //console.time("SWITCH TO WORLD MAP");
+        //console.time("SWITCH TO WORLD MAP2");
         console.log("SWITCH TO WORLD MAP");
         Router.current().render('worldMap', {
             to: 'middle'
@@ -3279,7 +3317,11 @@ if (Meteor.isClient) {
             //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
             //in diesem Fall ist das nur ein Objekt
             //workaround, weil Suche über _id nicht funktioniert
-            var maxX = parseInt(worldMapFields.findOne({maxXY: {$exists: true}}).maxXY);
+            var maxX = parseInt(worldMapFields.findOne({
+                maxXY: {
+                    $exists: true
+                }
+            }).maxXY);
             //Für den Fall, dass die Map symmetrisch ist, sind maxY und maxX identisch
             //wird im Weiteren getrennt behandelt, damit das flexibel bleibt und bei
             //Bedarf geändert werden kann
@@ -3287,26 +3329,28 @@ if (Meteor.isClient) {
             initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
         }
     }
-//NWM
-    function navigateWorldMap(direction) {
 
-        console.time("NAVIGATE WORLD MAP");
-        console.log("NAVIGATE WORLD MAP");
+    function navigateWorldMap(direction) {
+        // //console.time("NAVIGATE WORLD MAP");
         //get max map size
-        var maxX = parseInt(worldMapFields.findOne({maxXY: {$exists: true}}).maxXY);
+        var maxX = parseInt(worldMapFields.findOne({
+            maxXY: {
+                $exists: true
+            }
+        }).maxXY);
         var maxY = maxX;
         switch (direction) {
             case "worldMapGoUp":
-            //Scheint zu funktionieren
-            //Die subscriptions müssen irgendwie noch händisch wieder gestoppt werden
-            //eventuell?! Prüfen!
+                //Scheint zu funktionieren
+                //Die subscriptions müssen irgendwie noch händisch wieder gestoppt werden
+                //eventuell?! Prüfen!
                 var neededWorldMapFields = {};
                 var xNewColumn = [];
                 var yNewColumn = [];
                 yNewColumn[0] = worldMapArray[5].columns[0].y + 1;
-                if(yNewColumn[0] > maxY) yNewColumn[0] = 0;
+                if (yNewColumn[0] > maxY) yNewColumn[0] = 0;
                 var currentLeftx = worldMapArray[5].columns[0].x;
-                var yValue = worldMapArray[0].columns[0].y+1;
+                var yValue = worldMapArray[0].columns[0].y + 1;
                 for (var i = 0; i < mapColumns; i++) {
                     xNewColumn[i] = currentLeftx;
                     currentLeftx++;
@@ -3318,17 +3362,17 @@ if (Meteor.isClient) {
                 Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
                     if (yValue > maxY) yValue = 0
                     initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
-                    console.timeEnd("NAVIGATE WORLD MAP");                         
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
                 });
                 break;
             case "worldMapGoDown":
                 var neededWorldMapFields = {};
                 var xNewColumn = [];
                 var yNewColumn = [];
-                yNewColumn[0] = worldMapArray[0].columns[0].y-1;
-                if(yNewColumn[0] < 0) yNewColumn[0] = maxY;
+                yNewColumn[0] = worldMapArray[0].columns[0].y - 1;
+                if (yNewColumn[0] < 0) yNewColumn[0] = maxY;
                 var currentLeftx = worldMapArray[5].columns[0].x;
-                var yValue = worldMapArray[0].columns[0].y-1;
+                var yValue = worldMapArray[0].columns[0].y - 1;
                 for (var i = 0; i < mapColumns; i++) {
                     xNewColumn[i] = currentLeftx;
                     currentLeftx++;
@@ -3339,7 +3383,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
                     if (yValue < 0) yValue = maxY
                     initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
-                    console.timeEnd("NAVIGATE WORLD MAP");                         
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
                 });
                 break;
             case "worldMapGoRight":
@@ -3347,10 +3391,10 @@ if (Meteor.isClient) {
                 var neededWorldMapFields = {};
                 var xNewColumn = [];
                 var yNewColumn = [];
-                xNewColumn[0] = worldMapArray[0].columns[7].x+1;
-                if(xNewColumn[0] > maxX) xNewColumn[0] = 0;
+                xNewColumn[0] = worldMapArray[0].columns[7].x + 1;
+                if (xNewColumn[0] > maxX) xNewColumn[0] = 0;
                 var currentbottomy = worldMapArray[0].columns[0].y;
-                var xValue = worldMapArray[0].columns[0].x+1;
+                var xValue = worldMapArray[0].columns[0].x + 1;
                 for (var i = 0; i < mapRows; i++) {
                     yNewColumn[i] = currentbottomy;
                     currentbottomy++;
@@ -3360,18 +3404,18 @@ if (Meteor.isClient) {
                 //get user data for new worldMap fields from database
                 Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
                     if (xValue > maxX) xValue = 0
-                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY); 
-                    console.timeEnd("NAVIGATE WORLD MAP");                         
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
                 });
                 break;
             case "worldMapGoLeft":
                 var neededWorldMapFields = {};
                 var xNewColumn = [];
                 var yNewColumn = [];
-                xNewColumn[0] = worldMapArray[0].columns[0].x-1;
-                if(xNewColumn[0] < 0) xNewColumn[0] = maxX;
+                xNewColumn[0] = worldMapArray[0].columns[0].x - 1;
+                if (xNewColumn[0] < 0) xNewColumn[0] = maxX;
                 var currentbottomy = worldMapArray[0].columns[0].y;
-                var xValue = worldMapArray[0].columns[0].x-1;
+                var xValue = worldMapArray[0].columns[0].x - 1;
                 for (var i = 0; i < mapRows; i++) {
                     yNewColumn[i] = currentbottomy;
                     currentbottomy++;
@@ -3382,7 +3426,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
                     if (xValue < 0) xValue = maxX
                     initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
-                    console.timeEnd("NAVIGATE WORLD MAP");                        
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
                 });
                 break;
             default:
@@ -3401,7 +3445,7 @@ if (Meteor.isClient) {
         for (var i = 0; i < mapRows; i++) {
             worldMapArray.push(createRowObject(orientationX, orientationY, maxX, maxY, i));
         }
-        console.timeEnd('SWITCH TO WORLD MAP2');
+        // //console.timeEnd('SWITCH TO WORLD MAP2');
         Session.set("worldMapArray", worldMapArray);
     }
 
@@ -3439,11 +3483,10 @@ if (Meteor.isClient) {
                 var backgroundNumber = cursorUser.backgroundId;
                 infoMemory['playerLevel'] = playerLevel;
                 infoMemory['playerImage'] = "worldMapPlayerImage";
-                if(playerLevel < 10) {
+                if (playerLevel < 10) {
                     infoMemory['playerImageId'] = "-640px -138px";
                     if (myName == user) infoMemory['playerImageId'] = "-560px -138px";
-                }
-                else {
+                } else {
                     infoMemory['playerImageId'] = "-720px -138px";
                     if (myName == user) infoMemory['playerImageId'] = "-800px -138px";
                 }
@@ -3462,9 +3505,10 @@ if (Meteor.isClient) {
         return row;
     }
 
-        var deps_count = 0;
+    var deps_count = 0;
 
-        Deps.autorun(function() {
+    Deps.autorun(function() {
+        //DEPS AUTORUN FOR RANGE SLIDER
         var init = Session.get("init");
         // console.log("count: " + deps_count);
         if (deps_count == 1) {
@@ -3619,91 +3663,85 @@ if (Meteor.isClient) {
     }
 
     //SpriteSheet anpassen
-    function moveSpriteSheetBackground (pos, classToBeChanged, scrounge) {
 
-          var styleSheetList = document.styleSheets;
-          var rules = styleSheetList[0].cssRules;
+    function moveSpriteSheetBackground(pos, classToBeChanged, scrounge) {
 
-          /*to get the width of the spritesheet*/
-          var tempImg = new Image;
-          //Man könnte theoretisch auch jedes andere div nehmen, das das SpriteSheet als background-image hat
-          tempImg.src = $("#scrounge").css('background-image').replace(/url\(|\)$/ig, "");
-          var spriteSheetWidth = tempImg.width;
+        var styleSheetList = document.styleSheets;
+        var rules = styleSheetList[0].cssRules;
 
-          /*Der Umweg via split ist notwendig, da Firefox background-position-x bzw. -y nicht unterstützt*/
-          var posXY = pos.split(" ");
-          var posXAbsolute = Math.abs(parseInt(posXY[0]));
+        /*to get the width of the spritesheet*/
+        var tempImg = new Image;
+        //Man könnte theoretisch auch jedes andere div nehmen, das das SpriteSheet als background-image hat
+        tempImg.src = $("#scrounge").css('background-image').replace(/url\(|\)$/ig, "");
+        var spriteSheetWidth = tempImg.width;
 
-          /*console.log(posXY[0]); 
+        /*Der Umweg via split ist notwendig, da Firefox background-position-x bzw. -y nicht unterstützt*/
+        var posXY = pos.split(" ");
+        var posXAbsolute = Math.abs(parseInt(posXY[0]));
+
+        /*console.log(posXY[0]); 
           console.log("case 1 "+ (posXAbsolute < spriteSheetWidth/4 || (posXAbsolute >= spriteSheetWidth/2 && posXAbsolute < spriteSheetWidth*0.75)));*/
-/*          console.log(posXAbsolute+" "+spriteSheetWidth/4+" "+posXAbsolute+" "+spriteSheetWidth/2+" "+posXAbsolute+" "+spriteSheetWidth*0.75);*/
-          
-          //Falls es sich um eine Schaltfläche im Status "normal" handelt (linke Abfrage Base / rechte Abfrage Scrounge)
-          if(posXAbsolute < spriteSheetWidth/4 || (posXAbsolute >= spriteSheetWidth/2 && posXAbsolute < spriteSheetWidth*0.75)) {
-              var newPosX = parseInt(posXY[0])-(spriteSheetWidth/4);
-              /*console.log("IF "+newPosX);*/
-          }
-          //Falls es sich um eine Schaltfläche im Status "hovered" handelt
-          else {
-              var newPosX = parseInt(posXY[0])+(spriteSheetWidth/4);
-          }
-          for (i=0; i<rules.length; i++){
+        /*          console.log(posXAbsolute+" "+spriteSheetWidth/4+" "+posXAbsolute+" "+spriteSheetWidth/2+" "+posXAbsolute+" "+spriteSheetWidth*0.75);*/
+
+        //Falls es sich um eine Schaltfläche im Status "normal" handelt (linke Abfrage Base / rechte Abfrage Scrounge)
+        if (posXAbsolute < spriteSheetWidth / 4 || (posXAbsolute >= spriteSheetWidth / 2 && posXAbsolute < spriteSheetWidth * 0.75)) {
+            var newPosX = parseInt(posXY[0]) - (spriteSheetWidth / 4);
+            /*console.log("IF "+newPosX);*/
+        }
+        //Falls es sich um eine Schaltfläche im Status "hovered" handelt
+        else {
+            var newPosX = parseInt(posXY[0]) + (spriteSheetWidth / 4);
+        }
+        for (i = 0; i < rules.length; i++) {
             /*console.log("obereForSchleife "+i)*/
             //Falls kleinstes SpriteSheet, classToBeChanged Klasse ist in der obersten Ebene des spriteSheets zu finden
-            if(spriteSheetWidth == 1472){
+            if (spriteSheetWidth == 1472) {
 
-              /*console.log("kleinstesSpriteSheet");*/
-              if(rules[i].selectorText==classToBeChanged)
-              { 
-                rules[i].style.backgroundPosition = newPosX+"px "+posXY[1];
-/*                console.log(rules[i].style.backgroundPosition);*/
-                break;
-              }
+                /*console.log("kleinstesSpriteSheet");*/
+                if (rules[i].selectorText == classToBeChanged) {
+                    rules[i].style.backgroundPosition = newPosX + "px " + posXY[1];
+                    /*                console.log(rules[i].style.backgroundPosition);*/
+                    break;
+                }
 
             }
 
             //Falls mittelgroßes SpriteSheet
-            else if(spriteSheetWidth == 1880) {
+            else if (spriteSheetWidth == 1880) {
 
-              /*console.log("mittelgroßesSpriteSheet");*/
-              if(rules[i].cssText.substr(0,42) == "@media only screen and (max-width: 1919px)")
-              { 
-                //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
-                var rulesInner = rules[i].cssRules;
-                for(k=0; k<rulesInner.length; k++) {
-                  /*console.log("innereForSchleife" + k);*/
-                  if(rulesInner[k].selectorText==classToBeChanged)
-                  {
-                    rulesInner[k].style.backgroundPosition = newPosX+"px "+posXY[1];
-/*                    console.log("mittelgroß "+rulesInner[k].style.backgroundPosition);*/
-                    break;
-                  }
+                /*console.log("mittelgroßesSpriteSheet");*/
+                if (rules[i].cssText.substr(0, 42) == "@media only screen and (max-width: 1919px)") {
+                    //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
+                    var rulesInner = rules[i].cssRules;
+                    for (k = 0; k < rulesInner.length; k++) {
+                        /*console.log("innereForSchleife" + k);*/
+                        if (rulesInner[k].selectorText == classToBeChanged) {
+                            rulesInner[k].style.backgroundPosition = newPosX + "px " + posXY[1];
+                            /*console.log("mittelgroß "+rulesInner[k].style.backgroundPosition);*/
+                            break;
+                        }
+                    }
                 }
-              }
-            }
+            } else if (spriteSheetWidth == 2800) {
 
-            else if(spriteSheetWidth == 2800) {
-
-              /*console.log("großesSpriteSheet");
+                /*console.log("großesSpriteSheet");
               console.log(rules[i].cssText.substr(0,42));*/
-              /*console.log(rules[i].cssText.substr(0,42) == "@media only screen and (min-width: 1920px)");*/
-              if(rules[i].cssText.substr(0,42) == "@media only screen and (min-width: 1920px)")
-              { 
-                //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
-                var rulesInner = rules[i].cssRules;
-                for(j=0; j<rulesInner.length; j++) {
-                  /*console.log("innereForSchleife" + j);*/
-                  /*console.log(rulesInner[j].selectorText);
-                  console.log(rulesInner[j].selectorText==classToBeChanged);*/
-                  if(rulesInner[j].selectorText==classToBeChanged)
-                  {
-                    rulesInner[j].style.backgroundPosition = newPosX+"px "+posXY[1];
-                    /*console.log("groß "+rulesInner[j].style.backgroundPosition);*/
-                    break;
-                  }
+                /*console.log(rules[i].cssText.substr(0,42) == "@media only screen and (min-width: 1920px)");*/
+                if (rules[i].cssText.substr(0, 42) == "@media only screen and (min-width: 1920px)") {
+                    //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
+                    var rulesInner = rules[i].cssRules;
+                    for (j = 0; j < rulesInner.length; j++) {
+                        /*console.log("innereForSchleife" + j);*/
+                        /*console.log(rulesInner[j].selectorText);
+                        console.log(rulesInner[j].selectorText==classToBeChanged);*/
+                        if (rulesInner[j].selectorText == classToBeChanged) {
+                            rulesInner[j].style.backgroundPosition = newPosX + "px " + posXY[1];
+                            /*console.log("groß "+rulesInner[j].style.backgroundPosition);*/
+                            break;
+                        }
+                    }
                 }
-              }
-            }  
-          }
+            }
+        }
     }
 }
