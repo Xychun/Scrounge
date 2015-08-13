@@ -48,6 +48,7 @@ Router.route('game', {
         this.subscribe("battlefield").wait();
         this.subscribe("worldMapFields").wait();      
     },
+    //LIKE Deps.autorun
     action: function() {
         if (this.ready()) {
             this.render();
@@ -64,9 +65,11 @@ Router.route('game', {
             var menu = self.menu;
             //in your own menu? base:scrounge
             if (cu == self.username) {
+                // console.log("self");
                 Router.current().render(menu + 'Base', {
                     to: 'middle'
                 });
+
                 //change menu colors to green
                 $('#scrounge').css({
                     backgroundPosition: "0px -303px"
@@ -83,9 +86,11 @@ Router.route('game', {
                     backgroundPosition: "-109px 0px"
                 });
             } else {
+                // console.log("not self");
                 Router.current().render(menu + 'Scrounge', {
                     to: 'middle'
                 });
+
                 //change menu colors to red
                 $('#scrounge').css({
                     backgroundPosition: "0px 0px"

@@ -4,6 +4,7 @@
 
 if (Meteor.isServer) {
     var turfUpdateArray = new Array();
+    var loop = false;
 
     Meteor.startup(function() {
         // code to run on server at startup
@@ -12,6 +13,10 @@ if (Meteor.isServer) {
 
     //Methods
     Meteor.methods({
+        rootUrl: function() {
+            return process.env.ROOT_URL;
+        },
+
         asyncJob: function() {
             this.unblock();
         },
@@ -26,10 +31,17 @@ if (Meteor.isServer) {
         },
 
         updateLoop: function(tick) {
-            Meteor.call('update');
-            Meteor.setInterval(function() {
+            if (loop == false) {
+                loop = true;
+                console.log('update LOOP starts!');
                 Meteor.call('update');
-            }, tick * 1000);
+                updateInterval = Meteor.setInterval(function() {
+                    Meteor.call('update');
+                }, tick * 1000);
+            } else {
+                console.log('update LOOP stopps!');
+                Meteor.clearInterval(updateInterval);
+            }
         },
 
         update: function() {
@@ -53,7 +65,6 @@ if (Meteor.isServer) {
         },
 
         //updates the mine
-
         updateMine: function(cUser, cPData) {
             var cMine = mine.findOne({
                 user: cUser
@@ -198,7 +209,6 @@ if (Meteor.isServer) {
         },
 
         //updates the battlefield
-
         updateBattlefield: function(cUser, cPData) {
             var cBattlefield = battlefield.findOne({
                 user: cUser
@@ -239,7 +249,7 @@ if (Meteor.isServer) {
                                 for (var m = 0; m < currentSupScrSlots; m++) {
                                     if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
                                 }
-                                console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
+                                // console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                                 if (indexScr == -1) {
                                     console.log('Server battlefield slot calculation problem 1! - index scr Slot');
                                     break;
@@ -340,7 +350,7 @@ if (Meteor.isServer) {
                             for (var m = 0; m < currentSupScrSlots; m++) {
                                 if (sBattlefield['scrs' + m].victim == cUser) indexScr = m;
                             }
-                            console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
+                            // console.log('cUser: ' + cUser + ' currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
                             if (indexScr == -1) {
                                 console.log('Server battlefield slot calculation problem 2! - index scr Slot');
                                 break;
@@ -769,7 +779,7 @@ if (Meteor.isServer) {
 
         //ERROR logging
         infoLog: function(text, username) {
-            console.log(new Date(), 'UN:', username, 'txt:', text);
+            console.log(new Date(), username + ':', text);
         },
 
         // testGrinder: function(obj) {

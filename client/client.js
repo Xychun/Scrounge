@@ -36,7 +36,7 @@ if (Meteor.isClient) {
     ////////////////////////////
     ///// GLOBAL VARIABLES /////
     ////////////////////////////
-    
+
     timers = new Array();
     mapRows = 6;
     mapColumns = 8;
@@ -44,6 +44,15 @@ if (Meteor.isClient) {
     ////////////////////////////
     ////// FUNCTION CALLS //////
     ////////////////////////////
+
+    Meteor.call('rootUrl', function(err, result) {
+        if (err) {
+            console.log('rootUrl Error: ' + err);
+        }
+        if (result) {
+            console.log('Serving from: ' + result);
+        }
+    });
 
     setInterval(function() {
         updateTimers();
@@ -1396,6 +1405,20 @@ if (Meteor.isClient) {
             navigateWorldMap($(e.currentTarget).attr("id"));
         },
 
+        'click .worldMapPlayerPlace': function(e, t) {
+            if (e.currentTarget.id != '') {
+                var current = e.currentTarget.id;
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        cu: current
+                    }
+                });
+                renderActiveMiddle();
+            }
+        },
+
         'click .worldMapScroungePreview': function(e, t) {
             if (e.currentTarget.id != '') {
                 var current = (e.currentTarget.id).substring(7);;
@@ -1498,7 +1521,7 @@ if (Meteor.isClient) {
         'click #testButton': function(e, t) {
             console.log('action Button!');
             // This methodes activates l-k bots with the names from l to k
-            // createBots(0, 9);
+            // createBots(201, 1000);
             // This methodes activates n bots to simulate user actions
             // actionBots(5);
         },
@@ -1509,6 +1532,11 @@ if (Meteor.isClient) {
         },
 
         'click #testButton3': function(e, t) {
+            //param: interval in seconds
+            Meteor.call('updateLoop', 25);
+        },
+
+        'click #testButton4': function(e, t) {
             //param: interval in seconds
             Meteor.call('updateLoop', 25);
         },
@@ -1556,6 +1584,7 @@ if (Meteor.isClient) {
         },
 
         'click #scrounge': function(e, t) {
+            console.log('scroungeButton');
             var self = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1582,10 +1611,9 @@ if (Meteor.isClient) {
                             cu: Session.get("lastPlayer")
                         }
                     });
+                } else {
+                    switchToWorldMap();
                 }
-                // else {
-                //     switchToWorldMap();
-                // }
             }
         }
     });
@@ -2736,6 +2764,7 @@ if (Meteor.isClient) {
     }
 
     function renderActiveMiddle() {
+        // console.log('renderActiveMiddle');
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
         }, {
@@ -2802,7 +2831,6 @@ if (Meteor.isClient) {
     }
 
     function navigateWorldMap(direction) {
-
         //get max map size
         var maxX = worldMapFields.find({}, {
             fields: {
@@ -2851,6 +2879,7 @@ if (Meteor.isClient) {
     var deps_count = 0;
 
     Deps.autorun(function() {
+        //DEPS AUTORUN FOR RANGE SLIDER
         var init = Session.get("init");
         // console.log("count: " + deps_count);
         if (deps_count == 1) {
@@ -3113,32 +3142,32 @@ if (Meteor.isClient) {
     //     too complex
     // }
 
-    //Deps.Autorun
-    Deps.autorun(function() {
-        if (!Meteor.user()) {
-            //not logged in yet
-            // console.log("DEPS.AUTORUN: not logged in");
-        } else {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    menu: 1,
-                    cu: 1,
-                    username: 1
-                }
-            });
-            var menu = self.menu;
-            var cu = self.cu;
-            if (cu && menu) {
-                Meteor.subscribe(menu, cu, function(rdy) {
-                    // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
-                });
-            } else {
-                // console.log("DEPS.AUTORUN: cu or menu undefined");
-            }
-        }
-    });
+    // //Deps.Autorun
+    // Deps.autorun(function() {
+    //     if (!Meteor.user()) {
+    //         //not logged in yet
+    //         // console.log("DEPS.AUTORUN: not logged in");
+    //     } else {
+    //         var self = Meteor.users.findOne({
+    //             _id: Meteor.userId()
+    //         }, {
+    //             fields: {
+    //                 menu: 1,
+    //                 cu: 1,
+    //                 username: 1
+    //             }
+    //         });
+    //         var menu = self.menu;
+    //         var cu = self.cu;
+    //         if (cu && menu) {
+    //             Meteor.subscribe(menu, cu, function(rdy) {
+    //                 // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
+    //             });
+    //         } else {
+    //             // console.log("DEPS.AUTORUN: cu or menu undefined");
+    //         }
+    //     }
+    // });
 
     ///////////////////
     //// DEBUGGING ////
