@@ -2144,7 +2144,7 @@ if (Meteor.isClient) {
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-            console.log('action Button!');
+            console.log('Bots are generating!');
             // This methodes activates l-k bots with the names from l to k
             createBots(1, 20);
             // This methodes activates n bots to simulate user actions
@@ -3647,7 +3647,6 @@ if (Meteor.isClient) {
                 }
             });
         }
-        console.log('Bots created!');
     }
 
     ///////////////////
