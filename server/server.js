@@ -335,7 +335,7 @@ if (Meteor.isServer) {
     Meteor.publish("worldMapSize", function() {
         this.unblock();
         if (this.userId) {
-            return worldMapFields.find({maxXY: {$exists: true}});
+            return STATUS.find({maxXY: {$exists: true}});
         } else {
             this.ready();
         }

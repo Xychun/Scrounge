@@ -19,6 +19,7 @@ resources = new Mongo.Collection("resources");
 
 Turf = new Mongo.Collection("Turf");
 worldMapFields = new Mongo.Collection("worldMapFields");
+STATUS = new Mongo.Collection("STATUS");
 
 mine = new Mongo.Collection("mine");
 laboratory = new Mongo.Collection("laboratory");

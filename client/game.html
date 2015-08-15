@@ -1,7 +1,6 @@
 <template name="standardBorder">
-{{> worldMapPreload}}
-{{#if Template.subscriptionsReady}}
-<!--     <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"></div> -->
+    {{> worldMapPreload}} {{#if Template.subscriptionsReady}}
+    <!--     <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"></div> -->
     <div id="links" class="top left">
         <div class="corner top left">
             <div id="scrounge" class="corner top left inherit SSscroungeBaseButton hover ssh"></div>
@@ -294,7 +293,7 @@
                         </div>
                     </div>
                     <div class="ssh inventory_slots droppable">
-                    <!-- Es ist sehr wichtig, dass die Klasse "item_type_1" ganz am Ende steht, sonst funktioniert Michas Methode "init draggable" nicht" -->
+                        <!-- Es ist sehr wichtig, dass die Klasse "item_type_1" ganz am Ende steht, sonst funktioniert Michas Methode "init draggable" nicht" -->
                         <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -440px -110px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Red Pick</p>
@@ -368,9 +367,10 @@
     </div>
 
     <!-- Zu Testzwecken -->
-        <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:100px; height: 25px; z-index: 20; background-color: yellow; font-size: large; text-align: center">BotsCreation</div>
-        <div id="testButton2" style="position: absolute; left: 10px; top: 45px; width:100px; height: 25px; z-index: 20; background-color: lightblue; font-size: large; text-align: center">SingleUpdate</div>
-        <div id="testButton3" style="position: absolute; left: 10px; top: 80px; width:100px; height: 45px; z-index: 20; background-color: blue; color: white; font-size: large; text-align: center">Toggle UpLoop</div>
+    <div id="testButton" style="position: absolute; left: 10px; top: 10px; width:100px; height: 25px; z-index: 20; background-color: yellow; font-size: large; text-align: center">BotsCreation</div>
+    <div id="testButton2" style="position: absolute; left: 10px; top: 45px; width:100px; height: 25px; z-index: 20; background-color: lightblue; font-size: large; text-align: center">SingleUpdate</div>
+    <div id="testButton3" style="position: absolute; left: 10px; top: 80px; width:100px; height: 45px; z-index: 20; background-color: blue; color: white; font-size: large; text-align: center">Toggle UpLoop</div>
+    {{/if}}
 </template>
 
 <template name="improvements">
@@ -391,7 +391,7 @@
 <!-- MINEBASE -->
 
 <template name="mineBase">
-{{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div class="area_left bot">
@@ -425,14 +425,14 @@
                                     <div class="slot_items_content scrollable relative">
                                         {{#each matterBlocks}}
                                         <div id={{matter}} class="item relative">
-                                            <div class="itemImg ssib" style="background-position:{{color}}"> </div>
+                                            <div class="itemImg ssib" style="background-position:{{color}}"></div>
                                             <div class="itemTextValue">{{value}}</div>
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
                                                 <div class="itemTextCostPre relative">pay</div>
                                                 <div class="itemTextCost relative">{{cost}}</div>
-                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"> </div>
+                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"></div>
 
                                             </div>
 
@@ -564,7 +564,7 @@
                         </div>
                         <div class="slot_edge_right_BaseRight right sshr"></div>
                     </div>
-                    
+
                     {{/each}} {{#each mineUsedScroungeSlots}}
                     <div class="slotWrapper dropdown">
                         <div class="used_slot_Wrapper relative">
@@ -615,15 +615,17 @@
             </div>
         </div>
     </div>
-{{else}}
-<div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
-{{/if}}
+    {{else}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
+    {{/if}}
 </template>
 
 <!-- MINESCROUNGE -->
 
 <template name="mineScrounge">
-{{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div id="scroungeArea" class="bot">
@@ -666,7 +668,7 @@
                                 </div>
                                 {{#if locked}}
                                 <div class="scrounge_right right">
-                                    <div id="scrounging_locked" class="ssvr"> </div>
+                                    <div id="scrounging_locked" class="ssvr"></div>
                                     <div class="div_center_vertical" style="height: 100%; left: 140px;">
                                         <p class="text">{{lockedMsg}}</p>
                                     </div>
@@ -744,14 +746,16 @@
         </div>
     </div>
     {{else}}
-    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
-{{/if}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
+    {{/if}}
 </template>
 
 <!-- BATTLEFIELDBASE -->
 
 <template name="battlefieldBase">
-{{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div class="area_left bot">
@@ -786,14 +790,14 @@
                                     <div class="slot_items_content scrollable relative">
                                         {{#each fightArenas}}
                                         <div id={{fight}} class="item relative">
-                                            <div class="itemImg ssib" style="background-position:{{color}}"> </div>
+                                            <div class="itemImg ssib" style="background-position:{{color}}"></div>
                                             <div class="itemTextValue">{{value}}</div>
 
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
 
                                                 <div class="itemTextCostPre relative">pay</div>
                                                 <div class="itemTextCost relative">{{cost}}</div>
-                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"> </div>
+                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"></div>
 
                                             </div>
 
@@ -908,7 +912,7 @@
             <div id="scrounge_area">
                 <div id="scroungeAreaContent" class="scrollable relative">
 
-                {{#each battlefieldUnusedScroungeSlots}}
+                    {{#each battlefieldUnusedScroungeSlots}}
                     <div class="slotWrapper scrounge_now">
                         <div class="slot_edge_left_BaseRight left sshr">
                             <div class="slot_icon slot_icon_battlefieldUnused ssvr">
@@ -923,8 +927,8 @@
                         </div>
                         <div class="slot_edge_right_BaseRight right sshr"></div>
                     </div>
-                    
-                {{/each}} {{#each battlefieldUsedScroungeSlots}}
+
+                    {{/each}} {{#each battlefieldUsedScroungeSlots}}
                     <div class="slotWrapper dropdown">
 
                         <div class="used_slot_Wrapper relative">
@@ -971,7 +975,7 @@
                         </div>
 
                     </div>
-                {{/each}}
+                    {{/each}}
 
                 </div>
             </div>
@@ -982,15 +986,17 @@
         </div>
     </div>
     {{else}}
-    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
-<!--     <div id="mitte" style="background-color: blue"> BATTLEFIELD CONTENT IS LOADING </div> -->
-{{/if}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
+    <!--     <div id="mitte" style="background-color: blue"> BATTLEFIELD CONTENT IS LOADING </div> -->
+    {{/if}}
 </template>
 
 <!-- BATTLEFIELDSCROUNGE -->
 
 <template name="battlefieldScrounge">
-{{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div id="scroungeArea" class="bot">
@@ -1032,7 +1038,7 @@
                                 </div>
                                 {{#if locked}}
                                 <div class="scrounge_right right">
-                                    <div id="scrounging_locked" class="ssvr"> </div>
+                                    <div id="scrounging_locked" class="ssvr"></div>
                                     <div class="div_center_vertical" style="height: 100%; left: 140px;">
                                         <p class="text">{{lockedMsg}}</p>
                                     </div>
@@ -1119,8 +1125,10 @@
         </div>
     </div>
     {{else}}
-    <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
-{{/if}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
+    {{/if}}
 </template>
 
 <!-- BUYMENU -->
@@ -1133,7 +1141,7 @@
 
             <div id="buyMenuTopEnd" class="left right sshr">
 
-                <div id="buyMenuItem" class="ssib"> </div>
+                <div id="buyMenuItem" class="ssib"></div>
                 <div class="range_slider_wrapper tooltip_hover">
                     <span id="tooltip_left_handle_Buy_Menu" class="range_slider_tooltip"></span>
                     <span id="tooltip_right_handle_Buy_Menu" class="range_slider_tooltip"></span>
@@ -1245,19 +1253,19 @@
 </template>
 
 <template name="worldMapPreload">
-{{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
 
-    <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"> </div>
+    <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"></div>
 
-{{else}}
+    {{else}}
 
-    <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"> </div>
+    <div id="switchToWorldMap" class="short_tooltip ssvr" title="World Map"></div>
 
-{{/if}}
+    {{/if}}
 </template>
 
 <template name="worldMap">
-{{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
     <div id="worldViewPort">
 
         <div id="worldMapGoUp" class="worldMapNavigators SSworldMapGoUp hover ssh"></div>
@@ -1290,9 +1298,9 @@
             {{/each}} {{/each}}
         </div>
     </div>
-<!--     {{else}}  
+    <!--     {{else}}  
     <div id="mitte"> <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif"> </div> -->
-{{/if}}
+    {{/if}}
 </template>
 
 <template name="scroungePreview">
@@ -1303,36 +1311,35 @@
         {{#if mineResult}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -601px -440px;">
         </div>
-        {{else}}
-        {{#if mineInactive}}
+        {{else}} {{#if mineInactive}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -501px -440px;">
         </div>
         {{else}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -401px -440px;">
             <div class="worldMapSlotsPreviewText hammersmith">{{mineImpossible}} / {{mineMax}}</div>
         </div>
-        {{/if}}
-        {{/if}}
+        {{/if}} {{/if}}
 
         <!-- battlefield preview -->
         {{#if battlefieldResult}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -601px -220px;">
         </div>
-        {{else}}
-        {{#if battlefieldInactive}}
+        {{else}} {{#if battlefieldInactive}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -501px -220px;">
         </div>
         {{else}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -401px -220px;">
             <div class="worldMapSlotsPreviewText hammersmith">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
         </div>
-        {{/if}}
-        {{/if}}
+        {{/if}} {{/if}}
     </div>
     {{/with}}
 </template>
 
 <template name="loading">
-<!-- <div id="mitte"> <img style="position: absolute; width:256px; height:152px; top:50%; left:50%; margin-left:-128px;" src="loadingScreen.gif"> </div> -->
-<div id="mitte"> <div class="hammersmith slot_icon_userName_text" style="position: absolute; width:500px; height:200px; top:50%; left:50%; margin-left:-250px; margin-top:-100px; font-size: 2em; text-shadow: 4px 4px 10px black, 4px -4px 10px black, -4px 4px 10px black, -4px -4px 10px black;"> UPDATING YOUR SLOTS...BE PATIENT...IT'S WORTH YOUR TIME </div> <img style="position: absolute; width:256px; height:152px; top:50%; left:50%; margin-left:-128px;" src="loadingScreen.gif"> </div>
+    <!-- <div id="mitte"> <img style="position: absolute; width:256px; height:152px; top:50%; left:50%; margin-left:-128px;" src="loadingScreen.gif"> </div> -->
+    <div id="mitte">
+        <div class="hammersmith slot_icon_userName_text" style="position: absolute; width:500px; height:200px; top:50%; left:50%; margin-left:-250px; margin-top:-100px; font-size: 2em; text-shadow: 4px 4px 10px black, 4px -4px 10px black, -4px 4px 10px black, -4px -4px 10px black;">UPDATING YOUR SLOTS...BE PATIENT...IT'S WORTH YOUR TIME</div>
+        <img style="position: absolute; width:256px; height:152px; top:50%; left:50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
 </template>

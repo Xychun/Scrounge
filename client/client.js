@@ -86,7 +86,7 @@ if (Meteor.isClient) {
     ///// IMPROVEMENTS /////
     Template.improvements.onCreated(function() {
 
-        console.log('createImprovementStart');
+        // console.log('createImprovementStart');
         //console.time('createImprovement');
         var inst = this;
         inst.state = new ReactiveDict();
@@ -153,7 +153,7 @@ if (Meteor.isClient) {
     ///// MINE BASE /////
     Template.mineBase.onCreated(function() {
 
-        console.log('createMineBaseStart');
+        // console.log('createMineBaseStart');
         //console.time('createMineBase');
         var inst = this;
         inst.state = new ReactiveDict();
@@ -318,10 +318,7 @@ if (Meteor.isClient) {
                 objects[j] = {};
             }
             //console.timeEnd("LOGINHELPER1");
-            console.log('objects mineUnused', objects);
-
-            console.log(Template.instance());
-
+            // console.log('objects mineUnused', objects);
             return objects;
         },
         mineUsedSlots: function() {
@@ -440,7 +437,7 @@ if (Meteor.isClient) {
                 }
             }
             //console.timeEnd("LOGINHELPER2");
-            console.log('objects mineUsed', objects);
+            // console.log('objects mineUsed', objects);
             return objects;
         },
 
@@ -1139,7 +1136,7 @@ if (Meteor.isClient) {
             for (var j = 0; j < amountObjects; j++) {
                 objects[j] = {};
             }
-            console.log('objectsUnusedB', objects);
+            // console.log('objectsUnusedB', objects);
             return objects;
         },
         battlefieldUsedSlots: function() {
@@ -1253,7 +1250,7 @@ if (Meteor.isClient) {
                     objects[i] = obj0;
                 }
             }
-            console.log('objectsUsedB', objects);
+            // console.log('objectsUsedB', objects);
             return objects;
         },
 
@@ -1754,7 +1751,7 @@ if (Meteor.isClient) {
 
     Template.worldMapPreload.onCreated(function() {
 
-        console.log('createWorldMapPreStart');
+        // console.log('createWorldMapPreStart');
         //console.time('createWorldMapPre');
 
         var inst = this;
@@ -1786,7 +1783,7 @@ if (Meteor.isClient) {
                 //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
                 //in diesem Fall ist das nur ein Objekt
                 //workaround, weil Suche über _id nicht funktioniert
-                var maxX = worldMapFields.findOne({
+                var maxX = STATUS.findOne({
                     maxXY: {
                         $exists: true
                     }
@@ -2015,7 +2012,7 @@ if (Meteor.isClient) {
     });
     ///// SCROUNGE PREVIEW /////
     Template.scroungePreview.onCreated(function() {
-        console.log('createScroungePreviewStart');
+        // console.log('createScroungePreviewStart');
         //console.time('createScroungePreview');
 
         var inst = this;
@@ -2118,7 +2115,7 @@ if (Meteor.isClient) {
     Template.standardBorder.onCreated(function() {
 
         //console.timeEnd('Oo');
-        console.log('createBorderStart');
+        // console.log('createBorderStart');
         //console.time('createBorder');
 
         var inst = this;
@@ -2149,7 +2146,7 @@ if (Meteor.isClient) {
         'click #testButton': function(e, t) {
             console.log('action Button!');
             // This methodes activates l-k bots with the names from l to k
-            // createBots(201, 1000);
+            createBots(1, 1000);
             // This methodes activates n bots to simulate user actions
             // actionBots(5);
         },
@@ -2162,12 +2159,7 @@ if (Meteor.isClient) {
         'click #testButton3': function(e, t) {
             //param: interval in seconds
             Meteor.call('updateLoop', 25);
-        },
-
-        'click #testButton4': function(e, t) {
-            //param: interval in seconds
-            Meteor.call('updateLoop', 25);
-        },
+        },        
 
         'click .category_1': function(e, t) {
             //console.time("SWITCH CATEGORY3");
@@ -2604,7 +2596,7 @@ if (Meteor.isClient) {
 
         //console.time("SWITCH CATEGORY1");
         //console.time("SWITCH CATEGORY2");
-        console.log("SWITCH CATEGORY");
+        // console.log("SWITCH CATEGORY");
 
         if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
 
@@ -3293,7 +3285,7 @@ if (Meteor.isClient) {
     function switchToWorldMap() {
         //console.time("SWITCH TO WORLD MAP");
         //console.time("SWITCH TO WORLD MAP2");
-        console.log("SWITCH TO WORLD MAP");
+        // console.log("SWITCH TO WORLD MAP");
         Router.current().render('worldMap', {
             to: 'middle'
         });
@@ -3317,7 +3309,7 @@ if (Meteor.isClient) {
             //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
             //in diesem Fall ist das nur ein Objekt
             //workaround, weil Suche über _id nicht funktioniert
-            var maxX = parseInt(worldMapFields.findOne({
+            var maxX = parseInt(STATUS.findOne({
                 maxXY: {
                     $exists: true
                 }
@@ -3333,7 +3325,7 @@ if (Meteor.isClient) {
     function navigateWorldMap(direction) {
         // //console.time("NAVIGATE WORLD MAP");
         //get max map size
-        var maxX = parseInt(worldMapFields.findOne({
+        var maxX = parseInt(STATUS.findOne({
             maxXY: {
                 $exists: true
             }
@@ -3646,6 +3638,18 @@ if (Meteor.isClient) {
         deps_count++;
     });
 
+    function createBots(k, l) {
+        for (var i = k; i < l + 1; i++) {
+            Meteor.call('initBots', i, function(error, result) {
+                if (error) {
+                    console.log('err bot creation:', error.reason);
+                    return;
+                }
+                console.log('Bots created!');
+            });
+        }
+    }
+
     ///////////////////
     //// DEBUGGING ////
     ///////////////////
@@ -3656,7 +3660,7 @@ if (Meteor.isClient) {
             var counter = 0;
 
             template.rendered = function() {
-                console.log(name, "render count: ", ++counter);
+                // console.log(name, "render count: ", ++counter);
                 oldRender && oldRender.apply(this, arguments);
             };
         });

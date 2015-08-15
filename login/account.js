@@ -22,17 +22,17 @@ function validLength(val) {
 if (Meteor.isClient) {
     Template.login.events({
         'submit #login-form': function(e, t) {
-            console.time("LOGINMB");
-            console.time("LOGINSB");
-            console.time("LOGINI");
-            console.time("LOGINWP");
-            console.time("LOGINHELPER1");
-            console.time("LOGINHELPER2");
-            console.time("LOGINHELPER3");
-            console.time("LOGINHELPER4");
-            console.time("LOGINHELPER5");
-            console.time("LOGINHELPER6");
-            console.time('Oo');
+            // console.time("LOGINMB");
+            // console.time("LOGINSB");
+            // console.time("LOGINI");
+            // console.time("LOGINWP");
+            // console.time("LOGINHELPER1");
+            // console.time("LOGINHELPER2");
+            // console.time("LOGINHELPER3");
+            // console.time("LOGINHELPER4");
+            // console.time("LOGINHELPER5");
+            // console.time("LOGINHELPER6");
+            // console.time('Oo');
             var name = t.find('#login-name').value;
             var password = t.find('#login-password').value;
             // TO-DO: Trim and validate your fields here
