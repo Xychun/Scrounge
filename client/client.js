@@ -2146,7 +2146,7 @@ if (Meteor.isClient) {
         'click #testButton': function(e, t) {
             console.log('action Button!');
             // This methodes activates l-k bots with the names from l to k
-            createBots(1, 1000);
+            createBots(1, 20);
             // This methodes activates n bots to simulate user actions
             // actionBots(5);
         },
@@ -3645,9 +3645,9 @@ if (Meteor.isClient) {
                     console.log('err bot creation:', error.reason);
                     return;
                 }
-                console.log('Bots created!');
             });
         }
+        console.log('Bots created!');
     }
 
     ///////////////////

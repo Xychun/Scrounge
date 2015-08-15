@@ -2760,7 +2760,7 @@ if (Meteor.isServer) {
                     $set: obj2
                 });
                 playerData.update({
-                    username: username
+                    user: username
                 }, {
                     $set: obj2
                 })
@@ -2804,6 +2804,11 @@ if (Meteor.isServer) {
                 }, {
                     $set: obj2
                 });
+                playerData.update({
+                    user: username
+                }, {
+                    $set: obj2
+                })
                 //Show the new generated map position in the console
                 console.log(new Date() + ': Position done - ' + username + ' (x: ' + obj2['x'] + ' y: ' + obj2['y'] + ')!');
             } else {

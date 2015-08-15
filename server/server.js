@@ -321,7 +321,6 @@ if (Meteor.isServer) {
             this.ready();
         }
     });
-
     //momentan nicht benötigt
     // Meteor.publish("worldMapFields", function(users) {
     //     this.unblock();
