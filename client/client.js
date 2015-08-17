@@ -2146,7 +2146,7 @@ if (Meteor.isClient) {
         'click #testButton': function(e, t) {
             console.log('Bots are generating!');
             // This methodes activates l-k bots with the names from l to k
-            createBots(1, 20);
+            // createBots(1, 1000);
             // This methodes activates n bots to simulate user actions
             // actionBots(5);
         },
