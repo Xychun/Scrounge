@@ -2692,7 +2692,7 @@ if (Meteor.isServer) {
                     //insert successful
                 }
             });
-            Meteor.call('createRandomMapPosition', name);
+            Meteor.call('createMapPosition', name);
             return "account init OK!";
         },
 
