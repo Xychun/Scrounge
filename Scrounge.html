@@ -1,8 +1,20 @@
 <head>
-    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+    <link rel="icon" sizes="16x16 32x32" href="/favicon.ico?v=2">
     <title>Scrounge</title>
     <meta charset="UTF-8">
 </head>
+<body> 
+
+<div id="preload" style="display: none">
+   <!-- SpriteSheets -->
+   <img src="/Aufloesung1920x1080/MegaSpriteSheets/MegaSpriteSheetInterfaceHover.webp" width="1" height="1"/>
+   <img src="/Aufloesung1920x1080/MegaSpriteSheets/MegaSpriteSheetInterfaceVerticalRepeat.webp" width="1" height="1"/>
+   <img src="/Aufloesung1920x1080/MegaSpriteSheets/MegaSpriteSheetInterfaceHorizontalRepeat.webp" width="1" height="1"/>
+   <img src="/Aufloesung1920x1080/MegaSpriteSheets/MegaSpriteSheetItemsBuyables.webp" width="1" height="1"/>
+   <img src="/Aufloesung1920x1080/MegaSpriteSheets/MegaSpriteSheetWorldMap.webp" width="1" height="1"/>
+</div>
+
+</body>
 
 <template name="masterLayout">
     <div id="right_resolution">
@@ -14,9 +26,9 @@
             <p style="margin-top: 30px;">Please zoom out to play the game.</p>
 			<div style="left: 50%; margin-left: -150px; width: 300px; height: 180px">
 			<p> windows </p>
-			<img style="width: 150px; height: 70px; float: left" src="/Aufloesung1920x1080/Login/Ctrl.gif"> <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;"> + </p> <img style="width: 70px; height: 70px; display: block" src="/Aufloesung1920x1080/Login/Minus.gif">
+			<img id="Ctrl" style="width: 150px; height: 70px; float: left"> <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;"> + </p> <img id="Minus" style="width: 70px; height: 70px; display: block">
 			<p> macintosh </p>
-			<img style="width: 150px; height: 70px; float: left" src="/Aufloesung1920x1080/Login/Cmd.gif"> <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;"> + </p> <img style="width: 70px; height: 70px" src="/Aufloesung1920x1080/Login/Minus.gif">
+			<img id="Cmd" style="width: 150px; height: 70px; float: left"> <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;"> + </p> <img id="Minus" style="width: 70px; height: 70px">
 			</div>
         </div>
     </div>

@@ -23,15 +23,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (Meteor.isClient) {
-    /////////////////////////
-    ///// SUBSCRIPTIONS /////
-    /////////////////////////
-
-    Meteor.subscribe("userData");
-    Meteor.subscribe("playerData");
-    Meteor.subscribe("MatterBlocks");
-    Meteor.subscribe("resources");
-    Meteor.subscribe("worldMapFields");
 
     ////////////////////////////
     ///// GLOBAL VARIABLES /////
@@ -44,6 +35,15 @@ if (Meteor.isClient) {
     ////////////////////////////
     ////// FUNCTION CALLS //////
     ////////////////////////////
+
+    Meteor.call('rootUrl', function(err, result) {
+        if (err) {
+            console.log('rootUrl Error: ' + err);
+        }
+        if (result) {
+            console.log('Serving from: ' + result);
+        }
+    });
 
     setInterval(function() {
         updateTimers();
@@ -84,34 +84,64 @@ if (Meteor.isClient) {
     ////////////////////////////
 
     ///// IMPROVEMENTS /////
+    Template.improvements.onCreated(function() {
+
+        // console.log('createImprovementStart');
+        //console.time('createImprovement');
+        var inst = this;
+        inst.state = new ReactiveDict();
+        var cursorSelf = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                menu: 1,
+                username: 1,
+                _id: 0
+            }
+        });
+        var self = cursorSelf.username;
+        var currentUser = cursorSelf.cu;
+        var menu = cursorSelf.menu;
+        inst.autorun(function() {
+            var subsPlayerDataImprovements = inst.subscribe('playerDataImprovements' + menu, self);
+            if (subsPlayerDataImprovements.ready()) {
+
+                //set Data Context for other helpers
+                inst.state.set('self', self);
+                inst.state.set('currentUser', currentUser);
+                inst.state.set('menu', menu);
+                //console.timeEnd('createImprovement');
+                //console.timeEnd('SWITCH CATEGORY4');
+                //console.timeEnd('LOGINI');
+            }
+
+        })
+    });
+
     Template.improvements.helpers({
         improvement: function() {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    menu: 1,
-                    cu: 1,
-                    username: 1
-                }
-            });
-            var cu = self.cu;
-            var menu = self.menu;
+            //get Data Context
+            var self = Template.instance().state.get('self');
+            var cu = Template.instance().state.get('currentUser');
+            var menu = Template.instance().state.get('menu');
             var color = "firebrick";
-            if (cu == self.username) {
+            if (cu == self) {
                 cu = 'YOUR BASE';
                 color = "green";
             }
             var cursorPlayerData = playerData.findOne({
-                user: self.username
+                user: self
             });
             obj0 = {};
             obj0['color'] = color;
             obj0['name'] = cu;
             obj0['xp'] = Math.floor(cursorPlayerData.XP) + '/' + cursorPlayerData.requiredXP;
             obj0['level'] = cursorPlayerData.level;
-            obj0['science'] = cursorPlayerData[menu].science;
-            obj0['item'] = cursorPlayerData[menu].scrItem.benefit;
+            if (cursorPlayerData[menu]) {
+                obj0['science'] = cursorPlayerData[menu].science;
+                obj0['item'] = cursorPlayerData[menu].scrItem.benefit;
+            }
+            // //console.timeEnd("LOGINHELPER5");
             return obj0;
         }
     });
@@ -121,139 +151,282 @@ if (Meteor.isClient) {
     //////////////////
 
     ///// MINE BASE /////
+    Template.mineBase.onCreated(function() {
+
+        // console.log('createMineBaseStart');
+        //console.time('createMineBase');
+        var inst = this;
+        inst.state = new ReactiveDict();
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                _id: 0
+            }
+        }).username;
+        var users = [self];
+
+        inst.autorun(function() {
+
+            var subsPlayerDataMine = inst.subscribe('playerDataMine', users);
+            var color = 'green';
+            var subsMatterBlocks = inst.subscribe('MatterBlocks', color);
+
+            if (subsPlayerDataMine.ready() && subsMatterBlocks.ready()) {
+                var cursorPlayerDataMine = playerData.findOne({
+                    user: self
+                }, {
+                    fields: {
+                        mine: 1
+                    }
+                }).mine;
+
+                //Get data from all own slots
+                var inputs = [];
+                var stampsSlotsLeft = [];
+                var supStamps = [];
+                var supMiningrates = [];
+                var supNames = [];
+                var matterBlocksValues = [];
+                var matterBlocksColors = [];
+
+                var amountOwnSlots = cursorPlayerDataMine.amountOwnSlots;
+                var amountSupSlots = cursorPlayerDataMine.amountSupSlots;
+                var ownRate = cursorPlayerDataMine.scrItem.benefit;
+
+                for (i = 0; i < amountOwnSlots; i++) {
+                    inputs[i] = cursorPlayerDataMine.ownSlots['owns' + i].input;
+                    //falls der slot benutzt ist
+                    if (inputs[i] > 0) {
+                        var cursorMatterBlock = MatterBlocks.findOne({
+                            matter: inputs[i]
+                        })
+                        matterBlocksValues[i] = cursorMatterBlock.value;
+                        matterBlocksColors[i] = cursorMatterBlock.color;
+                    }
+                    stampsSlotsLeft[i] = cursorPlayerDataMine.ownSlots['owns' + i].stamp;
+
+                    var supStampsOneSlot = [];
+                    var supMiningratesOneSlot = [];
+                    var supNamesOneSlot = [];
+                    for (k = 0; k < amountSupSlots; k++) {
+                        supStampsOneSlot[k] = cursorPlayerDataMine.ownSlots['owns' + i]['sup' + k].stamp;
+                        supMiningratesOneSlot[k] = cursorPlayerDataMine.ownSlots['owns' + i]['sup' + k].benefit;
+                        supNamesOneSlot[k] = cursorPlayerDataMine.ownSlots['owns' + i]['sup' + k].name;
+                    }
+                    supStamps[i] = supStampsOneSlot;
+                    supMiningrates[i] = supMiningratesOneSlot;
+                    supNames[i] = supNamesOneSlot;
+                }
+
+                //Get data from all scrounge slots
+                var dataScrSlots = {};
+                var stampsSlotsRight = [];
+                var ownMiningrates = [];
+                var matterBlocksValuesScrounge = [];
+                var matterBlocksColorsScrounge = [];
+                var stampsScroungedUsers = [];
+                var inputsScroungedUsers = [];
+                var namesScroungedUsers = [];
+                var supsVictimsStamps = [];
+                var supsVictimsRates = [];
+                var amountVictimsSupSlots = [];
+
+                var amountScrSlots = cursorPlayerDataMine.amountScrSlots;
+
+                for (i = 0; i < amountScrSlots; i++) {
+                    ownMiningrates[i] = cursorPlayerDataMine.scrSlots['scrs' + i].benefit;
+                    stampsSlotsRight[i] = cursorPlayerDataMine.scrSlots['scrs' + i].stamp;
+                    stampsScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs' + i].victim.stamp;
+                    inputsScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs' + i].victim.input;
+                    namesScroungedUsers[i] = cursorPlayerDataMine.scrSlots['scrs' + i].victim.name;
+                    //falls der slot benutzt ist
+                    if (inputsScroungedUsers[i] > 0) {
+                        var cursorMatterBlock = MatterBlocks.findOne({
+                            matter: inputsScroungedUsers[i]
+                        })
+                        matterBlocksValuesScrounge[i] = cursorMatterBlock.value;
+                        matterBlocksColorsScrounge[i] = cursorMatterBlock.color;
+                    }
+
+                    var amountVictimSupSlots = cursorPlayerDataMine.scrSlots['scrs' + i].victim.supSlotsVictim;
+                    amountVictimsSupSlots[i] = amountVictimSupSlots;
+
+                    var supsVictimsStampsOneSlot = [];
+                    var supsVictimsRatesOneSlot = [];
+                    for (k = 0; k < amountVictimSupSlots; k++) {
+                        supsVictimsStampsOneSlot[k] = cursorPlayerDataMine.scrSlots['scrs' + i].victim['sup' + k].stamp;
+                        supsVictimsRatesOneSlot[k] = cursorPlayerDataMine.scrSlots['scrs' + i].victim['sup' + k].benefit;
+                    }
+                    supsVictimsStamps[i] = supsVictimsStampsOneSlot;
+                    supsVictimsRates[i] = supsVictimsRatesOneSlot;
+                }
+                //set Data Context for other helpers         
+
+                //allgemeine Daten
+                inst.state.set('self', users);
+                inst.state.set('amountScrSlots', amountScrSlots);
+                inst.state.set('amountSupSlots', amountSupSlots);
+                inst.state.set('amountOwnSlots', amountOwnSlots);
+                inst.state.set('ownRate', ownRate);
+
+                //für linke Seite benötigt
+                inst.state.set('matterIds', inputs);
+                inst.state.set('timeStamps', stampsSlotsLeft);
+                inst.state.set('supTimeStamps', supStamps);
+                inst.state.set('supRates', supMiningrates);
+                inst.state.set('supporters', supNames);
+                inst.state.set('matterBlocksValues', matterBlocksValues);
+                inst.state.set('matterBlocksColors', matterBlocksColors);
+
+                //für rechte Seite benötigt
+                inst.state.set('ownTimeStamps', stampsSlotsRight);
+                inst.state.set('victims', namesScroungedUsers);
+                inst.state.set('victimsSupSlots', amountVictimsSupSlots);
+                inst.state.set('timeStampsScrounge', stampsScroungedUsers);
+                inst.state.set('supRatesScrounge', supsVictimsRates);
+                inst.state.set('supTimeStampsScrounge', supsVictimsStamps);
+                inst.state.set('matterBlocksColorsScrounge', matterBlocksColorsScrounge);
+                inst.state.set('matterBlocksValuesScrounge', matterBlocksValuesScrounge);
+                //console.timeEnd('createMineBase');
+                //console.timeEnd("LOGINMB");
+
+                // console.log('mineBaseDict');
+                // console.log(inst.state);
+            }
+        })
+    });
+
     Template.mineBase.helpers({
         mineUnusedSlots: function() {
-            //Mine
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
-            var cursorMine = mine.findOne({
-                user: name
-            });
+
+            // Mine
+            //get fields from data context
+            var name = Template.instance().state.get('self');
+            var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
+            var matterIds = Template.instance().state.get('matterIds');
             var objects = new Array();
+            var amountObjects = 0;
 
             for (var i = 0; i < amountOwnSlots; i++) {
-                if (cursorMine['owns' + i].input == "0000")
-                    objects[i] = {};
+                if (matterIds[i] == "0000") {
+                    amountObjects++;
+                }
             }
+            for (var j = 0; j < amountObjects; j++) {
+                objects[j] = {};
+            }
+            //console.timeEnd("LOGINHELPER1");
+            // console.log('objects mineUnused', objects);
             return objects;
         },
         mineUsedSlots: function() {
-            //Mine
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
-            var cursorMine = mine.findOne({
-                user: name
-            });
+            /*Mine*/
+            //get fields from data context
+            var name = Template.instance().state.get('self');
+            var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
+            var amountSupSlots = Template.instance().state.get('amountSupSlots');
+            var matterIds = Template.instance().state.get('matterIds');
+            var matterBlocksValues = Template.instance().state.get('matterBlocksValues');
+            var matterBlocksColors = Template.instance().state.get('matterBlocksColors');
+            var timeStamps = Template.instance().state.get('timeStamps');
+            var supporters = Template.instance().state.get('supporters');
+            var supTimeStamps = Template.instance().state.get('supTimeStamps');
+            var supRates = Template.instance().state.get('supRates');
             var objects = new Array();
 
             var calculatedServerTime = new Date().getTime() - timeDifference;
-            //Iterate OwnSlots
+            /*Iterate OwnSlots*/
             for (var i = 0; i < amountOwnSlots; i++) {
-                var matterId = cursorMine['owns' + i].input;
-                if (matterId > 0) {
-                    var cursorMatterBlock = MatterBlocks.findOne({
-                        matter: matterId
-                    });
-                    var amountMaxSupSlots = cursorPlayerData.mine.supSlots;
+                //falls der slot benutzt ist (nicht 0000)
+                if (matterIds[i] > 0) {
+                    //falls es keinen Supporter gibt > iteriere gar nicht
+                    // if(supporters[i] == undefined) {
                     var amountUsedSupSlots = 0;
-                    for (var j = 0; j < amountMaxSupSlots; j++) {
-                        if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
-                    }
                     var obj0 = {};
 
-                    var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                    var progressOwn = (calculatedServerTime - timeStamps[i]) * (7.5 / 3600000);
                     var progressSups = 0;
-                    var supRates = 0;
+                    var supRatesAdded = 0;
 
                     var supSlotsMemory = new Array();
                     //Iterate Supporter
-                    for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
-                        var currentSup = cursorMine['owns' + i]['sup' + k];
+                    for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if (currentSup != undefined && currentSup.length != 0) {
-                            var obj00 = {};
-                            var supMine = mine.findOne({
-                                user: currentSup
-                            });
-                            var currentSupScrSlots = playerData.findOne({
-                                user: currentSup
-                            }, {
-                                fields: {
-                                    mine: 1
-                                }
-                            }).mine.scrSlots;
-                            //get index of scr slot
-                            var indexScr = -1;
-                            for (var m = 0; m < currentSupScrSlots; m++) {
-                                if (supMine['scrs' + m].victim == name) indexScr = m;
-                            }
-                            if (indexScr == -1) {
-                                console.log('Template.mineBase slot calculation problem - index scr Slot');
-                                break;
-                            }
-                            var result = indexScr;
-                            //calculate mined by currentSup
-                            var supTime = supMine['scrs' + result].stamp.getTime();
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
+                                amountUsedSupSlots++;
+                                var obj00 = {};
+                                var supTime = supTimeStamps[i][k];
 
-                            obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
-                            var obj01 = {};
-                            obj01['id'] = obj00['timeSpentId'];
-                            obj01['miliseconds'] = (calculatedServerTime - supTime);
-                            obj01['notFound'] = 0;
-                            obj01['prefix'] = 1;
-                            timers.push(obj01);
-                            obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+                                obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
+                                var obj01 = {};
+                                obj01['id'] = obj00['timeSpentId'];
+                                obj01['miliseconds'] = (calculatedServerTime - supTime);
+                                obj01['notFound'] = 0;
+                                obj01['prefix'] = 1;
+                                timers.push(obj01);
+                                obj00['timeSpent'] = msToTime(obj01['miliseconds']);
 
-                            var supRate = supMine['scrs' + result].benefit;
-                            supRates = supRates + supRate;
-                            progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
-                            obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
-                            obj00['miningrate'] = supRate + '/hr';
-                            obj00['supName'] = currentSup;
-                            supSlotsMemory[k] = obj00;
+                                var supRate = supRates[i][k];
+                                supRatesAdded = supRatesAdded + supRate;
+                                progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+                                obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
+                                obj00['miningrate'] = supRate + '/hr';
+                                obj00['supName'] = supporters[i][k];
+                                supSlotsMemory[k] = obj00;
+                            }
                         }
                     }
 
-
                     var progressTotal = progressOwn + progressSups;
-                    obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
-                    obj0['color'] = cursorMatterBlock.color;
-                    obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
+                    obj0['value'] = Math.floor(progressTotal) + '/' + matterBlocksValues[i] + '(' + Math.floor((Math.floor(progressTotal) / matterBlocksValues[i]) * 100) + '%)';
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    switch (matterBlocksColors[i]) {
+                        case "green":
+                            obj0['color'] = "-550px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-550px -100px";
+                            break;
+                        default:
+                            console.log("no matterBlock color defined");
+                    }
+                    //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
+                    /*if(cursorMatterBlock.color == "green") {obj0['color'] = "-550px 0px";}*/
+                    //vorherige Lösung
+                    /*obj0['color'] = cursorMatterBlock.color;*/
+                    obj0['slots'] = amountUsedSupSlots + '/' + amountSupSlots;
                     obj0['remainingId'] = 'timerDec_' + i + '_mine';
                     obj0['timeSpentId'] = 'timerInc_' + i + '_mine';
 
                     var obj1 = {};
                     obj1['id'] = obj0['remainingId'];
-                    obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                    obj1['miliseconds'] = ((matterBlocksValues[i] - progressTotal) / ((7.5 + supRatesAdded) / 3600000));
                     obj1['notFound'] = 0;
                     obj1['prefix'] = -1;
                     timers.push(obj1);
-                    obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                    obj0['remaining'] = msToTime((parseInt(matterBlocksValues[i]) - progressTotal) / ((7.5 + supRatesAdded) / 3600000));
 
                     var obj2 = {};
                     obj2['id'] = obj0['timeSpentId'];
-                    obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
+                    obj2['miliseconds'] = (calculatedServerTime - timeStamps[i]);
                     obj2['notFound'] = 0;
                     obj2['prefix'] = 1;
                     timers.push(obj2);
-                    obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - timeStamps[i]));
 
                     if (amountUsedSupSlots == 0) {
-                        obj0['profit'] = Math.floor(cursorMatterBlock.value) + '(100%)';
+                        obj0['profit'] = Math.floor(matterBlocksValues[i]) + '(100%)';
                     } else {
-                        obj0['profit'] = Math.floor(0.5 * cursorMatterBlock.value) + '(50%)';
+                        obj0['profit'] = Math.floor(0.5 * matterBlocksValues[i]) + '(50%)';
                     }
-                    obj0['miningrate'] = (7.5 + supRates) + '/hr';
+                    obj0['miningrate'] = (7.5 + supRatesAdded) + '/hr';
 
                     obj0['supporter'] = supSlotsMemory;
 
@@ -263,11 +436,121 @@ if (Meteor.isClient) {
                     objects[i] = obj0;
                 }
             }
+            //console.timeEnd("LOGINHELPER2");
+            // console.log('objects mineUsed', objects);
             return objects;
         },
-        playerData: function() {
-            return playerData.find({});
+
+        mineUnusedScroungeSlots: function() {
+            //Mine Scrounging
+            //get fields from data context
+            var name = Template.instance().state.get('self');
+            var victims = Template.instance().state.get('victims');
+            var amountScrSlots = Template.instance().state.get('amountScrSlots');
+            var objects = new Array();
+
+            for (var i = 0; i < amountScrSlots; i++) {
+                if (victims[i] == "") objects[i] = {};
+            }
+            //console.timeEnd("LOGINHELPER3");
+            return objects;
         },
+
+        mineUsedScroungeSlots: function() {
+            //Mine Scrounging
+            //get fields from data context
+            var name = Template.instance().state.get('self')[0];
+            var ownRate = Template.instance().state.get('ownRate');
+            var ownTimeStamps = Template.instance().state.get('ownTimeStamps');
+            var amountScrSlots = Template.instance().state.get('amountScrSlots');
+            var victimsSupSlots = Template.instance().state.get('victimsSupSlots');
+            var victims = Template.instance().state.get('victims');
+            var timeStampsScrounge = Template.instance().state.get('timeStampsScrounge');
+            var supRatesScrounge = Template.instance().state.get('supRatesScrounge');
+            var supTimeStampsScrounge = Template.instance().state.get('supTimeStampsScrounge');
+            var matterBlocksColorsScrounge = Template.instance().state.get('matterBlocksColorsScrounge');
+            var matterBlocksValuesScrounge = Template.instance().state.get('matterBlocksValuesScrounge');
+
+            var calculatedServerTime = new Date().getTime() - timeDifference;
+            var objects = new Array();
+
+            //Iterate all Scrounging Slots (i = scrounge slots)
+            for (var i = 0; i < amountScrSlots; i++) {
+                //Is used?
+                if (victims[i] != "") {
+                    var progressOwn = (calculatedServerTime - timeStampsScrounge[i]) * (7.5 / 3600000);
+                    var progressSups = 0;
+                    var supRatesScroungeAdded = 0;
+                    var amountUsedSupSlots = 0;
+                    //Iterate Supporter (l = supporter slot)
+                    for (var l = 0; l < victimsSupSlots[i]; l++) {
+                        //Falls ein Supporter vorhanden ist, verwende dessen supRate und Zeitstempel
+                        //scr slot überhaupt benutzt?
+                        if (supTimeStampsScrounge[i] != "") {
+                            //welcher/wieviele supporter slots des scr slots sind besetzt
+                            if (supTimeStampsScrounge[i][l] != "") {
+                                amountUsedSupSlots++;
+                                var supTime = supTimeStampsScrounge[i][l];
+                                var supRate = supRatesScrounge[i][l];
+                                supRatesScroungeAdded = supRatesScroungeAdded + supRate;
+                                progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+                            }
+                        }
+                    }
+                    var obj0 = {};
+                    var progressTotal = progressOwn + progressSups;
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    //switch(cursorMatterBlock.color) {
+                    switch (matterBlocksColorsScrounge[i]) {
+                        case "green":
+                            obj0['color'] = "-550px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-550px -100px";
+                            break;
+                        default:
+                            console.log("mineUsedScroungeSlots oops");
+                    }
+                    //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
+                    /*if(cursorMatterBlock.color == "green") {obj0['color'] = "-550px 0px";}*/
+                    //vorherige Lösung
+                    /*obj0['color'] = cursorMatterBlock.color;*/
+                    obj0['victim'] = victims[i];
+                    obj0['slots'] = amountUsedSupSlots + '/' + victimsSupSlots[i];
+                    obj0['remainingId'] = 'timerDec_' + i + '_mine_scr';
+                    obj0['timeSpentId'] = 'timerInc_' + i + '_mine_scr';
+
+                    var obj1 = {};
+                    obj1['id'] = obj0['remainingId'];
+                    obj1['miliseconds'] = ((matterBlocksValuesScrounge[i] - progressTotal) / ((7.5 + supRatesScroungeAdded) / 3600000));
+                    obj1['notFound'] = 0;
+                    obj1['prefix'] = -1;
+                    timers.push(obj1);
+                    obj0['remaining'] = msToTime((matterBlocksValuesScrounge[i] - progressTotal) / ((7.5 + supRatesScroungeAdded) / 3600000));
+
+                    var obj2 = {};
+                    obj2['id'] = obj0['timeSpentId'];
+                    obj2['miliseconds'] = (calculatedServerTime - ownTimeStamps[i]);
+                    obj2['notFound'] = 0;
+                    obj2['prefix'] = 1;
+                    timers.push(obj2);
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - ownTimeStamps[i]));
+
+                    obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * matterBlocksValuesScrounge[i]) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                    obj0['miningrate'] = ownRate + '/hr';
+                    obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (ownRate / 3600000));
+                    obj0['slider_id'] = i + 6;
+                    objects[i] = obj0;
+                }
+            }
+            //console.timeEnd("LOGINHELPER4");
+            return objects;
+        },
+
         blockColors: function() {
             var cursorMatterColors = MatterBlocks.find({}, {
                 fields: {
@@ -281,47 +564,89 @@ if (Meteor.isClient) {
             var result = distinct(colorArray);
             var objects = new Array();
             for (var j = 0; j < result.length; j++) {
-                objects[j] = {
-                    'color': result[j]
-                };
+                switch (result[j]) {
+                    case "green":
+                        objects[j] = {
+                            'color': "-683px -27px"
+                        };
+                        break;
+                    case "red":
+                        objects[j] = {
+                            'color': "-683px -45px"
+                        };
+                        break;
+                    default:
+                        console.log("oops");
+                }
             }
             return objects;
         },
         matterBlocks: function() {
-            return MatterBlocks.find({}, {
+            var objects = new Array();
+            var cursorMatterBlocks = MatterBlocks.find({}, {
                 sort: {
                     matter: 1
                 }
-            });
+            }).fetch();
+            for (var i = 0; i < cursorMatterBlocks.length; i++) {
+                var obj0 = {};
+                obj0['matter'] = cursorMatterBlocks[i].matter;
+                switch (cursorMatterBlocks[i].color) {
+                    case "green":
+                        obj0['color'] = "-1658px 2px";
+                        obj0['colorCost'] = "-1725px 0px";
+                        break;
+                    case "red":
+                        obj0['color'] = "-1658px -50px";
+                        obj0['colorCost'] = "-1725px -25px";
+                        break;
+                    default:
+                        console.log("oops");
+                }
+                obj0['cost'] = cursorMatterBlocks[i].cost;
+                obj0['value'] = cursorMatterBlocks[i].value;
+                objects[i] = obj0;
+            }
+            //console.timeEnd("LOGINHELPER6");
+            return objects;
         }
     });
 
     Template.mineBase.events({
         'click .item': function(e, t) {
-            //Variante B
-            var currentUser = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1,
-                }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
+            var currentUser = Template.instance().state.get('self')[0];
+            var amountSupSlots = Template.instance().state.get('amountSupSlots');
+            var cursorPlayerDataMine = playerData.findOne({
                 user: currentUser
-            });
-            /*            $('#buyMenuWrapper').fadeIn();
-            $('#background_fade').fadeIn();*/
+            }).mine;
             $("#buyMenuWrapper").show(0, function() {
                 $("#background_fade").fadeIn();
             });
             Session.set("clickedMatter", e.currentTarget.id);
-            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Mine/MatterBlock_" + this.color + ".png");
+            switch (e.currentTarget.id.substring(0, 2)) {
+                case "01":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-550px 0px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px 0px"
+                    });
+                    break;
+                case "02":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-550px -100px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px -50px"
+                    });
+                    break;
+                default:
+                    console.log("oops");
+            };
             $('#item').text("Matter: " + this.value);
-            var amountSupSlots = cursorPlayerData.mine.supSlots;
-            range_slider("Buy_Menu", cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl, cursorPlayerData.mine.minControl, cursorPlayerData.mine.maxControl);
+            range_slider("Buy_Menu", cursorPlayerDataMine.minControl, cursorPlayerDataMine.maxControl, cursorPlayerDataMine.minControl, cursorPlayerDataMine.maxControl);
             $('#time').text("Time: " + msToTime(this.value / (7.5 / 3600000)));
             $('#price').text("Price: " + this.cost);
-            $('#matterImg').attr("src", "/Aufloesung1920x1080/Mine/MatterBlockCost_" + this.color + ".png");
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
@@ -333,281 +658,204 @@ if (Meteor.isClient) {
 
                 if (amountSupSlots > i) {
 
-                    $('#AmountScroungerSlots').append("<div class='sslots_available'> </div>");
+                    $('#AmountScroungerSlots').append("<div class='sslots_available sshr'> </div>");
 
                 } else {
 
-                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable'> </div>");
+                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable sshr'> </div>");
 
                 }
             }
-
-            //target: Element, auf das geklickt wird  currentTarget: Element, an das das Event geheftet wurde
-            //Variante A
-            /*        var cursor = MatterBlocks.findOne({matter: e.currentTarget.id});
-
-          console.log(cursor);
-
-          $('#buyMenu').fadeIn();
-          $("#buyMenuMatterBlock").attr("src","/Aufloesung1920x1080/Mine/MatterBlock_"+cursor.color+".png");
-          $('#price').text("Price: "+cursor.cost);
-          $('#matter').text("Matter: "+cursor.value);*/
-        }
-    });
-
-
-    ///// MINE RIGHT BASE UNUSED SLOTS /////
-    Template.mineRightBaseUnusedSlots.helpers({
-        mineUnusedScroungeSlots: function() {
-            //Mine Scrounging
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            }, {
-                fields: {
-                    mine: 1
-                }
-            }).mine;
-            var amountScrSlots = cursorPlayerData.scrSlots;
-            var cursorMine = mine.findOne({
-                user: name
-            });
-            var objects = new Array();
-            for (var i = 0; i < amountScrSlots; i++) {
-                if (cursorMine['scrs' + i].victim == "")
-                    objects[i] = {};
-            }
-            return objects;
-        }
-    });
-
-    ///// MINE RIGHT BASE USED SLOTS /////
-    Template.mineRightBaseUsedSlots.helpers({
-        mineUsedScroungeSlots: function() {
-            //Mine Scrounging
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            }, {
-                fields: {
-                    mine: 1
-                }
-            }).mine;
-            var cursorMyMine = mine.findOne({
-                user: name
-            });
-            var calculatedServerTime = new Date().getTime() - timeDifference;
-            var amountScrSlots = cursorPlayerData.scrSlots;
-            var objects = new Array();
-
-            //Iterate all Scrounging Slots
-            for (var i = 0; i < amountScrSlots; i++) {
-                //Is used?
-                if (cursorMyMine['scrs' + i].victim != "") {
-                    var victimName = cursorMyMine['scrs' + i].victim;
-                    var cursorVictimMine = mine.findOne({
-                        user: victimName
-                    });
-                    var cursorPlayerDataVictim = playerData.findOne({
-                        user: victimName
-                    }, {
-                        fields: {
-                            mine: 1
-                        }
-                    });
-                    var amountVictimOwnSlots = cursorPlayerDataVictim.mine.ownSlots;
-                    var amountVictimSupSlots = cursorPlayerDataVictim.mine.supSlots;
-                    //get index of the right own slot
-                    var indexOwn = -1;
-                    for (var j = 0; j < amountVictimOwnSlots; j++) {
-                        for (var k = 0; k < amountVictimSupSlots; k++) {
-                            if (cursorVictimMine['owns' + j]['sup' + k] == name) indexOwn = j
-                        }
-                    }
-                    if (indexOwn == -1) {
-                        console.log('Template.rightBaseUsedSlots slot calculation problem - index own Slot');
-                        break;
-                    }
-                    //Calculate input values
-                    var matterId = cursorVictimMine['owns' + indexOwn].input;
-                    var cursorMatterBlock = MatterBlocks.findOne({
-                        matter: matterId
-                    });
-                    var progressOwn = (calculatedServerTime - cursorVictimMine['owns' + indexOwn].stamp.getTime()) * (7.5 / 3600000);
-                    var progressSups = 0;
-                    var supRates = 0;
-                    var amountUsedSupSlots = 0;
-                    //Iterate Supporter
-                    for (var l = 0; l < cursorPlayerDataVictim.mine.supSlots; l++) {
-                        var currentSup = cursorVictimMine['owns' + indexOwn]['sup' + l];
-                        //SupSlot used?
-                        if (currentSup.length != "") {
-                            amountUsedSupSlots++;
-                            var currentSupScrSlots = playerData.findOne({
-                                user: currentSup
-                            }, {
-                                fields: {
-                                    mine: 1
-                                }
-                            }).mine.scrSlots;
-                            var cursorSupMine = mine.findOne({
-                                user: currentSup
-                            });
-                            //get index of scr slot
-                            var indexScr = -1;
-                            for (var m = 0; m < currentSupScrSlots; m++) {
-                                if (cursorSupMine['scrs' + m].victim == victimName) indexScr = m;
-                            }
-                            if (indexScr == -1) {
-                                console.log('Template.rightBaseUsedSlots slot calculation problem - index scr Slot');
-                                break;
-                            }
-                            //calculate mined by cSup
-                            var supTime = cursorSupMine['scrs' + indexScr].stamp.getTime();
-                            var supRate = cursorSupMine['scrs' + indexScr].benefit;
-                            supRates = supRates + supRate;
-                            progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
-                        }
-                    }
-                    var obj0 = {};
-                    var progressTotal = progressOwn + progressSups;
-                    obj0['color'] = cursorMatterBlock.color;
-                    obj0['victim'] = victimName;
-                    obj0['slots'] = amountUsedSupSlots + '/' + amountVictimSupSlots;
-                    obj0['remainingId'] = 'timerDec_' + i + '_mine_scr';
-                    obj0['timeSpentId'] = 'timerInc_' + i + '_mine_scr';
-
-                    var obj1 = {};
-                    obj1['id'] = obj0['remainingId'];
-                    obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-                    obj1['notFound'] = 0;
-                    obj1['prefix'] = -1;
-                    timers.push(obj1);
-                    obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
-
-                    var obj2 = {};
-                    obj2['id'] = obj0['timeSpentId'];
-                    obj2['miliseconds'] = (calculatedServerTime - cursorMyMine['scrs' + i].stamp);
-                    obj2['notFound'] = 0;
-                    obj2['prefix'] = 1;
-                    timers.push(obj2);
-                    obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMyMine['scrs' + i].stamp));
-
-                    obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorMatterBlock.value) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
-                    obj0['miningrate'] = cursorMyMine['scrs' + i].benefit + '/hr';
-                    obj0['mined'] = Math.floor((calculatedServerTime - supTime) * (cursorMyMine['scrs' + i].benefit / 3600000));
-                    obj0['slider_id'] = i + 6;
-                    objects[i] = obj0;
-                }
-            }
-            return objects;
         }
     });
 
     ///// MINE SCROUNGE /////
+    Template.mineScrounge.onCreated(function() {
+
+        //console.time('createMineScrounge');
+        var inst = this;
+        inst.state = new ReactiveDict();
+        var cursorSelf = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                cu: 1
+            }
+        });
+        var currentUser = cursorSelf.cu;
+        var self = cursorSelf.username;
+        var users = [currentUser, self];
+
+        inst.autorun(function() {
+
+            var subsPlayerDataMine = inst.subscribe('playerDataMine', users);
+            var color = 'green';
+            var subsMatterBlocks = inst.subscribe('MatterBlocks', color);
+
+            if (subsPlayerDataMine.ready() && subsMatterBlocks.ready()) {
+                var cursorPlayerDataMineSelf = playerData.findOne({
+                    user: self
+                }, {
+                    fields: {
+                        mine: 1
+                    }
+                }).mine;
+                var cursorPlayerDataMineCu = playerData.findOne({
+                    user: currentUser
+                }, {
+                    fields: {
+                        mine: 1
+                    }
+                }).mine;
+
+                //data from active player
+                var namesScroungedUsers = [];
+                var amountScrSlots = cursorPlayerDataMineSelf.amountScrSlots;
+                var ownRate = cursorPlayerDataMineSelf.scrItem.benefit;
+
+                //data from looked at player
+                var inputs = [];
+                var stamps = [];
+                var supNames = [];
+                var supMiningrates = [];
+                var supStamps = [];
+                var amountSupSlots = cursorPlayerDataMineCu.amountSupSlots;
+                var amountOwnSlots = cursorPlayerDataMineCu.amountOwnSlots;
+                var matterBlocksValues = [];
+                var matterBlocksColors = [];
+
+                for (i = 0; i < amountScrSlots; i++) {
+                    namesScroungedUsers[i] = cursorPlayerDataMineSelf.scrSlots['scrs' + i].victim.name;
+                };
+
+                for (var i = 0; i < amountOwnSlots; i++) {
+                    inputs[i] = cursorPlayerDataMineCu.ownSlots['owns' + i].input;
+                    //falls der slot benutzt ist                                      
+                    if (inputs[i] > 0) {
+                        cursorMatterBlock = MatterBlocks.findOne({
+                            matter: inputs[i]
+                        });
+                        matterBlocksValues[i] = cursorMatterBlock.value;
+                        matterBlocksColors[i] = cursorMatterBlock.color;
+                    }
+                    stamps[i] = cursorPlayerDataMineCu.ownSlots['owns' + i].stamp;
+
+                    //Iterate Supporter
+                    var supNamesOneSlot = [];
+                    var supStampsOneSlot = [];
+                    var supMiningratesOneSlot = [];
+                    for (var k = 0; k < amountSupSlots; k++) {
+                        supNamesOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup' + k].name;
+                        supStampsOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup' + k].stamp;
+                        supMiningratesOneSlot[k] = cursorPlayerDataMineCu.ownSlots['owns' + i]['sup' + k].benefit;
+                    }
+                    supNames[i] = supNamesOneSlot;
+                    supStamps[i] = supStampsOneSlot;
+                    supMiningrates[i] = supMiningratesOneSlot;
+                }
+
+                //set Data Context for other helpers
+                inst.state.set('self', users);
+                inst.state.set('ownRate', ownRate);
+                inst.state.set('victimsM', namesScroungedUsers);
+                //muss als Mine angehörig gekennzeichnet werden, da die Variable in einer gemeinsamen
+                //Funktion vom Template WorldMap sonst mit anderen Templates überschneidet
+                //(worldmap.events)
+                inst.state.set('amountScrSlotsM', amountScrSlots);
+                inst.state.set('amountSupSlots', amountSupSlots);
+                inst.state.set('amountOwnSlots', amountOwnSlots);
+                inst.state.set('matterIds', inputs);
+                inst.state.set('timeStamps', stamps);
+                inst.state.set('supporters', supNames);
+                inst.state.set('supTimeStamps', supStamps);
+                inst.state.set('supRates', supMiningrates);
+                inst.state.set('matterBlocksValues', matterBlocksValues);
+                inst.state.set('matterBlocksColors', matterBlocksColors);
+                //console.timeEnd('createMineScrounge');
+            }
+        })
+    });
+
     Template.mineScrounge.helpers({
         mineSupporterSlots: function() {
             //Mine
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            });
-            var name = self.cu;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
-            var cursorMine = mine.findOne({
-                user: name
-            });
+            //get Data Context
+            var self = Template.instance().state.get('self')[1];
+            var currentUser = Template.instance().state.get('self')[0];
+            var ownRate = Template.instance().state.get('ownRate');
+            var amountSupSlots = Template.instance().state.get('amountSupSlots');
+            var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
+            var matterIds = Template.instance().state.get('matterIds');
+            var supporters = Template.instance().state.get('supporters');
+            var timeStamps = Template.instance().state.get('timeStamps');
+            var supTimeStamps = Template.instance().state.get('supTimeStamps');
+            var supRates = Template.instance().state.get('supRates');
+            var matterBlocksValues = Template.instance().state.get('matterBlocksValues');
+            var matterBlocksColors = Template.instance().state.get('matterBlocksColors');
             var objects = new Array();
 
             var calculatedServerTime = (new Date()).getTime() - timeDifference;
             //Iterate OwnSlots
             for (var i = 0; i < amountOwnSlots; i++) {
-                var matterId = cursorMine['owns' + i].input;
-                if (matterId > 0) {
-                    var cursorMatterBlock = MatterBlocks.findOne({
-                        matter: matterId
-                    });
-                    var amountMaxSupSlots = cursorPlayerData.mine.supSlots;
-                    var amountUsedSupSlots = 0;
-                    for (var j = 0; j < amountMaxSupSlots; j++) {
-                        if (cursorMine['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
-                    }
+                if (matterIds[i] > 0) {
+                    var amountUsedSupSlots = 0
                     var obj0 = {};
 
-                    var progressOwn = (calculatedServerTime - cursorMine['owns' + i].stamp.getTime()) * (7.5 / 3600000);
+                    var progressOwn = (calculatedServerTime - timeStamps[i]) * (7.5 / 3600000);
                     var progressSups = 0;
-                    var supRates = 0;
+                    var supRatesAdded = 0;
 
                     var supSlotsMemory = new Array();
                     //Iterate Supporter
-                    for (var k = 0; k < cursorPlayerData.mine.supSlots; k++) {
-                        var currentSup = cursorMine['owns' + i]['sup' + k];
+                    for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if (currentSup != undefined && currentSup.length != 0) {
-                            var obj00 = {};
-                            var supMine = mine.findOne({
-                                user: currentSup
-                            });
-                            var currentSupScrSlots = playerData.findOne({
-                                user: currentSup
-                            }, {
-                                fields: {
-                                    mine: 1
-                                }
-                            }).mine.scrSlots;
-                            //get index of scr slot
-                            var indexScr = -1;
-                            for (var m = 0; m < currentSupScrSlots; m++) {
-                                if (supMine['scrs' + m].victim == name) indexScr = m;
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
+                                amountUsedSupSlots++;
+                                var obj00 = {};
+                                var supTime = supTimeStamps[i][k];
+
+                                obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
+                                var obj01 = {};
+                                obj01['id'] = obj00['timeSpentId'];
+                                obj01['miliseconds'] = (calculatedServerTime - supTime);
+                                obj01['notFound'] = 0;
+                                obj01['prefix'] = 1;
+                                timers.push(obj01);
+                                obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                                var supRate = supRates[i][k];
+                                supRatesAdded = supRatesAdded + supRate;
+                                progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
+
+                                obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
+                                obj00['miningrate'] = supRate + '/hr';
+                                obj00['supName'] = supporters[i][k];
+                                supSlotsMemory[k] = obj00;
                             }
-                            if (indexScr == -1) {
-                                console.log('Template.mineBase slot calculation problem - index scr Slot');
-                                break;
-                            }
-                            var result = indexScr;
-                            //calculate mined by cSup
-                            var supTime = supMine['scrs' + result].stamp.getTime();
-
-                            obj00['timeSpentId'] = 'timerInc_' + i + k + '_mine_sup';
-                            var obj01 = {};
-                            obj01['id'] = obj00['timeSpentId'];
-                            obj01['miliseconds'] = (calculatedServerTime - supTime);
-                            obj01['notFound'] = 0;
-                            obj01['prefix'] = 1;
-                            timers.push(obj01);
-                            obj00['timeSpent'] = msToTime(obj01['miliseconds']);
-
-                            var supRate = supMine['scrs' + result].benefit;
-                            supRates = supRates + supRate;
-                            progressSups = progressSups + (calculatedServerTime - supTime) * (supRate / 3600000);
-
-                            obj00['mined'] = Math.floor((calculatedServerTime - supTime) * (supRate / 3600000));
-                            obj00['miningrate'] = supRate + '/hr';
-                            obj00['supName'] = currentSup;
-                            supSlotsMemory[k] = obj00;
                         }
                     }
-
-
                     var progressTotal = progressOwn + progressSups;
-                    obj0['value'] = Math.floor(progressTotal) + '/' + cursorMatterBlock.value + '(' + Math.floor((Math.floor(progressTotal) / cursorMatterBlock.value) * 100) + '%)';
-                    obj0['color'] = cursorMatterBlock.color;
-                    obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
-                    obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountMaxSupSlots;
+                    obj0['value'] = Math.floor(progressTotal) + '/' + matterBlocksValues[i] + '(' + Math.floor((Math.floor(progressTotal) / matterBlocksValues[i]) * 100) + '%)';
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    switch (matterBlocksColors[i]) {
+                        case "green":
+                            obj0['color'] = "-550px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-550px -100px";
+                            break;
+                        default:
+                            console.log("mineScrounge oops");
+                    }
+                    /*                    obj0['color'] = cursorMatterBlock.color;*/
+                    obj0['slots'] = amountUsedSupSlots + '/' + amountSupSlots;
+                    obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountSupSlots;
                     obj0['remainingId'] = 'timerDec_' + i + '_mine';
                     obj0['remainingChangeId'] = 'timerDec_' + i + '_mineChange';
                     obj0['timeSpentId'] = 'timerInc_' + i + '_mine';
@@ -615,45 +863,38 @@ if (Meteor.isClient) {
                     //Remaining calculation
                     var obj1 = {};
                     obj1['id'] = obj0['remainingId'];
-                    obj1['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                    obj1['miliseconds'] = ((matterBlocksValues[i] - progressTotal) / ((7.5 + supRatesAdded) / 3600000));
                     obj1['notFound'] = 0;
                     obj1['prefix'] = -1;
                     timers.push(obj1);
-                    obj0['remaining'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates) / 3600000));
+                    obj0['remaining'] = msToTime((matterBlocksValues[i] - progressTotal) / ((7.5 + supRatesAdded) / 3600000));
 
                     //RemainingChange calcuation
                     var obj3 = {};
                     obj3['id'] = obj0['remainingChangeId'];
-                    var myRate = playerData.findOne({
-                        user: self.username
-                    }, {
-                        fields: {
-                            mine: 1
-                        }
-                    }).mine.scrItem.benefit;
-                    obj3['miliseconds'] = ((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
+                    obj3['miliseconds'] = ((matterBlocksValues[i] - progressTotal) / ((7.5 + supRatesAdded + ownRate) / 3600000));
                     obj3['notFound'] = 0;
                     obj3['prefix'] = -1;
                     timers.push(obj3);
-                    obj0['remainingChange'] = msToTime((cursorMatterBlock.value - progressTotal) / ((7.5 + supRates + myRate) / 3600000));
+                    obj0['remainingChange'] = msToTime((matterBlocksValues[i] - progressTotal) / ((7.5 + supRatesAdded + ownRate) / 3600000));
 
                     var obj2 = {};
                     obj2['id'] = obj0['timeSpentId'];
-                    obj2['miliseconds'] = (calculatedServerTime - cursorMine['owns' + i].stamp);
+                    obj2['miliseconds'] = (calculatedServerTime - timeStamps[i]);
                     obj2['notFound'] = 0;
                     obj2['prefix'] = 1;
                     timers.push(obj2);
-                    obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMine['owns' + i].stamp));
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - timeStamps[i]));
 
-                    obj0['miningrate'] = (7.5 + supRates) + '/hr';
-                    obj0['miningrateChange'] = (7.5 + supRates + myRate) + '/hr';;
+                    obj0['miningrate'] = (7.5 + supRatesAdded) + '/hr';
+                    obj0['miningrateChange'] = (7.5 + supRatesAdded + ownRate) + '/hr';;
 
                     //Make Slot scroungeable
                     obj0['goScrounging'] = 'goScroungingMine_' + i;
 
                     obj0['index'] = i;
                     obj0['supporter'] = supSlotsMemory;
-                    var lockCheck = checkScroungeMine(i, self.username, self.cu);
+                    var lockCheck = checkScroungeMine(i, self, currentUser);
                     obj0['lockedMsg'] = lockCheck;
                     if (lockCheck != false) lockCheck = true
                     obj0['locked'] = lockCheck;
@@ -700,6 +941,7 @@ if (Meteor.isClient) {
         },
 
         'click .goScroungingMine': function(e, t) {
+            //console.time("GO SCROUNGING");
             var slotId = e.currentTarget.id.split("_").pop();
             Meteor.call('goScroungingMine', slotId, function(err, result) {
                 if (err) {
@@ -708,6 +950,7 @@ if (Meteor.isClient) {
                 if (result) {
                     infoLog(result);
                     showInfoTextAnimation(result);
+                    //console.timeEnd("GO SCROUNGING");
                 }
             });
         },
@@ -718,128 +961,286 @@ if (Meteor.isClient) {
     /////////////////////////
 
     ///// BATTLEFIELD BASE /////
+    Template.battlefieldBase.onCreated(function() {
+
+        //console.time('createBattlefieldBase');
+        var inst = this;
+        inst.state = new ReactiveDict();
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                _id: 0
+            }
+        }).username;
+        var users = [self];
+
+        inst.autorun(function() {
+
+            var subsPlayerDataBattlefield = inst.subscribe('playerDataBattlefield', users);
+            var color = 'green';
+            var subsFightArenas = inst.subscribe('FightArenas', color);
+
+            if (subsPlayerDataBattlefield.ready() && subsFightArenas.ready()) {
+                var cursorPlayerDataBattlefield = playerData.findOne({
+                    user: self
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                }).battlefield;
+
+                //Get data from all own slots
+                var inputs = [];
+                var stampsSlotsLeft = [];
+                var supStamps = [];
+                var supEpicness = [];
+                var supNames = [];
+                var supLevels = [];
+                var fightArenasValues = [];
+                var fightArenasColors = [];
+                var fightArenasTimes = [];
+
+                var amountOwnSlots = cursorPlayerDataBattlefield.amountOwnSlots;
+                var amountSupSlots = cursorPlayerDataBattlefield.amountSupSlots;
+                var ownEpic = cursorPlayerDataBattlefield.scrItem.benefit;
+
+                for (i = 0; i < amountOwnSlots; i++) {
+                    inputs[i] = cursorPlayerDataBattlefield.ownSlots['owns' + i].input;
+                    //falls der slot benutzt ist
+                    if (inputs[i] > 0) {
+                        var cursorFightArena = FightArenas.findOne({
+                            fight: inputs[i]
+                        })
+                        fightArenasValues[i] = cursorFightArena.value;
+                        fightArenasColors[i] = cursorFightArena.color;
+                        fightArenasTimes[i] = cursorFightArena.time;
+                    }
+                    stampsSlotsLeft[i] = cursorPlayerDataBattlefield.ownSlots['owns' + i].stamp;
+
+                    var supStampsOneSlot = [];
+                    var supEpicnessOneSlot = [];
+                    var supNamesOneSlot = [];
+                    var supLevelsOneSlot = [];
+                    for (k = 0; k < amountSupSlots; k++) {
+                        supStampsOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].stamp;
+                        supEpicnessOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].benefit;
+                        supNamesOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].name;
+                        supLevelsOneSlot[k] = cursorPlayerDataBattlefield.ownSlots['owns' + i]['sup' + k].level;
+                    }
+                    supStamps[i] = supStampsOneSlot;
+                    supEpicness[i] = supEpicnessOneSlot;
+                    supNames[i] = supNamesOneSlot;
+                    supLevels[i] = supLevelsOneSlot;
+                }
+
+                //Get data from all scrounge slots
+                var dataScrSlots = {};
+                var stampsSlotsRight = [];
+                var ownEpicness = [];
+                var fightArenasValuesScrounge = [];
+                var fightArenasColorsScrounge = [];
+                var fightArenasTimesScrounge = [];
+                var stampsScroungedUsers = [];
+                var inputsScroungedUsers = [];
+                var namesScroungedUsers = [];
+                var supsVictimsStamps = [];
+                var supsVictimsEpics = [];
+                var amountVictimsSupSlots = [];
+
+                var amountScrSlots = cursorPlayerDataBattlefield.amountScrSlots;
+
+                for (i = 0; i < amountScrSlots; i++) {
+                    ownEpicness[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].benefit;
+                    stampsSlotsRight[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].stamp;
+                    stampsScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.stamp;
+                    inputsScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.input;
+                    namesScroungedUsers[i] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.name;
+                    //falls der slot benutzt ist
+                    if (inputsScroungedUsers[i] > 0) {
+                        var cursorFightArena = FightArenas.findOne({
+                            fight: inputsScroungedUsers[i]
+                        })
+                        fightArenasValuesScrounge[i] = cursorFightArena.value;
+                        fightArenasColorsScrounge[i] = cursorFightArena.color;
+                        fightArenasTimesScrounge[i] = cursorFightArena.time;
+                    }
+
+                    var amountVictimSupSlots = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim.supSlotsVictim;
+                    amountVictimsSupSlots[i] = amountVictimSupSlots;
+
+                    var supsVictimsStampsOneSlot = [];
+                    var supsVictimsEpicsOneSlot = [];
+                    for (k = 0; k < amountVictimSupSlots; k++) {
+                        supsVictimsStampsOneSlot[k] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim['sup' + k].stamp;
+                        supsVictimsEpicsOneSlot[k] = cursorPlayerDataBattlefield.scrSlots['scrs' + i].victim['sup' + k].benefit;
+                    }
+                    supsVictimsStamps[i] = supsVictimsStampsOneSlot;
+                    supsVictimsEpics[i] = supsVictimsEpicsOneSlot;
+                }
+                //set Data Context for other helpers         
+
+                //allgemeine Daten
+                inst.state.set('self', users);
+                inst.state.set('amountScrSlots', amountScrSlots);
+                inst.state.set('amountSupSlots', amountSupSlots);
+                inst.state.set('amountOwnSlots', amountOwnSlots);
+                inst.state.set('ownEpic', ownEpic);
+
+                //für linke Seite benötigt
+                inst.state.set('fightIds', inputs);
+                inst.state.set('timeStamps', stampsSlotsLeft);
+                inst.state.set('supTimeStamps', supStamps);
+                inst.state.set('supEpics', supEpicness);
+                inst.state.set('supLevels', supLevels);
+                inst.state.set('supporters', supNames);
+                inst.state.set('fightArenasValues', fightArenasValues);
+                inst.state.set('fightArenasColors', fightArenasColors);
+                inst.state.set('fightArenasTimes', fightArenasTimes);
+
+                //für rechte Seite benötigt
+                inst.state.set('ownTimeStamps', stampsSlotsRight);
+                inst.state.set('victims', namesScroungedUsers);
+                inst.state.set('victimsSupSlots', amountVictimsSupSlots);
+                inst.state.set('timeStampsScrounge', stampsScroungedUsers);
+                inst.state.set('supEpicsScrounge', supsVictimsEpics);
+                inst.state.set('supTimeStampsScrounge', supsVictimsStamps);
+                inst.state.set('fightArenasColorsScrounge', fightArenasColorsScrounge);
+                inst.state.set('fightArenasValuesScrounge', fightArenasValuesScrounge);
+                inst.state.set('fightArenasTimesScrounge', fightArenasTimesScrounge);
+                //console.timeEnd('createBattlefieldBase');
+
+                // console.log('battlefieldBaseDict');
+                // console.log(inst.state);
+            }
+        })
+    });
+
     Template.battlefieldBase.helpers({
         battlefieldUnusedSlots: function() {
-            //Battlefield
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
-            var cursorBattlefield = battlefield.findOne({
-                user: name
-            });
+
+            // Battlefield
+            //get fields from data context
+            var name = Template.instance().state.get('self');
+            var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
+            var fightIds = Template.instance().state.get('fightIds');
             var objects = new Array();
+            var amountObjects = 0;
 
             for (var i = 0; i < amountOwnSlots; i++) {
-                if (cursorBattlefield['owns' + i].input == "0000")
-                    objects[i] = {};
+                if (fightIds[i] == "0000") {
+                    amountObjects++;
+                }
             }
+            for (var j = 0; j < amountObjects; j++) {
+                objects[j] = {};
+            }
+            // console.log('objectsUnusedB', objects);
             return objects;
         },
         battlefieldUsedSlots: function() {
-            //Battlefield
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
-            var cursorBattlefield = battlefield.findOne({
-                user: name
-            });
+            /*Battlefield*/
+            //get fields from data context
+            var name = Template.instance().state.get('self');
+            var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
+            var amountSupSlots = Template.instance().state.get('amountSupSlots');
+            var supLevels = Template.instance().state.get('supLevels');
+            var fightIds = Template.instance().state.get('fightIds');
+            var fightArenasValues = Template.instance().state.get('fightArenasValues');
+            var fightArenasColors = Template.instance().state.get('fightArenasColors');
+            var fightArenasTimes = Template.instance().state.get('fightArenasTimes');
+            var timeStamps = Template.instance().state.get('timeStamps');
+            var supporters = Template.instance().state.get('supporters');
+            var supTimeStamps = Template.instance().state.get('supTimeStamps');
+            var supEpics = Template.instance().state.get('supEpics');
             var objects = new Array();
 
             var calculatedServerTime = new Date().getTime() - timeDifference;
-            //Iterate OwnSlots
+            /*Iterate OwnSlots*/
             for (var i = 0; i < amountOwnSlots; i++) {
-                var fightId = cursorBattlefield['owns' + i].input;
-                if (fightId > 0) {
-                    var cursorFightArena = FightArenas.findOne({
-                        fight: fightId
-                    });
-                    var amountMaxSupSlots = cursorPlayerData.battlefield.supSlots;
+                //falls der slot benutzt ist (nicht 0000)
+                if (fightIds[i] > 0) {
                     var amountUsedSupSlots = 0;
-                    for (var j = 0; j < amountMaxSupSlots; j++) {
-                        if (cursorBattlefield['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
-                    }
                     var obj0 = {};
-                    var supEpics = 0;
+                    var supEpicsAdded = 0;
 
                     var supSlotsMemory = new Array();
                     //Iterate Supporter
-                    for (var k = 0; k < cursorPlayerData.battlefield.supSlots; k++) {
-                        var currentSup = cursorBattlefield['owns' + i]['sup' + k];
+                    for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if (currentSup != undefined && currentSup.length != 0) {
-                            var obj00 = {};
-                            var supBattlefield = battlefield.findOne({
-                                user: currentSup
-                            });
-                            var cursorCurrentSup = playerData.findOne({
-                                user: currentSup
-                            }, {
-                                fields: {
-                                    battlefield: 1,
-                                    level: 1
-                                }
-                            });
-                            var currentSupScrSlots = cursorCurrentSup.battlefield.scrSlots;
-                            //get index of scr slot
-                            var indexScr = -1;
-                            for (var m = 0; m < currentSupScrSlots; m++) {
-                                if (supBattlefield['scrs' + m].victim == name) indexScr = m;
-                            }
-                            if (indexScr == -1) {
-                                console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
-                                break;
-                            }
-                            var result = indexScr;
-                            //calculate timeSpent of currentSup
-                            var supTime = supBattlefield['scrs' + result].stamp.getTime();
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
+                                amountUsedSupSlots++;
+                                var obj00 = {};
+                                var supTime = supTimeStamps[i][k];
 
-                            obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
-                            var obj01 = {};
-                            obj01['id'] = obj00['timeSpentId'];
-                            obj01['miliseconds'] = (calculatedServerTime - supTime);
-                            obj01['notFound'] = 0;
-                            obj01['prefix'] = 1;
-                            timers.push(obj01);
-                            obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+                                obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
+                                var obj01 = {};
+                                obj01['id'] = obj00['timeSpentId'];
+                                obj01['miliseconds'] = (calculatedServerTime - supTime);
+                                obj01['notFound'] = 0;
+                                obj01['prefix'] = 1;
+                                timers.push(obj01);
+                                obj00['timeSpent'] = msToTime(obj01['miliseconds']);
 
-                            var supEpic = supBattlefield['scrs' + result].benefit;
-                            supEpics = supEpics + supEpic;
-                            obj00['epicness'] = supEpic + '%';
-                            obj00['level'] = cursorCurrentSup.level;
-                            obj00['supName'] = currentSup;
-                            supSlotsMemory[k] = obj00;
+                                var supEpic = supEpics[i][k];
+                                supEpicsAdded = supEpicsAdded + supEpic;
+                                obj00['epicness'] = supEpic + '%';
+                                obj00['level'] = supLevels[i];
+                                obj00['supName'] = supporters[i][k];
+                                supSlotsMemory[k] = obj00;
+                            }
                         }
                     }
 
-                    obj0['color'] = cursorFightArena.color;
-                    obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
-                    obj0['xp'] = Math.floor((cursorFightArena.value * (100 + supEpics)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    switch (fightArenasColors[i]) {
+                        case "green":
+                            obj0['color'] = "-216px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-0px -0px";
+                            break;
+                        default:
+                            console.log("no fightArena color defined");
+                    }
+                    //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
+                    /*if(cursorFightArena.color == "green") {obj0['color'] = "-550px 0px";}*/
+                    //vorherige Lösung
+                    /*obj0['color'] = cursorFightArena.color;*/
+                    obj0['slots'] = amountUsedSupSlots + '/' + amountSupSlots;
+                    obj0['xp'] = Math.floor((fightArenasValues[i] * (100 + supEpicsAdded)) / 100) + '(' + Math.floor(100 + supEpicsAdded) + '%)';
                     obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield';
+
+                    // var obj1 = {};
+                    // obj1['id'] = obj0['remainingId'];
+                    // obj1['miliseconds'] = ((fightArenasValues[i] - progressTotal) / ((7.5 + supEpicsAdded) / 3600000));
+                    // obj1['notFound'] = 0;
+                    // obj1['prefix'] = -1;
+                    // timers.push(obj1);
+                    // obj0['remaining'] = msToTime((parseInt(fightArenasValues[i]) - progressTotal) / ((7.5 + supEpicsAdded) / 3600000));
 
                     var obj2 = {};
                     obj2['id'] = obj0['timeSpentId'];
-                    obj2['miliseconds'] = (calculatedServerTime - cursorBattlefield['owns' + i].stamp);
+                    obj2['miliseconds'] = (calculatedServerTime - timeStamps[i]);
                     obj2['notFound'] = 0;
                     obj2['prefix'] = 1;
                     timers.push(obj2);
-                    obj0['timeSpent'] = msToTime((calculatedServerTime - cursorBattlefield['owns' + i].stamp));
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - timeStamps[i]));
 
-                    obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
+                    obj0['timeOverall'] = '/' + msToTime(fightArenasTimes[i]) + '(' + Math.floor((obj2['miliseconds'] / fightArenasTimes[i]) * 100) + '%)';
 
                     if (amountUsedSupSlots == 0) {
-                        obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
+                        obj0['profit'] = Math.floor(fightArenasValues[i]) + '(100%)';
                     } else {
-                        obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
+                        obj0['profit'] = Math.floor(0.5 * (fightArenasValues[i] + ((fightArenasValues[i] * supEpicsAdded) / 100))) + '(50%)';
                     }
-                    obj0['epicness'] = supEpics + '%';
+                    obj0['epicness'] = supEpicsAdded + '%';
 
                     obj0['supporter'] = supSlotsMemory;
 
@@ -849,68 +1250,211 @@ if (Meteor.isClient) {
                     objects[i] = obj0;
                 }
             }
+            // console.log('objectsUsedB', objects);
             return objects;
         },
+
+        battlefieldUnusedScroungeSlots: function() {
+            //Battlefield Scrounging
+            //get fields from data context
+            var name = Template.instance().state.get('self');
+            var victims = Template.instance().state.get('victims');
+            var amountScrSlots = Template.instance().state.get('amountScrSlots');
+            var objects = new Array();
+
+            for (var i = 0; i < amountScrSlots; i++) {
+                if (victims[i] == "") objects[i] = {};
+            }
+            return objects;
+        },
+
+        battlefieldUsedScroungeSlots: function() {
+            //Battlefield Scrounging
+            //get fields from data context
+            var name = Template.instance().state.get('self')[0];
+            var ownEpics = Template.instance().state.get('ownEpics');
+            var ownTimeStamps = Template.instance().state.get('ownTimeStamps');
+            var amountScrSlots = Template.instance().state.get('amountScrSlots');
+            var victimsSupSlots = Template.instance().state.get('victimsSupSlots');
+            var victims = Template.instance().state.get('victims');
+            var timeStampsScrounge = Template.instance().state.get('timeStampsScrounge');
+            var supEpicsScrounge = Template.instance().state.get('supEpicsScrounge');
+            var supTimeStampsScrounge = Template.instance().state.get('supTimeStampsScrounge');
+            var fightArenasColorsScrounge = Template.instance().state.get('fightArenasColorsScrounge');
+            var fightArenasValuesScrounge = Template.instance().state.get('fightArenasValuesScrounge');
+            var fightArenasTimesScrounge = Template.instance().state.get('fightArenasTimesScrounge');
+            var calculatedServerTime = new Date().getTime() - timeDifference;
+            var objects = new Array();
+
+            //Iterate all Scrounging Slots (i = scrounge slots)
+            for (var i = 0; i < amountScrSlots; i++) {
+                //Is used?
+                if (victims[i] != "") {
+                    var supEpicsScroungeAdded = 0;
+                    var amountUsedSupSlots = 0
+                    //Iterate Supporter (l = supporter slot)
+                    for (var l = 0; l < victimsSupSlots[i]; l++) {
+                        //Falls ein Supporter vorhanden ist, verwende dessen supEpic und Zeitstempel
+                        //scr slot überhaupt benutzt?
+                        if (supTimeStampsScrounge[i] != "") {
+                            //welcher/wieviele supporter slots des scr slots sind besetzt
+                            if (supTimeStampsScrounge[i][l] != "") {
+                                amountUsedSupSlots++;
+                                var supTime = supTimeStampsScrounge[i][l];
+                                var supEpic = supEpicsScrounge[i][l];
+                                supEpicsScroungeAdded = supEpicsScroungeAdded + supEpic;
+                            }
+                        }
+                    }
+                    var obj0 = {};
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    //switch(cursorFightArena.color) {
+                    switch (fightArenasColorsScrounge[i]) {
+                        case "green":
+                            obj0['color'] = "-216px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-0px -0px";
+                            break;
+                        default:
+                            console.log("oops");
+                    }
+                    //if else funktioniert identisch wie obiges aber da viele Farben geplant sind, ist ein switch case eleganter
+                    /*if(cursorFightArena.color == "green") {obj0['color'] = "-550px 0px";}*/
+                    //vorherige Lösung
+                    /*obj0['color'] = cursorFightArena.color;*/
+                    obj0['victim'] = victims[i];
+                    obj0['slots'] = amountUsedSupSlots + '/' + victimsSupSlots[i];
+                    obj0['remainingId'] = 'timerDec_' + i + '_battlefield_scr';
+                    obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield_scr';
+
+                    var obj1 = {};
+                    obj1['id'] = obj0['remainingId'];
+                    obj1['miliseconds'] = (fightArenasTimesScrounge[i]) - (calculatedServerTime - ownTimeStamps[i])
+                    obj1['notFound'] = 0;
+                    obj1['prefix'] = -1;
+                    timers.push(obj1);
+                    obj0['remaining'] = msToTime(obj1['miliseconds']);
+
+                    var obj2 = {};
+                    obj2['id'] = obj0['timeSpentId'];
+                    obj2['miliseconds'] = (calculatedServerTime - ownTimeStamps[i]);
+                    obj2['notFound'] = 0;
+                    obj2['prefix'] = 1;
+                    timers.push(obj2);
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - ownTimeStamps[i]));
+
+                    obj0['timeOverall'] = '/' + msToTime(fightArenasTimesScrounge[i]) + '(' + Math.floor((obj2['miliseconds'] / fightArenasTimesScrounge[i]) * 100) + '%)';
+
+                    obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * fightArenasValuesScrounge[i]) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
+                    obj0['epicness'] = supEpicsScroungeAdded + '%';
+                    obj0['slider_id'] = i + 6;
+                    objects[i] = obj0;
+                }
+            }
+            return objects;
+        },
+
         arenaColors: function() {
-            var cursorArenaColors = FightArenas.find({}, {
+            var cursorFightColors = FightArenas.find({}, {
                 fields: {
                     'color': 1
                 }
             }).fetch();
             var colorArray = new Array();
-            for (var i = 0; i < cursorArenaColors.length; i++) {
-                colorArray[i] = cursorArenaColors[i].color;
+            for (var i = 0; i < cursorFightColors.length; i++) {
+                colorArray[i] = cursorFightColors[i].color;
             }
             var result = distinct(colorArray);
             var objects = new Array();
             for (var j = 0; j < result.length; j++) {
-                objects[j] = {
-                    'color': result[j]
-                };
+                switch (result[j]) {
+                    case "green":
+                        objects[j] = {
+                            'color': "-683px -27px"
+                        };
+                        break;
+                    case "red":
+                        objects[j] = {
+                            'color': "-683px -45px"
+                        };
+                        break;
+                    default:
+                        console.log("oops");
+                }
             }
             return objects;
         },
         fightArenas: function() {
-            //add XP to the string for the shadow effect
-            var arrayHelper = FightArenas.find({}, {
+            var objects = new Array();
+            var cursorFightArenas = FightArenas.find({}, {
                 sort: {
                     fight: 1
                 }
             }).fetch();
-            for (var i = 0; i < arrayHelper.length; i++) {
-                arrayHelper[i].value = arrayHelper[i].value + 'XP';
+            for (var i = 0; i < cursorFightArenas.length; i++) {
+                var obj0 = {};
+                obj0['fight'] = cursorFightArenas[i].fight;
+                switch (cursorFightArenas[i].color) {
+                    case "green":
+                        obj0['color'] = "-2678px 0px";
+                        obj0['colorCost'] = "-1725px 0px";
+                        break;
+                    case "red":
+                        obj0['color'] = "-2678px -50px";
+                        obj0['colorCost'] = "-1725px -25px";
+                        break;
+                    default:
+                        console.log("oops");
+                }
+                obj0['cost'] = cursorFightArenas[i].cost;
+                obj0['value'] = cursorFightArenas[i].value + "XP";
+                obj0['time'] = cursorFightArenas[i].time;
+                objects[i] = obj0;
             }
-            return arrayHelper;
+            return objects;
         }
     });
 
     Template.battlefieldBase.events({
         'click .item': function(e, t) {
-            //Variante B
-            var currentUser = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1,
-                }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
+            var currentUser = Template.instance().state.get('self')[0];
+            var amountSupSlots = Template.instance().state.get('amountSupSlots');
+            var cursorPlayerDataBattlefield = playerData.findOne({
                 user: currentUser
-            });
-
-            /*            $('#background_fade').delay(3000).fadeIn();
-            $('#buyMenuWrapper').fadeIn();*/
+            }).battlefield;
             $("#buyMenuWrapper").show(0, function() {
                 $("#background_fade").fadeIn();
             });
             Session.set("clickedFight", e.currentTarget.id);
-            $("#buyMenuItem").attr("src", "/Aufloesung1920x1080/Battlefield/Battles_" + this.color + ".png");
+            switch (e.currentTarget.id.substring(0, 2)) {
+                case "01":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-220px 0px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px 0px"
+                    });
+                    break;
+                case "02":
+                    $("#buyMenuItem").css({
+                        backgroundPosition: "-220px -100px"
+                    });
+                    $("#matterImg").css({
+                        backgroundPosition: "-1725px -50px"
+                    });
+                    break;
+                default:
+                    console.log("oops");
+            };
             $('#item').text("XP: " + this.value);
-            var amountSupSlots = cursorPlayerData.battlefield.supSlots;
-            range_slider("Buy_Menu", cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl, cursorPlayerData.battlefield.minControl, cursorPlayerData.battlefield.maxControl);
+            range_slider("Buy_Menu", cursorPlayerDataBattlefield.minControl, cursorPlayerDataBattlefield.maxControl, cursorPlayerDataBattlefield.minControl, cursorPlayerDataBattlefield.maxControl);
             $('#time').text("Time: " + msToTime(this.time));
             $('#price').text("Price: " + this.cost);
-            $('#matterImg').attr("src", "/Aufloesung1920x1080/Mine/MatterBlockCost_" + this.color + ".png");
 
             $("#range_slider_Buy_Menu").children('.ui-slider-handle').css("display", "block");
 
@@ -922,303 +1466,230 @@ if (Meteor.isClient) {
 
                 if (amountSupSlots > i) {
 
-                    $('#AmountScroungerSlots').append("<div class='sslots_available'> </div>");
+                    $('#AmountScroungerSlots').append("<div class='sslots_available sshr'> </div>");
 
                 } else {
 
-                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable'> </div>");
+                    $('#AmountScroungerSlots').append("<div class='sslots_unavailable sshr'> </div>");
 
                 }
             }
-        }
-    });
-
-    ///// BATTLEFIELD RIGHT BASE UNUSED SLOTS /////
-    Template.battlefieldRightBaseUnusedSlots.helpers({
-        battlefieldUnusedScroungeSlots: function() {
-            //Battlefield Scrounging
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            }, {
-                fields: {
-                    battlefield: 1
-                }
-            }).battlefield;
-            var amountScrSlots = cursorPlayerData.scrSlots;
-            var cursorBattlefield = battlefield.findOne({
-                user: name
-            });
-            var objects = new Array();
-            for (var i = 0; i < amountScrSlots; i++) {
-                if (cursorBattlefield['scrs' + i].victim == "")
-                    objects[i] = {};
-            }
-            return objects;
-        }
-    });
-
-    ///// BATTLEFIELD RIGHT BASE USED SLOTS /////
-    Template.battlefieldRightBaseUsedSlots.helpers({
-        battlefieldUsedScroungeSlots: function() {
-            //Battlefield Scrounging
-            var name = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    username: 1
-                }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            }, {
-                fields: {
-                    battlefield: 1
-                }
-            }).battlefield;
-            var cursorMyBattlefield = battlefield.findOne({
-                user: name
-            });
-            var calculatedServerTime = new Date().getTime() - timeDifference;
-            var amountScrSlots = cursorPlayerData.scrSlots;
-            var objects = new Array();
-
-            //Iterate all Scrounging Slots
-            for (var i = 0; i < amountScrSlots; i++) {
-                //Is used?
-                if (cursorMyBattlefield['scrs' + i].victim != "") {
-                    var victimName = cursorMyBattlefield['scrs' + i].victim;
-                    var cursorVictimBattlefield = battlefield.findOne({
-                        user: victimName
-                    });
-                    var cursorPlayerDataVictim = playerData.findOne({
-                        user: victimName
-                    }, {
-                        fields: {
-                            battlefield: 1
-                        }
-                    });
-                    var amountVictimOwnSlots = cursorPlayerDataVictim.battlefield.ownSlots;
-                    var amountVictimSupSlots = cursorPlayerDataVictim.battlefield.supSlots;
-                    //get index of the right own slot
-                    var indexOwn = -1;
-                    for (var j = 0; j < amountVictimOwnSlots; j++) {
-                        for (var k = 0; k < amountVictimSupSlots; k++) {
-                            if (cursorVictimBattlefield['owns' + j]['sup' + k] == name) indexOwn = j
-                        }
-                    }
-                    if (indexOwn == -1) {
-                        console.log('Template.rightBaseUsedSlots slot calculation problem - index own Slot');
-                        break;
-                    }
-                    //Calculate input values
-                    var fightId = cursorVictimBattlefield['owns' + indexOwn].input;
-                    var cursorFightArena = FightArenas.findOne({
-                        fight: fightId
-                    });
-                    var supEpics = 0;
-                    var amountUsedSupSlots = 0;
-                    //Iterate Supporter
-                    for (var l = 0; l < cursorPlayerDataVictim.battlefield.supSlots; l++) {
-                        var currentSup = cursorVictimBattlefield['owns' + indexOwn]['sup' + l];
-                        //SupSlot used?
-                        if (currentSup.length != "") {
-                            amountUsedSupSlots++;
-                            var currentSupScrSlots = playerData.findOne({
-                                user: currentSup
-                            }, {
-                                fields: {
-                                    battlefield: 1
-                                }
-                            }).battlefield.scrSlots;
-                            var cursorSupBattlefield = battlefield.findOne({
-                                user: currentSup
-                            });
-                            //get index of scr slot
-                            var indexScr = -1;
-                            for (var m = 0; m < currentSupScrSlots; m++) {
-                                if (cursorSupBattlefield['scrs' + m].victim == victimName) indexScr = m;
-                            }
-                            if (indexScr == -1) {
-                                console.log('Template.rightBaseUsedSlots slot calculation problem - index scr Slot');
-                                break;
-                            }
-                            //calculate timeSpent and epicness of cSup
-                            var supTime = cursorSupBattlefield['scrs' + indexScr].stamp.getTime();
-                            var supEpic = cursorSupBattlefield['scrs' + indexScr].benefit;
-                            supEpics = supEpics + supEpic;
-                        }
-                    }
-                    var obj0 = {};
-                    obj0['color'] = cursorFightArena.color;
-                    obj0['victim'] = victimName;
-                    obj0['slots'] = amountUsedSupSlots + '/' + amountVictimSupSlots;
-                    obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield_scr';
-                    obj0['remainingId'] = 'timerDec_' + i + '_battlefield_scr';
-
-                    var obj1 = {};
-                    obj1['id'] = obj0['remainingId'];
-                    obj1['miliseconds'] = (cursorFightArena.time) - (calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp)
-                    obj1['notFound'] = 0;
-                    obj1['prefix'] = -1;
-                    timers.push(obj1);
-                    obj0['remaining'] = msToTime(obj1['miliseconds']);
-
-                    var obj2 = {};
-                    obj2['id'] = obj0['timeSpentId'];
-                    obj2['miliseconds'] = (calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp);
-                    obj2['notFound'] = 0;
-                    obj2['prefix'] = 1;
-                    timers.push(obj2);
-                    obj0['timeSpent'] = msToTime((calculatedServerTime - cursorMyBattlefield['scrs' + i].stamp));
-
-                    obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
-
-                    obj0['profit'] = Math.floor((0.5 / amountUsedSupSlots) * cursorFightArena.value + (cursorFightArena.value * supEpics) / 100) + '(' + (0.5 / amountUsedSupSlots) * 100 + '%)';
-                    obj0['epicness'] = supEpics + '%';
-                    objects[i] = obj0;
-                }
-            }
-            return objects;
         }
     });
 
     ///// BATTLEFIELD SCROUNGE /////
+    Template.battlefieldScrounge.onCreated(function() {
+
+        //console.time('createBattlefieldScrounge');
+        var inst = this;
+        inst.state = new ReactiveDict();
+        var cursorSelf = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1,
+                cu: 1
+            }
+        });
+        var currentUser = cursorSelf.cu;
+        var self = cursorSelf.username;
+        var users = [currentUser, self];
+
+        inst.autorun(function() {
+
+            var subsPlayerDataBattlefield = inst.subscribe('playerDataBattlefield', users);
+            var color = 'green';
+            var subsFightArenas = inst.subscribe('FightArenas', color);
+
+            if (subsPlayerDataBattlefield.ready() && subsFightArenas.ready()) {
+                var cursorPlayerDataBattlefieldSelf = playerData.findOne({
+                    user: self
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                }).battlefield;
+                var cursorPlayerDataBattlefieldCu = playerData.findOne({
+                    user: currentUser
+                }, {
+                    fields: {
+                        battlefield: 1
+                    }
+                }).battlefield;
+
+                //data from active player
+                var namesScroungedUsers = [];
+                var amountScrSlots = cursorPlayerDataBattlefieldSelf.amountScrSlots;
+                var ownEpic = cursorPlayerDataBattlefieldSelf.scrItem.benefit;
+
+                //data from looked at player
+                var inputs = [];
+                var stamps = [];
+                var supNames = [];
+                var supEpicness = [];
+                var supStamps = [];
+                var supLevels = [];
+                var amountSupSlots = cursorPlayerDataBattlefieldCu.amountSupSlots;
+                var amountOwnSlots = cursorPlayerDataBattlefieldCu.amountOwnSlots;
+                var fightArenasValues = [];
+                var fightArenasColors = [];
+                var fightArenasTimes = [];
+
+                for (i = 0; i < amountScrSlots; i++) {
+                    namesScroungedUsers[i] = cursorPlayerDataBattlefieldSelf.scrSlots['scrs' + i].victim.name;
+                };
+
+                for (var i = 0; i < amountOwnSlots; i++) {
+                    inputs[i] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i].input;
+                    //falls der slot benutzt ist                                      
+                    if (inputs[i] > 0) {
+                        cursorFightArena = FightArenas.findOne({
+                            fight: inputs[i]
+                        });
+                        fightArenasValues[i] = cursorFightArena.value;
+                        fightArenasColors[i] = cursorFightArena.color;
+                        fightArenasTimes[i] = cursorFightArena.time;
+                    }
+                    stamps[i] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i].stamp;
+
+                    //Iterate Supporter
+                    var supNamesOneSlot = [];
+                    var supStampsOneSlot = [];
+                    var supEpicnessOneSlot = [];
+                    var supLevelsOneSlot = [];
+                    for (var k = 0; k < amountSupSlots; k++) {
+                        supNamesOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].name;
+                        supStampsOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].stamp;
+                        supEpicnessOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].benefit;
+                        supLevelsOneSlot[k] = cursorPlayerDataBattlefieldCu.ownSlots['owns' + i]['sup' + k].level;
+                    }
+                    supNames[i] = supNamesOneSlot;
+                    supStamps[i] = supStampsOneSlot;
+                    supEpicness[i] = supEpicnessOneSlot;
+                    supLevels[i] = supLevelsOneSlot;
+                }
+
+                //set Data Context for other helpers
+                inst.state.set('self', users);
+                inst.state.set('ownEpic', ownEpic);
+                inst.state.set('victimsB', namesScroungedUsers);
+                //muss als Mine angehörig gekennzeichnet werden, da die Variable in einer gemeinsamen
+                //Funktion vom Template WorldMap sonst mit anderen Templates überschneidet
+                //(worldmap.events)
+                inst.state.set('amountScrSlotsB', amountScrSlots);
+                inst.state.set('amountSupSlots', amountSupSlots);
+                inst.state.set('amountOwnSlots', amountOwnSlots);
+                inst.state.set('fightIds', inputs);
+                inst.state.set('supLevels', supLevels);
+                inst.state.set('timeStamps', stamps);
+                inst.state.set('supporters', supNames);
+                inst.state.set('supTimeStamps', supStamps);
+                inst.state.set('supEpics', supEpicness);
+                inst.state.set('fightArenasValues', fightArenasValues);
+                inst.state.set('fightArenasColors', fightArenasColors);
+                inst.state.set('fightArenasTimes', fightArenasTimes);
+                //console.timeEnd('createBattlefieldScrounge');
+            }
+        })
+    });
+
     Template.battlefieldScrounge.helpers({
         battlefieldSupporterSlots: function() {
             //Battlefield
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            });
-            var name = self.cu;
-            var cursorPlayerData = playerData.findOne({
-                user: name
-            });
-            var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
-            var cursorBattlefield = battlefield.findOne({
-                user: name
-            });
+            //get Data Context
+            var self = Template.instance().state.get('self')[1];
+            var currentUser = Template.instance().state.get('self')[0];
+            var ownEpic = Template.instance().state.get('ownEpic');
+            var amountSupSlots = Template.instance().state.get('amountSupSlots');
+            var amountOwnSlots = Template.instance().state.get('amountOwnSlots');
+            var supLevels = Template.instance().state.get('supLevels');
+            var fightIds = Template.instance().state.get('fightIds');
+            var supporters = Template.instance().state.get('supporters');
+            var timeStamps = Template.instance().state.get('timeStamps');
+            var supTimeStamps = Template.instance().state.get('supTimeStamps');
+            var supEpics = Template.instance().state.get('supEpics');
+            var fightArenasValues = Template.instance().state.get('fightArenasValues');
+            var fightArenasColors = Template.instance().state.get('fightArenasColors');
+            var fightArenasTimes = Template.instance().state.get('fightArenasTimes');
             var objects = new Array();
 
             var calculatedServerTime = (new Date()).getTime() - timeDifference;
             //Iterate OwnSlots
             for (var i = 0; i < amountOwnSlots; i++) {
-                var fightId = cursorBattlefield['owns' + i].input;
-                if (fightId > 0) {
-                    var cursorFightArena = FightArenas.findOne({
-                        fight: fightId
-                    });
-                    var amountMaxSupSlots = cursorPlayerData.battlefield.supSlots;
-                    var amountUsedSupSlots = 0;
-                    for (var j = 0; j < amountMaxSupSlots; j++) {
-                        if (cursorBattlefield['owns' + i]['sup' + j].length != 0) amountUsedSupSlots++;
-                    }
+                if (fightIds[i] > 0) {
+                    var amountUsedSupSlots = 0
                     var obj0 = {};
-                    var supEpics = 0;
+
+                    var supEpicsAdded = 0;
 
                     var supSlotsMemory = new Array();
                     //Iterate Supporter
-                    for (var k = 0; k < cursorPlayerData.battlefield.supSlots; k++) {
-                        var currentSup = cursorBattlefield['owns' + i]['sup' + k];
+                    for (var k = 0; k < amountSupSlots; k++) {
                         //SupSlot used?
-                        if (currentSup != undefined && currentSup.length != 0) {
-                            var obj00 = {};
-                            var cursorCurrentSup = playerData.findOne({
-                                user: currentSup
-                            }, {
-                                fields: {
-                                    battlefield: 1,
-                                    level: 1
-                                }
-                            });
-                            var currentSupScrSlots = cursorCurrentSup.battlefield.scrSlots;
+                        if (supporters[i] != "") {
+                            if (supporters[i][k] != "") {
+                                amountUsedSupSlots++;
+                                var obj00 = {};
+                                var supTime = supTimeStamps[i][k];
 
-                            var supBattlefield = battlefield.findOne({
-                                user: currentSup
-                            });
-                            //get index of scr slot
-                            var indexScr = -1;
-                            for (var m = 0; m < currentSupScrSlots; m++) {
-                                if (supBattlefield['scrs' + m].victim == name) indexScr = m;
+                                obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
+                                var obj01 = {};
+                                obj01['id'] = obj00['timeSpentId'];
+                                obj01['miliseconds'] = (calculatedServerTime - supTime);
+                                obj01['notFound'] = 0;
+                                obj01['prefix'] = 1;
+                                timers.push(obj01);
+                                obj00['timeSpent'] = msToTime(obj01['miliseconds']);
+
+                                var supEpic = supEpics[i][k];
+                                supEpicsAdded = supEpicsAdded + supEpic;
+
+                                obj00['epicness'] = supEpic + '%';
+                                obj00['level'] = supLevels[i];
+                                obj00['supName'] = supporters[i][k];
+                                supSlotsMemory[k] = obj00;
                             }
-                            // console.log('currentSupScrSlots: ' + currentSupScrSlots + ' indexScr: ' + indexScr);
-                            if (indexScr == -1) {
-                                console.log('Template.battlefieldBase slot calculation problem - index scr Slot');
-                                break;
-                            }
-                            var result = indexScr;
-                            //calculate timespent by cSup
-                            var supTime = supBattlefield['scrs' + result].stamp.getTime();
-
-                            obj00['timeSpentId'] = 'timerInc_' + i + k + '_battlefield_sup';
-                            var obj01 = {};
-                            obj01['id'] = obj00['timeSpentId'];
-                            obj01['miliseconds'] = (calculatedServerTime - supTime);
-                            obj01['notFound'] = 0;
-                            obj01['prefix'] = 1;
-                            timers.push(obj01);
-                            obj00['timeSpent'] = msToTime(obj01['miliseconds']);
-
-                            var supEpic = supBattlefield['scrs' + result].benefit;
-                            supEpics = supEpics + supEpic;
-
-                            obj00['epicness'] = supEpic + '%';
-                            obj00['level'] = cursorCurrentSup.level;
-                            obj00['supName'] = currentSup;
-                            supSlotsMemory[k] = obj00;
                         }
                     }
-
-
-                    obj0['color'] = cursorFightArena.color;
-                    obj0['slots'] = amountUsedSupSlots + '/' + amountMaxSupSlots;
-                    obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountMaxSupSlots;
-                    obj0['xp'] = Math.floor((cursorFightArena.value * (100 + supEpics)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
-                    var myEpic = playerData.findOne({
-                        user: self.username
-                    }, {
-                        fields: {
-                            battlefield: 1
-                        }
-                    }).battlefield.scrItem.benefit;
-                    obj0['xpChange'] = Math.floor((cursorFightArena.value * (100 + supEpics + myEpic)) / 100) + '(' + Math.floor(100 + supEpics) + '%)';
+                    //Diese Switch-Anweisung existiert nur, um den Sprite Sheets gerecht zu werden
+                    //Es wird geprüft, um welchen Farbcode es sich handelt, dieser wird dann in die background-position im Sprite Sheet übersetzt
+                    //Im HTML wird der Wert entsprechend für die background-position eingesetzt
+                    //Diese "Übersetzung" ist notwendig, da der Farbcode an verschiedenen Stellen abgefragt wird und jeweils eine andere 
+                    //background-position nötig ist. (Unterschiedlich große images)
+                    switch (fightArenasColors[i]) {
+                        case "green":
+                            obj0['color'] = "-216px 0px";
+                            break;
+                        case "red":
+                            obj0['color'] = "-0px -0px";
+                            break;
+                        default:
+                            console.log("no color defined for fight arena");
+                    }
+                    obj0['slots'] = amountUsedSupSlots + '/' + amountSupSlots;
+                    obj0['slotsChange'] = (amountUsedSupSlots + 1) + '/' + amountSupSlots;
+                    obj0['xp'] = Math.floor((fightArenasValues[i] * (100 + supEpicsAdded)) / 100) + '(' + Math.floor(100 + supEpicsAdded) + '%)';
+                    obj0['xpChange'] = Math.floor((fightArenasValues[i] * (100 + supEpicsAdded + ownEpic)) / 100) + '(' + Math.floor(100 + supEpicsAdded) + '%)';
                     obj0['timeSpentId'] = 'timerInc_' + i + '_battlefield';
 
                     var obj2 = {};
                     obj2['id'] = obj0['timeSpentId'];
-                    obj2['miliseconds'] = (calculatedServerTime - cursorBattlefield['owns' + i].stamp);
+                    obj2['miliseconds'] = (calculatedServerTime - timeStamps[i]);
                     obj2['notFound'] = 0;
                     obj2['prefix'] = 1;
                     timers.push(obj2);
-                    obj0['timeSpent'] = msToTime((calculatedServerTime - cursorBattlefield['owns' + i].stamp));
+                    obj0['timeSpent'] = msToTime((calculatedServerTime - timeStamps[i]));
+                    obj0['timeOverall'] = '/' + msToTime(fightArenasTimes[i]) + '(' + Math.floor((obj2['miliseconds'] / fightArenasTimes[i]) * 100) + '%)';
 
-                    obj0['timeOverall'] = '/' + msToTime(cursorFightArena.time) + '(' + Math.floor((obj2['miliseconds'] / cursorFightArena.time) * 100) + '%)';
-
-                    if (amountUsedSupSlots == 0) {
-                        obj0['profit'] = Math.floor(cursorFightArena.value) + '(100%)';
-                    } else {
-                        obj0['profit'] = Math.floor(0.5 * (cursorFightArena.value + ((cursorFightArena.value * supEpics) / 100))) + '(50%)';
-                    }
-                    obj0['epicness'] = supEpics + '%';
-                    obj0['epicnessChange'] = (supEpics + myEpic) + '%';
-
-                    obj0['supporter'] = supSlotsMemory;
-
-                    //für den range slider
-                    obj0['slot'] = i;
+                    obj0['epicness'] = supEpicsAdded + '%';
+                    obj0['epicnessChange'] = (supEpicsAdded + ownEpic) + '%';
 
                     //Make Slot scroungeable
                     obj0['goScrounging'] = 'goScroungingBattlefield_' + i;
 
                     obj0['index'] = i;
                     obj0['supporter'] = supSlotsMemory;
-                    var lockCheck = checkScroungeBattlefield(i, self.username, self.cu);
+                    var lockCheck = checkScroungeBattlefield(i, self, currentUser);
                     obj0['lockedMsg'] = lockCheck;
                     if (lockCheck != false) lockCheck = true
                     obj0['locked'] = lockCheck;
@@ -1278,7 +1749,131 @@ if (Meteor.isClient) {
         }
     });
 
+    Template.worldMapPreload.onCreated(function() {
+
+        // console.log('createWorldMapPreStart');
+        //console.time('createWorldMapPre');
+
+        var inst = this;
+        var user = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                cu: 1,
+                username: 1
+            }
+        });
+        var myName = user.username;
+        var currentUser = user.cu;
+        var cursorUser = Meteor.users.findOne({
+            username: currentUser
+        }, {
+            fields: {
+                x: 1,
+                y: 1
+            }
+        });
+
+        inst.autorun(function() {
+
+            var subsWorldMapSize = inst.subscribe('worldMapSize');
+
+            if (subsWorldMapSize.ready()) {
+
+                //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
+                //in diesem Fall ist das nur ein Objekt
+                //workaround, weil Suche über _id nicht funktioniert
+                var maxX = STATUS.findOne({
+                    maxXY: {
+                        $exists: true
+                    }
+                }).maxXY;
+                var maxY = maxX;
+                var orientationX = cursorUser.x;
+                var orientationY = cursorUser.y;
+                var xInformation = [];
+                var yInformation = [];
+                var neededWorldMapFields = {};
+
+                for (var i = 0; i < mapRows; i++) {
+                    for (var j = 0; j < mapColumns; j++) {
+                        xInformation[j] = (orientationX + j) % (maxX + 1);
+                        //without user push empty object
+                    }
+                    yInformation[i] = (orientationY + i) % (maxY + 1);
+                }
+                neededWorldMapFields[0] = xInformation;
+                neededWorldMapFields[1] = yInformation;
+
+                var subsWorldMapPlayerData = inst.subscribe('playerDataForWorldMap', neededWorldMapFields);
+                if (subsWorldMapPlayerData.ready()) {
+                    //console.timeEnd('createWorldMapPre');
+                    // //console.timeEnd("LOGINWP");
+                }
+            }
+        })
+    });
     ///// WORLD MAP /////
+    Template.worldMap.onCreated(function() {
+        //console.time('createWorldMap');
+
+        var inst = this;
+        inst.state = new ReactiveDict();
+        var self = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        inst.autorun(function() {
+
+            var subsSelfM = inst.subscribe('playerDataMine', [self]);
+            var subsSelfB = inst.subscribe('playerDataBattlefield', [self]);
+            if (subsSelfM.ready() && subsSelfB.ready()) {
+                var cursorMyPlayerData = playerData.findOne({
+                    user: self
+                }, {
+                    fields: {
+                        mine: 1,
+                        battlefield: 1
+                    }
+                });
+                if (cursorMyPlayerData) {
+                    //Die Funktionen checkScroungeMine/Battlefield werden aus zwei verschiedenen Templates heraus
+                    //aufgerufen. 
+                    var amountScrSlotsM = cursorMyPlayerData.mine.amountScrSlots;
+                    var amountScrSlotsB = cursorMyPlayerData.battlefield.amountScrSlots;
+                    var ownRate = cursorMyPlayerData.mine.scrItem.benefit;
+                    var ownEpic = cursorMyPlayerData.battlefield.scrItem.benefit;
+                    victimsM = [];
+                    for (i = 0; i < amountScrSlotsM; i++) {
+                        victimsM[i] = cursorMyPlayerData.mine.scrSlots['scrs' + i].victim.name;
+                    }
+                    inst.state.set('victimsM', victimsM);
+                    victimsB = [];
+                    for (i = 0; i < amountScrSlotsB; i++) {
+                        victimsB[i] = cursorMyPlayerData.battlefield.scrSlots['scrs' + i].victim.name;
+                    }
+                    inst.state.set('victimsB', victimsB);
+
+                    //set Data Context for other helpers and connected methods (e.g. checkScroungeMine/Battlefield)
+                    inst.state.set('self', self);
+                    inst.state.set('ownRate', ownRate);
+                    inst.state.set('ownEpic', ownEpic);
+                    inst.state.set('amountScrSlotsM', amountScrSlotsM);
+                    inst.state.set('amountScrSlotsB', amountScrSlotsB);
+                    //console.timeEnd('createWorldMap');
+                    //console.timeEnd("SWITCH TO WORLD MAP");
+                    // console.log('worldMapDict');
+                    // console.log(inst.state);
+                }
+            }
+
+
+        })
+    });
+
     Template.worldMap.helpers({
         worldMapArray: function() {
             return Session.get("worldMapArray");
@@ -1287,11 +1882,10 @@ if (Meteor.isClient) {
 
     Template.worldMap.events({
         'mouseover .worldMapPlayerPlace': function(e, t) {
-            // var element = $(e.currentTarget).attr("id");
-            // $('#preview' + element).css({"visibility" : "visible"});
+            //get Data Context
+            var self = Template.instance().state.get('self');
+
             // get orientation
-
-
             var player = $(e.currentTarget).attr("id");
             if (!player) return
             var obj0 = {};
@@ -1304,35 +1898,27 @@ if (Meteor.isClient) {
                 "bottom": $(e.currentTarget).css("bottom")
             });
             // get db data
-            var myName = Meteor.users.findOne({
-                _id: Meteor.userId()
+            var cursorPlayerData = WorldMapPlayerData.findOne({
+                user: player
             }, {
                 fields: {
-                    username: 1
+                    mine: 1,
+                    battlefield: 1,
                 }
-            }).username;
-            var cursorPlayerData = playerData.findOne({
-                user: player
-            });
-            var cursorMine = mine.findOne({
-                user: player
-            });
-            var cursorBattlefield = battlefield.findOne({
-                user: player
             });
             //Check mine
-            var amountOwnSlots = cursorPlayerData.mine.ownSlots;
+            var amountOwnSlots = cursorPlayerData.mine.amountOwnSlots;
             var trueCount = 0;
             var falseCount = 0;
             var maxCount = 0;
             //Iterate OwnSlots
             for (var i = 0; i < amountOwnSlots; i++) {
-                var matterId = cursorMine['owns' + i].input;
+                var matterId = cursorPlayerData.mine.ownSlots['owns' + i].input;
                 if (matterId > 0) {
                     maxCount++;
                     trueCount++;
                     //check all circumstances
-                    var checkResult = checkScroungeMine(i, myName, player);
+                    var checkResult = checkScroungeMine(i, self, player);
                     //cannot be "==true": has to be !=false
                     if (checkResult != false) falseCount++;
                 }
@@ -1344,23 +1930,23 @@ if (Meteor.isClient) {
             } else {
                 obj0['mineResult'] = true;
             }
-            if (maxCount == 0 && myName != player) {
+            if (maxCount == 0 && self != player) {
                 obj0['mineInactive'] = true;
             }
-
+            //WWW
             //Check battlefield
-            var amountOwnSlots = cursorPlayerData.battlefield.ownSlots;
+            var amountOwnSlots = cursorPlayerData.battlefield.amountOwnSlots;
             var trueCount = 0;
             var falseCount = 0;
             var maxCount = 0;
             //Iterate OwnSlots
             for (var i = 0; i < amountOwnSlots; i++) {
-                var fightId = cursorBattlefield['owns' + i].input;
+                var fightId = cursorPlayerData.battlefield.ownSlots['owns' + i].input;
                 if (fightId > 0) {
                     maxCount++;
                     trueCount++;
                     //check all circumstances
-                    var checkResult = checkScroungeBattlefield(i, myName, player);
+                    var checkResult = checkScroungeBattlefield(i, self, player);
                     //cannot be "==true": has to be !=false
                     if (checkResult != false) falseCount++;
                 }
@@ -1372,10 +1958,9 @@ if (Meteor.isClient) {
             } else {
                 obj0['battlefieldResult'] = true;
             }
-            if (maxCount == 0 && myName != player) {
+            if (maxCount == 0 && self != player) {
                 obj0['battlefieldInactive'] = true;
             }
-            // update session variab
             Session.set("worldMapPreview", obj0);
 
             $("#scroungePreviewWrapper").css({
@@ -1396,6 +1981,20 @@ if (Meteor.isClient) {
             navigateWorldMap($(e.currentTarget).attr("id"));
         },
 
+        'click .worldMapPlayerPlace': function(e, t) {
+            if (e.currentTarget.id != '') {
+                var current = e.currentTarget.id;
+                Meteor.users.update({
+                    _id: Meteor.userId()
+                }, {
+                    $set: {
+                        cu: current
+                    }
+                });
+                renderActiveMiddle();
+            }
+        },
+
         'click .worldMapScroungePreview': function(e, t) {
             if (e.currentTarget.id != '') {
                 var current = (e.currentTarget.id).substring(7);;
@@ -1411,28 +2010,53 @@ if (Meteor.isClient) {
         }
 
     });
-
     ///// SCROUNGE PREVIEW /////
+    Template.scroungePreview.onCreated(function() {
+        // console.log('createScroungePreviewStart');
+        //console.time('createScroungePreview');
+
+        var inst = this;
+        var neededWorldMapFields = {};
+        var xInformation = [];
+        var yInformation = [];
+        var worldMapArray = Session.get('worldMapArray');
+        for (i = 0; i < worldMapArray[0].columns.length; i++) {
+            for (j = 0; j < worldMapArray.length; j++) {
+                if (worldMapArray[j].columns[i].playerName != undefined) {
+                    x = worldMapArray[j].columns[i].x;
+                    y = worldMapArray[j].columns[i].y;
+                    if ($.inArray(x, xInformation) == -1) xInformation.push(x);
+                    if ($.inArray(y, yInformation) == -1) yInformation.push(y);
+                }
+            }
+        }
+        neededWorldMapFields[0] = xInformation;
+        neededWorldMapFields[1] = yInformation;
+
+        inst.autorun(function() {
+
+            var subsPlayerDataScroungePreview = inst.subscribe('playerDataForWorldMap', neededWorldMapFields);
+            if (subsPlayerDataScroungePreview.ready()) {
+                //console.timeEnd('createScroungePreview');
+                // //console.timeEnd("SWITCH TO WORLD MAP");
+            }
+        })
+    });
+    //PI
     Template.scroungePreview.helpers({
         previewInfos: function() {
             return Session.get("worldMapPreview");
-        }
+        },
     });
 
     ///// BUY MENU /////
-    Template.buyMenu.helpers({
-        playerData: function() {
-            return playerData.find({});
-        },
-        mineSlots: function() {
-            return mineSlots.find({});
-        }
-    });
 
-    //TODO: noch nicht fertig !
+    //Parts created by Michael Kochanke, 30.08.2014
+    //TODO: RangeSlider(?!) noch nicht fertig !
     Template.buyMenu.events({
         'click #buyMenuYes': function(e, t) {
-
+            //console.time("BUYRESOURCE");
+            //console.time("S1");
             var menu = Meteor.users.findOne({
                 _id: Meteor.userId()
             }, {
@@ -1440,6 +2064,7 @@ if (Meteor.isClient) {
                     menu: 1,
                 }
             }).menu;
+            //console.timeEnd("S1");
 
             // Werte des Range Sliders
             var slider_range = $('#range_slider_Buy_Menu').slider("option", "values");
@@ -1453,6 +2078,7 @@ if (Meteor.isClient) {
                     if (result) {
                         infoLog(result);
                         showInfoTextAnimation(result);
+                        //console.timeEnd("BUYRESOURCE");
                     }
                 });
             }
@@ -1469,7 +2095,6 @@ if (Meteor.isClient) {
             }
             $('#buyMenuWrapper').fadeOut();
             $('#background_fade').fadeOut();
-
         },
 
         'click #buyMenuNo': function(e, t) {
@@ -1480,32 +2105,57 @@ if (Meteor.isClient) {
     });
 
     ///// STANDARD BORDER /////
+    Template.standardBorder.onCreated(function() {
+
+        // console.log('createBorderStart');
+        //console.time('createBorder');
+
+        var inst = this;
+
+        inst.autorun(function() {
+            var subsResourcesBorder = inst.subscribe('resources');
+            if (subsResourcesBorder.ready()) {
+                //console.timeEnd("LOGINSB");
+                //console.timeEnd('createBorder');
+            }
+        })
+    });
+
     Template.standardBorder.helpers({
         resources: function() {
             var arrayHelper = resources.find({}).fetch();
-            // console.log(arrayHelper[0]);
             arrayHelper[0].values.green.matter = Math.floor(arrayHelper[0].values.green.matter);
             return arrayHelper;
         },
 
-        worldMapFields: function()  {
-            return worldMapFields.find({});
-        }
+        // worldMapFields: function()  {
+        //     return worldMapFields.find({});
+        // }
     });
 
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-
+            // console.log('Bots are generating!');
+            // This methodes activates l-k bots with the names from l to k
+            // createBots(1, 1000);
+            // This methodes activates n bots to simulate user actions
+            // actionBots(5);
         },
 
         'click #testButton2': function(e, t) {
+            // logRenders();
+            Meteor.call('singleUpdate');
+        },
 
-            logRenders();
-
+        'click #testButton3': function(e, t) {
+            //param: interval in seconds
+            Meteor.call('updateLoop', 25);
         },
 
         'click .category_1': function(e, t) {
+            //console.time("SWITCH CATEGORY3");
+            //console.time("SWITCH CATEGORY4");
             switch_category($(e.target), 100, function() {
                 Meteor.users.update({
                     _id: Meteor.userId()
@@ -1518,6 +2168,8 @@ if (Meteor.isClient) {
         },
 
         'click .category_3': function(e, t) {
+            //console.time("SWITCH CATEGORY3");
+            //console.time("SWITCH CATEGORY4");
             switch_category($(e.target), 100, function() {
                 Meteor.users.update({
                     _id: Meteor.userId()
@@ -1574,14 +2226,15 @@ if (Meteor.isClient) {
                             cu: Session.get("lastPlayer")
                         }
                     });
+                } else {
+                    switchToWorldMap();
                 }
-                // else {
-                //     switchToWorldMap();
-                // }
             }
+            // console.log("SWITCH MODE");
         }
     });
 
+    //Created by Michael Kochanke, 30.08.2014
     Template.masterLayout.events({
         'mousedown img': function(e, t) {
             return false;
@@ -1702,24 +2355,28 @@ if (Meteor.isClient) {
         //To-DO Media Queries in 3 CSS files aufteilen und je nach Query nutzen
         //      Evtl. SpriteSheets anlegen im 4er Block und abhängig von der Größe benutzen
         'mouseover .hover': function(e, t) {
-            //console.log(e.target);
-            var pos = $(e.target).css("background-position");
-            var size = $(e.target).css("padding");
-            var bImage = $(e.target).css("background-image");
-            var bImageHover = bImage.replace(".png", "_hover.png");
-            $(e.target).css({
-                "background-image": bImageHover
-            });
+            var pos = $(e.currentTarget).css("background-position");
+
+            //Get only the className which is responsible for the background-Image to manipulate its background-position
+            //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
+            var className = e.currentTarget.className;
+            var temp1 = className.indexOf("SS");
+            var classNameSub = className.substr(temp1);
+            var temp2 = classNameSub.indexOf(" ");
+            var classToBeChanged = "." + classNameSub.substr(0, temp2);
+            moveSpriteSheetBackground(pos, classToBeChanged);
         },
         'mouseout .hover': function(e, t) {
-            //console.log(e.target);
-            var pos = $(e.target).css("background-position");
-            var size = $(e.target).css("padding");
-            var bImageHover = $(e.target).css("background-image");
-            var bImage = bImageHover.replace("_hover.png", ".png");
-            $(e.target).css({
-                "background-image": bImage
-            });
+            var pos = $(e.currentTarget).css("background-position");
+
+            //Get only the className which is responsible for the background-Image to manipulate its background-position
+            //Kennzeichen: "SS" (SpriteSheet) im Klassennamen
+            var className = e.currentTarget.className;
+            var temp1 = className.indexOf("SS");
+            var classNameSub = className.substr(temp1);
+            var temp2 = classNameSub.indexOf(" ");
+            var classToBeChanged = "." + classNameSub.substr(0, temp2);
+            moveSpriteSheetBackground(pos, classToBeChanged);
         },
         'click .scrounge_now': function(e, t) {
             switchToWorldMap();
@@ -1729,8 +2386,7 @@ if (Meteor.isClient) {
             // if ($(e.target).src().length() == 1) {
             //     console.log('blub');
             // }
-
-            if ($(e.target).parent().attr("class").search("goScroungingIcon") == -1) {
+            if ($(e.target).attr("class").search("goScroungingIcon") == -1) {
 
                 if ($(e.currentTarget).children().eq(1).filter(':not(:animated)').length == 1) { //das 2te child element (der advanced div) wird auf laufende animationen geprüft
 
@@ -1778,87 +2434,6 @@ if (Meteor.isClient) {
         }
     });
 
-    // Template.characterView.rendered = function() {
-    // }
-
-    /*
-        Events Frame-Buttons + Hover
-
-        // 'mouseover #scrounge': function(e, t) {
-
-        //     var pos = $('#scrounge').css("background-position");
-        //     var size = $('#scrounge').css("padding");
-        //     //console.log(pos);
-        //     //console.log(size);
-
-        //     /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
-    //     switch (size) {
-
-    //         case "76px":
-
-    //             $('#scrounge').css({
-    //                 "background-position": "0px -153px"
-    //             });
-    //             break;
-
-    //         case "51px":
-
-    //             $('#scrounge').css({
-    //                 "background-position": "0px -103px"
-    //             });
-    //             break;
-
-    //         case "40px":
-
-    //             $('#scrounge').css({
-    //                 "background-position": "0px -80px"
-    //             });
-    //             break;
-
-    //         default:
-
-    //             console.log("something's wrong...");
-    //     }
-    // },
-
-    // 'mouseout #scrounge': function(e, t) {
-
-    //     var pos = $('#scrounge').css("background-position");
-    //     var size = $('#scrounge').css("padding");
-    //     //console.log(pos);
-    //     //console.log(size);
-
-    //     /*Umsetzung der media queries in javascript, Abfrage über die Größe des Elements, muss noch für alle anderen Elemente übernommen werden*/
-    //     switch (size) {
-
-    //         case "76px":
-
-    //             $('#scrounge').css({
-    //                 "background-position": "0px 0px"
-    //             });
-    //             break;
-
-    //         case "51px":
-
-    //             $('#scrounge').css({
-    //                 "background-position": "0px 0px"
-    //             });
-    //             break;
-
-    //         case "40px":
-
-    //             $('#scrounge').css({
-    //                 "background-position": "0px 0px"
-    //             });
-    //             break;
-
-    //         default:
-
-    //             console.log("something's wrong...");
-    //     }
-    // }
-    // });
-
     var time = 1200; //Animationszeit in ms
     var current_category = 1; //Start Kategorie
     var max_cat = 6; //Anzahl Kategorien
@@ -1873,9 +2448,8 @@ if (Meteor.isClient) {
     var posY = 0;
 
 
-
+    //Created by Michael Kochanke, 30.08.2014
     // WorldMap Steuerung per Pfeiltasten
-
     (function($) {
 
         // Workaround für den Firefox zum Scrollen mit Mausrad
@@ -1928,7 +2502,7 @@ if (Meteor.isClient) {
 
     })(jQuery);
 
-
+    //Created by Michael Kochanke, 30.08.2014
     $(window).bind('mousewheel DOMMouseScroll', function(event) {
         if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
             var direction = "back";
@@ -1955,7 +2529,9 @@ if (Meteor.isClient) {
         }
     });
 
-    function slide(element) //abfrage welches ID gehovert wurde und umsetzung des richtigen slides
+    //Created by Michael Kochanke, 30.08.2014
+
+    function slide(element) //abfrage welche ID gehovert wurde und umsetzung des richtigen slides
     {
         switch (element.attr("id")) {
             case 'category_left':
@@ -2005,12 +2581,17 @@ if (Meteor.isClient) {
                 slide_start("forth", "vertical", 100, 400, "#inventory_stolen");
                 break;
             default:
-                console.log("Slide für diesen Hover nicht definiert !");
+                console.log("Slide für " + element.attr("id") + " nicht definiert !");
                 break;
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function switch_category(clicked_obj, speed, callback) {
+        //console.time("SWITCH CATEGORY1");
+        //console.time("SWITCH CATEGORY2");
+        // console.log("SWITCH CATEGORY");
 
         if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
 
@@ -2116,6 +2697,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function slide_category(direction, speed, delay_factor) {
 
         if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
@@ -2166,6 +2749,8 @@ if (Meteor.isClient) {
 
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function scroll_content(direction, orientation, pixel, content_div) {
 
         var css_direction;
@@ -2211,6 +2796,8 @@ if (Meteor.isClient) {
             }
         }
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function slide_start(direction, orientation, pixel, speed, content_div) {
         //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " content_div: " + content_div);
@@ -2269,6 +2856,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function init_draggable() {
         $(".draggable").draggable({
             addClasses: false,
@@ -2278,14 +2867,16 @@ if (Meteor.isClient) {
             containment: "window",
             start: function(event, ui) {
                 $(this).hide();
-                $("#scrounge_item_slot_" + $(this).attr("class").substr(49)).addClass("proper_droppable_slot");
+                $("#scrounge_item_slot_" + $(this).attr("class").substr(54)).addClass("proper_droppable_slot");
             },
             stop: function() {
                 $(this).show();
-                $("#scrounge_item_slot_" + $(this).attr("class").substr(49)).removeClass("proper_droppable_slot");
+                $("#scrounge_item_slot_" + $(this).attr("class").substr(54)).removeClass("proper_droppable_slot");
             }
         });
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function init_droppable() {
         $(".droppable").droppable({
@@ -2304,6 +2895,8 @@ if (Meteor.isClient) {
         });
         Session.set("init_bool", false);
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function character_view_droppable() {
         for (var x = 1; x <= 6; x++) {
@@ -2325,6 +2918,8 @@ if (Meteor.isClient) {
             });
         }
     }
+
+    //Created by Michael Kochanke, 30.08.2014
     // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
 
     function fade_In_and_Out(element, slot, state) {
@@ -2359,6 +2954,8 @@ if (Meteor.isClient) {
         }
 
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function range_slider(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl) {
         //console.log('slot: ' + slot + ' min_ctrl: ' + min_ctrl + ' max_ctrl: ' + max_ctrl + ' lower_ctrl: ' + lower_ctrl + ' higher_ctrl: ' + higher_ctrl);
@@ -2410,6 +3007,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, handle) {
         var ctrl_range = max_ctrl - min_ctrl,
             slider_threshold = ctrl_range * 0.1,
@@ -2449,6 +3048,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function slide_stop() {
         stop_bool = true;
         clearInterval(interval);
@@ -2456,33 +3057,7 @@ if (Meteor.isClient) {
 
     var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"];
 
-    // function update_current_category(direction, category_offset) {
-    //     for (var x = 0; x < category_offset; x++) {
-    //         if (direction == "left") {
-    //             current_category--;
-    //         } else if (direction == "right") {
-    //             current_category++;
-    //         }
-
-    //         if (current_category == 0 && direction == "left") {
-    //             current_category = max_cat;
-    //         } else if (current_category == (max_cat + 1) && direction == "right") {
-    //             current_category = 1;
-    //         }
-    //     }
-
-    //     if (current_category == 1 || current_category == 3) {
-    //         Meteor.users.update({
-    //             _id: Meteor.userId()
-    //         }, {
-    //             $set: {
-    //                 menu: category_names[current_category - 1]
-    //             }
-    //         });
-    //     }
-    //     console.log('updated: ' + current_category + "category: " + category_names[current_category - 1]);
-    // }
-
+    //Created by Michael Kochanke, 30.08.2014
     $(window).resize(function() {
         if ($(window).width() < 1920 && current_resolution != "<1920" && $("#loginWrapper").length == 0) {
             current_resolution = "<1920";
@@ -2517,6 +3092,7 @@ if (Meteor.isClient) {
         }
     });
 
+    //Created by Michael Kochanke, 30.08.2014
     //Changes array to unique array with distinct values
 
     function distinct(array) {
@@ -2526,8 +3102,6 @@ if (Meteor.isClient) {
         return uniqueArray
     }
 
-    /*Farbe vorübergehend hardcoded*/
-
     function showInfoTextAnimation(text) {
 
         var textForAnimation = text.substring(1);
@@ -2536,16 +3110,15 @@ if (Meteor.isClient) {
         textAnimation.innerHTML = textForAnimation;
         textAnimation.style.color = checkColorCode(text);
         textAnimation.id = "textAnimation";
+        textAnimation.className = "hammersmith";
         textAnimationWrapper.id = "textAnimationWrapper";
         textAnimationWrapper.className = "div_center_vertical";
 
-
-        if (document.getElementById("mitte")) document.getElementById("mitte").appendChild(textAnimationWrapper);
+        if (document.getElementById("oben")) document.getElementById("oben").appendChild(textAnimationWrapper);
         if (document.getElementById("textAnimationWrapper")) document.getElementById("textAnimationWrapper").appendChild(textAnimation);
-
         setTimeout(function() {
-            if (document.getElementById("textAnimationWrapper")) document.getElementById("mitte").removeChild(document.getElementById("textAnimationWrapper"))
-        }, 2000);
+            if (document.getElementById("textAnimationWrapper")) document.getElementById("oben").removeChild(document.getElementById("textAnimationWrapper"))
+        }, 1000);
     }
 
     function checkColorCode(infoLogText) {
@@ -2580,8 +3153,6 @@ if (Meteor.isClient) {
         return color;
     }
 
-    /*Farbe vorübergehend hardcoded*/
-
     function infoLog(text) {
 
         var logInput = text.substring(1);
@@ -2593,34 +3164,26 @@ if (Meteor.isClient) {
 
     }
 
-
     //returns true if locked
 
     function checkScroungeMine(slotId, myName, currentUser) {
+
+        //get Data Context
+        var self = Template.instance().state.get('self');
+        var ownRate = Template.instance().state.get('ownRate');
+        var amountScrSlots = Template.instance().state.get('amountScrSlotsM');
+        var victims = Template.instance().state.get('victimsM');
+
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
-        if (currentUser == myName) {
+        // if (currentUser == myName) {
+        if (currentUser == self) {
             return 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
         }
-        var cursorMyPlayerData = playerData.findOne({
-            user: myName
-        }, {
-            fields: {
-                mine: 1
-            }
-        });
-        var amountScrSlots = cursorMyPlayerData.mine.scrSlots;
-        var cursorMineScrounger = mine.findOne({
-            user: myName
-        });
-        for (i = 0; i < amountScrSlots; i++) {
-            if (cursorMineScrounger['scrs' + i].victim == currentUser) {
-                return 'You cannot scrounge here: You already scrounge this user!';
-            }
-        }
-        //CHECK FREE SCRSLOTS OF SCROUNGER DATA
         var resultScrounger = -1;
         for (i = 0; i < amountScrSlots; i++) {
-            if (cursorMineScrounger['scrs' + i].victim == "") {
+            if (victims[i] == currentUser) {
+                return 'You cannot scrounge here: You already scrounge this user!';
+            } else if (victims[i] == "") {
                 resultScrounger = i;
                 break;
             }
@@ -2629,64 +3192,52 @@ if (Meteor.isClient) {
             return 'You cannot scrounge here: Your Scrounge slots are all in use!';
         }
         //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
-        var obj0 = {};
-        obj0['owns' + slotId] = 1;
-        var cursorMineOwner = mine.findOne({
-            user: currentUser
-        }, {
-            fields: obj0
-        });
         //Get free SupSlots index
-        var amountSupSlots = playerData.findOne({
+        cursorPlayerDataCu = WorldMapPlayerData.findOne({
             user: currentUser
         }, {
             fields: {
                 mine: 1
             }
-        }).mine.supSlots;
+        }).mine;
+        var amountSupSlots = cursorPlayerDataCu.amountSupSlots;
+        var chosenScroungeSlot = cursorPlayerDataCu.ownSlots['owns' + slotId];
+
         var resultOwner = -1;
         for (i = 0; i < amountSupSlots; i++) {
-            if (cursorMineOwner['owns' + slotId]['sup' + i] == "") {
+            if (chosenScroungeSlot['sup' + i].name == "") {
                 resultOwner = i;
                 break;
             }
         }
         //LAST CHECK: RANGE SLIDER
-        if (!(cursorMineOwner['owns' + slotId].control.min <= cursorMyPlayerData.mine.scrItem.benefit && cursorMyPlayerData.mine.scrItem.benefit <= cursorMineOwner['owns' + slotId].control.max)) {
+        if (!(chosenScroungeSlot.control.min <= ownRate && ownRate <= chosenScroungeSlot.control.max)) {
             return 'You cannot scrounge here: You do not have the right miningrate!';
         }
         //SupSlot with id result is free and correct: update it ?
         if (resultOwner == -1) {
-            return 'You cannot scrounge here: The owners support slots are all full!';
+            return 'You cannot scrounge here: The owners support slots are all used!';
         }
         return false;
     }
 
     function checkScroungeBattlefield(slotId, myName, currentUser) {
+
+        //get Data Context
+        var self = Template.instance().state.get('self');
+        var ownEpic = Template.instance().state.get('ownEpic');
+        var amountScrSlots = Template.instance().state.get('amountScrSlotsB');
+        var victims = Template.instance().state.get('victimsB');
+
         //CHECK IF YOU ARE TRYING TO SCROUNGE YOURSELF OR TARGET IS ALLRDY SCROUNGED
-        if (currentUser == myName) {
+        if (currentUser == self) {
             return 'You cannot scrounge here: You are trying to scrounge yourself! How stupid is that? ô.O';
         }
-        var cursorMyPlayerData = playerData.findOne({
-            user: myName
-        }, {
-            fields: {
-                battlefield: 1
-            }
-        });
-        var amountScrSlots = cursorMyPlayerData.battlefield.scrSlots;
-        var cursorBattlefieldScrounger = battlefield.findOne({
-            user: myName
-        });
-        for (i = 0; i < amountScrSlots; i++) {
-            if (cursorBattlefieldScrounger['scrs' + i].victim == currentUser) {
-                return 'You cannot scrounge here: You already scrounge this user!';
-            }
-        }
-        //CHECK FREE SCRSLOTS OF SCROUNGER DATA
         var resultScrounger = -1;
         for (i = 0; i < amountScrSlots; i++) {
-            if (cursorBattlefieldScrounger['scrs' + i].victim == "") {
+            if (victims[i] == currentUser) {
+                return 'You cannot scrounge here: You already scrounge this user!';
+            } else if (victims[i] == "") {
                 resultScrounger = i;
                 break;
             }
@@ -2695,40 +3246,36 @@ if (Meteor.isClient) {
             return 'You cannot scrounge here: Your Scrounge slots are all in use!';
         }
         //CHECK FREE SUPSLOTS OF CURRENT USER DATA                
-        var obj0 = {};
-        obj0['owns' + slotId] = 1;
-        var cursorBattlefieldOwner = battlefield.findOne({
-            user: currentUser
-        }, {
-            fields: obj0
-        });
         //Get free SupSlots index
-        var amountSupSlots = playerData.findOne({
+        cursorPlayerDataCu = WorldMapPlayerData.findOne({
             user: currentUser
         }, {
             fields: {
                 battlefield: 1
             }
-        }).battlefield.supSlots;
+        });
+        var amountSupSlots = cursorPlayerDataCu.battlefield.amountSupSlots;
+        var chosenScroungeSlot = cursorPlayerDataCu.battlefield.ownSlots['owns' + slotId];
         var resultOwner = -1;
         for (i = 0; i < amountSupSlots; i++) {
-            if (cursorBattlefieldOwner['owns' + slotId]['sup' + i] == "") {
+            if (chosenScroungeSlot['sup' + i].name == "") {
                 resultOwner = i;
                 break;
             }
         }
         //LAST CHECK: RANGE SLIDER
-        if (!(cursorBattlefieldOwner['owns' + slotId].control.min <= cursorMyPlayerData.battlefield.scrItem.benefit && cursorMyPlayerData.battlefield.scrItem.benefit <= cursorBattlefieldOwner['owns' + slotId].control.max)) {
+        if (!(chosenScroungeSlot.control.min <= ownEpic && ownEpic <= chosenScroungeSlot.control.max)) {
             return 'You cannot scrounge here: You do not have the right epicness!';
         }
         //SupSlot with id result is free and correct: update it ?
         if (resultOwner == -1) {
-            return 'You cannot scrounge here: The owners support slots are all full!';
+            return 'You cannot scrounge here: The owners support slots are all used!';
         }
         return false;
     }
 
     function renderActiveMiddle() {
+        // console.log('renderActiveMiddle');
         var self = Meteor.users.findOne({
             _id: Meteor.userId()
         }, {
@@ -2753,6 +3300,9 @@ if (Meteor.isClient) {
     }
 
     function switchToWorldMap() {
+        //console.time("SWITCH TO WORLD MAP");
+        //console.time("SWITCH TO WORLD MAP2");
+        // console.log("SWITCH TO WORLD MAP");
         Router.current().render('worldMap', {
             to: 'middle'
         });
@@ -2773,66 +3323,120 @@ if (Meteor.isClient) {
                     y: 1
                 }
             });
-            //get max map size
-            var maxX = worldMapFields.find({}, {
-                fields: {
-                    x: 1
-                },
-                sort: {
-                    x: -1
+            //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
+            //in diesem Fall ist das nur ein Objekt
+            //workaround, weil Suche über _id nicht funktioniert
+            var maxX = parseInt(STATUS.findOne({
+                maxXY: {
+                    $exists: true
                 }
-            }).fetch()[0].x;
-            var maxY = worldMapFields.find({}, {
-                fields: {
-                    y: 1
-                },
-                sort: {
-                    y: -1
-                }
-            }).fetch()[0].y;
+            }).maxXY);
+            //Für den Fall, dass die Map symmetrisch ist, sind maxY und maxX identisch
+            //wird im Weiteren getrennt behandelt, damit das flexibel bleibt und bei
+            //Bedarf geändert werden kann
+            var maxY = maxX;
             initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
         }
     }
 
     function navigateWorldMap(direction) {
-
+        // //console.time("NAVIGATE WORLD MAP");
         //get max map size
-        var maxX = worldMapFields.find({}, {
-            fields: {
-                x: 1
-            },
-            sort: {
-                x: -1
+        var maxX = parseInt(STATUS.findOne({
+            maxXY: {
+                $exists: true
             }
-        }).fetch()[0].x;
-        var maxY = worldMapFields.find({}, {
-            fields: {
-                y: 1
-            },
-            sort: {
-                y: -1
-            }
-        }).fetch()[0].y;
+        }).maxXY);
+        var maxY = maxX;
         switch (direction) {
             case "worldMapGoUp":
+                //Scheint zu funktionieren
+                //Die subscriptions müssen irgendwie noch händisch wieder gestoppt werden
+                //eventuell?! Prüfen!
+                var neededWorldMapFields = {};
+                var xNewColumn = [];
+                var yNewColumn = [];
+                yNewColumn[0] = worldMapArray[5].columns[0].y + 1;
+                if (yNewColumn[0] > maxY) yNewColumn[0] = 0;
+                var currentLeftx = worldMapArray[5].columns[0].x;
                 var yValue = worldMapArray[0].columns[0].y + 1;
-                if (yValue > maxY) yValue = 0
-                initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
+                for (var i = 0; i < mapColumns; i++) {
+                    xNewColumn[i] = currentLeftx;
+                    currentLeftx++;
+                }
+                neededWorldMapFields[0] = xNewColumn;
+                neededWorldMapFields[1] = yNewColumn;
+                //subscribed die client only collection, die Daten aus der playerData enthält, aber nur solche, die
+                //für die worldMap relevant sind (vorher "worldMapPlayerData")
+                Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
+                    if (yValue > maxY) yValue = 0
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
+                });
                 break;
             case "worldMapGoDown":
+                var neededWorldMapFields = {};
+                var xNewColumn = [];
+                var yNewColumn = [];
+                yNewColumn[0] = worldMapArray[0].columns[0].y - 1;
+                if (yNewColumn[0] < 0) yNewColumn[0] = maxY;
+                var currentLeftx = worldMapArray[5].columns[0].x;
                 var yValue = worldMapArray[0].columns[0].y - 1;
-                if (yValue < 0) yValue = maxY
-                initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
+                for (var i = 0; i < mapColumns; i++) {
+                    xNewColumn[i] = currentLeftx;
+                    currentLeftx++;
+                }
+                neededWorldMapFields[0] = xNewColumn;
+                neededWorldMapFields[1] = yNewColumn;
+                //get user data for new worldMap fields from database
+                Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
+                    if (yValue < 0) yValue = maxY
+                    initWorldMapArray(worldMapArray[0].columns[0].x, yValue, maxX, maxY);
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
+                });
                 break;
             case "worldMapGoRight":
+                //console.log(worldMapArray);
+                var neededWorldMapFields = {};
+                var xNewColumn = [];
+                var yNewColumn = [];
+                xNewColumn[0] = worldMapArray[0].columns[7].x + 1;
+                if (xNewColumn[0] > maxX) xNewColumn[0] = 0;
+                var currentbottomy = worldMapArray[0].columns[0].y;
                 var xValue = worldMapArray[0].columns[0].x + 1;
-                if (xValue > maxX) xValue = 0
-                initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
+                for (var i = 0; i < mapRows; i++) {
+                    yNewColumn[i] = currentbottomy;
+                    currentbottomy++;
+                }
+                neededWorldMapFields[0] = xNewColumn;
+                neededWorldMapFields[1] = yNewColumn;
+                //get user data for new worldMap fields from database
+                Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
+                    if (xValue > maxX) xValue = 0
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
+                });
                 break;
             case "worldMapGoLeft":
+                var neededWorldMapFields = {};
+                var xNewColumn = [];
+                var yNewColumn = [];
+                xNewColumn[0] = worldMapArray[0].columns[0].x - 1;
+                if (xNewColumn[0] < 0) xNewColumn[0] = maxX;
+                var currentbottomy = worldMapArray[0].columns[0].y;
                 var xValue = worldMapArray[0].columns[0].x - 1;
-                if (xValue < 0) xValue = maxX
-                initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
+                for (var i = 0; i < mapRows; i++) {
+                    yNewColumn[i] = currentbottomy;
+                    currentbottomy++;
+                }
+                neededWorldMapFields[0] = xNewColumn;
+                neededWorldMapFields[1] = yNewColumn;
+                //get user data for new worldMap fields from database
+                Meteor.subscribe("playerDataForWorldMap", neededWorldMapFields, function() {
+                    if (xValue < 0) xValue = maxX
+                    initWorldMapArray(xValue, worldMapArray[0].columns[0].y, maxX, maxY);
+                    // //console.timeEnd("NAVIGATE WORLD MAP");
+                });
                 break;
             default:
                 console.log('default case: worldMapNavigators');
@@ -2841,9 +3445,80 @@ if (Meteor.isClient) {
         Session.set("worldMapArray", worldMapArray);
     }
 
+    var worldMapArray = new Array();
+
+    function initWorldMapArray(orientationX, orientationY, maxX, maxY) {
+        //reset array
+        worldMapArray.length = 0;
+        //go all rows
+        for (var i = 0; i < mapRows; i++) {
+            worldMapArray.push(createRowObject(orientationX, orientationY, maxX, maxY, i));
+        }
+        // //console.timeEnd('SWITCH TO WORLD MAP2');
+        Session.set("worldMapArray", worldMapArray);
+    }
+
+    function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
+        var row = {};
+        var column = new Array();
+        var myName = Meteor.users.findOne({
+            _id: Meteor.userId()
+        }, {
+            fields: {
+                username: 1
+            }
+        }).username;
+        //go all columns
+        for (var j = 0; j < mapColumns; j++) {
+            //if coordinates are bigger than map max: get new data with modulo for infinite map size
+            //benutzt die client only collection, die Daten aus der playerData enthält, aber nur solche, die
+            //für die worldMap relevant sind
+            var cursorUser = WorldMapPlayerData.findOne({
+                x: (orientationX + j) % (maxX + 1),
+                y: (orientationY + rowNo) % (maxY + 1)
+            }, {
+                fields: {
+                    user: 1,
+                    level: 1,
+                    backgroundId: 1
+                }
+            });
+            //nicht alle worldMap Positionen haben einen Spieler. In diesem Fall ist cursorUser undefined.
+            var infoMemory = {};
+            //without user push empty object
+            if (cursorUser != null) {
+                var user = cursorUser.user;
+                var playerLevel = cursorUser.level;
+                var backgroundNumber = cursorUser.backgroundId;
+                infoMemory['playerLevel'] = playerLevel;
+                infoMemory['playerImage'] = "worldMapPlayerImage";
+                if (playerLevel < 10) {
+                    infoMemory['playerImageId'] = "-640px -138px";
+                    if (myName == user) infoMemory['playerImageId'] = "-560px -138px";
+                } else {
+                    infoMemory['playerImageId'] = "-720px -138px";
+                    if (myName == user) infoMemory['playerImageId'] = "-800px -138px";
+                }
+                infoMemory['playerName'] = user;
+                infoMemory['backgroundNumber'] = backgroundNumber;
+            } else  {
+                infoMemory['backgroundNumber'] = 0;
+            }
+            infoMemory['x'] = (orientationX + j) % (maxX + 1);
+            infoMemory['y'] = (orientationY + rowNo) % (maxY + 1);
+            infoMemory['left'] = j * 300;
+            infoMemory['bottom'] = rowNo * 250;
+            column.push(infoMemory);
+        }
+        row['columns'] = column;
+        return row;
+    }
+
     var deps_count = 0;
 
+    //Created by Michael Kochanke, 30.08.2014
     Deps.autorun(function() {
+        //DEPS AUTORUN FOR RANGE SLIDER
         var init = Session.get("init");
         // console.log("count: " + deps_count);
         if (deps_count == 1) {
@@ -2912,11 +3587,9 @@ if (Meteor.isClient) {
                     var cursorPlayerData = playerData.findOne({
                         user: name
                     });
-                    var input = mine.findOne({
-                        user: name
-                    });
-                    amountSlots = cursorPlayerData.mine.ownSlots;
-                    amountScroungeSlots = cursorPlayerData.mine.srcSlots;
+                    var input = cursorPlayerData.mine.ownSlots;
+                    amountSlots = cursorPlayerData.mine.amountOwnSlots;
+                    amountScroungeSlots = cursorPlayerData.mine.amountSrcSlots;
                     minControl = cursorPlayerData.mine.minControl;
                     maxControl = cursorPlayerData.mine.maxControl;
                     break;
@@ -2927,10 +3600,8 @@ if (Meteor.isClient) {
                     var cursorPlayerData = playerData.findOne({
                         user: name
                     });
-                    var input = mine.findOne({
-                        user: name
-                    });
-                    amountSlots = cursorPlayerData.mine.ownSlots;
+                    var input = cursorPlayerData.mine.ownSlots;
+                    amountSlots = cursorPlayerData.mine.amountOwnSlots;
                     amountScroungeSlots = 0;
                     minControl = cursorPlayerData.mine.minControl;
                     maxControl = cursorPlayerData.mine.maxControl;
@@ -2942,11 +3613,9 @@ if (Meteor.isClient) {
                     var cursorPlayerData = playerData.findOne({
                         user: name
                     });
-                    var input = battlefield.findOne({
-                        user: name
-                    });
-                    amountSlots = cursorPlayerData.battlefield.ownSlots;
-                    amountScroungeSlots = cursorPlayerData.battlefield.srcSlots;
+                    var input = cursorPlayerData.battlefield.ownSlots;
+                    amountSlots = cursorPlayerData.battlefield.amountOwnSlots;
+                    amountScroungeSlots = cursorPlayerData.battlefield.amountSrcSlots;
                     minControl = cursorPlayerData.battlefield.minControl;
                     maxControl = cursorPlayerData.battlefield.maxControl;
                     break;
@@ -2957,10 +3626,8 @@ if (Meteor.isClient) {
                     var cursorPlayerData = playerData.findOne({
                         user: name
                     });
-                    var input = battlefield.findOne({
-                        user: name
-                    });
-                    amountSlots = cursorPlayerData.battlefield.ownSlots;
+                    var input = cursorPlayerData.battlefield.ownSlots;
+                    amountSlots = cursorPlayerData.battlefield.amountOwnSlots;
                     amountScroungeSlots = 0;
                     minControl = cursorPlayerData.battlefield.minControl;
                     maxControl = cursorPlayerData.battlefield.maxControl;
@@ -2986,152 +3653,19 @@ if (Meteor.isClient) {
             character_view_droppable();
             Session.set("middle", "");
         }
-
         deps_count++;
     });
 
-    var worldMapArray = new Array();
-
-    function initWorldMapArray(orientationX, orientationY, maxX, maxY) {
-        //reset array
-        worldMapArray.length = 0;
-        //go all rows
-        for (var i = 0; i < mapRows; i++) {
-            worldMapArray.push(createRowObject(orientationX, orientationY, maxX, maxY, i));
-        }
-        Session.set("worldMapArray", worldMapArray);
-    }
-
-    function createRowObject(orientationX, orientationY, maxX, maxY, rowNo) {
-        var row = {};
-        var column = new Array();
-        var myName = Meteor.users.findOne({
-            _id: Meteor.userId()
-        }, {
-            fields: {
-                username: 1
-            }
-        }).username;
-        //go all columns
-        for (var j = 0; j < mapColumns; j++) {
-            //if coordinates are bigger than map max: get new data with modulo for infinite map size
-            var user = worldMapFields.findOne({
-                x: (orientationX + j) % (maxX + 1),
-                y: (orientationY + rowNo) % (maxY + 1)
-            }, {
-                fields: {
-                    user: 1
-                }
-            }).user;
-            var infoMemory = {};
-            //without user push empty object
-            if (user != '') {
-                var cursorPlayerData = playerData.findOne({
-                    user: user
-                }, {
-                    fields: {
-                        level: 1,
-                        backgroundId: 1
-                    }
-                });
-                var playerLevel = cursorPlayerData.level;
-                var backgroundNumber = cursorPlayerData.backgroundId;
-                infoMemory['playerLevel'] = playerLevel;
-                infoMemory['playerImage'] = "worldMapPlayerImage";
-                infoMemory['playerImageId'] = "01";
-                if (myName == user) infoMemory['playerImageId'] = "00";
-                infoMemory['playerName'] = user;
-                infoMemory['backgroundNumber'] = backgroundNumber;
-            } else  {
-                infoMemory['backgroundNumber'] = 0;
-            }
-            infoMemory['x'] = (orientationX + j) % (maxX + 1);
-            infoMemory['y'] = (orientationY + rowNo) % (maxY + 1);
-            infoMemory['left'] = j * 300;
-            infoMemory['bottom'] = rowNo * 250;
-            column.push(infoMemory);
-        }
-        row['columns'] = column;
-        return row;
-    }
-
-    //TO-DO: Datenbankanfrage optimieren + debuggen
-    // function updateWorldMapArray(direction) {
-    //     //get max map size
-    //     var maxX = worldMapFields.find({}, {
-    //         fields: {
-    //             x: 1
-    //         },
-    //         sort: {
-    //             x: -1
-    //         }
-    //     }).fetch()[0].x;
-    //     var maxY = worldMapFields.find({}, {
-    //         fields: {
-    //             y: 1
-    //         },
-    //         sort: {
-    //             y: -1
-    //         }
-    //     }).fetch()[0].y;
-    //     if (direction == "worldMapGoUp" || direction == "worldMapGoDown") {
-    //         var result = getNewRow(direction, maxX, maxY);
-    //     } else {
-    //      //To-DO: getNewColumn implementieren
-    //     }
-    //     return result;
-    // }
-
-    // function getNewRow(direction, maxX, maxY) {
-    //     var newArray = new Array();
-    //     if (direction == "worldMapGoUp") {
-    //         //slide useable data
-    //         for (var i = 0; i < worldMapArray.length - 1; i++) {
-    //             newArray[i] = worldMapArray[i + 1];
-    //         }
-    //         //create the NEW row
-    //         newArray[mapRows - 1] = createRowObject(worldMapArray[0].columns[0].x, worldMapArray[0].columns[0].y + 1, maxX, maxY, mapRows - 1, mapColumns);
-    //     } else {
-    //         //slide useable data
-    //         for (var i = worldMapArray.length - 1; i > 0; i--) {
-    //             newArray[i] = worldMapArray[i - 1];
-    //         }
-    //         //create the NEW row
-    //         newArray[0] = createRowObject(worldMapArray[0].columns[0].x, worldMapArray[0].columns[0].y - 1, maxX, maxY, mapRows - 1, mapColumns);
-    //     }
-    //     return newArray;
-    // }
-
-    // function getNewColumn(direction, maxX, maxY) {
-    //     too complex
-    // }
-
-    //Deps.Autorun
-    Deps.autorun(function() {
-        if (!Meteor.user()) {
-            //not logged in yet
-            // console.log("DEPS.AUTORUN: not logged in");
-        } else {
-            var self = Meteor.users.findOne({
-                _id: Meteor.userId()
-            }, {
-                fields: {
-                    menu: 1,
-                    cu: 1,
-                    username: 1
+    function createBots(k, l) {
+        for (var i = k; i < l + 1; i++) {
+            Meteor.call('initBots', i, function(error, result) {
+                if (error) {
+                    console.log('err bot creation:', error.reason);
+                    return;
                 }
             });
-            var menu = self.menu;
-            var cu = self.cu;
-            if (cu && menu) {
-                Meteor.subscribe(menu, cu, function(rdy) {
-                    // console.log("DEPS.AUTORUN: Sub: " + menu + ", " + cu + " - " + rdy);
-                });
-            } else {
-                // console.log("DEPS.AUTORUN: cu or menu undefined");
-            }
         }
-    });
+    }
 
     ///////////////////
     //// DEBUGGING ////
@@ -3143,13 +3677,92 @@ if (Meteor.isClient) {
             var counter = 0;
 
             template.rendered = function() {
-                console.log(name, "render count: ", ++counter);
+                // console.log(name, "render count: ", ++counter);
                 oldRender && oldRender.apply(this, arguments);
             };
         });
     }
-}
 
-/*  function hoverScroungeBase() {
-    var pos = button.style.backgroundPosition;
-    alert(pos);*/
+    //SpriteSheet anpassen
+
+    function moveSpriteSheetBackground(pos, classToBeChanged, scrounge) {
+
+        var styleSheetList = document.styleSheets;
+        var rules = styleSheetList[0].cssRules;
+
+        /*to get the width of the spritesheet*/
+        var tempImg = new Image;
+        //Man könnte theoretisch auch jedes andere div nehmen, das das SpriteSheet als background-image hat
+        tempImg.src = $("#scrounge").css('background-image').replace(/url\(|\)$/ig, "");
+        var spriteSheetWidth = tempImg.width;
+
+        /*Der Umweg via split ist notwendig, da Firefox background-position-x bzw. -y nicht unterstützt*/
+        var posXY = pos.split(" ");
+        var posXAbsolute = Math.abs(parseInt(posXY[0]));
+
+        /*console.log(posXY[0]); 
+          console.log("case 1 "+ (posXAbsolute < spriteSheetWidth/4 || (posXAbsolute >= spriteSheetWidth/2 && posXAbsolute < spriteSheetWidth*0.75)));*/
+        /*          console.log(posXAbsolute+" "+spriteSheetWidth/4+" "+posXAbsolute+" "+spriteSheetWidth/2+" "+posXAbsolute+" "+spriteSheetWidth*0.75);*/
+
+        //Falls es sich um eine Schaltfläche im Status "normal" handelt (linke Abfrage Base / rechte Abfrage Scrounge)
+        if (posXAbsolute < spriteSheetWidth / 4 || (posXAbsolute >= spriteSheetWidth / 2 && posXAbsolute < spriteSheetWidth * 0.75)) {
+            var newPosX = parseInt(posXY[0]) - (spriteSheetWidth / 4);
+            /*console.log("IF "+newPosX);*/
+        }
+        //Falls es sich um eine Schaltfläche im Status "hovered" handelt
+        else {
+            var newPosX = parseInt(posXY[0]) + (spriteSheetWidth / 4);
+        }
+        for (i = 0; i < rules.length; i++) {
+            /*console.log("obereForSchleife "+i)*/
+            //Falls kleinstes SpriteSheet, classToBeChanged Klasse ist in der obersten Ebene des spriteSheets zu finden
+            if (spriteSheetWidth == 1472) {
+
+                /*console.log("kleinstesSpriteSheet");*/
+                if (rules[i].selectorText == classToBeChanged) {
+                    rules[i].style.backgroundPosition = newPosX + "px " + posXY[1];
+                    /*                console.log(rules[i].style.backgroundPosition);*/
+                    break;
+                }
+
+            }
+
+            //Falls mittelgroßes SpriteSheet
+            else if (spriteSheetWidth == 1880) {
+
+                /*console.log("mittelgroßesSpriteSheet");*/
+                if (rules[i].cssText.substr(0, 42) == "@media only screen and (max-width: 1919px)") {
+                    //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
+                    var rulesInner = rules[i].cssRules;
+                    for (k = 0; k < rulesInner.length; k++) {
+                        /*console.log("innereForSchleife" + k);*/
+                        if (rulesInner[k].selectorText == classToBeChanged) {
+                            rulesInner[k].style.backgroundPosition = newPosX + "px " + posXY[1];
+                            /*console.log("mittelgroß "+rulesInner[k].style.backgroundPosition);*/
+                            break;
+                        }
+                    }
+                }
+            } else if (spriteSheetWidth == 2800) {
+
+                /*console.log("großesSpriteSheet");
+              console.log(rules[i].cssText.substr(0,42));*/
+                /*console.log(rules[i].cssText.substr(0,42) == "@media only screen and (min-width: 1920px)");*/
+                if (rules[i].cssText.substr(0, 42) == "@media only screen and (min-width: 1920px)") {
+                    //spriteSheet rules in tieferer Verschachtelung innerhalb der spriteSheet rule der media queries
+                    var rulesInner = rules[i].cssRules;
+                    for (j = 0; j < rulesInner.length; j++) {
+                        /*console.log("innereForSchleife" + j);*/
+                        /*console.log(rulesInner[j].selectorText);
+                        console.log(rulesInner[j].selectorText==classToBeChanged);*/
+                        if (rulesInner[j].selectorText == classToBeChanged) {
+                            rulesInner[j].style.backgroundPosition = newPosX + "px " + posXY[1];
+                            /*console.log("groß "+rulesInner[j].style.backgroundPosition);*/
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

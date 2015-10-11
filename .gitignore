@@ -1,3 +1,8 @@
-packages/
 .meteor/
+mup.json
+settings.json
+server/kadira.js
+server/cluster.js
+client/bots.js
+client/lein.sh
 *.db
