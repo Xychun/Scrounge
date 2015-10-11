@@ -2,20 +2,37 @@
 ///////////////////////////////////// CLIENT + SERVER //////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*Meteor.Collection was renamed Mongo.Collection in 0.9.1. 
+The change is currently backward compatible, however you should 
+switch to using Mongo.Collection for any new projects. It looks 
+like the docs have mostly been updated except for the wording in 
+the Data and security section.*/
+
 //Collection init
-Menus = new Meteor.Collection("Menus");
-MatterBlocks = new Meteor.Collection("MatterBlocks");
-FightArenas = new Meteor.Collection("FightArenas");
+//Users = new Mongo.Collection("users");
+Menus = new Mongo.Collection("Menus");
+MatterBlocks = new Mongo.Collection("MatterBlocks");
+FightArenas = new Mongo.Collection("FightArenas");
 
-playerData = new Meteor.Collection("playerData");
-resources = new Meteor.Collection("resources");
+playerData = new Mongo.Collection("playerData");
+resources = new Mongo.Collection("resources");
 
-Turf = new Meteor.Collection("Turf");
-worldMapFields = new Meteor.Collection("worldMapFields");
+Turf = new Mongo.Collection("Turf");
+worldMapFields = new Mongo.Collection("worldMapFields");
+STATUS = new Mongo.Collection("STATUS");
 
-mine = new Meteor.Collection("mine");
-laboratory = new Meteor.Collection("laboratory");
-workshop = new Meteor.Collection("workshop");
-battlefield = new Meteor.Collection("battlefield");
-thievery = new Meteor.Collection("thievery");
-smelter = new Meteor.Collection("smelter");
+mine = new Mongo.Collection("mine");
+laboratory = new Mongo.Collection("laboratory");
+workshop = new Mongo.Collection("workshop");
+battlefield = new Mongo.Collection("battlefield");
+thievery = new Mongo.Collection("thievery");
+smelter = new Mongo.Collection("smelter");
+
+
+//CLIENT ONLY COLLECTIONS
+
+//die client only collection, die Daten aus der playerData enthält, aber nur solche, die
+//für die worldMap relevant sind (vorher "worldMapPlayerData")
+if(Meteor.isClient) {
+	WorldMapPlayerData = new Mongo.Collection('playerDataForWorldMap');
+}

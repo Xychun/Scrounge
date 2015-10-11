@@ -1,49 +1,51 @@
 <body>
 </body>
 
-<template name = "login">
+<template name="login">
 
-<div style="top: 0px; left: 0px; width: 100%; height: 100%; background; opacity: 0.2; background-color: black"> </div>
+    <div style="top: 0px; left: 0px; width: 100%; height: 100%; background; opacity: 0.2; background-color: black"></div>
 
-<img style="left: 0px; top: 0px; width: 1920px; height: 1080px; position: fixed;"  src="/Aufloesung1920x1080/Login/Testgrafik.png">
+    <div id="testGraphic" style="left: 0px; top: 0px; width: 1920px; height: 1080px; position: fixed;"></div>
 
-	<div id="loginWrapper" class="text">
-		
-		<div id="login-form_wrapper">
-			<form id="login-form" action="game">
+    <div id="loginWrapper" class="text">
 
-					<div class="textLogin"> LOGIN </div>
-					<input name="loginName" type="text" id="login-name" placeholder="user name"/>
-					<input name="loginPassword" type="password" id="login-password" placeholder="password"/>
-					<input type="submit" id="login-button" value="Sign in"/>
-					<div id="login-error" class="error" style="display: none;"> </div>
-				
-			</form> 
-		</div>
+        <div id="login-form_wrapper">
+            <form id="login-form" action="game">
+                <div class="textLogin hammersmith">LOGIN</div>
+                <input name= "loginName" type="text" id="login-name" placeholder="user name" />
+                <input name= "loginPassword" type="password" id="login-password" placeholder="password" />
+                <input type="submit" id="login-button" value="Sign in" />
+                <div id="login-error" class="error hammersmith" style="display: none;"></div>
+            </form>
+        </div>
 
-		<div id="register-form_wrapper">
-			<form id="register-form" action="game">
-				
-					<div class="textLogin"> REGISTER </div>
-					<input type="text" id="account-name" placeholder="user name"/>
-					<input type="password" id="account-password" placeholder="password"/>
-					<input type="submit" id="create-account" value="Create Account" />
-					<div id="register-error" class="error" style="display: none;"> </div>
-				
-			</form>
-		</div>
+        <div id="register-form_wrapper">
+            <form id="register-form" action="game">
 
-		<div style="left: 50px; top: 280px; width: 420px;">
-		<p style="font-size: 1.5em; font-family:'Hammersmith One', 'Arial', 'sans-serif';"> BEFORE YOU START PRESS</p>
-		<p> windows </p>
-		<img style="width: 150px; height: 70px; float: left" src="/Aufloesung1920x1080/Login/Ctrl.gif"> <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;"> + </p> <img style="width: 70px; height: 70px; display: block" src="/Aufloesung1920x1080/Login/Minus.gif">
-		<p> macintosh </p>
-		<img style="width: 150px; height: 70px; float: left" src="/Aufloesung1920x1080/Login/Cmd.gif"> <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;"> + </p> <img style="width: 70px; height: 70px" src="/Aufloesung1920x1080/Login/Minus.gif">
-		<p style="font-size: 1em; font-family:'Hammersmith One', 'Arial', 'sans-serif';"> Scrounge currently only supports a resolution of 1920px or higher (width). </p>
-		<p style="font-size: 1em; font-family:'Hammersmith One', 'Arial', 'sans-serif';"> Please zoom out until you see the violet line on the right side of your screen. </p>
-		</div>
-		
-		<div style="height: 100%; right: 0px; left: 490px; top: 0px; overflow-y: scroll">
+                <div class="textLogin">REGISTER</div>
+                <input type="text" id="account-name" placeholder="user name" />
+                <input type="password" id="account-password" placeholder="password" />
+                <input type="submit" id="create-account" value="Create Account" />
+                <div id="register-error" class="error" style="display: none;"></div>
+
+            </form>
+        </div>
+
+        <div style="left: 50px; top: 280px; width: 420px;">
+            <p class="hammersmith" style="font-size: 1.5em;">BEFORE YOU START PRESS</p>
+            <p>windows</p>
+            <img id="Ctrl" style="width: 150px; height: 70px; float: left">
+            <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;">+</p>
+            <img id="Minus" style="width: 70px; height: 70px; display: block">
+            <p>macintosh</p>
+            <img id="Cmd" style="width: 150px; height: 70px; float: left">
+            <p style="font-size: 30pt; position: relative; float: left; margin: 10px 26px 0px 26px;">+</p>
+            <img id="Minus" style="width: 70px; height: 70px">
+            <p class="hammersmith" style="font-size: 1em;">Scrounge currently only supports a resolution of 1920px or higher (width).</p>
+            <p class="hammersmith" style="font-size: 1em;">Please zoom out until you see the violet line on the right side of your screen.</p>
+        </div>
+
+        <!-- <div style="height: 100%; right: 0px; left: 490px; top: 0px; overflow-y: scroll">
 
 		<div style="width: 100%; height: 50px; margin-top:20px; position: relative; font-size: 1.5em; font-family:'Hammersmith One', 'Arial', 'sans-serif';"> A short guide to get you started</div>
 
@@ -101,30 +103,7 @@
 		</div>
 
 		<div style="width: 100%; height: 200px"> </div>
-<!-- 
-		<div style="width: 100%; margin-top: 10px; height: 396px; position: absolute;">
-			<div style="float: left; width: 794px; height: 396px; position: relative; background-image: url(/Aufloesung1920x1080/Login/Anleitung2.jpg); background-repeat: no-repeat;"> </div>
-			<div style="right: 0px; left: 794px; position: relative;"> 
-
-
-
-			</div>
 		</div>
-
-		<div style="width: 100%; margin-top: 10px; height: 396px; position: relative;">
-			<div style="float: left; width: 794px; height: 396px; position: relative; background-image: url(/Aufloesung1920x1080/Login/Anleitung2.jpg); background-repeat: no-repeat;"> </div>
-			<div style="right: 0px; left: 794px; position: relative; background-image: url(/Aufloesung1920x1080/Login/Anleitung2.jpg); background-repeat: no-repeat;"> </div>
-		</div>
-
-		<div style="width: 100%; margin-top: 10px; height: 396px; position: relative;">
-			<div style="float: left; width: 794px; height: 396px; position: relative; background-image: url(/Aufloesung1920x1080/Login/Anleitung2.jpg); background-repeat: no-repeat;"> </div>
-			<div style="right: 0px; left: 794px; position: relative; background-image: url(/Aufloesung1920x1080/Login/Anleitung2.jpg); background-repeat: no-repeat;"> </div>
-		</div> -->
-
-
-		</div>
-
-	</div>
+ -->
+    </div>
 </template>
-
-
