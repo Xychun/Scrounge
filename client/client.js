@@ -3349,6 +3349,29 @@ if (Meteor.isClient) {
         }).maxXY);
         var maxY = maxX;
         switch (direction) {
+            case "worldMapHomeButton":
+                var cursorUser = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }, {
+                    fields: {
+                        x: 1,
+                        y: 1
+                    }
+                });
+                //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
+                //in diesem Fall ist das nur ein Objekt
+                //workaround, weil Suche über _id nicht funktioniert
+                var maxX = parseInt(STATUS.findOne({
+                    maxXY: {
+                        $exists: true
+                    }
+                }).maxXY);
+                //Für den Fall, dass die Map symmetrisch ist, sind maxY und maxX identisch
+                //wird im Weiteren getrennt behandelt, damit das flexibel bleibt und bei
+                //Bedarf geändert werden kann
+                var maxY = maxX;
+                initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
+                break;
             case "worldMapGoUp":
                 //Scheint zu funktionieren
                 //Die subscriptions müssen irgendwie noch händisch wieder gestoppt werden
