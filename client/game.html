@@ -165,7 +165,7 @@
         <div id="categories_wrapper">
             <div class="category_3 categories_icon_size short_tooltip SSCategoryBattlefield hover relative ssh" title="Battlefield"></div>
             <div class="category_4 categories_icon_size short_tooltip SSCategoryWorkshop relative ssh" title="Workshop"></div>
-            <div class="category_5 categories_icon_size short_tooltip SSCategoryThievery relative ssh" title="Thiefery"></div>
+            <div class="category_5 categories_icon_size short_tooltip SSCategoryThievery relative ssh" title="Thievery"></div>
             <div class="category_6 categories_icon_size short_tooltip SSCategorySmelter relative ssh" title="Smelter"></div>
             <div class="category_1 categories_icon_size short_tooltip SSCategoryMine hover relative ssh" title="Mine"></div>
             <div class="category_2 categories_icon_size short_tooltip SSCategoryLaboratory relative ssh" title="Laboratory"></div>
@@ -180,43 +180,47 @@
         <div id="matter_wrapper" class="bot matter_background sshr">
             <div id="infoLog" class="hammersmith"></div>
             <div id="matter_content">
-                {{#each resources}}
 
+                {{#each resources}}
                 <div class="matter_colorBlocks">
-                    <div class="img_matter short_tooltip ssib" style="background-position: -1660px -0px;" title="Green Matter Block"></div>
-                    <div style="top: 8px; font-size: 30px;" class="text text_matter">{{values.green.matter}}</div>
+                    <div class="img_matter short_tooltip ssib" style="background-position: {{imagePosition '-1'}};" title="Green Matter Block"></div>
+                    <div style="top: 8px; font-size: 30px;" class="text text_matter">{{matter}}</div>
                     <div class="wrapper_specialResource short_tooltip" title="coming soon!">
                         <div class="sr_left">
                             <div class="sr_slot">
-                                <div class="img_specialResources ssib" style="background-position: -2578px 0px;"></div>
-                                <div class="text text_specialResources">{{values.green.sr1}}</div>
+                                <div class="img_specialResources ssib" style="background-position: {{imagePosition '1'}};"></div>
+                                <div class="text text_specialResources">{{sr1}}</div>
                             </div>
                             <div class="sr_slot">
-                                <div class="img_specialResources ssib" style="background-position: -2551px 0px;"></div>
-                                <div class="text text_specialResources">{{values.green.sr2}}</div>
+                                <div class="img_specialResources ssib" style="background-position: {{imagePosition '2'}};"></div>
+                                <div class="text text_specialResources">{{sr2}}</div>
                             </div>
                             <div class="sr_slot">
-                                <div class="img_specialResources ssib" style="background-position: -2628px 0px;"></div>
-                                <div class="text text_specialResources">{{values.green.sr3}}</div>
+                                <div class="img_specialResources ssib" style="background-position: {{imagePosition '3'}};"></div>
+                                <div class="text text_specialResources">{{sr3}}</div>
                             </div>
                         </div>
                         <div class="sr_right">
                             <div class="sr_slot">
-                                <div class="img_specialResources ssib" style="background-position: -2603px 0px;"></div>
-                                <div class="text text_specialResources">{{values.green.sr4}}</div>
+                                <div class="img_specialResources ssib" style="background-position: {{imagePosition '4'}};"></div>
+                                <div class="text text_specialResources">{{sr4}}</div>
                             </div>
                             <div class="sr_slot">
-                                <div class="img_specialResources ssib" style="background-position: -2655px 0px;"></div>
-                                <div class="text text_specialResources">{{values.green.sr5}}</div>
+                                <div class="img_specialResources ssib" style="background-position: {{imagePosition '5'}};"></div>
+                                <div class="text text_specialResources">{{sr5}}</div>
                             </div>
                             <div class="sr_slot">
-                                <div class="img_specialResources ssib" style="background-position: -2524px 0px;"></div>
-                                <div class="text text_specialResources">{{values.green.sr6}}</div>
+                                <div class="img_specialResources ssib" style="background-position: {{imagePosition '6'}};"></div>
+                                <div class="text text_specialResources">{{sr6}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="matter_colorBlocks">
+                {{/each}}
+
+                <!-- OLD OLD 2015/12/20 OLD OLD -->
+                <!-- OLD OLD 2015/12/20 OLD OLD -->
+                <!-- <div class="matter_colorBlocks">
                     <div class="img_matter short_tooltip ssib" style="background-position: -1660px -55px;" title="Red Matter Block"></div>
                     <div style="top: 8px; font-size: 30px;" class="text text_matter">{{values.red.matter}}</div>
                     <div class="wrapper_specialResource short_tooltip" title="coming soon!">
@@ -249,8 +253,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                {{/each}}
+                </div> -->
+                <!-- OLD OLD 2015/12/20 OLD OLD -->
+                <!-- OLD OLD 2015/12/20 OLD OLD -->
+
             </div>
         </div>
         <div id="matter_right" class="matter_edge bot right matter_background_right sshr"></div>
@@ -293,7 +299,7 @@
                         </div>
                     </div>
                     <div class="ssh inventory_slots droppable">
-                        <!-- Es ist sehr wichtig, dass die Klasse "item_type_1" ganz am Ende steht, sonst funktioniert Michas Methode "init draggable" nicht" -->
+                        <!-- Es ist sehr wichtig, dass die Klasse "item_type_1" ganz am Ende steht, sonst funktioniert Michas Methode "init draggable" nicht" TO-DO: Change with String search? -->
                         <div class="inventory_items draggable item_tooltip ssib item_type_1" style="background-position: -440px -110px" title="
                                 <div class='item_tooltip_window_name'>
                                     <p class='text headline'>{{item_name}} Red Pick</p>
@@ -388,9 +394,8 @@
     {{/if}}
 </template>
 
-<!-- MINEBASE -->
-
-<template name="mineBase">
+<!-- MINEOWNER -->
+<template name="mineOwner">
     {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
@@ -400,8 +405,127 @@
             </div>
             <div id="base_area">
                 <div id="base_area_content" class="scrollable relative">
+                    {{#each mineBaseUnused}}
+                    <!-- unused slot -->
+                    <div class="slotWrapper">
+                        <div class="slot_edge_left_BaseLeft left sshr">
+                            <div class="slot_icon slot_icon_mineUnused waitMine ssvr"></div>
+                        </div>
+                        <div class="unused_slot slotBackgroundBaseLeft sshr">
+                            <div class="slot_upper_bar">
+                                <div id="left_slider_slot_colors" class="left slot_colors_slider SScolors_pfeil_left ssh"></div>
+                                <div class="slot_colors_wrapper">
+                                    <div class="left slot_colors_edges sshr"></div>
+                                    <div class="slot_colors_content sshr">
+                                        {{#each blockColors}}
+                                        <div class="SScolor relative ssh" style="background-position:{{color}}"></div>{{/each}}
+                                    </div>
+                                    <div class="right slot_colors_edges sshr"></div>
+                                </div>
+                                <div id="right_slider_slot_colors" class="right slot_colors_slider SScolors_pfeil_right ssh"></div>
+                            </div>
+                            <div class="slot_items">
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items ssh"></div>
+                                <div class="slot_items_wrapper">
+                                    <div class="slot_items_content scrollable relative">
+                                        {{#each matterBlocks}}
+                                        <div id={{matter}} class="item relative">
+                                            <div class="itemImg ssib" style="background-position:{{color}}"></div>
+                                            <div class="itemTextValue">{{value}}</div>
 
-                    {{#each mineUnusedSlots}}
+                                            <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
+
+                                                <div class="itemTextCostPre relative">pay</div>
+                                                <div class="itemTextCost relative">{{cost}}</div>
+                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"></div>
+
+                                            </div>
+
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items ssh"></div>
+                            </div>
+                        </div>
+                        <div class="slot_edge_right_BaseLeft right sshr"></div>
+                    </div>
+                    {{/each}} {{#each mineBaseUsed}}
+                    <!-- used slot -->
+                    <div class="slotWrapper dropdown">
+                        <div class="used_slot_Wrapper relative">
+                            <div class="slot_edge_left_BaseLeft left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{imagePosition}}"></div>
+                            </div>
+                            <div class="used_slot slotBackgroundBaseLeft sshr">
+                                <div class="slot_upper_bar tooltip_hover">
+                                    <span id="tooltip_left_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <div id="range_slider_{{slotID}}" class="range_slider"></div>
+                                </div>
+                                <div class="slot_stats">
+                                    <!-- progress -->
+                                    <p class='text relative'>Progress: {{progress}}/{{progress2}}({{percentageProgress}}%)</p>
+                                    <!-- remaining -->
+                                    <p class='text relative'>Remaining: {{remainingTimeFormat}}
+                                    </p>
+                                    <!-- profit -->
+                                    <p class='text relative'>Profit: {{profit "base"}}</p>
+                                </div>
+                            </div>
+                            <div class="slot_edge_right_BaseLeft right sshr"></div>
+                        </div>
+
+                        <div class="used_slot_advanced_wrapper">
+
+                            <div class="used_slot_advanced">
+
+                                <div class="slot_edge_left_BaseLeft_advanced left sshr"></div>
+
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced sshr">
+
+                                    <div class="div_center_vertical">
+
+                                        <div class="slot_advanced_stats">
+                                            <!-- slots: replace with icons -->
+                                            <p class='text relative'>Slots: {{slots1}}/{{slots2}}</p>
+                                            <!-- benefit -->
+                                            <p class='text relative'>Miningrate: {{benefitTotal}}/hr</p>
+                                            <!-- time spent -->
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseLeft_advanced right sshr"></div>
+                            </div>
+                            {{#each supporter slotID}}
+                            <div class="scrounge_slot_supporter relative">
+                                <div class="slot_edge_left_BaseLeft_supporter left sshr">
+                                    <div class="scrounger_icon ssib" style="background-position: -1754px 4px"></div>
+                                    <div class="scrounger_icon_userName hammersmith">{{this.supporter}}</div>
+                                </div>
+                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="scrounger_stats relative">
+                                            <p class='text relative'>Miningrate: {{benefit}}</p>
+                                            <p class='text relative'>Mined: {{mined}}</p>
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseLeft_supporter right sshr"></div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <script>
+                    Session.set("middle", "mine");
+                    </script>
+                    {{/each}}
+
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
+                    <!-- {{#each mineUnusedSlots}}
                     <div class="slotWrapper">
                         <div class="slot_edge_left_BaseLeft left sshr">
                             <div class="slot_icon slot_icon_mineUnused waitMine ssvr"></div>
@@ -532,7 +656,9 @@
                     Session.set("middle", "mineBase");
                     </script>
 
-                    {{/each}}
+                    {{/each}} -->
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
                 </div>
             </div>
             <div class="down_slider_base hover_slide_height bot">
@@ -540,8 +666,8 @@
             </div>
         </div>
 
+        <!-- SEPERATION: SCROUNGE AREA -->
         <div id="seperation_bar" class="left right ssvr"></div>
-
 
         <div class="area_right bot">
             <div id="up_slider_scrounge" class="hover_slide_height top">
@@ -549,8 +675,65 @@
             </div>
             <div id="scrounge_area">
                 <div id="scroungeAreaContent" class="scrollable relative">
+                    {{#each mineScroungeUnused}}
+                    <!-- unused slot -->
+                    <div class="slotWrapper scrounge_now">
+                        <div class="slot_edge_left_BaseRight left sshr">
+                            <div class="slot_icon ssvr slot_icon_mineUnused"></div>
+                        </div>
+                        <div class="unused_slot slotBackgroundBaseRight sshr">
+                            <div class="div_center_vertical">
+                                <div class="scrounge_slot_stats">
+                                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slot_edge_right_BaseRight right sshr"></div>
+                    </div>
+                    {{/each}} {{#each mineScroungeUsed}}
+                    <!-- used slot -->
+                    <div class="slotWrapper dropdown">
+                        <div class="used_slot_Wrapper relative">
+                            <div class="slot_icon_userName">
+                                <p class="slot_icon_userName_text hammersmith">{{victim}}</p>
+                            </div>
+                            <div class="slot_edge_left_BaseRight left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{imagePosition}}"></div>
+                            </div>
+                            <div class="used_slot slotBackgroundBaseRight sshr">
+                                <div class="div_center_vertical">
+                                    <div class="scrounge_slot_stats">
+                                        <p class='text relative'>Profit: {{profit "scrounge"}}</p>
+                                        <p class='text relative'>Remaining: {{remainingTimeFormat}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slot_edge_right_BaseRight right sshr"></div>
+                        </div>
+                        <div class="used_slot_advanced_wrapper">
+                            <div class="used_slot_advanced">
+                                <div class="slot_edge_left_BaseRight_advanced left sshr"></div>
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseRightAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="slot_advanced_stats">
+                                            <p class='text relative'>Slots: {{slots1}}/{{slots2}}</p>
+                                            <p class='text relative'>Miningrate: {{benefit}}/hr</p>
+                                            <p class='text relative'>Mined: {{mined}}</p>
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseRight_advanced right sshr"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
 
-                    {{#each mineUnusedScroungeSlots}}
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
+                    <!-- {{#each mineUnusedScroungeSlots}}
                     <div class="slotWrapper scrounge_now">
                         <div class="slot_edge_left_BaseRight left sshr">
                             <div class="slot_icon ssvr slot_icon_mineUnused"></div>
@@ -605,7 +788,9 @@
                         </div>
 
                     </div>
-                    {{/each}}
+                    {{/each}} -->
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
+                    <!-- OLD OLD 2015/11/21 OLD OLD -->
 
                 </div>
             </div>
@@ -622,10 +807,127 @@
     {{/if}}
 </template>
 
-<!-- MINESCROUNGE -->
 
-<template name="mineScrounge">
+<!-- MINEENEMY -->
+<template name="mineEnemy">
     {{#if Template.subscriptionsReady}}
+    <div id="mitte">
+        {{> improvements}}
+        <div id="scroungeArea" class="bot">
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <div id="scrounge_up" class="slider slider_size center_h SSscrounge_slider_up hover ssh"></div>
+            </div>
+            <div id="scroungeAreaWrapper">
+                {{#if activeSlots}}
+                <div id="scroungeAreaContent" class="scrollable relative">
+                    {{#each activeSlots}}
+                    <div id="scrounge_slot_{{slotID}}" class="scrounge_slot dropdown relative">
+                        <div class="scrounge_slot relative">
+                            <div class="slot_edge_left_Scrounge left sshr">
+                                <div class="slot_icon ssib" style="background-position: {{imagePosition}}"></div>
+                            </div>
+                            <div class="scroungable_slot slotBackgroundScrounge sshr">
+                                <div class="slot_upper_bar scrounge_left tooltip_hover">
+                                    <span id="tooltip_left_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <div id="range_slider_{{slotID}}" class="range_slider"></div>
+                                </div>
+                                <div class="slot_stats scrounge_left">
+                                    <!-- progress -->
+                                    <p class='text relative'>Progress: {{progress}}/{{progress2}}({{percentageProgress}}%)</p>
+                                    <!-- remaining -->
+                                    <p class='text relative'>Remaining: {{remainingTimeFormat}}
+                                    </p>
+                                    <!-- splitValue -->
+                                    <p class='text relative'>Matter-Pool: {{splitValue}}
+                                    </p>
+                                </div>
+                                {{#if scroungeable}}
+                                <div id="goScroungingMine_{{slotID}}" class="goScroungingMine goScroungingIcon scrounge_right ssvr"></div>
+                                <div class="div_center_vertical scrounge_right">
+                                    <div class="scroungableText">
+                                        <!-- benefit change -->
+                                        <p class='text relative'>Miningrate: {{benefitChange}}/hr</p>
+                                        <!-- slots change -->
+                                        <p class='text relative'>Slots: {{slotsChange}}/{{slots2}}</p>
+                                        <!-- effect change -->
+                                        <p class='text relative'>Remaining: {{remainingChangeTimeFormat}}
+                                        </p>
+                                    </div>
+                                </div>
+                                {{else}}
+                                <div class="scrounge_right right">
+                                    <div id="scrounging_locked" class="ssvr"></div>
+                                    <div class="div_center_vertical" style="height: 100%; left: 140px;">
+                                        <p class="text">{{scroungeable.message}}</p>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div class="slot_edge_right_Scrounge right sshr"></div>
+                        </div>
+                        <div class="scrounge_slot_advanced_wrapper relative">
+                            <div class="scrounge_slot_advanced relative">
+                                <div class="slot_edge_left_ScroungeAdvanced left sshr"></div>
+                                <div class="scroungable_slot_advanced slotBackgroundScroungeAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="scrounge_slot_advanced_text">
+                                            <!-- slots -->
+                                            <p class='text relative'>Slots: {{slots1}}/{{slots2}}</p>
+                                            <!-- benefitTotal -->
+                                            <p class='text relative'>Miningrate: {{benefitTotal}}/hr</p>
+                                            <!-- timeSpent -->
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_ScroungeAdvanced right sshr"></div>
+                            </div>
+                            {{#each supporter slotID}}
+                            <div class="scrounge_slot_supporter relative">
+                                <div class="slot_edge_left_ScroungeSupporter left sshr">
+                                    <div class="scrounger_icon ssib" style="background-position: -1754px 4px "></div>
+                                    <div class="scrounger_icon_userName hammersmith">{{this.supporter}}</div>
+                                </div>
+                                <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="scrounge_slot_supporter_text">
+                                            <p class='text relative'>Miningrate: {{benefit}}</p>
+                                            <p class='text relative'>Mined: {{mined}}</p>
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_ScroungeSupporter right sshr"></div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <script>
+                    Session.set("middle", "mine");
+                    </script>
+                    {{/each}}
+                </div>
+                {{else}}
+                <div id="nothingToScrounge" class="ssvr nothingToScroungeMine"></div>
+                {{/if}}
+            </div>
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <div id="scrounge_down" class="slider slider_size center_h SSscrounge_slider_down hover ssh"></div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
+    {{/if}}
+
+    <!-- OLD OLD 2015/12/05 OLD OLD -->
+    <!-- OLD OLD 2015/12/05 OLD OLD -->
+    <!-- {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
         <div id="scroungeArea" class="bot">
@@ -637,7 +939,7 @@
             <div id="scroungeAreaWrapper">
 
                 {{#if mineSupporterSlots}}
-                <!-- content is here! -->
+                    
                 {{else}}
                 <div id="nothingToScrounge" class="ssvr nothingToScroungeMine"></div>
                 {{/if}}
@@ -735,7 +1037,7 @@
                         </div>
                     </div>
                     <script>
-                    Session.set("middle", "mineScrounge");
+                    Session.set("middle", "mineEnemy");
                     </script>
                     {{/each}}
                 </div>
@@ -749,12 +1051,13 @@
     <div id="mitte">
         <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
     </div>
-    {{/if}}
+    {{/if}} -->
+    <!-- OLD OLD 2015/12/05 OLD OLD -->
+    <!-- OLD OLD 2015/12/05 OLD OLD -->
 </template>
 
-<!-- BATTLEFIELDBASE -->
-
-<template name="battlefieldBase">
+<!-- BATTLEFIELDOWNER -->
+<template name="battlefieldOwner">
     {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
@@ -764,7 +1067,210 @@
             </div>
             <div id="base_area">
                 <div id="base_area_content" class="scrollable relative">
+                    {{#each battlefieldBaseUnused}}
+                    <!-- unused slot -->
+                    <div class="slotWrapper">
+                        <div class="slot_edge_left_BaseLeft left sshr">
+                            <div class="slot_icon slot_icon_battlefieldUnused waitBf ssvr">
+                            </div>
+                        </div>
+                        <div class="unused_slot slotBackgroundBaseLeft sshr">
+                            <div class="slot_upper_bar">
+                                <div id="left_slider_slot_colors" class="left slot_colors_slider SScolors_pfeil_left ssh"></div>
+                                <div class="slot_colors_wrapper">
+                                    <div class="left slot_colors_edges sshr"></div>
+                                    <div class="slot_colors_content sshr">
+                                        {{#each arenaColors}}
+                                        <div class="SScolor relative ssh" style="background-position:{{color}}"></div>{{/each}}
+                                    </div>
+                                    <div class="right slot_colors_edges sshr"></div>
+                                </div>
+                                <div id="right_slider_slot_colors" class="right slot_colors_slider SScolors_pfeil_right ssh"></div>
+                            </div>
+                            <div class="slot_items">
+                                <div id="slot_items_left" class="slider left slot_items_slider left_slider_slot_items ssh"></div>
+                                <div class="slot_items_wrapper">
+                                    <div class="slot_items_content scrollable relative">
+                                        {{#each fightArenas}}
+                                        <div id={{fight}} class="item relative">
+                                            <div class="itemImg ssib" style="background-position:{{color}}"></div>
+                                            <div class="itemTextValue">{{value}}</div>
+                                            <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
+                                                <div class="itemTextCostPre relative">pay</div>
+                                                <div class="itemTextCost relative">{{cost}}</div>
+                                                <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"></div>
+                                            </div>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                <div id="slot_items_right" class="slider right slot_items_slider right_slider_slot_items ssh"></div>
+                            </div>
+                        </div>
+                        <div class="slot_edge_right_BaseLeft right sshr"></div>
+                    </div>
+                    {{/each}} {{#each battlefieldBaseUsed}}
+                    <!-- used slot -->
+                    <div class="slotWrapper dropdown">
+                        <div class="used_slot_Wrapper relative">
+                            <div class="slot_edge_left_BaseLeft left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{imagePosition}}"></div>
+                            </div>
+                            <div class="used_slot slotBackgroundBaseLeft sshr">
+                                <div class="slot_upper_bar tooltip_hover">
+                                    <span id="tooltip_left_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <div id="range_slider_{{slotID}}" class="range_slider"></div>
+                                </div>
+                                <div class="slot_stats">
+                                    <!-- progress -->
+                                    <p class='text relative'>Progress: {{timeSpentTimeFormat}}/{{progressTimeFormat}}({{percentageProgress}}%)</p>
+                                    <!-- remaining -->
+                                    <p class='text relative'>Remaining: {{remainingTimeFormat}}
+                                    </p>
+                                    <!-- profit -->
+                                    <p class='text relative'>Profit: {{profit "base"}}</p>
+                                </div>
+                            </div>
+                            <div class="slot_edge_right_BaseLeft right sshr"></div>
+                        </div>
+                        <div class="used_slot_advanced_wrapper">
+                            <div class="used_slot_advanced">
+                                <div class="slot_edge_left_BaseLeft_advanced left sshr"></div>
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="slot_advanced_stats">
+                                            <!-- slots: replace with icons -->
+                                            <p class='text relative'>Slots: {{slots1}}/{{slots2}}</p>
+                                            <!-- benefit -->
+                                            <p class='text relative'>Epicness: {{benefitTotal}}%</p>
+                                            <!-- time spent -->
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseLeft_advanced right sshr"></div>
+                            </div>
+                            {{#each supporter slotID}}
+                            <div class="scrounge_slot_supporter relative">
+                                <div class="slot_edge_left_BaseLeft_supporter left sshr">
+                                    <div class="scrounger_icon ssib" style="background-position: -1863px 4px"></div>
+                                    <div class="scrounger_icon_userName hammersmith">{{this.supporter}}</div>
+                                </div>
+                                <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="scrounger_stats relative">
+                                            <p class='text relative'>Epicness: {{benefit}}%</p>
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseLeft_supporter right sshr"></div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <script>
+                    Session.set("middle", "battlefield");
+                    </script>
+                    {{/each}}
+                </div>
+            </div>
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <div id="base_down" class="slider slider_size center_h SSbase_left_slider_down hover ssh"></div>
+            </div>
+        </div>
 
+        <!-- SEPERATION: SCROUNGE AREA -->
+        <div id="seperation_bar" class="left right ssvr"></div>
+
+        <div class="area_right bot">
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <div class="slider slider_size center_h SSbase_right_slider_up hover ssh"></div>
+            </div>
+            <div id="scrounge_area">
+                <div id="scroungeAreaContent" class="scrollable relative">
+                    {{#each battlefieldScroungeUnused}}
+                    <!-- unused slot -->
+                    <div class="slotWrapper scrounge_now">
+                        <div class="slot_edge_left_BaseRight left sshr">
+                            <div class="slot_icon slot_icon_battlefieldUnused ssvr">
+                            </div>
+                        </div>
+                        <div class="unused_slot slotBackgroundBaseRight sshr">
+                            <div class="div_center_vertical">
+                                <div class="scrounge_slot_stats">
+                                    <p class="text relative" style="font-size: 2em;">Click to Scrounge !</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slot_edge_right_BaseRight right sshr"></div>
+                    </div>
+                    {{/each}} {{#each battlefieldScroungeUsed}}
+                    <!-- used slot -->
+                    <div class="slotWrapper dropdown">
+                        <div class="used_slot_Wrapper relative">
+                            <div class="slot_icon_userName">
+                                <p class="slot_icon_userName_text hammersmith">{{victim}}</p>
+                            </div>
+                            <div class="slot_edge_left_BaseRight left sshr">
+                                <div class="slot_icon ssib" style="background-position:{{imagePosition}}"></div>
+                            </div>
+                            <div class="used_slot slotBackgroundBaseRight sshr">
+                                <div class="div_center_vertical">
+                                    <div class="scrounge_slot_stats">
+                                        <p class='text relative'>Profit: {{profit "scrounge"}}</p>
+                                        <p class='text relative'>Remaining: {{remainingTimeFormat}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slot_edge_right_BaseRight right sshr"></div>
+                        </div>
+                        <div class="used_slot_advanced_wrapper">
+                            <div class="used_slot_advanced">
+                                <div class="slot_edge_left_BaseRight_advanced left sshr"></div>
+                                <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseRightAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="slot_advanced_stats">
+                                            <p class='text relative'>Slots: {{slots1}}/{{slots2}}</p>
+                                            <p class='text relative'>Epicness: {{benefit}}%
+                                            </p>
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_BaseRight_advanced right"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div id="down_slider_scrounge" class="hover_slide_height bot">
+                <div id="scrounge_down" class="slider slider_size center_h SSbase_right_slider_down hover ssh"></div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
+    {{/if}}
+</template>
+
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+<!-- BATTLEFIELOWNER -->
+<!-- <template name="battlefieldOwner">
+    {{#if Template.subscriptionsReady}}
+    <div id="mitte">
+        {{> improvements}}
+        <div class="area_left bot">
+            <div id="up_slider_base" class="hover_slide_height top">
+                <div id="base_up" class="slider slider_size center_h SSbase_left_slider_up hover ssh"></div>
+            </div>
+            <div id="base_area">
+                <div id="base_area_content" class="scrollable relative">
                     {{#each battlefieldUnusedSlots}}
                     <div class="slotWrapper">
                         <div class="slot_edge_left_BaseLeft left sshr">
@@ -792,15 +1298,11 @@
                                         <div id={{fight}} class="item relative">
                                             <div class="itemImg ssib" style="background-position:{{color}}"></div>
                                             <div class="itemTextValue">{{value}}</div>
-
                                             <div class="wrapperCosts" style="bottom: 5px; display: inline-flex;">
-
                                                 <div class="itemTextCostPre relative">pay</div>
                                                 <div class="itemTextCost relative">{{cost}}</div>
                                                 <div class="itemTextCostAfter relative ssib" style="background-position:{{colorCost}}"></div>
-
                                             </div>
-
                                         </div>
                                         {{/each}}
                                     </div>
@@ -812,9 +1314,7 @@
                     </div>
                     {{/each}} {{#each battlefieldUsedSlots}}
                     <div class="slotWrapper dropdown">
-
                         <div class="used_slot_Wrapper relative">
-
                             <div class="slot_edge_left_BaseLeft left sshr">
                                 <div class="slot_icon ssib" style="background-position:{{color}}"></div>
                             </div>
@@ -831,49 +1331,28 @@
                                 </div>
                             </div>
                             <div class="slot_edge_right_BaseLeft right sshr"></div>
-
                         </div>
-
-
-
-
                         <div class="used_slot_advanced_wrapper">
-
                             <div class="used_slot_advanced">
-
                                 <div class="slot_edge_left_BaseLeft_advanced left sshr"></div>
-
                                 <div class="slot_advanced_stats_wrapper relative slotBackgroundBaseLeftAdvanced sshr">
-
                                     <div class="div_center_vertical">
-
                                         <div class="slot_advanced_stats">
                                             <p class='text relative'>Profit: {{profit}}</p>
                                             <p class='text relative'>Epicness: {{epicness}}</p>
                                         </div>
-
                                     </div>
                                 </div>
-
                                 <div class="slot_edge_right_BaseLeft_advanced right sshr"></div>
-
                             </div>
-
                             {{#each supporter}}
                             <div class="scrounge_slot_supporter relative">
-
                                 <div class="slot_edge_left_BaseLeft_supporter left sshr">
-
                                     <div class="scrounger_icon ssib" style="background-position: -1863px 4px"></div>
-
                                     <div class="scrounger_icon_userName hammersmith">{{supName}}</div>
-
                                 </div>
-
                                 <div class="scrounger_stats_wrapper relative slotBackgroundBaseLeftSupporter sshr">
-
                                     <div class="div_center_vertical">
-
                                         <div class="scrounger_stats relative">
                                             <p class='text relative'>Epicness: {{epicness}}</p>
                                             <p class='text relative'>Time spent: <a id='{{timeSpentId}}' class='text relative'> {{timeSpent}} </a>
@@ -882,18 +1361,14 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="slot_edge_right_BaseLeft_supporter right sshr"></div>
                             </div>
                             {{/each}}
                         </div>
-
                     </div>
-
                     <script>
-                    Session.set("middle", "battlefieldBase");
+                    Session.set("middle", "battlefieldOwner");
                     </script>
-
                     {{/each}}
                 </div>
             </div>
@@ -904,14 +1379,12 @@
 
         <div id="seperation_bar" class="left right ssvr"></div>
 
-
         <div class="area_right bot">
             <div id="up_slider_scrounge" class="hover_slide_height top">
                 <div class="slider slider_size center_h SSbase_right_slider_up hover ssh"></div>
             </div>
             <div id="scrounge_area">
                 <div id="scroungeAreaContent" class="scrollable relative">
-
                     {{#each battlefieldUnusedScroungeSlots}}
                     <div class="slotWrapper scrounge_now">
                         <div class="slot_edge_left_BaseRight left sshr">
@@ -927,25 +1400,17 @@
                         </div>
                         <div class="slot_edge_right_BaseRight right sshr"></div>
                     </div>
-
                     {{/each}} {{#each battlefieldUsedScroungeSlots}}
                     <div class="slotWrapper dropdown">
-
                         <div class="used_slot_Wrapper relative">
-
                             <div class="slot_icon_userName">
                                 <p class="slot_icon_userName_text hammersmith">{{victim}}</p>
                             </div>
-
                             <div class="slot_edge_left_BaseRight left sshr">
                                 <div class="slot_icon ssib" style="background-position:{{color}}"></div>
                             </div>
                             <div class="used_slot slotBackgroundBaseRight sshr">
-                                <!-- <div class="slot_upper_bar tooltip_hover">
-                                    <span id="tooltip_left_handle_{{slider_id}}" class="range_slider_tooltip"></span>
-                                    <span id="tooltip_right_handle_{{slider_id}}" class="range_slider_tooltip"></span>
-                                    <div id="range_slider_{{slider_id}}" class="range_slider"></div>
-                                </div> -->
+                                
                                 <div class="div_center_vertical">
                                     <div class="scrounge_slot_stats">
                                         <p class='text relative'>XP: {{profit}}</p>
@@ -957,7 +1422,6 @@
                             </div>
                             <div class="slot_edge_right_BaseRight right sshr"></div>
                         </div>
-
                         <div class="used_slot_advanced_wrapper">
                             <div class="used_slot_advanced">
                                 <div class="slot_edge_left_BaseRight_advanced left sshr"></div>
@@ -973,13 +1437,10 @@
                                 <div class="slot_edge_right_BaseRight_advanced right"></div>
                             </div>
                         </div>
-
                     </div>
                     {{/each}}
-
                 </div>
             </div>
-
             <div id="down_slider_scrounge" class="hover_slide_height bot">
                 <div class="slider slider_size center_h SSbase_right_slider_down hover ssh"></div>
             </div>
@@ -989,13 +1450,133 @@
     <div id="mitte">
         <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
     </div>
-    <!--     <div id="mitte" style="background-color: blue"> BATTLEFIELD CONTENT IS LOADING </div> -->
+
+
+    {{/if}}
+</template> -->
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+
+<!-- BATTLEFIELDENEMY -->
+<template name="battlefieldEnemy">
+    {{#if Template.subscriptionsReady}}
+    <div id="mitte">
+        {{> improvements}}
+        <div id="scroungeArea" class="bot">
+            <div id="up_slider_scrounge" class="hover_slide_height top">
+                <div id="scrounge_up" class="slider slider_size center_h SSscrounge_slider_up hover ssh"></div>
+            </div>
+            <div id="scroungeAreaWrapper">
+                {{#if activeSlots}}
+                <div id="scroungeAreaContent" class="scrollable relative">
+                    {{#each activeSlots}}
+                    <div id="scrounge_slot_{{slotID}}" class="scrounge_slot dropdown relative">
+                        <div class="scrounge_slot relative">
+                            <div class="slot_edge_left_Scrounge left sshr">
+                                <div class="slot_icon ssib" style="background-position: {{imagePosition}}"></div>
+                            </div>
+                            <div class="scroungable_slot slotBackgroundScrounge sshr">
+                                <div class="slot_upper_bar scrounge_left tooltip_hover">
+                                    <span id="tooltip_left_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <span id="tooltip_right_handle_{{slotID}}" class="range_slider_tooltip"></span>
+                                    <div id="range_slider_{{slotID}}" class="range_slider"></div>
+                                </div>
+                                <div class="slot_stats scrounge_left">
+                                    <!-- progress -->
+                                    <p class='text relative'>Progress: {{timeSpentTimeFormat}}/{{progressTimeFormat}}({{percentageProgress}}%)</p>
+                                    <!-- remaining -->
+                                    <p class='text relative'>Remaining:{{remainingTimeFormat}}
+                                    </p>
+                                    <!-- splitPool -->
+                                    <p class='text relative'>XP-Pool: {{splitValue}}</p>
+                                </div>
+                                {{#if scroungeable}}
+                                <div id="goScroungingBattlefield_{{slotID}}" class="goScroungingBattlefield goScroungingIcon scrounge_right ssvr">
+                                </div>
+                                <div class="div_center_vertical scrounge_right">
+                                    <div class="scroungableText">
+                                        <!-- benefit change -->
+                                        <p class='text relative'>Epicness: {{benefitChange}}%</p>
+                                        <!-- slots change -->
+                                        <p class='text relative'>Slots: {{slotsChange}}/{{slots2}}</p>
+                                        <!-- effect change -->
+                                        <p class='text relative'>XP-Pool: {{xpChange}}</p>
+                                    </div>
+                                </div>
+                                {{else}}
+                                <div class="scrounge_right right">
+                                    <div id="scrounging_locked" class="ssvr"></div>
+                                    <div class="div_center_vertical" style="height: 100%; left: 140px;">
+                                        <p class="text">{{scroungeable.message}}</p>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div class="slot_edge_right_Scrounge right sshr"></div>
+                        </div>
+                        <div class="scrounge_slot_advanced_wrapper relative">
+                            <div class="scrounge_slot_advanced relative">
+                                <div class="slot_edge_left_ScroungeAdvanced left sshr"></div>
+                                <div class="scroungable_slot_advanced slotBackgroundScroungeAdvanced sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="scrounge_slot_advanced_text">
+                                            <!-- slots -->
+                                            <p class='text relative'>Slots: {{slots1}}/{{slots2}}</p>
+                                            <!-- benefitTotal -->
+                                            <p class='text relative'>Epicness: {{benefitTotal}}%</p>
+                                            <!-- timeSpent -->
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_ScroungeAdvanced right sshr"></div>
+                            </div>
+                            {{#each supporter slotID}}
+                            <div class="scrounge_slot_supporter relative">
+                                <div class="slot_edge_left_ScroungeSupporter left sshr">
+                                    <div class="scrounger_icon ssib" style="background-position: -1863px 4px"></div>
+                                    <div class="scrounger_icon_userName hammersmith">{{this.supporter}}</div>
+                                </div>
+                                <div class="scroungable_slot_supporter slotBackgroundScroungeSupporter sshr">
+                                    <div class="div_center_vertical">
+                                        <div class="scrounge_slot_supporter_text">
+                                            <p class='text relative'>Epicness: {{benefit}}%</p>
+                                            <p class='text relative'>Time spent: {{timeSpentTimeFormat}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slot_edge_right_ScroungeSupporter right sshr"></div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <script>
+                    Session.set("middle", "battlefield");
+                    </script>
+                    {{/each}}
+                </div>
+                {{else}}
+                <div id="nothingToScrounge" class="ssvr nothingToScroungeBattlefield"></div>
+                {{/if}}
+            </div>
+            <div id="down_slider_base" class="hover_slide_height bot">
+                <div id="scrounge_down" class="slider slider_size center_h SSscrounge_slider_down hover ssh"></div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div id="mitte">
+        <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
+    </div>
     {{/if}}
 </template>
 
-<!-- BATTLEFIELDSCROUNGE -->
-
-<template name="battlefieldScrounge">
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+<!-- BATTLEFIELDENEMY -->
+<!-- <template name="battlefieldEnemy">
     {{#if Template.subscriptionsReady}}
     <div id="mitte">
         {{> improvements}}
@@ -1007,9 +1588,7 @@
 
             <div id="scroungeAreaWrapper">
 
-                {{#if battlefieldSupporterSlots}}
-                <!-- content is here! -->
-                {{else}}
+                {{#if battlefieldSupporterSlots}} {{else}}
                 <div id="nothingToScrounge" class="ssvr nothingToScroungeBattlefield"></div>
                 {{/if}}
 
@@ -1110,7 +1689,7 @@
                     </div>
 
                     <script>
-                    Session.set("middle", "battlefieldScrounge");
+                    Session.set("middle", "battlefieldEnemy");
                     </script>
 
                     {{/each}}
@@ -1129,35 +1708,28 @@
         <img style="position: relative; width:256px; height:152px; top:50%; left: 50%; margin-left:-128px;" src="loadingScreen.gif">
     </div>
     {{/if}}
-</template>
+</template> -->
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+<!-- OLD OLD 2016/01/03 OLD OLD -->
+
 
 <!-- BUYMENU -->
-
 <template name="buyMenu">
-
     <div id="background_fade"></div>
     <div id="buyMenuWrapper">
         <div id="buyMenu" class="left right">
-
             <div id="buyMenuTopEnd" class="left right sshr">
-
                 <div id="buyMenuItem" class="ssib"></div>
                 <div class="range_slider_wrapper tooltip_hover">
                     <span id="tooltip_left_handle_Buy_Menu" class="range_slider_tooltip"></span>
                     <span id="tooltip_right_handle_Buy_Menu" class="range_slider_tooltip"></span>
                     <div id="range_slider_Buy_Menu" class="range_slider"></div>
                 </div>
-
             </div>
-
             <div id="buyMenuFrame" class="left right sshr">
-
                 <div id="AmountScroungerSlots">
-
                     <!-- WIRD DURCH JAVASCRIPT GEFÜLLT -->
-
                 </div>
-
                 <div id="buyMenuText" class="hammersmith">
                     <p id="item"></p>
                     <div style="position: relative; margin-top: 24px; margin-bottom: 24px">
@@ -1166,25 +1738,15 @@
                     </div>
                     <p id="time"></p>
                 </div>
-
-
-
-
-
-
                 <div id="buyMenuYes" class="sshr"></div>
                 <div id="buyMenuNo" class="sshr"></div>
-
             </div>
-
             <div id="buyMenuBottomEnd" class="left right sshr"></div>
         </div>
     </div>
-
     <script>
     Session.set("init", 0);
     </script>
-
 </template>
 
 
@@ -1272,7 +1834,7 @@
         <div id="worldMapGoDown" class="worldMapNavigators SSworldMapGoDown hover ssh"></div>
         <div id="worldMapGoRight" class="worldMapNavigators SSworldMapGoRight hover ssh"></div>
         <div id="worldMapGoLeft" class="worldMapNavigators SSworldMapGoLeft hover ssh"></div>
-        <div id="worldMapHomeButton" class="worldMapNavigators ssvr" ></div>
+        <div id="worldMapHomeButton" class="worldMapNavigators ssvr"></div>
 
 
         <!-- currentMapView umfasst alle slots, die ein Spieler sehen kann. Beim Navigieren via der Richtungspfeile, werden entsprechend der Bewegungsrichtung die divs neu mit Daten befüllt -->
@@ -1308,20 +1870,39 @@
     <div id={{id}} class="worldMapScroungePreview relative" style="width: 300px; height: 250px;">
 
         <!-- mine preview -->
-        {{#if mineResult}}
-        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -601px -440px;">
-        </div>
-        {{else}} {{#if mineInactive}}
+        {{#if mineInactive}}
+        <!-- status: sleeping -->
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -501px -440px;">
         </div>
+        {{else}} {{#if mineLocked}}
+        <!-- status: locked -->
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -601px -440px;">
+        </div>
         {{else}}
+        <!-- status: free -->
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; top: -50px; background-position: -401px -440px;">
             <div class="worldMapSlotsPreviewText hammersmith">{{mineImpossible}} / {{mineMax}}</div>
         </div>
         {{/if}} {{/if}}
 
         <!-- battlefield preview -->
-        {{#if battlefieldResult}}
+        {{#if battlefieldInactive}}
+        <!-- status: sleeping -->
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -501px -220px;">
+        </div>
+        {{else}} {{#if battlefieldLocked}}
+        <!-- status: locked -->
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -601px -220px;">
+        </div>
+        {{else}}
+        <!-- status: free -->
+        <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -401px -220px;">
+            <div class="worldMapSlotsPreviewText hammersmith">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
+        </div>
+        {{/if}} {{/if}}
+
+        <!-- battlefield preview -->
+        <!-- {{#if battlefieldResult}}
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -601px -220px;">
         </div>
         {{else}} {{#if battlefieldInactive}}
@@ -1331,7 +1912,7 @@
         <div class="worldMapSlotsPreview ssvr" style="left: 50%; margin-left: -50px; bottom: -50px; background-position: -401px -220px;">
             <div class="worldMapSlotsPreviewText hammersmith">{{battlefieldImpossible}} / {{battlefieldMax}}</div>
         </div>
-        {{/if}} {{/if}}
+        {{/if}} {{/if}} -->
     </div>
     {{/with}}
 </template>
