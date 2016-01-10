@@ -9,7 +9,6 @@ like the docs have mostly been updated except for the wording in
 the Data and security section.*/
 
 //Collection init
-//Users = new Mongo.Collection("users");
 Menus = new Mongo.Collection("Menus");
 MatterBlocks = new Mongo.Collection("MatterBlocks");
 FightArenas = new Mongo.Collection("FightArenas");
@@ -21,12 +20,14 @@ Turf = new Mongo.Collection("Turf");
 worldMapFields = new Mongo.Collection("worldMapFields");
 STATUS = new Mongo.Collection("STATUS");
 
-mine = new Mongo.Collection("mine");
-laboratory = new Mongo.Collection("laboratory");
-workshop = new Mongo.Collection("workshop");
-battlefield = new Mongo.Collection("battlefield");
-thievery = new Mongo.Collection("thievery");
-smelter = new Mongo.Collection("smelter");
+// mine = new Mongo.Collection("mine");
+mineBase = new Mongo.Collection("mineBase");
+mineSupport = new Mongo.Collection("mineSupport");
+mineScrounge = new Mongo.Collection("mineScrounge");
+
+battlefieldBase = new Mongo.Collection("battlefieldBase");
+battlefieldSupport = new Mongo.Collection("battlefieldSupport");
+battlefieldScrounge = new Mongo.Collection("battlefieldScrounge");
 
 
 //CLIENT ONLY COLLECTIONS
