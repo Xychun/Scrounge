@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // check input
-
 function checkUsername(string) {
     if (string.match(/^[0-9a-zA-Z]+$/)) {
         return true;
@@ -22,17 +21,6 @@ function validLength(val) {
 if (Meteor.isClient) {
     Template.login.events({
         'submit #login-form': function(e, t) {
-            // console.time("LOGINMB");
-            // console.time("LOGINSB");
-            // console.time("LOGINI");
-            // console.time("LOGINWP");
-            // console.time("LOGINHELPER1");
-            // console.time("LOGINHELPER2");
-            // console.time("LOGINHELPER3");
-            // console.time("LOGINHELPER4");
-            // console.time("LOGINHELPER5");
-            // console.time("LOGINHELPER6");
-            // console.time('Oo');
             var name = t.find('#login-name').value;
             var password = t.find('#login-password').value;
             // TO-DO: Trim and validate your fields here
@@ -123,17 +111,21 @@ if (Meteor.isClient) {
                 username: 1
             }
         });
-        if(loginOrRegister === 'login') {
-            //update everything of active player if need be
-            Meteor.call('initialUpdate', self.username, function(err, result) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log(result);
-                }
-            });
-        }
+
+        // OLD OLD 2015/12/20 OLD OLD
+        // if(loginOrRegister === 'login') {
+        //     //update everything of active player if need be
+        //     Meteor.call('initialUpdate', self.username, function(err, result) {
+        //         if (err) {
+        //             console.log(err);
+        //         }
+        //         else {
+        //             console.log(result);
+        //         }
+        //     });
+        // }
+        // OLD OLD 2015/12/20 OLD OLD
+        
         if (self) {
             if ($(window).width() < 1920) {
                 current_resolution = "<1920";

@@ -32,9 +32,9 @@ Router.route('/game', {
     onBeforeAction: function() {
         //get the TIME ZONE difference (not the ping!)
         if (allReady) {
-            timeClient = new Date();
-            timeServer = TimeSync.serverTime(Date.now());
-            timeDifference = Math.round((timeClient - timeServer) / 10000) * 10000;
+            var timeClient = new Date();
+            var timeServer = TimeSync.serverTime(Date.now());
+            GV_timeDifference = Math.round((timeClient - timeServer) / 10000) * 10000;
             this.next();
         }
     },
@@ -81,7 +81,7 @@ Router.route('/game', {
                 //console.log(cu == self.username);
                 //in your own menu? base:scrounge
                 if (cu == self.username) {
-                    Router.current().render(menu + 'Base', {
+                    Router.current().render(menu + 'Owner', {
                         to: 'middle'
                     });
 
@@ -96,7 +96,7 @@ Router.route('/game', {
                     if ($('#category_left').css("backgroundPosition")) switchScroungeBaseMode($('#category_left').css("backgroundPosition"), '.SScategory_left', 'scrounge');
 
                 } else {
-                    Router.current().render(menu + 'Scrounge', {
+                    Router.current().render(menu + 'Enemy', {
                         to: 'middle'
                     });
 
