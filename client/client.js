@@ -2050,16 +2050,9 @@ if (Meteor.isClient) {
     });
 
     ///// BUY MENU /////
-    // Template.buyMenu.helpers({
-    //     playerData: function() {
-    //         return playerData.find({});
-    //     },
-    //     mineSlots: function() {
-    //         return mineSlots.find({});
-    //     }
-    // });
 
-    //TODO: noch nicht fertig !
+    //Parts created by Michael Kochanke, 30.08.2014
+    //TODO: RangeSlider(?!) noch nicht fertig !
     Template.buyMenu.events({
         'click #buyMenuYes': function(e, t) {
             //console.time("BUYRESOURCE");
@@ -2114,7 +2107,6 @@ if (Meteor.isClient) {
     ///// STANDARD BORDER /////
     Template.standardBorder.onCreated(function() {
 
-        //console.timeEnd('Oo');
         // console.log('createBorderStart');
         //console.time('createBorder');
 
@@ -2144,7 +2136,7 @@ if (Meteor.isClient) {
     Template.standardBorder.events({
 
         'click #testButton': function(e, t) {
-            console.log('Bots are generating!');
+            // console.log('Bots are generating!');
             // This methodes activates l-k bots with the names from l to k
             // createBots(1, 1000);
             // This methodes activates n bots to simulate user actions
@@ -2159,7 +2151,7 @@ if (Meteor.isClient) {
         'click #testButton3': function(e, t) {
             //param: interval in seconds
             Meteor.call('updateLoop', 25);
-        },        
+        },
 
         'click .category_1': function(e, t) {
             //console.time("SWITCH CATEGORY3");
@@ -2242,6 +2234,7 @@ if (Meteor.isClient) {
         }
     });
 
+    //Created by Michael Kochanke, 30.08.2014
     Template.masterLayout.events({
         'mousedown img': function(e, t) {
             return false;
@@ -2455,9 +2448,8 @@ if (Meteor.isClient) {
     var posY = 0;
 
 
-
+    //Created by Michael Kochanke, 30.08.2014
     // WorldMap Steuerung per Pfeiltasten
-
     (function($) {
 
         // Workaround für den Firefox zum Scrollen mit Mausrad
@@ -2510,7 +2502,7 @@ if (Meteor.isClient) {
 
     })(jQuery);
 
-
+    //Created by Michael Kochanke, 30.08.2014
     $(window).bind('mousewheel DOMMouseScroll', function(event) {
         if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
             var direction = "back";
@@ -2536,6 +2528,8 @@ if (Meteor.isClient) {
             }
         }
     });
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function slide(element) //abfrage welche ID gehovert wurde und umsetzung des richtigen slides
     {
@@ -2592,8 +2586,9 @@ if (Meteor.isClient) {
         }
     }
 
-    function switch_category(clicked_obj, speed, callback) {
+    //Created by Michael Kochanke, 30.08.2014
 
+    function switch_category(clicked_obj, speed, callback) {
         //console.time("SWITCH CATEGORY1");
         //console.time("SWITCH CATEGORY2");
         // console.log("SWITCH CATEGORY");
@@ -2702,6 +2697,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function slide_category(direction, speed, delay_factor) {
 
         if ($("#categories_wrapper").filter(':not(:animated)').length == 1) {
@@ -2752,6 +2749,8 @@ if (Meteor.isClient) {
 
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function scroll_content(direction, orientation, pixel, content_div) {
 
         var css_direction;
@@ -2797,6 +2796,8 @@ if (Meteor.isClient) {
             }
         }
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function slide_start(direction, orientation, pixel, speed, content_div) {
         //console.log("direction: " + direction + " pixel: " + pixel + " speed: " + speed + " content_div: " + content_div);
@@ -2855,6 +2856,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function init_draggable() {
         $(".draggable").draggable({
             addClasses: false,
@@ -2873,6 +2876,8 @@ if (Meteor.isClient) {
         });
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function init_droppable() {
         $(".droppable").droppable({
             addClasses: false,
@@ -2890,6 +2895,8 @@ if (Meteor.isClient) {
         });
         Session.set("init_bool", false);
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function character_view_droppable() {
         for (var x = 1; x <= 6; x++) {
@@ -2911,6 +2918,8 @@ if (Meteor.isClient) {
             });
         }
     }
+
+    //Created by Michael Kochanke, 30.08.2014
     // Funktion um die Tooltips der Range Slider anzuzeigen und auszublenden
 
     function fade_In_and_Out(element, slot, state) {
@@ -2945,6 +2954,8 @@ if (Meteor.isClient) {
         }
 
     }
+
+    //Created by Michael Kochanke, 30.08.2014
 
     function range_slider(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl) {
         //console.log('slot: ' + slot + ' min_ctrl: ' + min_ctrl + ' max_ctrl: ' + max_ctrl + ' lower_ctrl: ' + lower_ctrl + ' higher_ctrl: ' + higher_ctrl);
@@ -2996,6 +3007,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function tooltip_adjustment(slot, min_ctrl, max_ctrl, lower_ctrl, higher_ctrl, handle) {
         var ctrl_range = max_ctrl - min_ctrl,
             slider_threshold = ctrl_range * 0.1,
@@ -3035,6 +3048,8 @@ if (Meteor.isClient) {
         }
     }
 
+    //Created by Michael Kochanke, 30.08.2014
+
     function slide_stop() {
         stop_bool = true;
         clearInterval(interval);
@@ -3042,6 +3057,7 @@ if (Meteor.isClient) {
 
     var category_names = ["mine", "laboratory", "battlefield", "workshop", "thievery", "smelter"];
 
+    //Created by Michael Kochanke, 30.08.2014
     $(window).resize(function() {
         if ($(window).width() < 1920 && current_resolution != "<1920" && $("#loginWrapper").length == 0) {
             current_resolution = "<1920";
@@ -3076,6 +3092,7 @@ if (Meteor.isClient) {
         }
     });
 
+    //Created by Michael Kochanke, 30.08.2014
     //Changes array to unique array with distinct values
 
     function distinct(array) {
@@ -3332,6 +3349,29 @@ if (Meteor.isClient) {
         }).maxXY);
         var maxY = maxX;
         switch (direction) {
+            case "worldMapHomeButton":
+                var cursorUser = Meteor.users.findOne({
+                    _id: Meteor.userId()
+                }, {
+                    fields: {
+                        x: 1,
+                        y: 1
+                    }
+                });
+                //"$exists: true" > mongo syntax, sucht alle Dokumente, die das Feld "maxXY" haben
+                //in diesem Fall ist das nur ein Objekt
+                //workaround, weil Suche über _id nicht funktioniert
+                var maxX = parseInt(STATUS.findOne({
+                    maxXY: {
+                        $exists: true
+                    }
+                }).maxXY);
+                //Für den Fall, dass die Map symmetrisch ist, sind maxY und maxX identisch
+                //wird im Weiteren getrennt behandelt, damit das flexibel bleibt und bei
+                //Bedarf geändert werden kann
+                var maxY = maxX;
+                initWorldMapArray(cursorUser.x, cursorUser.y, maxX, maxY);
+                break;
             case "worldMapGoUp":
                 //Scheint zu funktionieren
                 //Die subscriptions müssen irgendwie noch händisch wieder gestoppt werden
@@ -3499,6 +3539,7 @@ if (Meteor.isClient) {
 
     var deps_count = 0;
 
+    //Created by Michael Kochanke, 30.08.2014
     Deps.autorun(function() {
         //DEPS AUTORUN FOR RANGE SLIDER
         var init = Session.get("init");

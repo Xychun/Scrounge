@@ -1,22 +1,26 @@
-Meteor Installation unter Windows:
+How to install meteor?
+https://www.meteor.com/install
 
-Meteor Installer :
-http://win-install.meteor.com/LaunchMeteor.exe
+Meteor Dokumentation:
+http://docs.meteor.com/
 
-Packages :
-iron-router - https://github.com/EventedMind/iron-router
-deps-ext - https://github.com/EventedMind/deps-ext
-blaze-layout - https://github.com/EventedMind/blaze-layout
+Meteor Packages:
+https://atmospherejs.com/
 
-Installation:
-LaunchMeteor.exe starten zur Installation und dann 
-in den "packages" Ordner alle Packages reinkopieren
-
-Meteor starten :
-PowerShell (mit Admin rechten) öffnen
-Pfad zum Projektordner wechseln
-den Befehl 'meteor' eingeben
-
-falls das nicht funktionieren sollte 
-ggf. noch den router hinzufügen mit
-'meteor add iron-router'
+Scrounge - Used Packages :
+accounts-base                1.2.0  A user account system
+accounts-password            1.1.1  Password support for accounts
+blaze                        2.1.2  Meteor Reactive Templating library
+insecure                     1.0.3  Allow all database writes by default
+iron:router                  1.0.7* Routing specifically designed for Meteor
+meteorhacks:async            1.0.0  Set of async utilities to work with NPM m...
+meteorhacks:cluster          1.6.9  Clustering solution for Meteor with load ...
+meteorhacks:kadira           2.21.0* Performance Monitoring for Meteor
+meteorhacks:kadira-debug     1.3.3  Full Stack Debugging Solution for Meteor
+meteorhacks:kadira-profiler  1.1.0* CPU Profiler for Kadira
+meteorhacks:meteor-down      1.1.1  Load Testing Framework for Meteor
+meteorhacks:unblock          1.1.0  a way to use this.unblock inside publicat...
+mizzao:timesync              0.3.1* NTP-style time synchronization between se...
+reactive-dict                1.1.0  Reactive dictionary
+reactive-var                 1.0.5  Reactive variable
+standard-app-packages        1.0.5  Moved to meteor-platform

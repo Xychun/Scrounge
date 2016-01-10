@@ -11,7 +11,9 @@ if (Meteor.isServer) {
 
     Meteor.startup(function() {
         // code to run on server at startup
-        // Meteor.call('updateLoop', 25);
+        Meteor.setInterval(function() {
+            updateTimers();
+        }, 1 * 1000);
     });
 
     //Methods
@@ -595,8 +597,6 @@ if (Meteor.isServer) {
                     $exists: true
                 }
             }).maxXY;
-            //Denkfehler!!
-            // var newMaxXY = maxXY * 2;
             var newMaxXY = (maxXY * 2) + 1;
 
             STATUS.update({
@@ -2692,7 +2692,7 @@ if (Meteor.isServer) {
                     //insert successful
                 }
             });
-            Meteor.call('createRandomMapPosition', name);
+            Meteor.call('createMapPosition', name);
             return "account init OK!";
         },
 
@@ -3283,56 +3283,6 @@ if (Meteor.isServer) {
         }
     }
 
-    //ERSETZT DURCH checkIfDuplicate
-
-
-    // function addOrReplaceTimer(menu, user, slot, time) {
-
-    //     console.log('addOrReplaceTimer');
-
-    //     //falls der Timer einen Eintrag hat
-    //     if(timers.length > 0) {
-    //         //prüfe, ob der gescroungte slot bereits vorhanden ist und beschleunigt werden muss (wegen neuem sup)
-    //         for(var i = 0; i < timers.length; i++) {
-    //             console.log('i',i);
-    //             console.log('timer_',i,'user',timers[i][1],user,'slot',timers[i][2],slot);
-    //             var userFromTimer = timers[i][1];
-    //             var slotFromTimer = timers[i][2];
-    //             console.log('fromTimer',userFromTimer);
-    //             console.log('scrounger',user);
-    //             console.log('fromTimer',slotFromTimer);
-    //             console.log('scrounger',slot);
-    //             console.log(userFromTimer == user);
-    //             var areSlotsIdentical = userFromTimer == user && slotFromTimer == slot;
-    //             console.log('areSlotsIdentical',areSlotsIdentical);
-    //             //bei Verwendung eines if/else Konstruktes ist der Server immer eingefroren... buggy?!
-    //             // switch(areSlotsIdentical) {
-    //             //         case true:
-    //             //             console.log('switch true');
-    //             //             // entferne den timer
-    //             //             timers.splice(i,1);
-    //             //             //ersetze ihn mit der neuen Restzeit (kürzer, weil jetzt supporter vorhanden)
-    //             //             timers.push(menu, user, slot, time);
-    //             //             break;
-    //             //         case false:
-    //             //             console.log('switch false');
-    //             //             console.log('before',timers);
-    //             //             timers.push(menu, user, slot, time);
-    //             //             console.log('after',timers);
-    //             //             break;
-    //             //         default:
-    //             //             console.log("shit");
-    //             // }
-    //         }
-    //     //falls der Timer noch keinen Eintrag hat
-    //     } else {
-    //         console.log('timer was empty');
-    //         console.log('before',timers);
-    //         timers.push(menu, user, slot, time);
-    //         console.log('after',timers);
-    //     }
-    // }
-
     function checkIfDuplicate(user, slot) {
         // console.log('checkIfDuplicate');
         //falls der Timer einen Eintrag hat
@@ -3361,10 +3311,4 @@ if (Meteor.isServer) {
             return "push";
         }
     }
-
-    Meteor.startup(function() {
-        Meteor.setInterval(function() {
-            updateTimers();
-        }, 1 * 1000);
-    });
 }
